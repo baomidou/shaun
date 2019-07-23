@@ -1,4 +1,4 @@
 # Auto Configure
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.baomidou.ezpac4j.stateless.autoconfigure.Pac4jPlusAutoConfiguration,\
-  com.baomidou.ezpac4j.stateless.autoconfigure.Pac4jPlusSecurityAutoConfiguration
+  com.baomidou.mipac4j.stateless.autoconfigure.Pac4jPlusAutoConfiguration,\
+  com.baomidou.mipac4j.stateless.autoconfigure.Pac4jPlusSecurityAutoConfiguration

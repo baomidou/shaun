@@ -34,7 +34,7 @@ ext {
             "pac4j-jwt"               : "org.pac4j:pac4j-jwt:${pac4jVersion}",
             "pac4j-http"              : "org.pac4j:pac4j-http:${pac4jVersion}",
             "spring-web"              : "org.springframework:spring-web:${springVersion}",
-            "servlet-api"              : "javax.servlet:javax.servlet-api:4.0.1",
+            "servlet-api"             : "javax.servlet:javax.servlet-api:4.0.1",
             "spring-aop"              : "org.springframework:spring-aop:${springVersion}",
             "spring-boot-starter-test": "org.springframework.boot:spring-boot-starter-test:${springBootVersion}",
             "lombok"                  : "org.projectlombok:lombok:1.18.4",
