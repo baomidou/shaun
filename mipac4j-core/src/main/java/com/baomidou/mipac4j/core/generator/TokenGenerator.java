@@ -1,4 +1,4 @@
-package com.baomidou.mipac4j.core.core.generator;
+package com.baomidou.mipac4j.core.generator;
 
 import org.pac4j.core.profile.CommonProfile;
 

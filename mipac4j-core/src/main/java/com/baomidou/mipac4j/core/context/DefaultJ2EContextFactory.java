@@ -1,4 +1,4 @@
-package com.baomidou.mipac4j.core.core.context;
+package com.baomidou.mipac4j.core.context;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

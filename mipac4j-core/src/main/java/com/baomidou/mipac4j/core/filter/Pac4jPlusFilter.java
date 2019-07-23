@@ -19,9 +19,9 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.baomidou.mipac4j.core.core.context.J2EContextFactory;
-import com.baomidou.mipac4j.core.core.engine.LogoutExecutor;
-import com.baomidou.mipac4j.core.core.engine.Pac4jPlusSecurityLogic;
+import com.baomidou.mipac4j.core.context.J2EContextFactory;
+import com.baomidou.mipac4j.core.engine.LogoutExecutor;
+import com.baomidou.mipac4j.core.engine.Pac4jPlusSecurityLogic;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

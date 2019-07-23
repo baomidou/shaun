@@ -1,4 +1,4 @@
-package com.baomidou.mipac4j.core.core.engine;
+package com.baomidou.mipac4j.core.engine;
 
 import static org.pac4j.core.util.CommonHelper.assertNotNull;
 import static org.pac4j.core.util.CommonHelper.isEmpty;

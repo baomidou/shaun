@@ -8,7 +8,7 @@ import org.pac4j.core.context.session.SessionStore;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import com.baomidou.mipac4j.core.core.context.J2EContextFactory;
+import com.baomidou.mipac4j.core.context.J2EContextFactory;
 
 /**
  * @author miemie

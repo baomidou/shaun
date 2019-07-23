@@ -19,14 +19,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.CollectionUtils;
 
-import com.baomidou.mipac4j.core.core.client.TokenClient;
-import com.baomidou.mipac4j.core.core.context.CookieContext;
-import com.baomidou.mipac4j.core.core.context.DefaultJ2EContextFactory;
-import com.baomidou.mipac4j.core.core.context.J2EContextFactory;
-import com.baomidou.mipac4j.core.core.engine.LogoutExecutor;
-import com.baomidou.mipac4j.core.core.extractor.TokenExtractor;
-import com.baomidou.mipac4j.core.core.generator.DefaultJwtTokenGenerator;
-import com.baomidou.mipac4j.core.core.generator.TokenGenerator;
+import com.baomidou.mipac4j.core.client.TokenClient;
+import com.baomidou.mipac4j.core.context.CookieContext;
+import com.baomidou.mipac4j.core.context.DefaultJ2EContextFactory;
+import com.baomidou.mipac4j.core.context.J2EContextFactory;
+import com.baomidou.mipac4j.core.engine.LogoutExecutor;
+import com.baomidou.mipac4j.core.extractor.TokenExtractor;
+import com.baomidou.mipac4j.core.generator.DefaultJwtTokenGenerator;
+import com.baomidou.mipac4j.core.generator.TokenGenerator;
 import com.baomidou.mipac4j.stateless.autoconfigure.properties.Pac4jProperties;
 
 import lombok.AllArgsConstructor;

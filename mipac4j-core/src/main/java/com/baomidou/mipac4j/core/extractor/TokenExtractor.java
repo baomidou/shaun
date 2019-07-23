@@ -1,4 +1,4 @@
-package com.baomidou.mipac4j.core.core.extractor;
+package com.baomidou.mipac4j.core.extractor;
 
 import org.pac4j.core.context.HttpConstants;
 import org.pac4j.core.context.WebContext;

@@ -1,10 +1,10 @@
-package com.baomidou.mipac4j.core.core.context;
+package com.baomidou.mipac4j.core.context;
 
 import org.pac4j.core.context.J2EContext;
 import org.pac4j.core.context.session.SessionStore;
 import org.pac4j.core.profile.CommonProfile;
 
-import com.baomidou.mipac4j.core.core.generator.TokenGenerator;
+import com.baomidou.mipac4j.core.generator.TokenGenerator;
 import com.baomidou.mipac4j.core.properties.Cookie;
 import com.baomidou.mipac4j.core.util.J2EContextUtil;
 

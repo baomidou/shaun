@@ -1,4 +1,4 @@
-package com.baomidou.mipac4j.core.core.client;
+package com.baomidou.mipac4j.core.client;
 
 import org.pac4j.core.client.DirectClient;
 import org.pac4j.core.credentials.TokenCredentials;

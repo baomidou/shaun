@@ -15,9 +15,9 @@ import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import com.baomidou.mipac4j.core.core.client.TokenClient;
-import com.baomidou.mipac4j.core.core.context.J2EContextFactory;
-import com.baomidou.mipac4j.core.core.engine.LogoutExecutor;
+import com.baomidou.mipac4j.core.client.TokenClient;
+import com.baomidou.mipac4j.core.context.J2EContextFactory;
+import com.baomidou.mipac4j.core.engine.LogoutExecutor;
 import com.baomidou.mipac4j.core.filter.Pac4jPlusFilter;
 import com.baomidou.mipac4j.stateless.autoconfigure.properties.Pac4jProperties;
 

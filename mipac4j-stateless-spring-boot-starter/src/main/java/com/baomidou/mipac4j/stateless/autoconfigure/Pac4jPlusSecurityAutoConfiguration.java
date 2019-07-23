@@ -10,9 +10,9 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.baomidou.mipac4j.core.core.client.TokenClient;
-import com.baomidou.mipac4j.core.core.context.J2EContextFactory;
-import com.baomidou.mipac4j.core.core.engine.LogoutExecutor;
+import com.baomidou.mipac4j.core.client.TokenClient;
+import com.baomidou.mipac4j.core.context.J2EContextFactory;
+import com.baomidou.mipac4j.core.engine.LogoutExecutor;
 import com.baomidou.mipac4j.stateless.autoconfigure.aop.AnnotationAspect;
 import com.baomidou.mipac4j.stateless.autoconfigure.filter.Pac4jPlusFilterFactoryBean;
 import com.baomidou.mipac4j.stateless.autoconfigure.properties.Pac4jProperties;
