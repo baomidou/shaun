@@ -13,7 +13,7 @@ import org.pac4j.core.authorization.authorizer.RequireAnyRoleAuthorizer;
 import org.pac4j.core.config.Config;
 import org.pac4j.core.context.J2EContext;
 import org.pac4j.core.exception.HttpAction;
-import org.pac4j.jwt.profile.JwtProfile;
+import org.pac4j.core.profile.CommonProfile;
 
 import com.baomidou.mipac4j.core.annotation.RequireAllPermission;
 import com.baomidou.mipac4j.core.annotation.RequireAllRole;
@@ -58,17 +58,17 @@ public class AnnotationAspect {
     }
 
     @SuppressWarnings("unchecked")
-    private List<JwtProfile> isAuthenticated(J2EContext webContext) {
-        final List<JwtProfile> profiles = config.getProfileManagerFactory().apply(webContext).getAll(false);
+    private <U extends CommonProfile> List<U> isAuthenticated(J2EContext webContext) {
+        final List<U> profiles = config.getProfileManagerFactory().apply(webContext).getAll(false);
         if (!IS_AUTHENTICATED_AUTHORIZER.isAuthorized(webContext, profiles)) {
             throw HttpAction.unauthorized(webContext);
         }
         return profiles;
     }
 
-    private void isAuthorized(final AbstractRequireElementAuthorizer<String, JwtProfile> authorizer) {
+    private <U extends CommonProfile> void isAuthorized(final AbstractRequireElementAuthorizer<String, U> authorizer) {
         J2EContext j2EContext = J2EContextUtil.getJ2EContext(j2EContextFactory, config.getSessionStore());
-        final List<JwtProfile> profiles = this.isAuthenticated(j2EContext);
+        final List<U> profiles = this.isAuthenticated(j2EContext);
         if (!authorizer.isAuthorized(j2EContext, profiles)) {
             throw HttpAction.forbidden(j2EContext);
         }
