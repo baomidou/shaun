@@ -1,9 +1,4 @@
-pluginManagement {
-    repositories {
-        gradlePluginPortal()
-    }
-}
-rootProject.name = 'ezpac4j'
-include 'ezpac4j-stateless-spring-boot-starter'
-include 'ezpac4j-core'
+rootProject.name = "mipac4j"
+include "mipac4j-stateless-spring-boot-starter"
+include "mipac4j-core"
 
