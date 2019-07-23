@@ -1,27 +1,211 @@
-plugins {
-    id 'org.springframework.boot' version '2.1.6.RELEASE'
-    id 'java'
-}
+import java.text.SimpleDateFormat
 
-apply plugin: 'io.spring.dependency-management'
+buildscript {
+    repositories {
+        maven { url "https://maven.aliyun.com/nexus/content/groups/public" }
+        mavenCentral()
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
 
-group = 'com.baomidou'
-version = '0.0.1'
-sourceCompatibility = '1.8'
-
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
+    dependencies {
+        classpath("gradle.plugin.com.hierynomus.gradle.plugins:license-gradle-plugin:0.15.0")
     }
 }
 
-repositories {
-    mavenCentral()
+plugins {
+    id 'java'
 }
 
-dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+ext {
+    configuration = [
+            javaVersion = JavaVersion.VERSION_1_8
+    ]
+
+    libraries = [
+            springVersion = "5.1.6.RELEASE",
+            springBootVersion = "2.1.6.RELEASE",
+            pac4jVersion = "3.7.0",
+            shiroVersion = "1.4.1",
+            junitVersion = "5.4.0"
+    ]
+
+    lib = [
+            "pac4j-jwt"               : "org.pac4j:pac4j-jwt:${pac4jVersion}",
+            "pac4j-http"              : "org.pac4j:pac4j-http:${pac4jVersion}",
+            "spring-web"              : "org.springframework:spring-web:${springVersion}",
+            "servlet-api"              : "javax.servlet:javax.servlet-api:4.0.1",
+            "spring-aop"              : "org.springframework:spring-aop:${springVersion}",
+            "spring-boot-starter-test": "org.springframework.boot:spring-boot-starter-test:${springBootVersion}",
+            "lombok"                  : "org.projectlombok:lombok:1.18.4",
+            "assertj-core"            : "org.assertj:assertj-core:3.12.2",
+            "junit-jupiter-api"       : "org.junit.jupiter:junit-jupiter-api:${junitVersion}",
+            "junit-jupiter-engine"    : "org.junit.jupiter:junit-jupiter-engine:${junitVersion}",
+            "mockito-all"             : "org.mockito:mockito-all:1.10.19"
+    ]
+}
+
+allprojects {
+    group = "com.baomidou"
+    version = "0.0.1"
+}
+
+description = "easy security by pac4j"
+
+subprojects {
+    apply plugin: "java"
+    apply plugin: 'java-library'
+    apply plugin: 'maven-publish'
+    apply plugin: 'com.github.hierynomus.license'
+
+    sourceCompatibility = "${javaVersion}"
+    targetCompatibility = "${javaVersion}"
+
+    tasks.withType(JavaCompile) {
+        options.encoding = 'UTF-8'
+        options.deprecation = true
+        options.compilerArgs += ["-parameters"]
+    }
+
+    jar {
+        afterEvaluate {
+            manifest {
+                attributes 'Implementation-Version': version
+                attributes 'Built-Gradle': gradle.gradleVersion
+                attributes 'Bundle-DocURL': 'https://mybatis.plus/'
+                attributes 'Build-OS': System.getProperty("os.name")
+                attributes 'Built-By': System.getProperty("user.name")
+                attributes 'Build-Jdk': System.getProperty("java.version")
+                attributes 'Build-Timestamp': new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
+            }
+        }
+    }
+
+    license {
+        encoding = "UTF-8"
+        header = rootProject.file("license.txt")
+        includes(["**/*.java"])
+        exclude "**/*Test.java"
+        mapping "java", "SLASHSTAR_STYLE"
+    }
+
+    repositories {
+        mavenLocal()
+        maven { url "https://maven.aliyun.com/repository/public" }
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+        jcenter()
+    }
+
+    dependencies {
+        annotationProcessor "${lib.lombok}"
+        compileOnly "${lib.lombok}"
+
+        testAnnotationProcessor "${lib.lombok}"
+        testCompileOnly "${lib.lombok}"
+        testImplementation("${lib["assertj-core"]}")
+        testImplementation("${lib["junit-jupiter-api"]}")
+        testRuntimeOnly("${lib["junit-jupiter-engine"]}")
+        testCompileOnly("${lib["mockito-all"]}")
+        testImplementation("org.mockito:mockito-junit-jupiter:2.24.0")
+    }
+
+    //noinspection GroovyAssignabilityCheck
+    task sourcesJar(type: Jar) {
+        archiveClassifier = 'sources'
+        from sourceSets.main.allJava
+    }
+
+    javadoc {
+        afterEvaluate {
+            configure(options) {
+                encoding "UTF-8"
+                charSet 'UTF-8'
+                author true
+                version true
+                failOnError false
+                links "http://docs.oracle.com/javase/8/docs/api"
+            }
+        }
+    }
+
+    task javadocJar(type: Jar) {
+        archiveClassifier = 'javadoc'
+        from javadoc
+    }
+
+    tasks.whenTaskAdded { task ->
+        if (task.name.contains('signMavenJavaPublication')) {
+            task.enabled = new File(project.property('signing.secretKeyRingFile') as String).isFile()
+        }
+    }
+
+    publishing {
+        repositories {
+            maven {
+                def userName = System.getProperty("un")
+                def passWord = System.getProperty("ps")
+                def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+                def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
+                url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+
+                credentials {
+                    username userName
+                    password passWord
+                }
+            }
+        }
+        publications {
+
+            mavenJava(MavenPublication) {
+                from components.java
+
+                artifact sourcesJar
+                artifact javadocJar
+
+                pom {
+                    name = 'ezpac4j'
+                    packaging 'jar'
+                    description = 'An enhanced toolkit of Mybatis to simplify development.'
+                    url = 'https://github.com/baomidou/mybatis-plus'
+
+                    scm {
+                        connection = 'scm:git@github.com:Codearte/gradle-nexus-staging-plugin.git'
+                        developerConnection = 'scm:git@github.com:Codearte/gradle-nexus-staging-plugin.git'
+                        url = 'https://github.com/baomidou/mybatis-plus'
+                    }
+
+                    licenses {
+                        license {
+                            name = 'The Apache License, Version 2.0'
+                            url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        }
+                    }
+
+                    developers {
+                        developer {
+                            id = 'baomidou'
+                            name = 'hubin'
+                            email = 'jobob@qq.com'
+                        }
+                    }
+
+                    withXml {
+                        def root = asNode()
+                        root.dependencies.'*'.findAll {
+                            def d = it
+                            d.scope.text() == 'runtime' && project.configurations.findByName("implementation").allDependencies.find { dep ->
+                                dep.name == it.artifactId.text()
+                            }.each() {
+                                d.scope*.value = 'compile'
+                                d.appendNode('optional', true)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        signing {
+            sign publishing.publications.mavenJava
+        }
+    }
 }

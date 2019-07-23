@@ -1,16 +1,12 @@
-plugins {
-    id 'java'
+pdependencies {
+    api project(":ezpac4j-core")
+    implementation(enforcedPlatform("org.springframework.boot:spring-boot-dependencies:${springBootVersion}" as String))
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor:${springBootVersion}"
+    annotationProcessor "org.springframework.boot:spring-boot-autoconfigure-processor:${springBootVersion}"
+    api 'org.springframework.boot:spring-boot-autoconfigure'
+    implementation 'org.springframework.boot:spring-boot-configuration-processor'
+    implementation 'org.springframework.boot:spring-boot-autoconfigure-processor'
+    testImplementation "${lib.spring-boot-starter-test}"
 }
 
-group 'com.baomidou'
-version '0.0.1'
-
-sourceCompatibility = 1.8
-
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
-}
+compileJava.dependsOn(processResources)
