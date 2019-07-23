@@ -1,4 +1,4 @@
 dependencies {
-    api "${lib.pac4j-core}"
+    api "${lib.'pac4j-jwt'}"
     implementation "${lib.servlet-api}"
 }
