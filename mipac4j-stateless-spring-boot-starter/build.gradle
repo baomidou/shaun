@@ -2,6 +2,8 @@ dependencies {
     api project(":mipac4j-core")
     api "${lib.'pac4j-jwt'}"
     api "${lib.'spring-web'}"
+    api "${lib.'spring-aop'}"
+    api "org.aspectj:aspectjweaver:1.9.4"
     implementation "${lib.'servlet-api'}"
     implementation(enforcedPlatform("org.springframework.boot:spring-boot-dependencies:${springBootVersion}" as String))
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor:${springBootVersion}"

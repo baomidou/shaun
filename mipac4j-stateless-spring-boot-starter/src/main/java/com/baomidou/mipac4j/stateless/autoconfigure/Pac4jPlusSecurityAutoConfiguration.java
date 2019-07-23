@@ -10,12 +10,12 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.baomidou.pac4jplus.annotation.AnnotationAspect;
-import com.baomidou.pac4jplus.core.client.TokenClient;
-import com.baomidou.pac4jplus.core.context.J2EContextFactory;
-import com.baomidou.pac4jplus.core.engine.LogoutExecutor;
-import com.baomidou.pac4jplus.filter.Pac4jPlusFilterFactoryBean;
-import com.baomidou.pac4jplus.properties.Pac4jProperties;
+import com.baomidou.mipac4j.core.core.client.TokenClient;
+import com.baomidou.mipac4j.core.core.context.J2EContextFactory;
+import com.baomidou.mipac4j.core.core.engine.LogoutExecutor;
+import com.baomidou.mipac4j.stateless.autoconfigure.aop.AnnotationAspect;
+import com.baomidou.mipac4j.stateless.autoconfigure.filter.Pac4jPlusFilterFactoryBean;
+import com.baomidou.mipac4j.stateless.autoconfigure.properties.Pac4jProperties;
 
 import lombok.AllArgsConstructor;
 
