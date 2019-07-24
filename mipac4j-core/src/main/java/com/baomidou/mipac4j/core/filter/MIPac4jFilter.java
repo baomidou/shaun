@@ -28,6 +28,7 @@ import com.baomidou.mipac4j.core.engine.MIPac4jCallbackLogic;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.Setter;
 
 /**
@@ -35,6 +36,7 @@ import lombok.Setter;
  * @since 2019-07-01
  */
 @Data
+@Getter(AccessLevel.NONE)
 @EqualsAndHashCode(callSuper = true)
 public class MIPac4jFilter extends OncePerRequestFilter {
 
@@ -46,6 +48,7 @@ public class MIPac4jFilter extends OncePerRequestFilter {
 
     private String matchers;
 
+    @Getter(AccessLevel.PUBLIC)
     private Config securityConfig;
 
     private Config callbackConfig;

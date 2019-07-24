@@ -1,4 +1,4 @@
-package com.baomidou.mipac4j.stateless.autoconfigure.aop;
+package com.baomidou.mipac4j.autoconfigure.aop;
 
 import java.util.List;
 

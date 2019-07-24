@@ -1,11 +1,7 @@
-package com.baomidou.mipac4j.stateless.autoconfigure;
+package com.baomidou.mipac4j.autoconfigure;
 
-import com.baomidou.mipac4j.core.context.J2EContextFactory;
-import com.baomidou.mipac4j.core.engine.LogoutExecutor;
-import com.baomidou.mipac4j.stateless.autoconfigure.aop.AnnotationAspect;
-import com.baomidou.mipac4j.stateless.autoconfigure.filter.MIPac4jFilterFactoryBean;
-import com.baomidou.mipac4j.stateless.autoconfigure.properties.MIPac4jProperties;
-import lombok.AllArgsConstructor;
+import javax.servlet.DispatcherType;
+
 import org.pac4j.core.client.Client;
 import org.pac4j.core.context.session.SessionStore;
 import org.pac4j.core.matching.Matcher;
@@ -16,7 +12,13 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.servlet.DispatcherType;
+import com.baomidou.mipac4j.autoconfigure.aop.AnnotationAspect;
+import com.baomidou.mipac4j.autoconfigure.filter.MIPac4jFilterFactoryBean;
+import com.baomidou.mipac4j.autoconfigure.properties.MIPac4jProperties;
+import com.baomidou.mipac4j.core.context.J2EContextFactory;
+import com.baomidou.mipac4j.core.engine.LogoutExecutor;
+
+import lombok.AllArgsConstructor;
 
 /**
  * @author miemie

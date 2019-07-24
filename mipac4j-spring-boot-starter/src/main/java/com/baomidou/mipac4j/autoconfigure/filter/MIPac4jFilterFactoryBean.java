@@ -1,11 +1,7 @@
-package com.baomidou.mipac4j.stateless.autoconfigure.filter;
+package com.baomidou.mipac4j.autoconfigure.filter;
 
-import com.baomidou.mipac4j.core.context.J2EContextFactory;
-import com.baomidou.mipac4j.core.engine.LogoutExecutor;
-import com.baomidou.mipac4j.core.filter.MIPac4jFilter;
-import com.baomidou.mipac4j.stateless.autoconfigure.properties.MIPac4jProperties;
-import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+import java.util.Map;
+
 import org.pac4j.core.authorization.authorizer.Authorizer;
 import org.pac4j.core.client.Client;
 import org.pac4j.core.client.Clients;
@@ -20,7 +16,13 @@ import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import java.util.Map;
+import com.baomidou.mipac4j.autoconfigure.properties.MIPac4jProperties;
+import com.baomidou.mipac4j.core.context.J2EContextFactory;
+import com.baomidou.mipac4j.core.engine.LogoutExecutor;
+import com.baomidou.mipac4j.core.filter.MIPac4jFilter;
+
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author miemie
@@ -38,7 +40,7 @@ public class MIPac4jFilterFactoryBean implements FactoryBean<MIPac4jFilter>, Ini
     private MIPac4jFilter instance;
     private MIPac4jProperties properties;
     private J2EContextFactory j2EContextFactory;
-    private Config config;
+    private Config securityConfig;
     private String authorizers;
 
     public MIPac4jFilterFactoryBean(MIPac4jProperties properties, ListableBeanFactory beanFactory, Matcher matcher,
@@ -63,7 +65,7 @@ public class MIPac4jFilterFactoryBean implements FactoryBean<MIPac4jFilter>, Ini
 
     private MIPac4jFilter createInstance() {
         MIPac4jFilter filter = new MIPac4jFilter();
-        filter.setConfig(config);
+        filter.setSecurityConfig(securityConfig);
         filter.setAuthorizers(authorizers);
         filter.setMatchers(Pac4jConstants.MATCHERS);
         filter.setJ2EContextFactory(j2EContextFactory);
@@ -84,11 +86,11 @@ public class MIPac4jFilterFactoryBean implements FactoryBean<MIPac4jFilter>, Ini
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        config = new Config();
+        securityConfig = new Config();
         Map<String, Authorizer> authorizerMap = beanFactory.getBeansOfType(Authorizer.class);
         String au = properties.getAuthorizers();
         if (!CollectionUtils.isEmpty(authorizerMap)) {
-            config.setAuthorizers(authorizerMap);
+            securityConfig.setAuthorizers(authorizerMap);
             String s = String.join(Pac4jConstants.ELEMENT_SEPRATOR, authorizerMap.keySet());
             if (StringUtils.hasText(au)) {
                 au += (Pac4jConstants.ELEMENT_SEPRATOR + s);
@@ -100,10 +102,10 @@ public class MIPac4jFilterFactoryBean implements FactoryBean<MIPac4jFilter>, Ini
         Clients clients = new Clients();
         clients.setClients(client);
         clients.setDefaultSecurityClients(client.getName());
-        config.setClients(clients);
-        config.setSessionStore(sessionStore);
-        config.setHttpActionAdapter((code, context) -> false);
-        config.setProfileManagerFactory(ProfileManager::new);
-        config.addMatcher(Pac4jConstants.MATCHERS, matcher);
+        securityConfig.setClients(clients);
+        securityConfig.setSessionStore(sessionStore);
+        securityConfig.setHttpActionAdapter((code, context) -> false);
+        securityConfig.setProfileManagerFactory(ProfileManager::new);
+        securityConfig.addMatcher(Pac4jConstants.MATCHERS, matcher);
     }
 }
