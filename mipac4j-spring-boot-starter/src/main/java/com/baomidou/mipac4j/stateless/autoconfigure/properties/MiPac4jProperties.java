@@ -46,6 +46,10 @@ public class MiPac4jProperties {
      */
     private Parameter parameter = new Parameter();
     /**
+     * 登陆 url,非前后台分离下,才起作用,主要用于请求到受保护页面进行 redirect
+     */
+    private String loginUrl;
+    /**
      * 登出 url
      */
     private String logoutUrl;

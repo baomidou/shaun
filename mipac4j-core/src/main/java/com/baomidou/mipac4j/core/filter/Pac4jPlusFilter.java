@@ -1,15 +1,12 @@
 package com.baomidou.mipac4j.core.filter;
 
-import java.io.IOException;
-import java.util.List;
-
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.baomidou.mipac4j.core.context.J2EContextFactory;
+import com.baomidou.mipac4j.core.engine.LogoutExecutor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.pac4j.core.config.Config;
 import org.pac4j.core.context.J2EContext;
+import org.pac4j.core.engine.DefaultSecurityLogic;
 import org.pac4j.core.engine.SecurityLogic;
 import org.pac4j.core.matching.Matcher;
 import org.pac4j.core.profile.CommonProfile;
@@ -19,12 +16,12 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.baomidou.mipac4j.core.context.J2EContextFactory;
-import com.baomidou.mipac4j.core.engine.LogoutExecutor;
-import com.baomidou.mipac4j.core.engine.Pac4jPlusSecurityLogic;
-
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * @author miemie
@@ -34,7 +31,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class Pac4jPlusFilter extends OncePerRequestFilter {
 
-    private SecurityLogic<Boolean, J2EContext> securityLogic = new Pac4jPlusSecurityLogic<>();
+    private SecurityLogic<Boolean, J2EContext> securityLogic = new DefaultSecurityLogic<>();
 
     private String authorizers;
 

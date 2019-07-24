@@ -1,6 +1,7 @@
 package com.baomidou.mipac4j.stateless.autoconfigure;
 
 import com.baomidou.mipac4j.core.client.TokenDirectClient;
+import com.baomidou.mipac4j.core.client.TokenIndirectClient;
 import com.baomidou.mipac4j.core.context.CookieContext;
 import com.baomidou.mipac4j.core.context.DefaultJ2EContextFactory;
 import com.baomidou.mipac4j.core.context.J2EContextFactory;
@@ -10,6 +11,7 @@ import com.baomidou.mipac4j.core.generator.DefaultJwtTokenGenerator;
 import com.baomidou.mipac4j.core.generator.TokenGenerator;
 import com.baomidou.mipac4j.stateless.autoconfigure.properties.MiPac4jProperties;
 import lombok.AllArgsConstructor;
+import org.pac4j.core.client.Client;
 import org.pac4j.core.context.session.J2ESessionStore;
 import org.pac4j.core.context.session.SessionStore;
 import org.pac4j.core.credentials.TokenCredentials;
@@ -69,13 +71,15 @@ public class Pac4jPlusAutoConfiguration {
     }
 
     /**
-     * 检索 token 并验证
+     * 检索 token 并验证(前后台分离下)
      */
     @Bean
     @ConditionalOnMissingBean
-    @ConditionalOnProperty(prefix = "mpac4j", name = "stateless", havingValue = "true")
-    public TokenDirectClient tokenClient(CredentialsExtractor<TokenCredentials> credentialsExtractor, Authenticator<TokenCredentials> authenticator) {
-        return new TokenDirectClient(credentialsExtractor, authenticator);
+    public Client tokenClient(CredentialsExtractor<TokenCredentials> credentialsExtractor, Authenticator<TokenCredentials> authenticator) {
+        if (properties.isStateless()) {
+            return new TokenDirectClient(credentialsExtractor, authenticator);
+        }
+        return new TokenIndirectClient(properties.getLoginUrl(), credentialsExtractor, authenticator);
     }
 
     /**
