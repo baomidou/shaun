@@ -7,7 +7,8 @@ import org.pac4j.core.profile.CommonProfile;
  * @author miemie
  * @since 2019-07-24
  */
-public interface HttpActionAdapter<R extends CommonProfile, P extends CommonProfile> {
+@FunctionalInterface
+public interface CommonProfileAdapter<T extends CommonProfile, R extends CommonProfile> {
 
     /**
      * Adapt the HTTP action.
@@ -15,5 +16,5 @@ public interface HttpActionAdapter<R extends CommonProfile, P extends CommonProf
      * @param profile the user profile
      * @return the specific framework HTTP result
      */
-    R adapt(P profile, IndirectClient client);
+    R adapt(T profile, IndirectClient client);
 }

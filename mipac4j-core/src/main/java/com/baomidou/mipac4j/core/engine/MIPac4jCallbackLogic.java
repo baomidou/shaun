@@ -1,25 +1,30 @@
 package com.baomidou.mipac4j.core.engine;
 
-import org.pac4j.core.client.BaseClient;
+import static org.pac4j.core.util.CommonHelper.assertNotBlank;
+import static org.pac4j.core.util.CommonHelper.assertNotNull;
+import static org.pac4j.core.util.CommonHelper.assertTrue;
+import static org.pac4j.core.util.CommonHelper.toNiceString;
+
+import java.util.List;
+
 import org.pac4j.core.client.Client;
 import org.pac4j.core.client.Clients;
 import org.pac4j.core.client.finder.ClientFinder;
 import org.pac4j.core.client.finder.DefaultCallbackClientFinder;
 import org.pac4j.core.config.Config;
-import org.pac4j.core.context.Pac4jConstants;
 import org.pac4j.core.context.WebContext;
 import org.pac4j.core.context.session.SessionStore;
 import org.pac4j.core.credentials.Credentials;
 import org.pac4j.core.engine.AbstractExceptionAwareLogic;
-import org.pac4j.core.engine.CallbackLogic;
 import org.pac4j.core.exception.HttpAction;
 import org.pac4j.core.http.adapter.HttpActionAdapter;
 import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.core.profile.ProfileManager;
 
-import java.util.List;
+import com.baomidou.mipac4j.core.adapter.CommonProfileAdapter;
 
-import static org.pac4j.core.util.CommonHelper.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * todo 待改造
@@ -27,56 +32,30 @@ import static org.pac4j.core.util.CommonHelper.*;
  * @author miemie
  * @since 2019-07-24
  */
-public class MIPac4jCallbackLogic<R, C extends WebContext> extends AbstractExceptionAwareLogic<R, C> implements CallbackLogic<R, C> {
+@Data
+@EqualsAndHashCode(callSuper = true)
+@SuppressWarnings("unchecked")
+public class MIPac4jCallbackLogic<R, C extends WebContext, P extends CommonProfile> extends AbstractExceptionAwareLogic<R, C> implements CallbackLogic<R, C, P> {
 
     private ClientFinder clientFinder = new DefaultCallbackClientFinder();
 
     @Override
-    public R perform(final C context, final Config config, final HttpActionAdapter<R, C> httpActionAdapter,
-                     final String inputDefaultUrl, final Boolean inputSaveInSession, final Boolean inputMultiProfile,
-                     final Boolean inputRenewSession, final String client) {
+    public R perform(C context, Config config, HttpActionAdapter<R, C> httpActionAdapter, String indexUrl, CommonProfileAdapter<P, CommonProfile> commonProfileAdapter) {
         logger.debug("=== CALLBACK ===");
 
         HttpAction action;
         try {
-
-            // default values
-            final String defaultUrl;
-            if (inputDefaultUrl == null) {
-                defaultUrl = Pac4jConstants.DEFAULT_URL_VALUE;
-            } else {
-                defaultUrl = inputDefaultUrl;
-            }
-            final boolean saveInSession;
-            if (inputSaveInSession == null) {
-                saveInSession = true;
-            } else {
-                saveInSession = inputSaveInSession;
-            }
-            final boolean multiProfile;
-            if (inputMultiProfile == null) {
-                multiProfile = false;
-            } else {
-                multiProfile = inputMultiProfile;
-            }
-            final boolean renewSession;
-            if (inputRenewSession == null) {
-                renewSession = true;
-            } else {
-                renewSession = inputRenewSession;
-            }
-
             // checks
             assertNotNull("clientFinder", clientFinder);
             assertNotNull("context", context);
             assertNotNull("config", config);
             assertNotNull("httpActionAdapter", httpActionAdapter);
-            assertNotBlank(Pac4jConstants.DEFAULT_URL, defaultUrl);
+            assertNotBlank("indexUrl", indexUrl);
             final Clients clients = config.getClients();
             assertNotNull("clients", clients);
 
             // logic
-            final List<Client> foundClients = clientFinder.find(clients, context, client);
+            final List<Client> foundClients = clientFinder.find(clients, context, null);
             assertTrue(foundClients != null && foundClients.size() == 1,
                     "unable to find one indirect client for the callback: check the callback URL for a client name parameter or suffix path"
                             + " or ensure that your configuration defaults to one indirect client");
@@ -89,9 +68,8 @@ public class MIPac4jCallbackLogic<R, C extends WebContext> extends AbstractExcep
 
             final CommonProfile profile = foundClient.getUserProfile(credentials, context);
             logger.debug("profile: {}", profile);
-            saveUserProfile(context, config, profile, saveInSession, multiProfile, renewSession);
-            action = redirectToOriginallyRequestedUrl(context, defaultUrl);
-
+            saveUserProfile(context, config, profile);
+            action = redirectToIndexUrl(context, indexUrl);
         } catch (final RuntimeException e) {
             return handleException(e, httpActionAdapter, context);
         }
@@ -99,58 +77,18 @@ public class MIPac4jCallbackLogic<R, C extends WebContext> extends AbstractExcep
         return httpActionAdapter.adapt(action.getCode(), context);
     }
 
-    protected void saveUserProfile(final C context, final Config config, final CommonProfile profile,
-                                   final boolean saveInSession, final boolean multiProfile, final boolean renewSession) {
+    protected void saveUserProfile(final C context, final Config config, final CommonProfile profile) {
         final ProfileManager manager = getProfileManager(context, config);
         if (profile != null) {
-            manager.save(saveInSession, profile, multiProfile);
-            if (renewSession) {
-                renewSession(context, config);
-            }
+            manager.save(false, profile, false);
+            final SessionStore<C> sessionStore = context.getSessionStore();
+            sessionStore.destroySession(context);
         }
     }
 
-    protected void renewSession(final C context, final Config config) {
-        final SessionStore<C> sessionStore = context.getSessionStore();
-        if (sessionStore != null) {
-            final String oldSessionId = sessionStore.getOrCreateSessionId(context);
-            final boolean renewed = sessionStore.renewSession(context);
-            if (renewed) {
-                final String newSessionId = sessionStore.getOrCreateSessionId(context);
-                logger.debug("Renewing session: {} -> {}", oldSessionId, newSessionId);
-                final Clients clients = config.getClients();
-                if (clients != null) {
-                    final List<Client> clientList = clients.getClients();
-                    for (final Client client : clientList) {
-                        final BaseClient baseClient = (BaseClient) client;
-                        baseClient.notifySessionRenewal(oldSessionId, context);
-                    }
-                }
-            } else {
-                logger.error("Unable to renew the session. The session store may not support this feature");
-            }
-        } else {
-            logger.error("No session store available for this web context");
-        }
-    }
-
-    protected HttpAction redirectToOriginallyRequestedUrl(final C context, final String defaultUrl) {
-        final String requestedUrl = (String) context.getSessionStore().get(context, Pac4jConstants.REQUESTED_URL);
-        String redirectUrl = defaultUrl;
-        if (isNotBlank(requestedUrl)) {
-            context.getSessionStore().set(context, Pac4jConstants.REQUESTED_URL, null);
-            redirectUrl = requestedUrl;
-        }
+    protected HttpAction redirectToIndexUrl(final C context, final String redirectUrl) {
         logger.debug("redirectUrl: {}", redirectUrl);
         return HttpAction.redirect(context, redirectUrl);
-    }
-
-    public ClientFinder getClientFinder() {
-        return clientFinder;
-    }
-
-    public void setClientFinder(final ClientFinder clientFinder) {
-        this.clientFinder = clientFinder;
     }
 
     @Override

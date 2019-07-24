@@ -1,9 +1,11 @@
 package com.baomidou.mipac4j.core.engine;
 
-import com.baomidou.mipac4j.core.adapter.HttpActionAdapter;
 import org.pac4j.core.config.Config;
 import org.pac4j.core.context.WebContext;
+import org.pac4j.core.http.adapter.HttpActionAdapter;
 import org.pac4j.core.profile.CommonProfile;
+
+import com.baomidou.mipac4j.core.adapter.CommonProfileAdapter;
 
 /**
  * copy from {@link org.pac4j.core.engine.CallbackLogic}
@@ -21,13 +23,9 @@ public interface CallbackLogic<R, C extends WebContext, P extends CommonProfile>
      * @param context           the web context
      * @param config            the security configuration
      * @param httpActionAdapter the HTTP action adapter
-     * @param defaultUrl        the default url
-     * @param saveInSession     whether profile should be saved in session
-     * @param multiProfile      whether multi profiles are supported
-     * @param renewSession      whether the session must be renewed
-     * @param client            the default client
+     * @param indexUrl          the index url
      * @return the resulting action of the callback
      */
-    R perform(C context, Config config, HttpActionAdapter<R, P> httpActionAdapter,
-              String defaultUrl, Boolean saveInSession, Boolean multiProfile, Boolean renewSession, String client);
+    R perform(C context, Config config, final HttpActionAdapter<R, C> httpActionAdapter,
+              String indexUrl, CommonProfileAdapter<P, CommonProfile> commonProfileAdapter);
 }

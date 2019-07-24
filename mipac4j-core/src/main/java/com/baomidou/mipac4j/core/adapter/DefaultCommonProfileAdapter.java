@@ -1,11 +1,13 @@
 package com.baomidou.mipac4j.core.adapter;
 
-import com.baomidou.mipac4j.core.client.IndirectClients;
-import com.baomidou.mipac4j.core.converter.ProfileConverter;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import org.pac4j.core.client.IndirectClient;
 import org.pac4j.core.profile.CommonProfile;
+
+import com.baomidou.mipac4j.core.client.IndirectClients;
+import com.baomidou.mipac4j.core.converter.ProfileConverter;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
 /**
  * @author miemie
@@ -13,17 +15,18 @@ import org.pac4j.core.profile.CommonProfile;
  */
 @Data
 @AllArgsConstructor
-public class DefaultHttpActionAdapter<R extends CommonProfile, P extends CommonProfile> implements HttpActionAdapter<R, P> {
+public class DefaultCommonProfileAdapter implements CommonProfileAdapter<CommonProfile, CommonProfile> {
 
     private final IndirectClients indirectClients;
 
+    @SuppressWarnings("unchecked")
     @Override
-    public R adapt(P profile, IndirectClient client) {
+    public CommonProfile adapt(CommonProfile profile, IndirectClient client) {
         ProfileConverter converter = indirectClients.findConverterByClient(client);
         // todo 根据流程变化,待定
         if (converter != null) {
-            return (R) converter.converter(profile);
+            return converter.converter(profile);
         }
-        return (R) profile;
+        return profile;
     }
 }
