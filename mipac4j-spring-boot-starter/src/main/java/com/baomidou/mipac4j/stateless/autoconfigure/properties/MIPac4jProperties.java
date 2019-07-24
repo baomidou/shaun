@@ -61,6 +61,10 @@ public class MIPac4jProperties {
      */
     private String indexUrl;
     /**
+     * callback url,非前后台分离下,才起作用,主要用于 IndirectClients 在 callback 环节使用
+     */
+    private String callbackUrl;
+    /**
      * parameter 的 name
      */
     private String parameterName = HttpConstants.AUTHORIZATION_HEADER;
