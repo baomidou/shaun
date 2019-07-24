@@ -1,19 +1,17 @@
 package com.baomidou.mipac4j.stateless.autoconfigure.properties;
 
-import java.util.List;
-import java.util.UUID;
-
+import com.baomidou.mipac4j.core.enums.TokenLocation;
+import com.baomidou.mipac4j.core.properties.Cookie;
+import com.baomidou.mipac4j.core.properties.Header;
+import com.baomidou.mipac4j.core.properties.Parameter;
+import lombok.Data;
 import org.pac4j.core.authorization.authorizer.Authorizer;
 import org.pac4j.core.authorization.checker.DefaultAuthorizationChecker;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.http.HttpHeaders;
 
-import com.baomidou.mipac4j.core.enums.TokenType;
-import com.baomidou.mipac4j.core.properties.Cookie;
-import com.baomidou.mipac4j.core.properties.Header;
-import com.baomidou.mipac4j.core.properties.Parameter;
-
-import lombok.Data;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * @author miemie
@@ -28,9 +26,9 @@ public class Pac4jProperties {
      */
     private String salt = UUID.randomUUID().toString().replace("-", "");
     /**
-     * 取 token 的方式
+     * token 的存放位置
      */
-    private TokenType tokenType = TokenType.HEADER;
+    private TokenLocation tokenLocation = TokenLocation.HEADER;
     /**
      * 取 token 的方式之 header
      */

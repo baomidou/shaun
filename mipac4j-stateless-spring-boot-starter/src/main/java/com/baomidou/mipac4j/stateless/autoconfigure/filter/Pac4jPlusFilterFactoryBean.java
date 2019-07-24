@@ -15,7 +15,7 @@ import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import com.baomidou.mipac4j.core.client.TokenClient;
+import com.baomidou.mipac4j.core.client.TokenDirectClient;
 import com.baomidou.mipac4j.core.context.J2EContextFactory;
 import com.baomidou.mipac4j.core.engine.LogoutExecutor;
 import com.baomidou.mipac4j.core.filter.Pac4jPlusFilter;
@@ -33,7 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 public class Pac4jPlusFilterFactoryBean implements FactoryBean<Pac4jPlusFilter>, InitializingBean {
 
     private final Matcher matcher;
-    private final TokenClient tokenClient;
+    private final TokenDirectClient tokenClient;
     private final SessionStore sessionStore;
     private final LogoutExecutor logoutExecutor;
     private final ListableBeanFactory beanFactory;
@@ -44,7 +44,7 @@ public class Pac4jPlusFilterFactoryBean implements FactoryBean<Pac4jPlusFilter>,
     private String authorizers;
 
     public Pac4jPlusFilterFactoryBean(Pac4jProperties properties, ListableBeanFactory beanFactory, Matcher matcher,
-                                      J2EContextFactory j2EContextFactory, TokenClient tokenClient,
+                                      J2EContextFactory j2EContextFactory, TokenDirectClient tokenClient,
                                       SessionStore sessionStore, LogoutExecutor logoutExecutor) {
         this.properties = properties;
         this.beanFactory = beanFactory;

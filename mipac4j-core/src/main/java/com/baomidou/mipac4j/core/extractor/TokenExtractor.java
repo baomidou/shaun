@@ -9,7 +9,7 @@ import org.pac4j.core.credentials.extractor.ParameterExtractor;
 import org.pac4j.core.exception.CredentialsException;
 import org.pac4j.http.credentials.extractor.CookieExtractor;
 
-import com.baomidou.mipac4j.core.enums.TokenType;
+import com.baomidou.mipac4j.core.enums.TokenLocation;
 import com.baomidou.mipac4j.core.properties.Cookie;
 import com.baomidou.mipac4j.core.properties.Header;
 import com.baomidou.mipac4j.core.properties.Parameter;
@@ -29,7 +29,7 @@ public class TokenExtractor implements CredentialsExtractor<TokenCredentials> {
 
     private CredentialsExtractor<TokenCredentials> extractor;
 
-    public TokenExtractor(TokenType type, Header header, Parameter parameter, Cookie cookie) {
+    public TokenExtractor(TokenLocation type, Header header, Parameter parameter, Cookie cookie) {
         switch (type) {
             case HEADER:
                 this.extractor = new HeaderExtractor(header.getHeaderName(), header.getPrefixHeader());

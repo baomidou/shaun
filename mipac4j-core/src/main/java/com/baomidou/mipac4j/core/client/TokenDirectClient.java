@@ -17,9 +17,9 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class TokenClient extends DirectClient<TokenCredentials, CommonProfile> {
+public class TokenDirectClient extends DirectClient<TokenCredentials, CommonProfile> {
 
-    public TokenClient(final CredentialsExtractor<TokenCredentials> credentialsExtractor, final Authenticator<TokenCredentials> tokenAuthenticator) {
+    public TokenDirectClient(final CredentialsExtractor<TokenCredentials> credentialsExtractor, final Authenticator<TokenCredentials> tokenAuthenticator) {
         defaultCredentialsExtractor(credentialsExtractor);
         defaultAuthenticator(tokenAuthenticator);
     }

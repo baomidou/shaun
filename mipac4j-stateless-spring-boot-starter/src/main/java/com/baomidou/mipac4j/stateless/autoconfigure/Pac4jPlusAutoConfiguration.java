@@ -19,7 +19,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.CollectionUtils;
 
-import com.baomidou.mipac4j.core.client.TokenClient;
+import com.baomidou.mipac4j.core.client.TokenDirectClient;
 import com.baomidou.mipac4j.core.context.CookieContext;
 import com.baomidou.mipac4j.core.context.DefaultJ2EContextFactory;
 import com.baomidou.mipac4j.core.context.J2EContextFactory;
@@ -75,8 +75,8 @@ public class Pac4jPlusAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean
-    public TokenClient tokenClient(CredentialsExtractor<TokenCredentials> credentialsExtractor, Authenticator<TokenCredentials> authenticator) {
-        return new TokenClient(credentialsExtractor, authenticator);
+    public TokenDirectClient tokenClient(CredentialsExtractor<TokenCredentials> credentialsExtractor, Authenticator<TokenCredentials> authenticator) {
+        return new TokenDirectClient(credentialsExtractor, authenticator);
     }
 
     /**
@@ -85,7 +85,7 @@ public class Pac4jPlusAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public CredentialsExtractor<TokenCredentials> tokenExtractor() {
-        return new TokenExtractor(properties.getTokenType(), properties.getHeader(), properties.getParameter(), properties.getCookie());
+        return new TokenExtractor(properties.getTokenLocation(), properties.getHeader(), properties.getParameter(), properties.getCookie());
     }
 
     /**

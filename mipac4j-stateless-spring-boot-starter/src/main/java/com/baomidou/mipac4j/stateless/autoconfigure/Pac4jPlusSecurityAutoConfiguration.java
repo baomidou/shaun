@@ -10,7 +10,7 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.baomidou.mipac4j.core.client.TokenClient;
+import com.baomidou.mipac4j.core.client.TokenDirectClient;
 import com.baomidou.mipac4j.core.context.J2EContextFactory;
 import com.baomidou.mipac4j.core.engine.LogoutExecutor;
 import com.baomidou.mipac4j.stateless.autoconfigure.aop.AnnotationAspect;
@@ -34,7 +34,7 @@ public class Pac4jPlusSecurityAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public Pac4jPlusFilterFactoryBean pac4jPlusFilterFactoryBean(Matcher matcher, J2EContextFactory j2EContextFactory,
-                                                                 TokenClient tokenClient, SessionStore sessionStore,
+                                                                 TokenDirectClient tokenClient, SessionStore sessionStore,
                                                                  LogoutExecutor logoutExecutor) {
         return new Pac4jPlusFilterFactoryBean(properties, beanFactory, matcher, j2EContextFactory, tokenClient,
                 sessionStore, logoutExecutor);
