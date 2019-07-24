@@ -18,7 +18,7 @@ import java.util.UUID;
  * @since 2019-07-01
  */
 @Data
-@ConfigurationProperties("pac4j")
+@ConfigurationProperties("mipac4j")
 public class MiPac4jProperties {
 
     /**

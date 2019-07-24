@@ -1,5 +1,15 @@
 package com.baomidou.mipac4j.stateless.autoconfigure;
 
+import com.baomidou.mipac4j.core.client.TokenDirectClient;
+import com.baomidou.mipac4j.core.context.CookieContext;
+import com.baomidou.mipac4j.core.context.DefaultJ2EContextFactory;
+import com.baomidou.mipac4j.core.context.J2EContextFactory;
+import com.baomidou.mipac4j.core.engine.LogoutExecutor;
+import com.baomidou.mipac4j.core.extractor.TokenExtractor;
+import com.baomidou.mipac4j.core.generator.DefaultJwtTokenGenerator;
+import com.baomidou.mipac4j.core.generator.TokenGenerator;
+import com.baomidou.mipac4j.stateless.autoconfigure.properties.MiPac4jProperties;
+import lombok.AllArgsConstructor;
 import org.pac4j.core.context.session.J2ESessionStore;
 import org.pac4j.core.context.session.SessionStore;
 import org.pac4j.core.credentials.TokenCredentials;
@@ -18,18 +28,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.CollectionUtils;
-
-import com.baomidou.mipac4j.core.client.TokenDirectClient;
-import com.baomidou.mipac4j.core.context.CookieContext;
-import com.baomidou.mipac4j.core.context.DefaultJ2EContextFactory;
-import com.baomidou.mipac4j.core.context.J2EContextFactory;
-import com.baomidou.mipac4j.core.engine.LogoutExecutor;
-import com.baomidou.mipac4j.core.extractor.TokenExtractor;
-import com.baomidou.mipac4j.core.generator.DefaultJwtTokenGenerator;
-import com.baomidou.mipac4j.core.generator.TokenGenerator;
-import com.baomidou.mipac4j.stateless.autoconfigure.properties.MiPac4jProperties;
-
-import lombok.AllArgsConstructor;
 
 /**
  * @author miemie
@@ -75,6 +73,7 @@ public class Pac4jPlusAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean
+    @ConditionalOnProperty(prefix = "mpac4j", name = "stateless", havingValue = "true")
     public TokenDirectClient tokenClient(CredentialsExtractor<TokenCredentials> credentialsExtractor, Authenticator<TokenCredentials> authenticator) {
         return new TokenDirectClient(credentialsExtractor, authenticator);
     }
@@ -138,7 +137,7 @@ public class Pac4jPlusAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean
-    @ConditionalOnProperty(prefix = "pac4j", name = "token-type", havingValue = "cookie")
+    @ConditionalOnProperty(prefix = "mpac4j", name = "token-type", havingValue = "cookie")
     public CookieContext cookieContext(J2EContextFactory j2EContextFactory, TokenGenerator tokenGenerator, SessionStore sessionStore) {
         return new CookieContext(j2EContextFactory, tokenGenerator, sessionStore, properties.getCookie());
     }
