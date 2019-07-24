@@ -1,8 +1,7 @@
 package com.baomidou.mipac4j.core.properties;
 
-import org.springframework.http.HttpHeaders;
-
 import lombok.Data;
+import org.springframework.http.HttpHeaders;
 
 /**
  * @author miemie
@@ -19,4 +18,8 @@ public class Header {
      * headerName 的值的前缀
      */
     private String prefixHeader = "";
+    /**
+     * 去除空串
+     */
+    private boolean trimValue;
 }
