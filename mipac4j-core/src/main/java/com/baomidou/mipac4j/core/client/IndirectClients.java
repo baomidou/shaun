@@ -1,11 +1,15 @@
 package com.baomidou.mipac4j.core.client;
 
 import com.baomidou.mipac4j.core.converter.ProfileConverter;
+import lombok.AccessLevel;
 import lombok.Getter;
+import org.pac4j.core.client.Client;
 import org.pac4j.core.client.IndirectClient;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author miemie
@@ -14,10 +18,14 @@ import java.util.Map;
 @Getter
 public class IndirectClients {
 
-    private Map<IndirectClient, ProfileConverter> clientsProfileConverterMap = new HashMap<>();
+    @Getter(AccessLevel.NONE)
+    private final Map<String, ProfileConverter> profileConverterMap = new HashMap<>();
+
+    private final Set<IndirectClient> clientSet = new HashSet<>();
 
     /**
      * 不需要进行转换,直接通过 TokenGenerator 把 Profile 变为 token
+     *
      * @param client IndirectClient
      * @return this
      */
@@ -27,11 +35,20 @@ public class IndirectClients {
 
     /**
      * 把 IndirectClients 获取到的 Profile 依据指定的转换器转换后,通过 TokenGenerator 把 Profile 变为 token
+     *
      * @param client IndirectClient
      * @return this
      */
     public IndirectClients addClient(IndirectClient client, ProfileConverter converter) {
-        clientsProfileConverterMap.put(client, converter);
+        clientSet.add(client);
+        profileConverterMap.put(client.getName(), converter);
         return this;
+    }
+
+    public ProfileConverter findConverterByClient(Client client) {
+        if (client instanceof IndirectClient) {
+            return profileConverterMap.getOrDefault(client.getName(), ProfileConverter.NO_THING);
+        }
+        return null;
     }
 }
