@@ -49,6 +49,12 @@ public class TokenExtractor implements CredentialsExtractor<TokenCredentials> {
                         if (token != null && !token.startsWith(header.getPrefixHeader())) {
                             throw new CredentialsException("Wrong prefix for token: " + header.getHeaderName());
                         }
+                        if (token != null) {
+                            String tokenWithoutPrefix = token.substring(header.getPrefixHeader().length());
+                            if (header.isTrimValue()) {
+                                token = tokenWithoutPrefix.trim();
+                            }
+                        }
                     }
                     if (token == null) {
                         final String method = context.getRequestMethod();
