@@ -19,6 +19,7 @@ import org.pac4j.core.credentials.authenticator.Authenticator;
 import org.pac4j.core.credentials.extractor.CredentialsExtractor;
 import org.pac4j.core.matching.Matcher;
 import org.pac4j.core.matching.PathMatcher;
+import org.pac4j.http.credentials.extractor.CookieExtractor;
 import org.pac4j.jwt.config.encryption.EncryptionConfiguration;
 import org.pac4j.jwt.config.encryption.SecretEncryptionConfiguration;
 import org.pac4j.jwt.config.signature.SecretSignatureConfiguration;
@@ -88,7 +89,10 @@ public class MIPac4jAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public CredentialsExtractor<TokenCredentials> tokenExtractor() {
-        return new TokenExtractor(properties.getTokenLocation(), properties.getHeader(), properties.getParameter(), properties.getCookie());
+        if (properties.isStateless()) {
+            return new TokenExtractor(properties.getTokenLocation(), properties.getHeader(), properties.getParameter(), properties.getCookie());
+        }
+        return new CookieExtractor(properties.getCookie().getName());
     }
 
     /**

@@ -32,7 +32,7 @@ public class MIPac4jProperties {
     /**
      * token 的存放位置
      * <p>
-     * 非前后分离下,推荐使用 cookie 方式
+     * 非前后分离下,使用 cookie 方式,且只支持 cookie 方式
      * </p>
      */
     private TokenLocation tokenLocation = TokenLocation.HEADER;
