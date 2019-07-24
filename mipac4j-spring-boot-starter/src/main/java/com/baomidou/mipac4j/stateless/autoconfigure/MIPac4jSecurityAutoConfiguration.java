@@ -3,8 +3,8 @@ package com.baomidou.mipac4j.stateless.autoconfigure;
 import com.baomidou.mipac4j.core.context.J2EContextFactory;
 import com.baomidou.mipac4j.core.engine.LogoutExecutor;
 import com.baomidou.mipac4j.stateless.autoconfigure.aop.AnnotationAspect;
-import com.baomidou.mipac4j.stateless.autoconfigure.filter.Pac4jPlusFilterFactoryBean;
-import com.baomidou.mipac4j.stateless.autoconfigure.properties.MiPac4jProperties;
+import com.baomidou.mipac4j.stateless.autoconfigure.filter.MIPac4jFilterFactoryBean;
+import com.baomidou.mipac4j.stateless.autoconfigure.properties.MIPac4jProperties;
 import lombok.AllArgsConstructor;
 import org.pac4j.core.client.Client;
 import org.pac4j.core.context.session.SessionStore;
@@ -24,26 +24,26 @@ import javax.servlet.DispatcherType;
  */
 @AllArgsConstructor
 @Configuration
-@AutoConfigureAfter(Pac4jPlusAutoConfiguration.class)
-public class Pac4jPlusSecurityAutoConfiguration {
+@AutoConfigureAfter(MIPac4jAutoConfiguration.class)
+public class MIPac4jSecurityAutoConfiguration {
 
     private final J2EContextFactory j2EContextFactory;
-    private final MiPac4jProperties properties;
+    private final MIPac4jProperties properties;
     private final ListableBeanFactory beanFactory;
 
     @Bean
     @ConditionalOnMissingBean
-    public Pac4jPlusFilterFactoryBean pac4jPlusFilterFactoryBean(Matcher matcher, J2EContextFactory j2EContextFactory,
-                                                                 Client client, SessionStore sessionStore,
-                                                                 LogoutExecutor logoutExecutor) {
-        return new Pac4jPlusFilterFactoryBean(properties, beanFactory, matcher, j2EContextFactory, client,
+    public MIPac4jFilterFactoryBean pac4jPlusFilterFactoryBean(Matcher matcher, J2EContextFactory j2EContextFactory,
+                                                               Client client, SessionStore sessionStore,
+                                                               LogoutExecutor logoutExecutor) {
+        return new MIPac4jFilterFactoryBean(properties, beanFactory, matcher, j2EContextFactory, client,
                 sessionStore, logoutExecutor);
     }
 
     @SuppressWarnings("all")
     @Bean(name = "filterPac4jFilterRegistrationBean")
     @ConditionalOnMissingBean
-    protected FilterRegistrationBean filterShiroFilterRegistrationBean(Pac4jPlusFilterFactoryBean pac4jPlusFilterFactoryBean) throws Exception {
+    protected FilterRegistrationBean filterShiroFilterRegistrationBean(MIPac4jFilterFactoryBean pac4jPlusFilterFactoryBean) throws Exception {
         FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
         filterRegistrationBean.setDispatcherTypes(DispatcherType.REQUEST, DispatcherType.FORWARD, DispatcherType.INCLUDE, DispatcherType.ERROR);
         filterRegistrationBean.setFilter(pac4jPlusFilterFactoryBean.getObject());
@@ -53,7 +53,7 @@ public class Pac4jPlusSecurityAutoConfiguration {
     }
 
     @Bean
-    public AnnotationAspect annotationAspect(Pac4jPlusFilterFactoryBean pac4jPlusFilterFactoryBean) {
+    public AnnotationAspect annotationAspect(MIPac4jFilterFactoryBean pac4jPlusFilterFactoryBean) {
         return new AnnotationAspect(pac4jPlusFilterFactoryBean.getConfig(), j2EContextFactory);
     }
 }

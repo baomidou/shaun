@@ -19,7 +19,7 @@ import java.util.UUID;
  */
 @Data
 @ConfigurationProperties("mipac4j")
-public class MiPac4jProperties {
+public class MIPac4jProperties {
 
     /**
      * 是否是前后台分离的

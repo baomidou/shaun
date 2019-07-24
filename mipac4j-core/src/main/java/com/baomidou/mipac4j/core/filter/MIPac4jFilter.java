@@ -29,7 +29,7 @@ import java.util.List;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class Pac4jPlusFilter extends OncePerRequestFilter {
+public class MIPac4jFilter extends OncePerRequestFilter {
 
     private SecurityLogic<Boolean, J2EContext> securityLogic = new DefaultSecurityLogic<>();
 

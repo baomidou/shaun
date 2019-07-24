@@ -2,8 +2,8 @@ package com.baomidou.mipac4j.stateless.autoconfigure.filter;
 
 import com.baomidou.mipac4j.core.context.J2EContextFactory;
 import com.baomidou.mipac4j.core.engine.LogoutExecutor;
-import com.baomidou.mipac4j.core.filter.Pac4jPlusFilter;
-import com.baomidou.mipac4j.stateless.autoconfigure.properties.MiPac4jProperties;
+import com.baomidou.mipac4j.core.filter.MIPac4jFilter;
+import com.baomidou.mipac4j.stateless.autoconfigure.properties.MIPac4jProperties;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.pac4j.core.authorization.authorizer.Authorizer;
@@ -28,22 +28,22 @@ import java.util.Map;
  */
 @Data
 @Slf4j
-public class Pac4jPlusFilterFactoryBean implements FactoryBean<Pac4jPlusFilter>, InitializingBean {
+public class MIPac4jFilterFactoryBean implements FactoryBean<MIPac4jFilter>, InitializingBean {
 
     private final Matcher matcher;
     private final Client client;
     private final SessionStore sessionStore;
     private final LogoutExecutor logoutExecutor;
     private final ListableBeanFactory beanFactory;
-    private Pac4jPlusFilter instance;
-    private MiPac4jProperties properties;
+    private MIPac4jFilter instance;
+    private MIPac4jProperties properties;
     private J2EContextFactory j2EContextFactory;
     private Config config;
     private String authorizers;
 
-    public Pac4jPlusFilterFactoryBean(MiPac4jProperties properties, ListableBeanFactory beanFactory, Matcher matcher,
-                                      J2EContextFactory j2EContextFactory, Client client,
-                                      SessionStore sessionStore, LogoutExecutor logoutExecutor) {
+    public MIPac4jFilterFactoryBean(MIPac4jProperties properties, ListableBeanFactory beanFactory, Matcher matcher,
+                                    J2EContextFactory j2EContextFactory, Client client,
+                                    SessionStore sessionStore, LogoutExecutor logoutExecutor) {
         this.properties = properties;
         this.beanFactory = beanFactory;
         this.j2EContextFactory = j2EContextFactory;
@@ -54,15 +54,15 @@ public class Pac4jPlusFilterFactoryBean implements FactoryBean<Pac4jPlusFilter>,
     }
 
     @Override
-    public Pac4jPlusFilter getObject() throws Exception {
+    public MIPac4jFilter getObject() throws Exception {
         if (instance == null) {
             instance = createInstance();
         }
         return instance;
     }
 
-    private Pac4jPlusFilter createInstance() {
-        Pac4jPlusFilter filter = new Pac4jPlusFilter();
+    private MIPac4jFilter createInstance() {
+        MIPac4jFilter filter = new MIPac4jFilter();
         filter.setConfig(config);
         filter.setAuthorizers(authorizers);
         filter.setMatchers(Pac4jConstants.MATCHERS);
@@ -74,7 +74,7 @@ public class Pac4jPlusFilterFactoryBean implements FactoryBean<Pac4jPlusFilter>,
 
     @Override
     public Class<?> getObjectType() {
-        return Pac4jPlusFilter.class;
+        return MIPac4jFilter.class;
     }
 
     @Override

@@ -9,7 +9,7 @@ import com.baomidou.mipac4j.core.engine.LogoutExecutor;
 import com.baomidou.mipac4j.core.extractor.TokenExtractor;
 import com.baomidou.mipac4j.core.generator.DefaultJwtTokenGenerator;
 import com.baomidou.mipac4j.core.generator.TokenGenerator;
-import com.baomidou.mipac4j.stateless.autoconfigure.properties.MiPac4jProperties;
+import com.baomidou.mipac4j.stateless.autoconfigure.properties.MIPac4jProperties;
 import lombok.AllArgsConstructor;
 import org.pac4j.core.client.Client;
 import org.pac4j.core.context.session.J2ESessionStore;
@@ -37,10 +37,10 @@ import org.springframework.util.CollectionUtils;
  */
 @AllArgsConstructor
 @Configuration
-@EnableConfigurationProperties(MiPac4jProperties.class)
-public class Pac4jPlusAutoConfiguration {
+@EnableConfigurationProperties(MIPac4jProperties.class)
+public class MIPac4jAutoConfiguration {
 
-    private final MiPac4jProperties properties;
+    private final MIPac4jProperties properties;
 
     /**
      * session 存储器,主要存储 profiles,但我们不用 session,注入这个 bean 只是为了 pac4j 内部少 new 这个类
