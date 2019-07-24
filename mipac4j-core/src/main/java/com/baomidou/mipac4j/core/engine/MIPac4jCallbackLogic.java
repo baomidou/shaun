@@ -27,7 +27,7 @@ import static org.pac4j.core.util.CommonHelper.*;
  * @author miemie
  * @since 2019-07-24
  */
-public class MIPac4jCallbackLogic<R extends CommonProfile, C extends WebContext> extends AbstractExceptionAwareLogic<R, C> implements CallbackLogic<R, C> {
+public class MIPac4jCallbackLogic<R, C extends WebContext> extends AbstractExceptionAwareLogic<R, C> implements CallbackLogic<R, C> {
 
     private ClientFinder clientFinder = new DefaultCallbackClientFinder();
 

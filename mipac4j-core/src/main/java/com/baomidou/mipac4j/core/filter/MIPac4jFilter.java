@@ -2,10 +2,12 @@ package com.baomidou.mipac4j.core.filter;
 
 import com.baomidou.mipac4j.core.context.J2EContextFactory;
 import com.baomidou.mipac4j.core.engine.LogoutExecutor;
+import com.baomidou.mipac4j.core.engine.MIPac4jCallbackLogic;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.pac4j.core.config.Config;
 import org.pac4j.core.context.J2EContext;
+import org.pac4j.core.engine.CallbackLogic;
 import org.pac4j.core.engine.DefaultSecurityLogic;
 import org.pac4j.core.engine.SecurityLogic;
 import org.pac4j.core.matching.Matcher;
@@ -32,6 +34,8 @@ import java.util.List;
 public class MIPac4jFilter extends OncePerRequestFilter {
 
     private SecurityLogic<Boolean, J2EContext> securityLogic = new DefaultSecurityLogic<>();
+
+    private CallbackLogic<Boolean, J2EContext> callbackLogic = new MIPac4jCallbackLogic<>();
 
     private String authorizers;
 
