@@ -22,6 +22,10 @@ import java.util.UUID;
 public class MiPac4jProperties {
 
     /**
+     * 是否是前后台分离的
+     */
+    private boolean stateless = true;
+    /**
      * jwt 加密盐值(默认加密方式只支持 32 位字符)
      */
     private String salt = UUID.randomUUID().toString().replace("-", "");
