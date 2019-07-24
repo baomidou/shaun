@@ -43,6 +43,7 @@ ext {
             "spring-boot-configuration-processor": "org.springframework.boot:spring-boot-configuration-processor:${springBootVersion}",
             "spring-boot-autoconfigure-processor": "org.springframework.boot:spring-boot-autoconfigure-processor:${springBootVersion}",
             "spring-boot-starter-test"           : "org.springframework.boot:spring-boot-starter-test:${springBootVersion}",
+            "shiro-spring-boot-web-starter"      : "org.apache.shiro:shiro-spring-boot-web-starter:${shiroVersion}",
             "lombok"                             : "org.projectlombok:lombok:1.18.4",
             "assertj-core"                       : "org.assertj:assertj-core:3.12.2",
             "junit-jupiter-api"                  : "org.junit.jupiter:junit-jupiter-api:${junitVersion}",

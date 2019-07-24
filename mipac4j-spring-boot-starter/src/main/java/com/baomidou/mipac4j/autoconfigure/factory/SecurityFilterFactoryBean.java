@@ -1,4 +1,4 @@
-package com.baomidou.mipac4j.autoconfigure.filter;
+package com.baomidou.mipac4j.autoconfigure.factory;
 
 import java.util.Map;
 
@@ -9,79 +9,48 @@ import org.pac4j.core.config.Config;
 import org.pac4j.core.context.Pac4jConstants;
 import org.pac4j.core.context.session.SessionStore;
 import org.pac4j.core.matching.Matcher;
-import org.pac4j.core.profile.ProfileManager;
-import org.springframework.beans.factory.FactoryBean;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import com.baomidou.mipac4j.autoconfigure.properties.MIPac4jProperties;
-import com.baomidou.mipac4j.core.context.J2EContextFactory;
-import com.baomidou.mipac4j.core.engine.LogoutExecutor;
-import com.baomidou.mipac4j.core.filter.MIPac4jFilter;
-
-import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+import com.baomidou.mipac4j.core.context.ProfileManagerFactory;
+import com.baomidou.mipac4j.core.filter.DefaultSecurityFilter;
+import com.baomidou.mipac4j.core.filter.Pac4jFilter;
 
 /**
  * @author miemie
- * @since 2019-07-22
+ * @since 2019-07-24
  */
-@Data
-@Slf4j
-public class MIPac4jFilterFactoryBean implements FactoryBean<MIPac4jFilter>, InitializingBean {
+public class SecurityFilterFactoryBean extends AbstractPac4jFilterFactoryBean {
 
     private final Matcher matcher;
     private final Client client;
     private final SessionStore sessionStore;
-    private final LogoutExecutor logoutExecutor;
     private final ListableBeanFactory beanFactory;
-    private MIPac4jFilter instance;
-    private MIPac4jProperties properties;
-    private J2EContextFactory j2EContextFactory;
-    private Config securityConfig;
+    private final MIPac4jProperties properties;
+    private final ProfileManagerFactory profileManagerFactory;
     private String authorizers;
+    private Config securityConfig;
 
-    public MIPac4jFilterFactoryBean(MIPac4jProperties properties, ListableBeanFactory beanFactory, Matcher matcher,
-                                    J2EContextFactory j2EContextFactory, Client client,
-                                    SessionStore sessionStore, LogoutExecutor logoutExecutor) {
+    public SecurityFilterFactoryBean(final MIPac4jProperties properties, final ListableBeanFactory beanFactory,
+                                     final Matcher matcher, final Client client, final SessionStore sessionStore,
+                                     final ProfileManagerFactory profileManagerFactory) {
         this.properties = properties;
         this.beanFactory = beanFactory;
-        this.j2EContextFactory = j2EContextFactory;
         this.matcher = matcher;
         this.client = client;
         this.sessionStore = sessionStore;
-        this.logoutExecutor = logoutExecutor;
+        this.profileManagerFactory = profileManagerFactory;
     }
 
     @Override
-    public MIPac4jFilter getObject() throws Exception {
-        if (instance == null) {
-            instance = createInstance();
-        }
-        return instance;
-    }
-
-    private MIPac4jFilter createInstance() {
-        MIPac4jFilter filter = new MIPac4jFilter();
-        filter.setSecurityConfig(securityConfig);
+    protected Pac4jFilter createInstance() {
+        DefaultSecurityFilter filter = new DefaultSecurityFilter();
         filter.setAuthorizers(authorizers);
+        filter.setConfig(securityConfig);
         filter.setMatchers(Pac4jConstants.MATCHERS);
-        filter.setJ2EContextFactory(j2EContextFactory);
-        filter.setLogoutUrl(properties.getLogoutUrl());
-        filter.setLogoutExecutor(logoutExecutor);
         return filter;
-    }
-
-    @Override
-    public Class<?> getObjectType() {
-        return MIPac4jFilter.class;
-    }
-
-    @Override
-    public boolean isSingleton() {
-        return true;
     }
 
     @Override
@@ -104,8 +73,7 @@ public class MIPac4jFilterFactoryBean implements FactoryBean<MIPac4jFilter>, Ini
         clients.setDefaultSecurityClients(client.getName());
         securityConfig.setClients(clients);
         securityConfig.setSessionStore(sessionStore);
-        securityConfig.setHttpActionAdapter((code, context) -> false);
-        securityConfig.setProfileManagerFactory(ProfileManager::new);
+        securityConfig.setProfileManagerFactory(profileManagerFactory);
         securityConfig.addMatcher(Pac4jConstants.MATCHERS, matcher);
     }
 }

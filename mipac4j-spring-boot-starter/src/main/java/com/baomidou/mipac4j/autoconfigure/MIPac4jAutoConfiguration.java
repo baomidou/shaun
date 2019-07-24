@@ -27,6 +27,7 @@ import com.baomidou.mipac4j.core.client.TokenIndirectClient;
 import com.baomidou.mipac4j.core.context.CookieContext;
 import com.baomidou.mipac4j.core.context.DefaultJ2EContextFactory;
 import com.baomidou.mipac4j.core.context.J2EContextFactory;
+import com.baomidou.mipac4j.core.context.ProfileManagerFactory;
 import com.baomidou.mipac4j.core.engine.LogoutExecutor;
 import com.baomidou.mipac4j.core.extractor.TokenExtractor;
 import com.baomidou.mipac4j.core.generator.DefaultJwtTokenGenerator;
@@ -159,5 +160,11 @@ public class MIPac4jAutoConfiguration {
     @ConditionalOnMissingBean
     public LogoutExecutor logoutExecutor() {
         return LogoutExecutor.DO_NOTHING;
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public ProfileManagerFactory profileManagerFactory() {
+        return ProfileManagerFactory.DEFAULT;
     }
 }
