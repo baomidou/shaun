@@ -15,7 +15,7 @@ import com.baomidou.mipac4j.core.context.J2EContextFactory;
 import com.baomidou.mipac4j.core.engine.LogoutExecutor;
 import com.baomidou.mipac4j.stateless.autoconfigure.aop.AnnotationAspect;
 import com.baomidou.mipac4j.stateless.autoconfigure.filter.Pac4jPlusFilterFactoryBean;
-import com.baomidou.mipac4j.stateless.autoconfigure.properties.Pac4jProperties;
+import com.baomidou.mipac4j.stateless.autoconfigure.properties.MiPac4jProperties;
 
 import lombok.AllArgsConstructor;
 
@@ -28,7 +28,7 @@ import lombok.AllArgsConstructor;
 public class Pac4jPlusSecurityAutoConfiguration {
 
     private final J2EContextFactory j2EContextFactory;
-    private final Pac4jProperties properties;
+    private final MiPac4jProperties properties;
     private final ListableBeanFactory beanFactory;
 
     @Bean

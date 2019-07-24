@@ -19,7 +19,7 @@ import com.baomidou.mipac4j.core.client.TokenDirectClient;
 import com.baomidou.mipac4j.core.context.J2EContextFactory;
 import com.baomidou.mipac4j.core.engine.LogoutExecutor;
 import com.baomidou.mipac4j.core.filter.Pac4jPlusFilter;
-import com.baomidou.mipac4j.stateless.autoconfigure.properties.Pac4jProperties;
+import com.baomidou.mipac4j.stateless.autoconfigure.properties.MiPac4jProperties;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -38,12 +38,12 @@ public class Pac4jPlusFilterFactoryBean implements FactoryBean<Pac4jPlusFilter>,
     private final LogoutExecutor logoutExecutor;
     private final ListableBeanFactory beanFactory;
     private Pac4jPlusFilter instance;
-    private Pac4jProperties properties;
+    private MiPac4jProperties properties;
     private J2EContextFactory j2EContextFactory;
     private Config config;
     private String authorizers;
 
-    public Pac4jPlusFilterFactoryBean(Pac4jProperties properties, ListableBeanFactory beanFactory, Matcher matcher,
+    public Pac4jPlusFilterFactoryBean(MiPac4jProperties properties, ListableBeanFactory beanFactory, Matcher matcher,
                                       J2EContextFactory j2EContextFactory, TokenDirectClient tokenClient,
                                       SessionStore sessionStore, LogoutExecutor logoutExecutor) {
         this.properties = properties;

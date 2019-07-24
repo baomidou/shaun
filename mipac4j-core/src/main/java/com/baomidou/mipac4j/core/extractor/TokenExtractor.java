@@ -39,21 +39,39 @@ public class TokenExtractor implements CredentialsExtractor<TokenCredentials> {
 
     @Override
     public TokenCredentials extract(WebContext context) {
+        TokenCredentials credentials = null;
         switch (tokenLocation) {
             case HEADER:
-                return headerExtractor.extract(context);
+                credentials = headerExtractor.extract(context);
+                break;
             case PARAMETER:
-                return parameterExtractor.extract(context);
+                credentials = parameterExtractor.extract(context);
+                break;
             case COOKIE:
-                return cookieExtractor.extract(context);
-            case HEARDER_OR_PARAMETER:
-                TokenCredentials credentials = headerExtractor.extract(context);
+                credentials = cookieExtractor.extract(context);
+                break;
+            case HEADER_OR_PARAMETER:
+                credentials = headerExtractor.extract(context);
                 if (credentials == null) {
                     credentials = parameterExtractor.extract(context);
                 }
-                return credentials;
-            default:
-                return null;
+                break;
+            case HEADER_OR_COOKIE:
+                credentials = headerExtractor.extract(context);
+                if (credentials == null) {
+                    credentials = cookieExtractor.extract(context);
+                }
+                break;
+            case HEADER_OR_COOKIE_OR_PARAMETER:
+                credentials = headerExtractor.extract(context);
+                if (credentials == null) {
+                    credentials = cookieExtractor.extract(context);
+                }
+                if (credentials == null) {
+                    credentials = parameterExtractor.extract(context);
+                }
+                break;
         }
+        return credentials;
     }
 }

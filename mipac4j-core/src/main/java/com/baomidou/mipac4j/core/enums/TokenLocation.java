@@ -8,6 +8,8 @@ public enum TokenLocation {
 
     HEADER,
     PARAMETER,
-    HEARDER_OR_PARAMETER,
-    COOKIE
+    COOKIE,
+    HEADER_OR_PARAMETER,
+    HEADER_OR_COOKIE,
+    HEADER_OR_COOKIE_OR_PARAMETER
 }

@@ -7,8 +7,8 @@ import com.baomidou.mipac4j.core.properties.Parameter;
 import lombok.Data;
 import org.pac4j.core.authorization.authorizer.Authorizer;
 import org.pac4j.core.authorization.checker.DefaultAuthorizationChecker;
+import org.pac4j.core.context.HttpConstants;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.http.HttpHeaders;
 
 import java.util.List;
 import java.util.UUID;
@@ -19,7 +19,7 @@ import java.util.UUID;
  */
 @Data
 @ConfigurationProperties("pac4j")
-public class Pac4jProperties {
+public class MiPac4jProperties {
 
     /**
      * jwt 加密盐值(默认加密方式只支持 32 位字符)
@@ -48,7 +48,7 @@ public class Pac4jProperties {
     /**
      * parameter 的 name
      */
-    private String parameterName = HttpHeaders.AUTHORIZATION;
+    private String parameterName = HttpConstants.AUTHORIZATION_HEADER;
     /**
      * jwt 超时时间
      * <li> 以数字开头,以 "s" 结尾: 秒 , 例: 100s = 100秒 </li>

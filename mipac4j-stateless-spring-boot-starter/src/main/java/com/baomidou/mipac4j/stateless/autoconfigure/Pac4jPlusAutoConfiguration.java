@@ -27,7 +27,7 @@ import com.baomidou.mipac4j.core.engine.LogoutExecutor;
 import com.baomidou.mipac4j.core.extractor.TokenExtractor;
 import com.baomidou.mipac4j.core.generator.DefaultJwtTokenGenerator;
 import com.baomidou.mipac4j.core.generator.TokenGenerator;
-import com.baomidou.mipac4j.stateless.autoconfigure.properties.Pac4jProperties;
+import com.baomidou.mipac4j.stateless.autoconfigure.properties.MiPac4jProperties;
 
 import lombok.AllArgsConstructor;
 
@@ -37,10 +37,10 @@ import lombok.AllArgsConstructor;
  */
 @AllArgsConstructor
 @Configuration
-@EnableConfigurationProperties(Pac4jProperties.class)
+@EnableConfigurationProperties(MiPac4jProperties.class)
 public class Pac4jPlusAutoConfiguration {
 
-    private final Pac4jProperties properties;
+    private final MiPac4jProperties properties;
 
     /**
      * session 存储器,主要存储 profiles,但我们不用 session,注入这个 bean 只是为了 pac4j 内部少 new 这个类
