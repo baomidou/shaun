@@ -6,13 +6,11 @@ import com.baomidou.mipac4j.core.properties.Header;
 import com.baomidou.mipac4j.core.properties.Parameter;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.pac4j.core.context.HttpConstants;
 import org.pac4j.core.context.WebContext;
 import org.pac4j.core.credentials.TokenCredentials;
 import org.pac4j.core.credentials.extractor.CredentialsExtractor;
 import org.pac4j.core.credentials.extractor.HeaderExtractor;
 import org.pac4j.core.credentials.extractor.ParameterExtractor;
-import org.pac4j.core.exception.CredentialsException;
 import org.pac4j.http.credentials.extractor.CookieExtractor;
 
 /**
@@ -25,58 +23,37 @@ import org.pac4j.http.credentials.extractor.CookieExtractor;
 @AllArgsConstructor
 public class TokenExtractor implements CredentialsExtractor<TokenCredentials> {
 
-    private CredentialsExtractor<TokenCredentials> extractor;
+    private final TokenLocation tokenLocation;
+    private final HeaderExtractor headerExtractor;
+    private final ParameterExtractor parameterExtractor;
+    private final CookieExtractor cookieExtractor;
 
-    public TokenExtractor(TokenLocation type, Header header, Parameter parameter, Cookie cookie) {
-        switch (type) {
-            case HEADER:
-                HeaderExtractor headerExtractor = new HeaderExtractor(header.getHeaderName(), header.getPrefixHeader());
-                headerExtractor.setTrimValue(header.isTrimValue());
-                this.extractor = headerExtractor;
-                break;
-            case PARAMETER:
-                this.extractor = new ParameterExtractor(parameter.getParameterName(),
-                        parameter.isSupportGetRequest(), parameter.isSupportPostRequest());
-                break;
-            case COOKIE:
-                this.extractor = new CookieExtractor(cookie.getName());
-                break;
-            default:
-                this.extractor = context -> {
-                    String token = context.getRequestHeader(header.getHeaderName());
-                    if (token == null) {
-                        token = context.getRequestHeader(header.getHeaderName().toLowerCase());
-                        if (token != null && !token.startsWith(header.getPrefixHeader())) {
-                            throw new CredentialsException("Wrong prefix for token: " + header.getHeaderName());
-                        }
-                        if (token != null) {
-                            String tokenWithoutPrefix = token.substring(header.getPrefixHeader().length());
-                            if (header.isTrimValue()) {
-                                token = tokenWithoutPrefix.trim();
-                            }
-                        }
-                    }
-                    if (token == null) {
-                        final String method = context.getRequestMethod();
-                        if (HttpConstants.HTTP_METHOD.GET.name().equalsIgnoreCase(method) && !parameter.isSupportGetRequest()) {
-                            throw new CredentialsException("GET requests not supported");
-                        } else if (HttpConstants.HTTP_METHOD.POST.name().equalsIgnoreCase(method) && !parameter.isSupportPostRequest()) {
-                            throw new CredentialsException("POST requests not supported");
-                        }
-
-                        token = context.getRequestParameter(parameter.getParameterName());
-                        if (token == null) {
-                            return null;
-                        }
-                    }
-                    return new TokenCredentials(token);
-                };
-                break;
-        }
+    public TokenExtractor(TokenLocation tokenLocation, Header header, Parameter parameter, Cookie cookie) {
+        this.tokenLocation = tokenLocation;
+        this.headerExtractor = new HeaderExtractor(header.getHeaderName(), header.getPrefixHeader());
+        this.headerExtractor.setTrimValue(header.isTrimValue());
+        this.parameterExtractor = new ParameterExtractor(parameter.getParameterName(),
+                parameter.isSupportGetRequest(), parameter.isSupportPostRequest());
+        this.cookieExtractor = new CookieExtractor(cookie.getName());
     }
 
     @Override
     public TokenCredentials extract(WebContext context) {
-        return this.extractor.extract(context);
+        switch (tokenLocation) {
+            case HEADER:
+                return headerExtractor.extract(context);
+            case PARAMETER:
+                return parameterExtractor.extract(context);
+            case COOKIE:
+                return cookieExtractor.extract(context);
+            case HEARDER_OR_PARAMETER:
+                TokenCredentials credentials = headerExtractor.extract(context);
+                if (credentials == null) {
+                    credentials = parameterExtractor.extract(context);
+                }
+                return credentials;
+            default:
+                return null;
+        }
     }
 }
