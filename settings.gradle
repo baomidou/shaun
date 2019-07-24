@@ -1,4 +1,3 @@
 rootProject.name = "mipac4j"
-include "mipac4-spring-boot-starter"
+include "mipac4j-spring-boot-starter"
 include "mipac4j-core"
-
