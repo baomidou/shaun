@@ -31,6 +31,9 @@ public class MIPac4jProperties {
     private String salt = UUID.randomUUID().toString().replace("-", "");
     /**
      * token 的存放位置
+     * <p>
+     * 非前后分离下,推荐使用 cookie 方式
+     * </p>
      */
     private TokenLocation tokenLocation = TokenLocation.HEADER;
     /**
@@ -53,6 +56,10 @@ public class MIPac4jProperties {
      * 登出 url
      */
     private String logoutUrl;
+    /**
+     * index url,非前后台分离下,才起作用,主要用于 IndirectClients 在 callback 环节获取到 profile 之后,跳转到的 index 页面
+     */
+    private String indexUrl;
     /**
      * parameter 的 name
      */
