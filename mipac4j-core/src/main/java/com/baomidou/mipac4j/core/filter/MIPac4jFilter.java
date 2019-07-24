@@ -25,8 +25,10 @@ import com.baomidou.mipac4j.core.engine.CallbackLogic;
 import com.baomidou.mipac4j.core.engine.LogoutExecutor;
 import com.baomidou.mipac4j.core.engine.MIPac4jCallbackLogic;
 
+import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Setter;
 
 /**
  * @author miemie
@@ -50,6 +52,7 @@ public class MIPac4jFilter extends OncePerRequestFilter {
 
     private String logoutUrl;
 
+    @Setter(AccessLevel.NONE)
     private Matcher logoutMatcher;
 
     private LogoutExecutor logoutExecutor;

@@ -4,13 +4,12 @@ dependencies {
     api "${lib.'spring-web'}"
     api "${lib.'spring-aop'}"
     api "org.aspectj:aspectjweaver:1.9.4"
+    api "${lib.'spring-boot-autoconfigure'}"
     implementation "${lib.'servlet-api'}"
-    implementation(enforcedPlatform("org.springframework.boot:spring-boot-dependencies:${springBootVersion}" as String))
-    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor:${springBootVersion}"
-    annotationProcessor "org.springframework.boot:spring-boot-autoconfigure-processor:${springBootVersion}"
-    api 'org.springframework.boot:spring-boot-autoconfigure'
-    implementation 'org.springframework.boot:spring-boot-configuration-processor'
-    implementation 'org.springframework.boot:spring-boot-autoconfigure-processor'
+    annotationProcessor "${lib.'spring-boot-autoconfigure-processor'}"
+    annotationProcessor "${lib.'spring-boot-configuration-processor'}"
+    implementation "${lib.'spring-boot-autoconfigure-processor'}"
+    implementation "${lib.'spring-boot-configuration-processor'}"
     testImplementation "${lib.'spring-boot-starter-test'}"
 }
 

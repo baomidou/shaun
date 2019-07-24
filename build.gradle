@@ -31,20 +31,23 @@ ext {
     ]
 
     lib = [
-            "pac4j-jwt"               : "org.pac4j:pac4j-jwt:${pac4jVersion}",
-            "pac4j-http"              : "org.pac4j:pac4j-http:${pac4jVersion}",
-            "pac4j-oauth"             : "org.pac4j:pac4j-oauth:${pac4jVersion}",
-            "pac4j-cas"               : "org.pac4j:pac4j-cas:${pac4jVersion}",
-            "spring-web"              : "org.springframework:spring-web:${springVersion}",
-            "servlet-api"             : "javax.servlet:javax.servlet-api:4.0.1",
-            "spring-aop"              : "org.springframework:spring-aop:${springVersion}",
-            "spring-context"          : "org.springframework:spring-context:${springVersion}",
-            "spring-boot-starter-test": "org.springframework.boot:spring-boot-starter-test:${springBootVersion}",
-            "lombok"                  : "org.projectlombok:lombok:1.18.4",
-            "assertj-core"            : "org.assertj:assertj-core:3.12.2",
-            "junit-jupiter-api"       : "org.junit.jupiter:junit-jupiter-api:${junitVersion}",
-            "junit-jupiter-engine"    : "org.junit.jupiter:junit-jupiter-engine:${junitVersion}",
-            "mockito-all"             : "org.mockito:mockito-all:1.10.19"
+            "pac4j-jwt"                          : "org.pac4j:pac4j-jwt:${pac4jVersion}",
+            "pac4j-http"                         : "org.pac4j:pac4j-http:${pac4jVersion}",
+            "pac4j-oauth"                        : "org.pac4j:pac4j-oauth:${pac4jVersion}",
+            "pac4j-cas"                          : "org.pac4j:pac4j-cas:${pac4jVersion}",
+            "spring-web"                         : "org.springframework:spring-web:${springVersion}",
+            "servlet-api"                        : "javax.servlet:javax.servlet-api:4.0.1",
+            "spring-aop"                         : "org.springframework:spring-aop:${springVersion}",
+            "spring-context"                     : "org.springframework:spring-context:${springVersion}",
+            "spring-boot-autoconfigure"          : "org.springframework.boot:spring-boot-autoconfigure:${springBootVersion}",
+            "spring-boot-configuration-processor": "org.springframework.boot:spring-boot-configuration-processor:${springBootVersion}",
+            "spring-boot-autoconfigure-processor": "org.springframework.boot:spring-boot-autoconfigure-processor:${springBootVersion}",
+            "spring-boot-starter-test"           : "org.springframework.boot:spring-boot-starter-test:${springBootVersion}",
+            "lombok"                             : "org.projectlombok:lombok:1.18.4",
+            "assertj-core"                       : "org.assertj:assertj-core:3.12.2",
+            "junit-jupiter-api"                  : "org.junit.jupiter:junit-jupiter-api:${junitVersion}",
+            "junit-jupiter-engine"               : "org.junit.jupiter:junit-jupiter-engine:${junitVersion}",
+            "mockito-all"                        : "org.mockito:mockito-all:1.10.19"
     ]
 }
 
