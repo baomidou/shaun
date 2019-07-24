@@ -1,4 +1,4 @@
-package com.baomidou.mipac4j.core;
+package com.baomidou.mipac4j.core.converter;
 
 import org.pac4j.core.profile.CommonProfile;
 
@@ -10,6 +10,8 @@ import org.pac4j.core.profile.CommonProfile;
  */
 @FunctionalInterface
 public interface ProfileConverter<T extends CommonProfile, R extends CommonProfile> {
+
+    ProfileConverter<CommonProfile, CommonProfile> NO_THING = t -> t;
 
     /**
      * 进行转换
