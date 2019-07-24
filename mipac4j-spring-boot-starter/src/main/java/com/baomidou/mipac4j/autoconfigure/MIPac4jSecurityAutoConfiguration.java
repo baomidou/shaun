@@ -33,6 +33,7 @@ public class MIPac4jSecurityAutoConfiguration {
     private final MIPac4jProperties properties;
     private final ListableBeanFactory beanFactory;
 
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Bean
     @ConditionalOnMissingBean
     public MIPac4jFilterFactoryBean pac4jPlusFilterFactoryBean(Matcher matcher, J2EContextFactory j2EContextFactory,
@@ -56,6 +57,6 @@ public class MIPac4jSecurityAutoConfiguration {
 
     @Bean
     public AnnotationAspect annotationAspect(MIPac4jFilterFactoryBean pac4jPlusFilterFactoryBean) {
-        return new AnnotationAspect(pac4jPlusFilterFactoryBean.getConfig(), j2EContextFactory);
+        return new AnnotationAspect(pac4jPlusFilterFactoryBean.getSecurityConfig(), j2EContextFactory);
     }
 }

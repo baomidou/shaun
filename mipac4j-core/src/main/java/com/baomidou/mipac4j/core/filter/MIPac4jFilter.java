@@ -48,7 +48,6 @@ public class MIPac4jFilter extends OncePerRequestFilter {
 
     private String matchers;
 
-    @Getter(AccessLevel.PUBLIC)
     private Config securityConfig;
 
     private Config callbackConfig;
