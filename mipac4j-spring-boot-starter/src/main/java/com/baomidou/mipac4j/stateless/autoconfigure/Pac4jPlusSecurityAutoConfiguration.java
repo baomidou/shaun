@@ -1,12 +1,12 @@
 package com.baomidou.mipac4j.stateless.autoconfigure;
 
-import com.baomidou.mipac4j.core.client.TokenDirectClient;
 import com.baomidou.mipac4j.core.context.J2EContextFactory;
 import com.baomidou.mipac4j.core.engine.LogoutExecutor;
 import com.baomidou.mipac4j.stateless.autoconfigure.aop.AnnotationAspect;
 import com.baomidou.mipac4j.stateless.autoconfigure.filter.Pac4jPlusFilterFactoryBean;
 import com.baomidou.mipac4j.stateless.autoconfigure.properties.MiPac4jProperties;
 import lombok.AllArgsConstructor;
+import org.pac4j.core.client.Client;
 import org.pac4j.core.context.session.SessionStore;
 import org.pac4j.core.matching.Matcher;
 import org.springframework.beans.factory.ListableBeanFactory;
@@ -34,9 +34,9 @@ public class Pac4jPlusSecurityAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public Pac4jPlusFilterFactoryBean pac4jPlusFilterFactoryBean(Matcher matcher, J2EContextFactory j2EContextFactory,
-                                                                 TokenDirectClient tokenClient, SessionStore sessionStore,
+                                                                 Client client, SessionStore sessionStore,
                                                                  LogoutExecutor logoutExecutor) {
-        return new Pac4jPlusFilterFactoryBean(properties, beanFactory, matcher, j2EContextFactory, tokenClient,
+        return new Pac4jPlusFilterFactoryBean(properties, beanFactory, matcher, j2EContextFactory, client,
                 sessionStore, logoutExecutor);
     }
 

@@ -1,8 +1,13 @@
 package com.baomidou.mipac4j.stateless.autoconfigure.filter;
 
-import java.util.Map;
-
+import com.baomidou.mipac4j.core.context.J2EContextFactory;
+import com.baomidou.mipac4j.core.engine.LogoutExecutor;
+import com.baomidou.mipac4j.core.filter.Pac4jPlusFilter;
+import com.baomidou.mipac4j.stateless.autoconfigure.properties.MiPac4jProperties;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.pac4j.core.authorization.authorizer.Authorizer;
+import org.pac4j.core.client.Client;
 import org.pac4j.core.client.Clients;
 import org.pac4j.core.config.Config;
 import org.pac4j.core.context.Pac4jConstants;
@@ -15,14 +20,7 @@ import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import com.baomidou.mipac4j.core.client.TokenDirectClient;
-import com.baomidou.mipac4j.core.context.J2EContextFactory;
-import com.baomidou.mipac4j.core.engine.LogoutExecutor;
-import com.baomidou.mipac4j.core.filter.Pac4jPlusFilter;
-import com.baomidou.mipac4j.stateless.autoconfigure.properties.MiPac4jProperties;
-
-import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+import java.util.Map;
 
 /**
  * @author miemie
@@ -33,7 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 public class Pac4jPlusFilterFactoryBean implements FactoryBean<Pac4jPlusFilter>, InitializingBean {
 
     private final Matcher matcher;
-    private final TokenDirectClient tokenClient;
+    private final Client client;
     private final SessionStore sessionStore;
     private final LogoutExecutor logoutExecutor;
     private final ListableBeanFactory beanFactory;
@@ -44,13 +42,13 @@ public class Pac4jPlusFilterFactoryBean implements FactoryBean<Pac4jPlusFilter>,
     private String authorizers;
 
     public Pac4jPlusFilterFactoryBean(MiPac4jProperties properties, ListableBeanFactory beanFactory, Matcher matcher,
-                                      J2EContextFactory j2EContextFactory, TokenDirectClient tokenClient,
+                                      J2EContextFactory j2EContextFactory, Client client,
                                       SessionStore sessionStore, LogoutExecutor logoutExecutor) {
         this.properties = properties;
         this.beanFactory = beanFactory;
         this.j2EContextFactory = j2EContextFactory;
         this.matcher = matcher;
-        this.tokenClient = tokenClient;
+        this.client = client;
         this.sessionStore = sessionStore;
         this.logoutExecutor = logoutExecutor;
     }
@@ -100,8 +98,8 @@ public class Pac4jPlusFilterFactoryBean implements FactoryBean<Pac4jPlusFilter>,
         }
         authorizers = au;
         Clients clients = new Clients();
-        clients.setClients(tokenClient);
-        clients.setDefaultSecurityClients(tokenClient.getName());
+        clients.setClients(client);
+        clients.setDefaultSecurityClients(client.getName());
         config.setClients(clients);
         config.setSessionStore(sessionStore);
         config.setHttpActionAdapter((code, context) -> false);
