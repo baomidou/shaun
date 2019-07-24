@@ -35,12 +35,12 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @SuppressWarnings("unchecked")
-public class MIPac4jCallbackLogic<R, C extends WebContext, P extends CommonProfile> extends AbstractExceptionAwareLogic<R, C> implements CallbackLogic<R, C, P> {
+public class MIPac4jCallbackLogic<R, C extends WebContext> extends AbstractExceptionAwareLogic<R, C> implements CallbackLogic<R, C> {
 
     private ClientFinder clientFinder = new DefaultCallbackClientFinder();
 
     @Override
-    public R perform(C context, Config config, HttpActionAdapter<R, C> httpActionAdapter, String indexUrl, CommonProfileAdapter<P, CommonProfile> commonProfileAdapter) {
+    public R perform(C context, Config config, HttpActionAdapter<R, C> httpActionAdapter, String indexUrl, CommonProfileAdapter commonProfileAdapter) {
         logger.debug("=== CALLBACK ===");
 
         HttpAction action;
@@ -66,8 +66,10 @@ public class MIPac4jCallbackLogic<R, C extends WebContext, P extends CommonProfi
             final Credentials credentials = foundClient.getCredentials(context);
             logger.debug("credentials: {}", credentials);
 
-            final CommonProfile profile = foundClient.getUserProfile(credentials, context);
+            CommonProfile profile = foundClient.getUserProfile(credentials, context);
             logger.debug("profile: {}", profile);
+            profile = commonProfileAdapter.adapt(profile, foundClient);
+            logger.debug("adaptProfile: {}", profile);
             saveUserProfile(context, config, profile);
             action = redirectToIndexUrl(context, indexUrl);
         } catch (final RuntimeException e) {

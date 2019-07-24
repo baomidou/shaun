@@ -3,7 +3,6 @@ package com.baomidou.mipac4j.core.engine;
 import org.pac4j.core.config.Config;
 import org.pac4j.core.context.WebContext;
 import org.pac4j.core.http.adapter.HttpActionAdapter;
-import org.pac4j.core.profile.CommonProfile;
 
 import com.baomidou.mipac4j.core.adapter.CommonProfileAdapter;
 
@@ -15,7 +14,7 @@ import com.baomidou.mipac4j.core.adapter.CommonProfileAdapter;
  * @author miemie
  * @since 2019-07-24
  */
-public interface CallbackLogic<R, C extends WebContext, P extends CommonProfile> {
+public interface CallbackLogic<R, C extends WebContext> {
 
     /**
      * Perform the callback logic.
@@ -27,5 +26,5 @@ public interface CallbackLogic<R, C extends WebContext, P extends CommonProfile>
      * @return the resulting action of the callback
      */
     R perform(C context, Config config, final HttpActionAdapter<R, C> httpActionAdapter,
-              String indexUrl, CommonProfileAdapter<P, CommonProfile> commonProfileAdapter);
+              String indexUrl, CommonProfileAdapter commonProfileAdapter);
 }
