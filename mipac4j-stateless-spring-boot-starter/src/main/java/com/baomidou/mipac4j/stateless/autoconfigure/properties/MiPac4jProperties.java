@@ -34,13 +34,13 @@ public class MiPac4jProperties {
      */
     private Header header = new Header();
     /**
-     * 取 token 的方式之 parameter
-     */
-    private Parameter parameter = new Parameter();
-    /**
      * 取 token 的方式之 cookie
      */
     private Cookie cookie = new Cookie();
+    /**
+     * 取 token 的方式之 parameter
+     */
+    private Parameter parameter = new Parameter();
     /**
      * 登出 url
      */

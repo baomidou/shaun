@@ -25,16 +25,16 @@ public class TokenExtractor implements CredentialsExtractor<TokenCredentials> {
 
     private final TokenLocation tokenLocation;
     private final HeaderExtractor headerExtractor;
-    private final ParameterExtractor parameterExtractor;
     private final CookieExtractor cookieExtractor;
+    private final ParameterExtractor parameterExtractor;
 
     public TokenExtractor(TokenLocation tokenLocation, Header header, Parameter parameter, Cookie cookie) {
         this.tokenLocation = tokenLocation;
         this.headerExtractor = new HeaderExtractor(header.getHeaderName(), header.getPrefixHeader());
         this.headerExtractor.setTrimValue(header.isTrimValue());
+        this.cookieExtractor = new CookieExtractor(cookie.getName());
         this.parameterExtractor = new ParameterExtractor(parameter.getParameterName(),
                 parameter.isSupportGetRequest(), parameter.isSupportPostRequest());
-        this.cookieExtractor = new CookieExtractor(cookie.getName());
     }
 
     @Override
@@ -44,22 +44,22 @@ public class TokenExtractor implements CredentialsExtractor<TokenCredentials> {
             case HEADER:
                 credentials = headerExtractor.extract(context);
                 break;
-            case PARAMETER:
-                credentials = parameterExtractor.extract(context);
-                break;
             case COOKIE:
                 credentials = cookieExtractor.extract(context);
                 break;
-            case HEADER_OR_PARAMETER:
-                credentials = headerExtractor.extract(context);
-                if (credentials == null) {
-                    credentials = parameterExtractor.extract(context);
-                }
+            case PARAMETER:
+                credentials = parameterExtractor.extract(context);
                 break;
             case HEADER_OR_COOKIE:
                 credentials = headerExtractor.extract(context);
                 if (credentials == null) {
                     credentials = cookieExtractor.extract(context);
+                }
+                break;
+            case HEADER_OR_PARAMETER:
+                credentials = headerExtractor.extract(context);
+                if (credentials == null) {
+                    credentials = parameterExtractor.extract(context);
                 }
                 break;
             case HEADER_OR_COOKIE_OR_PARAMETER:

@@ -7,9 +7,9 @@ package com.baomidou.mipac4j.core.enums;
 public enum TokenLocation {
 
     HEADER,
-    PARAMETER,
     COOKIE,
-    HEADER_OR_PARAMETER,
+    PARAMETER,
     HEADER_OR_COOKIE,
+    HEADER_OR_PARAMETER,
     HEADER_OR_COOKIE_OR_PARAMETER
 }
