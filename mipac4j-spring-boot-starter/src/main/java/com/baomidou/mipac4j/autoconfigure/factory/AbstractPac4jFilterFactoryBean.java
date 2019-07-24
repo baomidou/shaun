@@ -27,9 +27,4 @@ public abstract class AbstractPac4jFilterFactoryBean implements FactoryBean<Pac4
     public Class<?> getObjectType() {
         return Pac4jFilter.class;
     }
-
-    @Override
-    public boolean isSingleton() {
-        return false;
-    }
 }
