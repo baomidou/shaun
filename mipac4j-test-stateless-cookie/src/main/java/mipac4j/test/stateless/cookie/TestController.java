@@ -1,6 +1,6 @@
 package mipac4j.test.stateless.cookie;
 
-import org.pac4j.core.profile.CommonProfile;
+import org.pac4j.jwt.profile.JwtProfile;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,11 +22,11 @@ public class TestController {
 
     @GetMapping("login")
     public String login() {
-        CommonProfile profile = new CommonProfile();
+        JwtProfile profile = new JwtProfile();
         profile.setId("111111111111");
-        profile.setLinkedId("22222222222");
+//        profile.setLinkedId("222222222222"); 不支持这个属性
         profile.addRole("admin");
-        profile.addPermission("add");
+//        profile.addPermission("add");
         return cookieContext.generateAndAddCookie(profile);
     }
 

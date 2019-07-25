@@ -1,6 +1,6 @@
 package mipac4j.test.stateless.header;
 
-import org.pac4j.core.profile.CommonProfile;
+import org.pac4j.jwt.profile.JwtProfile;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,7 +22,7 @@ public class TestController {
 
     @GetMapping("login")
     public String login() {
-        CommonProfile profile = new CommonProfile();
+        JwtProfile profile = new JwtProfile();
         profile.setId("111111111111");
         profile.setLinkedId("22222222222");
         profile.addRole("admin");

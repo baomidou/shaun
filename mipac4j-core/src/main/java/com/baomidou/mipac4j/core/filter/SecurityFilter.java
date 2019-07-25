@@ -6,6 +6,8 @@ import org.pac4j.core.engine.DefaultSecurityLogic;
 import org.pac4j.core.engine.SecurityLogic;
 import org.pac4j.core.util.CommonHelper;
 
+import com.baomidou.mipac4j.core.exception.HttpCodeException;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -26,7 +28,9 @@ public class SecurityFilter extends AbstractPac4jFilter {
 
     @Override
     public boolean filterChain(J2EContext context) {
-        return securityLogic.perform(context, config, (ctx, pf, param) -> true, (code, ctx) -> false,
+        return securityLogic.perform(context, config, (ctx, pf, param) -> true, (code, ctx) -> {
+                    throw new HttpCodeException(code);
+                },
                 config.getClients().getDefaultSecurityClients(), authorizers, marchers, false);
     }
 
