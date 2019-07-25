@@ -1,15 +1,14 @@
-package com.baomidou.mipac4j.core.context;
+package com.baomidou.mipac4j.core.context.cookie;
 
-import org.pac4j.core.context.J2EContext;
-import org.pac4j.core.context.session.SessionStore;
-import org.pac4j.core.profile.CommonProfile;
-
+import com.baomidou.mipac4j.core.context.J2EContextFactory;
 import com.baomidou.mipac4j.core.generator.TokenGenerator;
 import com.baomidou.mipac4j.core.properties.Cookie;
 import com.baomidou.mipac4j.core.util.J2EContextUtil;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.pac4j.core.context.J2EContext;
+import org.pac4j.core.context.session.SessionStore;
+import org.pac4j.core.profile.CommonProfile;
 
 /**
  * 操作 cookie 的类

@@ -39,11 +39,6 @@ public class DefaultLogoutFilter implements Pac4jFilter {
         this.logoutMatcher = ctx -> ctx.getPath().equals(logoutUrl);
     }
 
-    @Override
-    public int order() {
-        return 200;
-    }
-
     @SuppressWarnings("unchecked")
     @Override
     public boolean goOnChain(J2EContext context) {
@@ -59,5 +54,10 @@ public class DefaultLogoutFilter implements Pac4jFilter {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public int order() {
+        return 200;
     }
 }

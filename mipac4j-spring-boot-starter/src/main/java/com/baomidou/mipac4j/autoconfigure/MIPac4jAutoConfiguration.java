@@ -3,9 +3,10 @@ package com.baomidou.mipac4j.autoconfigure;
 import com.baomidou.mipac4j.autoconfigure.properties.MIPac4jProperties;
 import com.baomidou.mipac4j.core.client.TokenDirectClient;
 import com.baomidou.mipac4j.core.client.TokenIndirectClient;
-import com.baomidou.mipac4j.core.context.CookieContext;
 import com.baomidou.mipac4j.core.context.DefaultJ2EContextFactory;
 import com.baomidou.mipac4j.core.context.J2EContextFactory;
+import com.baomidou.mipac4j.core.context.cookie.CookieContext;
+import com.baomidou.mipac4j.core.context.session.NoSessionStore;
 import com.baomidou.mipac4j.core.engine.LogoutExecutor;
 import com.baomidou.mipac4j.core.extractor.TokenExtractor;
 import com.baomidou.mipac4j.core.generator.DefaultJwtTokenGenerator;
@@ -13,7 +14,6 @@ import com.baomidou.mipac4j.core.generator.TokenGenerator;
 import com.baomidou.mipac4j.core.profile.ProfileManagerFactory;
 import lombok.AllArgsConstructor;
 import org.pac4j.core.client.Client;
-import org.pac4j.core.context.session.J2ESessionStore;
 import org.pac4j.core.context.session.SessionStore;
 import org.pac4j.core.credentials.TokenCredentials;
 import org.pac4j.core.credentials.authenticator.Authenticator;
@@ -45,12 +45,12 @@ public class MIPac4jAutoConfiguration {
     private final MIPac4jProperties properties;
 
     /**
-     * session 存储器,主要存储 profiles,但我们不用 session,注入这个 bean 只是为了 pac4j 内部少 new 这个类
+     * session 存储器,选择不进行 session 存储
      */
     @Bean
     @ConditionalOnMissingBean
     public SessionStore sessionStore() {
-        return new J2ESessionStore();
+        return new NoSessionStore();
     }
 
     /**

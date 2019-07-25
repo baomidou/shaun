@@ -1,7 +1,8 @@
 package com.baomidou.mipac4j.core.filter;
 
-import com.baomidou.mipac4j.core.engine.CallbackLogic;
 import org.pac4j.core.context.J2EContext;
+import org.pac4j.core.engine.CallbackLogic;
+import org.pac4j.core.engine.DefaultCallbackLogic;
 
 /**
  * 回调 filter
@@ -11,7 +12,7 @@ import org.pac4j.core.context.J2EContext;
  */
 public class DefaultCallbackFilter implements Pac4jFilter {
 
-    private CallbackLogic<Boolean, J2EContext> callbackLogic = new CallbackLogic<>();
+    private CallbackLogic<Boolean, J2EContext> callbackLogic = new DefaultCallbackLogic<>();
 
     @Override
     public boolean goOnChain(J2EContext context) {
