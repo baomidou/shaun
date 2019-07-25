@@ -5,6 +5,7 @@ import com.baomidou.mipac4j.core.matching.OnlyPathMatcher;
 import com.baomidou.mipac4j.core.profile.ProfileManagerFactory;
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.pac4j.core.context.HttpConstants;
@@ -25,8 +26,9 @@ import static org.pac4j.core.util.CommonHelper.assertNotBlank;
  * @author miemie
  * @since 2019-07-24
  */
-@Data
 @Slf4j
+@Data
+@EqualsAndHashCode(callSuper = true)
 public class LogoutFilter extends AbstractPac4jFilter {
 
     private LogoutExecutor logoutExecutor;
