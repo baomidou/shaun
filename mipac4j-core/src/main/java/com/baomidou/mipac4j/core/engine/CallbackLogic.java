@@ -1,30 +1,94 @@
 package com.baomidou.mipac4j.core.engine;
 
+import com.baomidou.mipac4j.core.adapter.CommonProfileAdapter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.pac4j.core.client.Client;
+import org.pac4j.core.client.Clients;
+import org.pac4j.core.client.finder.ClientFinder;
+import org.pac4j.core.client.finder.DefaultCallbackClientFinder;
 import org.pac4j.core.config.Config;
 import org.pac4j.core.context.WebContext;
+import org.pac4j.core.context.session.SessionStore;
+import org.pac4j.core.credentials.Credentials;
+import org.pac4j.core.engine.AbstractExceptionAwareLogic;
+import org.pac4j.core.exception.HttpAction;
 import org.pac4j.core.http.adapter.HttpActionAdapter;
+import org.pac4j.core.profile.CommonProfile;
+import org.pac4j.core.profile.ProfileManager;
 
-import com.baomidou.mipac4j.core.adapter.CommonProfileAdapter;
+import java.util.List;
+
+import static org.pac4j.core.util.CommonHelper.*;
 
 /**
- * copy from {@link org.pac4j.core.engine.CallbackLogic}
- * <p>
- * 做了一些定制化改造
+ * todo 待改造
  *
  * @author miemie
  * @since 2019-07-24
  */
-public interface CallbackLogic<R, C extends WebContext> {
+@Data
+@EqualsAndHashCode(callSuper = true)
+@SuppressWarnings("unchecked")
+public class CallbackLogic<R, C extends WebContext> extends AbstractExceptionAwareLogic<R, C> {
 
-    /**
-     * Perform the callback logic.
-     *
-     * @param context           the web context
-     * @param config            the security configuration
-     * @param httpActionAdapter the HTTP action adapter
-     * @param indexUrl          the index url
-     * @return the resulting action of the callback
-     */
-    R perform(C context, Config config, final HttpActionAdapter<R, C> httpActionAdapter,
-              String indexUrl, CommonProfileAdapter commonProfileAdapter);
+    private ClientFinder clientFinder = new DefaultCallbackClientFinder();
+
+    public R perform(C context, Config config, HttpActionAdapter<R, C> httpActionAdapter, String indexUrl, CommonProfileAdapter commonProfileAdapter) {
+        logger.debug("=== CALLBACK ===");
+
+        HttpAction action;
+        try {
+            // checks
+            assertNotNull("clientFinder", clientFinder);
+            assertNotNull("context", context);
+            assertNotNull("config", config);
+            assertNotNull("httpActionAdapter", httpActionAdapter);
+            assertNotBlank("indexUrl", indexUrl);
+            final Clients clients = config.getClients();
+            assertNotNull("clients", clients);
+
+            // logic
+            final List<Client> foundClients = clientFinder.find(clients, context, null);
+            assertTrue(foundClients != null && foundClients.size() == 1,
+                    "unable to find one indirect client for the callback: check the callback URL for a client name parameter or suffix path"
+                            + " or ensure that your configuration defaults to one indirect client");
+            final Client foundClient = foundClients.get(0);
+            logger.debug("foundClient: {}", foundClient);
+            assertNotNull("foundClient", foundClient);
+
+            final Credentials credentials = foundClient.getCredentials(context);
+            logger.debug("credentials: {}", credentials);
+
+            CommonProfile profile = foundClient.getUserProfile(credentials, context);
+            logger.debug("profile: {}", profile);
+            profile = commonProfileAdapter.adapt(profile, foundClient);
+            logger.debug("adaptProfile: {}", profile);
+            saveUserProfile(context, config, profile);
+            action = redirectToIndexUrl(context, indexUrl);
+        } catch (final RuntimeException e) {
+            return handleException(e, httpActionAdapter, context);
+        }
+
+        return httpActionAdapter.adapt(action.getCode(), context);
+    }
+
+    protected void saveUserProfile(final C context, final Config config, final CommonProfile profile) {
+        final ProfileManager manager = getProfileManager(context, config);
+        if (profile != null) {
+            manager.save(false, profile, false);
+            final SessionStore<C> sessionStore = context.getSessionStore();
+            sessionStore.destroySession(context);
+        }
+    }
+
+    protected HttpAction redirectToIndexUrl(final C context, final String redirectUrl) {
+        logger.debug("redirectUrl: {}", redirectUrl);
+        return HttpAction.redirect(context, redirectUrl);
+    }
+
+    @Override
+    public String toString() {
+        return toNiceString(this.getClass(), "clientFinder", clientFinder, "errorUrl", getErrorUrl());
+    }
 }
