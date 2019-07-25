@@ -1,11 +1,11 @@
 package com.baomidou.mipac4j.core.filter;
 
+import com.baomidou.mipac4j.core.engine.SecurityLogic;
+import lombok.Data;
 import org.pac4j.core.config.Config;
 import org.pac4j.core.context.J2EContext;
-import org.pac4j.core.engine.DefaultSecurityLogic;
-import org.pac4j.core.engine.SecurityLogic;
-
-import lombok.Data;
+import org.pac4j.core.matching.MatchingChecker;
+import org.pac4j.core.matching.RequireAllMatchersChecker;
 
 /**
  * 安全 filter
@@ -16,7 +16,9 @@ import lombok.Data;
 @Data
 public class DefaultSecurityFilter implements Pac4jFilter {
 
-    private SecurityLogic<Boolean, J2EContext> securityLogic = new DefaultSecurityLogic<>();
+    private MatchingChecker matchingChecker = new RequireAllMatchersChecker();
+
+    private SecurityLogic securityLogic = new SecurityLogic();
 
     private Config config;
 
@@ -26,8 +28,11 @@ public class DefaultSecurityFilter implements Pac4jFilter {
 
     @Override
     public boolean goOnChain(J2EContext context) {
-        return securityLogic.perform(context, config, (ctx, pf, param) -> true, (code, ctx) -> false,
-                config.getClients().getDefaultSecurityClients(), authorizers, matchers, false);
+        if (matchingChecker.matches(context, matchers, config.getMatchers())) {
+            return securityLogic.perform(context, config, config.getClients().getDefaultSecurityClients(),
+                    authorizers, matchers, false);
+        }
+        return true;
     }
 
     @Override

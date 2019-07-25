@@ -1,21 +1,17 @@
 package com.baomidou.mipac4j.autoconfigure;
 
-import org.pac4j.core.client.Client;
+import com.baomidou.mipac4j.autoconfigure.aop.AnnotationAspect;
+import com.baomidou.mipac4j.autoconfigure.factory.MIPac4jFilterFactoryBean;
+import com.baomidou.mipac4j.autoconfigure.properties.MIPac4jProperties;
+import com.baomidou.mipac4j.core.context.J2EContextFactory;
+import com.baomidou.mipac4j.core.context.ProfileManagerFactory;
+import lombok.AllArgsConstructor;
 import org.pac4j.core.context.session.SessionStore;
-import org.pac4j.core.matching.Matcher;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import com.baomidou.mipac4j.autoconfigure.aop.AnnotationAspect;
-import com.baomidou.mipac4j.autoconfigure.factory.MIPac4jFilterFactoryBean;
-import com.baomidou.mipac4j.autoconfigure.properties.MIPac4jProperties;
-import com.baomidou.mipac4j.core.context.J2EContextFactory;
-import com.baomidou.mipac4j.core.engine.LogoutExecutor;
-
-import lombok.AllArgsConstructor;
 
 /**
  * @author miemie
@@ -26,22 +22,21 @@ import lombok.AllArgsConstructor;
 @AutoConfigureAfter(MIPac4jAutoConfiguration.class)
 public class MIPac4jSecurityAutoConfiguration {
 
-    private final J2EContextFactory j2EContextFactory;
     private final MIPac4jProperties properties;
     private final ListableBeanFactory beanFactory;
 
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Bean
     @ConditionalOnMissingBean
-    public MIPac4jFilterFactoryBean pac4jPlusFilterFactoryBean(Matcher matcher, J2EContextFactory j2EContextFactory,
-                                                               Client client, SessionStore sessionStore,
-                                                               LogoutExecutor logoutExecutor) {
-        return new MIPac4jFilterFactoryBean(properties, beanFactory, matcher, j2EContextFactory, client,
-                sessionStore, logoutExecutor);
+    public MIPac4jFilterFactoryBean pac4jPlusFilterFactoryBean(J2EContextFactory j2EContextFactory,
+                                                               SessionStore sessionStore) {
+        return new MIPac4jFilterFactoryBean(beanFactory, j2EContextFactory, sessionStore);
     }
 
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Bean
-    public AnnotationAspect annotationAspect(MIPac4jFilterFactoryBean pac4jPlusFilterFactoryBean) {
-        return new AnnotationAspect(pac4jPlusFilterFactoryBean.getSecurityConfig(), j2EContextFactory);
+    public AnnotationAspect annotationAspect(ProfileManagerFactory profileManagerFactory, SessionStore sessionStore,
+                                             J2EContextFactory j2EContextFactory) {
+        return new AnnotationAspect(profileManagerFactory, sessionStore, j2EContextFactory);
     }
 }
