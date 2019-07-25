@@ -9,11 +9,11 @@ import org.pac4j.core.config.Config;
 import org.pac4j.core.context.Pac4jConstants;
 import org.pac4j.core.context.session.SessionStore;
 import org.pac4j.core.matching.Matcher;
+import org.pac4j.core.util.CommonHelper;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import com.baomidou.mipac4j.autoconfigure.properties.MIPac4jProperties;
 import com.baomidou.mipac4j.core.filter.SecurityFilter;
 import com.baomidou.mipac4j.core.profile.ProfileManagerFactory;
 
@@ -31,30 +31,16 @@ import lombok.Setter;
 @EqualsAndHashCode(callSuper = true)
 public class SecurityFilterFactoryBean extends AbstractPac4jFilterFactoryBean<SecurityFilter> {
 
-    private final Matcher matcher;
-    private final Client client;
-    private final SessionStore sessionStore;
-    private final ListableBeanFactory beanFactory;
-    private final MIPac4jProperties properties;
-    private final ProfileManagerFactory profileManagerFactory;
+    private Matcher matcher;
+    private Client client;
+    private SessionStore sessionStore;
+    private ListableBeanFactory beanFactory;
+    private ProfileManagerFactory profileManagerFactory;
+    private String authorizers;
 
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
     private Config config;
-    @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    private String authorizers;
-
-    public SecurityFilterFactoryBean(final MIPac4jProperties properties, final ListableBeanFactory beanFactory,
-                                     final Matcher matcher, final Client client, final SessionStore sessionStore,
-                                     final ProfileManagerFactory profileManagerFactory) {
-        this.properties = properties;
-        this.beanFactory = beanFactory;
-        this.matcher = matcher;
-        this.client = client;
-        this.sessionStore = sessionStore;
-        this.profileManagerFactory = profileManagerFactory;
-    }
 
     @Override
     protected SecurityFilter createInstance() {
@@ -67,9 +53,15 @@ public class SecurityFilterFactoryBean extends AbstractPac4jFilterFactoryBean<Se
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        // check
+        CommonHelper.assertNotNull("matcher", matcher);
+        CommonHelper.assertNotNull("client", client);
+        CommonHelper.assertNotNull("sessionStore", sessionStore);
+        CommonHelper.assertNotNull("profileManagerFactory", profileManagerFactory);
+
         config = new Config();
         Map<String, Authorizer> authorizeMap = beanFactory.getBeansOfType(Authorizer.class);
-        String au = properties.getAuthorizers();
+        String au = authorizers;
         if (!CollectionUtils.isEmpty(authorizeMap)) {
             config.setAuthorizers(authorizeMap);
             String s = String.join(Pac4jConstants.ELEMENT_SEPRATOR, authorizeMap.keySet());
@@ -79,7 +71,7 @@ public class SecurityFilterFactoryBean extends AbstractPac4jFilterFactoryBean<Se
                 au = s;
             }
         }
-        this.authorizers = au;
+        authorizers = au;
         Clients clients = new Clients();
         clients.setClients(client);
         clients.setDefaultSecurityClients(client.getName());

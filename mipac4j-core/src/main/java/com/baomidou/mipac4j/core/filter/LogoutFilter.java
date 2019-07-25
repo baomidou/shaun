@@ -14,7 +14,6 @@ import org.pac4j.core.util.CommonHelper;
 
 import com.baomidou.mipac4j.core.engine.LogoutExecutor;
 import com.baomidou.mipac4j.core.matching.OnlyPathMatcher;
-import com.baomidou.mipac4j.core.profile.ProfileManagerFactory;
 
 import lombok.AccessLevel;
 import lombok.Data;
@@ -34,7 +33,6 @@ public class LogoutFilter extends AbstractPac4jFilter {
     private LogoutLogic<Boolean, J2EContext> logoutLogic = new DefaultLogoutLogic<>();
     private AjaxRequestResolver ajaxRequestResolver = new DefaultAjaxRequestResolver();
     private LogoutExecutor logoutExecutor = LogoutExecutor.DO_NOTHING;
-    private ProfileManagerFactory profileManagerFactory;
     private Config config;
     private String logoutUrl;
     private String outThenUrl;
@@ -46,7 +44,7 @@ public class LogoutFilter extends AbstractPac4jFilter {
     public boolean filterChain(J2EContext context) {
         if (matcher.matches(context)) {
             logoutLogic.perform(context, config, ((code, ctx) -> true), outThenUrl, null, false, false, false);
-            List<CommonProfile> profiles = profileManagerFactory.apply(context).getAll(false);
+            List<CommonProfile> profiles = config.getProfileManagerFactory().apply(context).getAll(false);
             if (CommonHelper.isNotEmpty(profiles)) {
                 logoutExecutor.logout(context, profiles);
             } else {
@@ -62,7 +60,6 @@ public class LogoutFilter extends AbstractPac4jFilter {
         CommonHelper.assertNotBlank("callbackUrl", logoutUrl);
         CommonHelper.assertNotNull("config", config);
         CommonHelper.assertNotNull("ajaxRequestResolver", ajaxRequestResolver);
-        CommonHelper.assertNotNull("profileManagerFactory", profileManagerFactory);
         CommonHelper.assertNotNull("logoutExecutor", logoutExecutor);
         CommonHelper.assertNotNull("logoutLogic", logoutLogic);
         this.matcher = new OnlyPathMatcher(logoutUrl);

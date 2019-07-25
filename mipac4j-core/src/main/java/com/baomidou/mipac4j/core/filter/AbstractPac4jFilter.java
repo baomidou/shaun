@@ -4,13 +4,13 @@ import org.pac4j.core.context.J2EContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * @author miemie
  * @since 2019-07-25
  */
-@Data
 public abstract class AbstractPac4jFilter implements Pac4jFilter {
 
     protected Logger log = LoggerFactory.getLogger(getClass());
@@ -18,6 +18,8 @@ public abstract class AbstractPac4jFilter implements Pac4jFilter {
     /**
      * 这个 Filter 是否将被使用
      */
+    @Setter
+    @Getter
     private boolean willBeUse;
 
     @Override

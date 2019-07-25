@@ -1,8 +1,9 @@
 package com.baomidou.mipac4j.autoconfigure.factory;
 
-import com.baomidou.mipac4j.core.filter.Pac4jFilter;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
+
+import com.baomidou.mipac4j.core.filter.Pac4jFilter;
 
 /**
  * @author miemie
@@ -15,6 +16,7 @@ public abstract class AbstractPac4jFilterFactoryBean<T extends Pac4jFilter> impl
     @Override
     public T getObject() throws Exception {
         if (instance == null) {
+            afterPropertiesSet();
             instance = createInstance();
         }
         return instance;
