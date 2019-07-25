@@ -3,6 +3,8 @@ package com.baomidou.mipac4j.autoconfigure.factory;
 import com.baomidou.mipac4j.autoconfigure.properties.MIPac4jProperties;
 import com.baomidou.mipac4j.core.filter.SecurityFilter;
 import com.baomidou.mipac4j.core.profile.ProfileManagerFactory;
+import lombok.AccessLevel;
+import lombok.Setter;
 import org.pac4j.core.authorization.authorizer.Authorizer;
 import org.pac4j.core.client.Client;
 import org.pac4j.core.client.Clients;
@@ -28,7 +30,9 @@ public class SecurityFilterFactoryBean extends AbstractPac4jFilterFactoryBean<Se
     private final ListableBeanFactory beanFactory;
     private final MIPac4jProperties properties;
     private final ProfileManagerFactory profileManagerFactory;
+    @Setter(AccessLevel.NONE)
     private Config config;
+    @Setter(AccessLevel.NONE)
     private String authorizers;
 
     public SecurityFilterFactoryBean(final MIPac4jProperties properties, final ListableBeanFactory beanFactory,
