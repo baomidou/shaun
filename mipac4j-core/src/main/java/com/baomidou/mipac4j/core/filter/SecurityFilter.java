@@ -23,15 +23,10 @@ public class SecurityFilter extends AbstractPac4jFilter {
     private Config config;
 
     @Override
-    public boolean goOnChain(J2EContext context) {
+    public boolean filterChain(J2EContext context) {
         return securityLogic.perform(context, config, (ctx, pf, param) -> true, (code, ctx) -> false,
                 config.getClients().getDefaultSecurityClients(), authorizers, Pac4jConstants.MATCHERS,
                 false);
-    }
-
-    @Override
-    public boolean filterChain(J2EContext context) {
-        return false;
     }
 
     @Override
