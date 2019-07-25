@@ -1,10 +1,10 @@
 package com.baomidou.mipac4j.autoconfigure.factory;
 
 import com.baomidou.mipac4j.autoconfigure.properties.MIPac4jProperties;
-import com.baomidou.mipac4j.core.context.ProfileManagerFactory;
 import com.baomidou.mipac4j.core.engine.LogoutExecutor;
 import com.baomidou.mipac4j.core.filter.DefaultLogoutFilter;
 import com.baomidou.mipac4j.core.filter.Pac4jFilter;
+import com.baomidou.mipac4j.core.profile.ProfileManagerFactory;
 
 /**
  * @author miemie

@@ -4,7 +4,7 @@ import com.baomidou.mipac4j.autoconfigure.aop.AnnotationAspect;
 import com.baomidou.mipac4j.autoconfigure.factory.MIPac4jFilterFactoryBean;
 import com.baomidou.mipac4j.autoconfigure.properties.MIPac4jProperties;
 import com.baomidou.mipac4j.core.context.J2EContextFactory;
-import com.baomidou.mipac4j.core.context.ProfileManagerFactory;
+import com.baomidou.mipac4j.core.profile.ProfileManagerFactory;
 import lombok.AllArgsConstructor;
 import org.pac4j.core.context.session.SessionStore;
 import org.springframework.beans.factory.ListableBeanFactory;

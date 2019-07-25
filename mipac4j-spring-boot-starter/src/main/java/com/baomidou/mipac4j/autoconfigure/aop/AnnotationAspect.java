@@ -5,7 +5,7 @@ import com.baomidou.mipac4j.core.annotation.RequireAllRole;
 import com.baomidou.mipac4j.core.annotation.RequireAnyPermission;
 import com.baomidou.mipac4j.core.annotation.RequireAnyRole;
 import com.baomidou.mipac4j.core.context.J2EContextFactory;
-import com.baomidou.mipac4j.core.context.ProfileManagerFactory;
+import com.baomidou.mipac4j.core.profile.ProfileManagerFactory;
 import com.baomidou.mipac4j.core.util.J2EContextUtil;
 import lombok.AllArgsConstructor;
 import org.aspectj.lang.annotation.Aspect;

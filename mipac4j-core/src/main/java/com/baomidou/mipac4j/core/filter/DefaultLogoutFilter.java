@@ -1,9 +1,8 @@
 package com.baomidou.mipac4j.core.filter;
 
-import static org.pac4j.core.util.CommonHelper.assertNotBlank;
-
-import java.util.List;
-
+import com.baomidou.mipac4j.core.engine.LogoutExecutor;
+import com.baomidou.mipac4j.core.profile.ProfileManagerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.pac4j.core.context.HttpConstants;
 import org.pac4j.core.context.J2EContext;
 import org.pac4j.core.http.ajax.AjaxRequestResolver;
@@ -12,10 +11,9 @@ import org.pac4j.core.matching.Matcher;
 import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.core.util.CommonHelper;
 
-import com.baomidou.mipac4j.core.context.ProfileManagerFactory;
-import com.baomidou.mipac4j.core.engine.LogoutExecutor;
+import java.util.List;
 
-import lombok.extern.slf4j.Slf4j;
+import static org.pac4j.core.util.CommonHelper.assertNotBlank;
 
 /**
  * 登出 filter

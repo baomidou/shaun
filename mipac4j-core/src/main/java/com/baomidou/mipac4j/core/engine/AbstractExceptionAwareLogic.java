@@ -1,8 +1,8 @@
 package com.baomidou.mipac4j.core.engine;
 
+import com.baomidou.mipac4j.core.profile.ProfileManagerFactoryAware;
 import org.pac4j.core.context.J2EContext;
 import org.pac4j.core.exception.HttpAction;
-import org.pac4j.core.profile.ProfileManagerFactoryAware;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
  * @author miemie
  * @since 2019-07-25
  */
-public class AbstractExceptionAwareLogic extends ProfileManagerFactoryAware<J2EContext> {
+public class AbstractExceptionAwareLogic extends ProfileManagerFactoryAware {
 
     protected Logger log = LoggerFactory.getLogger(getClass());
 

@@ -1,5 +1,6 @@
 package com.baomidou.mipac4j.core.engine;
 
+import com.baomidou.mipac4j.core.config.Config;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.pac4j.core.authorization.checker.AuthorizationChecker;
@@ -10,7 +11,6 @@ import org.pac4j.core.client.DirectClient;
 import org.pac4j.core.client.IndirectClient;
 import org.pac4j.core.client.finder.ClientFinder;
 import org.pac4j.core.client.finder.DefaultSecurityClientFinder;
-import org.pac4j.core.config.Config;
 import org.pac4j.core.context.J2EContext;
 import org.pac4j.core.context.Pac4jConstants;
 import org.pac4j.core.credentials.Credentials;
@@ -43,20 +43,11 @@ public class SecurityLogic extends AbstractExceptionAwareLogic {
     private AjaxRequestResolver ajaxRequestResolver = new DefaultAjaxRequestResolver();
 
     @SuppressWarnings("unchecked")
-    public Boolean perform(final J2EContext context, final Config config, final String clients,
-                           final String authorizers, final String matchers, final Boolean inputMultiProfile) {
+    public Boolean perform(final J2EContext context, final Config config, final String clients) {
 
         log.debug("=== SECURITY ===");
 
         try {
-
-            // default value
-            final boolean multiProfile;
-            if (inputMultiProfile == null) {
-                multiProfile = false;
-            } else {
-                multiProfile = inputMultiProfile;
-            }
 
             // checks
             assertNotNull("context", context);
@@ -69,7 +60,6 @@ public class SecurityLogic extends AbstractExceptionAwareLogic {
 
             // logic
             log.debug("url: {}", context.getFullRequestURL());
-            log.debug("matchers: {}", matchers);
 
             log.debug("clients: {}", clients);
             final List<Client> currentClients = clientFinder.find(configClients, context, clients);
@@ -96,12 +86,10 @@ public class SecurityLogic extends AbstractExceptionAwareLogic {
                         if (profile != null) {
                             final boolean saveProfileInSession = profileStorageDecision.mustSaveProfileInSession(context,
                                     currentClients, (DirectClient) currentClient, profile);
-                            log.debug("saveProfileInSession: {} / multiProfile: {}", saveProfileInSession, multiProfile);
-                            manager.save(saveProfileInSession, profile, multiProfile);
+                            log.debug("saveProfileInSession: {} / multiProfile: {}", saveProfileInSession, false);
+                            manager.save(saveProfileInSession, profile, false);
                             updated = true;
-                            if (!multiProfile) {
-                                break;
-                            }
+                            break;
                         }
                     }
                 }
@@ -113,13 +101,13 @@ public class SecurityLogic extends AbstractExceptionAwareLogic {
 
             // we have profile(s) -> check authorizations
             if (isNotEmpty(profiles)) {
-                log.debug("authorizers: {}", authorizers);
-                if (authorizationChecker.isAuthorized(context, profiles, authorizers, config.getAuthorizers())) {
+                log.debug("authorizers: {}", config.getAuthorizes());
+                if (authorizationChecker.isAuthorized(context, profiles, config.getAuthorizes(), config.getAuthorizeMap())) {
                     log.debug("authenticated and authorized -> grant access");
                     return true;
                 } else {
                     log.debug("forbidden");
-                    forbidden(context, profiles, authorizers);
+                    forbidden(context, profiles, config.getAuthorizes());
                 }
             } else {
                 if (startAuthentication(context, currentClients)) {

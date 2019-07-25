@@ -1,9 +1,9 @@
-package com.baomidou.mipac4j.core.context;
-
-import java.util.function.Function;
+package com.baomidou.mipac4j.core.profile;
 
 import org.pac4j.core.context.WebContext;
 import org.pac4j.core.profile.ProfileManager;
+
+import java.util.function.Function;
 
 /**
  * 包装一下
