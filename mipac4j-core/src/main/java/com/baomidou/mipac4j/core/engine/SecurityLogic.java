@@ -12,7 +12,6 @@ import org.pac4j.core.client.IndirectClient;
 import org.pac4j.core.client.finder.ClientFinder;
 import org.pac4j.core.client.finder.DefaultSecurityClientFinder;
 import org.pac4j.core.context.J2EContext;
-import org.pac4j.core.context.Pac4jConstants;
 import org.pac4j.core.credentials.Credentials;
 import org.pac4j.core.engine.decision.DefaultProfileStorageDecision;
 import org.pac4j.core.engine.decision.ProfileStorageDecision;
@@ -112,7 +111,6 @@ public class SecurityLogic extends AbstractExceptionAwareLogic {
             } else {
                 if (startAuthentication(context, currentClients)) {
                     log.debug("Starting authentication");
-                    saveRequestedUrl(context, currentClients);
                     redirectToIdentityProvider(context, currentClients);
                 } else {
                     log.debug("unauthorized");
@@ -147,20 +145,6 @@ public class SecurityLogic extends AbstractExceptionAwareLogic {
      */
     protected boolean startAuthentication(final J2EContext context, final List<Client> currentClients) {
         return isNotEmpty(currentClients) && currentClients.get(0) instanceof IndirectClient;
-    }
-
-    /**
-     * Save the requested url.
-     *
-     * @param context        the web context
-     * @param currentClients the current clients
-     */
-    protected void saveRequestedUrl(final J2EContext context, final List<Client> currentClients) {
-        if (ajaxRequestResolver == null || !ajaxRequestResolver.isAjax(context)) {
-            final String requestedUrl = context.getFullRequestURL();
-            log.debug("requestedUrl: {}", requestedUrl);
-            context.getSessionStore().set(context, Pac4jConstants.REQUESTED_URL, requestedUrl);
-        }
     }
 
     /**
