@@ -35,7 +35,7 @@ public class SecurityFilter extends AbstractPac4jFilter {
     }
 
     @Override
-    protected void initIfNeed() {
+    protected void initMustNeed() {
 
     }
 

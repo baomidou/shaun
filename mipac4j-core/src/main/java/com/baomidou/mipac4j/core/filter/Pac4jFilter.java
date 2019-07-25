@@ -25,4 +25,11 @@ public interface Pac4jFilter extends InitializingBean {
     default int order() {
         return 0;
     }
+
+    /**
+     * 是否要被使用
+     */
+    default boolean isWillBeUse() {
+        return true;
+    }
 }

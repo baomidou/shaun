@@ -47,7 +47,7 @@ public class ThreeLandingFilter extends AbstractPac4jFilter {
     }
 
     @Override
-    protected void initIfNeed() {
+    protected void initMustNeed() {
         this.matcher = new OnlyPathMatcher(threeLandingUrl);
         this.config = new Config();
     }

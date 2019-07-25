@@ -66,7 +66,7 @@ public class LogoutFilter extends AbstractPac4jFilter {
     }
 
     @Override
-    protected void initIfNeed() {
+    protected void initMustNeed() {
         CommonHelper.assertNotBlank("callbackUrl", logoutUrl);
         this.matcher = new OnlyPathMatcher(logoutUrl);
     }

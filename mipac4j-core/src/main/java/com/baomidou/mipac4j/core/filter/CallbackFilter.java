@@ -43,7 +43,7 @@ public class CallbackFilter extends AbstractPac4jFilter {
     }
 
     @Override
-    protected void initIfNeed() {
+    protected void initMustNeed() {
         CommonHelper.assertNotBlank("callbackUrl", callbackUrl);
         this.matcher = new OnlyPathMatcher(callbackUrl);
     }

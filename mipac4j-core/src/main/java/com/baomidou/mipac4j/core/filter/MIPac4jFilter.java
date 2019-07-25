@@ -1,16 +1,8 @@
 package com.baomidou.mipac4j.core.filter;
 
-import java.io.IOException;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.baomidou.mipac4j.core.context.J2EContextFactory;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.pac4j.core.context.J2EContext;
 import org.pac4j.core.context.session.SessionStore;
 import org.springframework.core.Ordered;
@@ -18,10 +10,15 @@ import org.springframework.lang.NonNull;
 import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.baomidou.mipac4j.core.context.J2EContextFactory;
-
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author miemie
@@ -54,7 +51,8 @@ public class MIPac4jFilter extends OncePerRequestFilter implements Ordered {
 
     @Override
     protected void initFilterBean() throws ServletException {
-        filterList = filterList.stream().sorted(Comparator.comparingInt(Pac4jFilter::order)).collect(Collectors.toList());
+        filterList = filterList.stream().filter(Pac4jFilter::isWillBeUse)
+                .sorted(Comparator.comparingInt(Pac4jFilter::order)).collect(Collectors.toList());
     }
 
     @Override

@@ -26,11 +26,11 @@ public abstract class AbstractPac4jFilter implements Pac4jFilter {
     @Override
     public void afterPropertiesSet() throws Exception {
         if (isWillBeUse()) {
-            initIfNeed();
+            initMustNeed();
         }
     }
 
     public abstract boolean filterChain(J2EContext context);
 
-    protected abstract void initIfNeed();
+    protected abstract void initMustNeed();
 }
