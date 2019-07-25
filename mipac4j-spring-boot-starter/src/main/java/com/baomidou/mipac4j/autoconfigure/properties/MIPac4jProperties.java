@@ -63,7 +63,7 @@ public class MIPac4jProperties {
     /**
      * 使用 oauth 或者 cas client 下,拦截的 url,会跳转到第三方网址进行登陆,然后 通过 callbackUrl 进行回调
      */
-    private String indirectUrl;
+    private String threeLandingUrl;
     /**
      * callback url,非前后台分离下,才起作用,主要用于 IndirectClients 在 callback 环节使用
      */

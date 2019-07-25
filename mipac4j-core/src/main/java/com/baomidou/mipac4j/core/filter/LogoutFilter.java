@@ -58,6 +58,6 @@ public class LogoutFilter implements Pac4jFilter {
 
     @Override
     public int order() {
-        return 200;
+        return 300;
     }
 }

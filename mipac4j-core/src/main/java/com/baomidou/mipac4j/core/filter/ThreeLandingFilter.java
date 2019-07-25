@@ -11,21 +11,22 @@ import org.pac4j.core.matching.Matcher;
 import org.pac4j.core.util.CommonHelper;
 
 /**
- * 安全 filter
+ * 三方登陆 filter
+ * 主要是 oauth 和 cas
  *
  * @author miemie
  * @since 2019-07-24
  */
 @Data
-public class IndirectSecurityFilter implements Pac4jFilter {
+public class ThreeLandingFilter implements Pac4jFilter {
 
     private final Config config;
     private final Matcher matcher;
     private SecurityLogic<Boolean, J2EContext> securityLogic = new DefaultSecurityLogic<>();
 
-    public IndirectSecurityFilter(final String indirectUrl, final Config config) {
-        if (CommonHelper.isNotBlank(indirectUrl)) {
-            this.matcher = new OnlyPathMatcher(indirectUrl);
+    public ThreeLandingFilter(final String threeLandingUrl, final Config config) {
+        if (CommonHelper.isNotBlank(threeLandingUrl)) {
+            this.matcher = new OnlyPathMatcher(threeLandingUrl);
         } else {
             this.matcher = OnlyPathMatcher.NO_MATCHER;
         }
@@ -34,9 +35,12 @@ public class IndirectSecurityFilter implements Pac4jFilter {
 
     @Override
     public boolean goOnChain(J2EContext context) {
-        return securityLogic.perform(context, config, (ctx, pf, param) -> true, (code, ctx) -> false,
-                config.getClients().getDefaultSecurityClients(), null, Pac4jConstants.MATCHERS,
-                false);
+        if (matcher.matches(context)) {
+            return securityLogic.perform(context, config, (ctx, pf, param) -> true, (code, ctx) -> false,
+                    config.getClients().getDefaultSecurityClients(), null, Pac4jConstants.MATCHERS,
+                    false);
+        }
+        return true;
     }
 
     @Override

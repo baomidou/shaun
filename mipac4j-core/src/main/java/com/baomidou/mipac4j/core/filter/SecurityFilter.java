@@ -29,6 +29,6 @@ public class SecurityFilter implements Pac4jFilter {
 
     @Override
     public int order() {
-        return 100;
+        return 200;
     }
 }
