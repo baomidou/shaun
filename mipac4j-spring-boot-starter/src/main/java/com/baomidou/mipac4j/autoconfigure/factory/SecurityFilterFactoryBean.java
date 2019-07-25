@@ -47,6 +47,7 @@ public class SecurityFilterFactoryBean extends AbstractPac4jFilterFactoryBean<Se
         SecurityFilter filter = new SecurityFilter();
         filter.setConfig(config);
         filter.setAuthorizers(authorizers);
+        filter.setMarchers(Pac4jConstants.MATCHERS);
         return filter;
     }
 
