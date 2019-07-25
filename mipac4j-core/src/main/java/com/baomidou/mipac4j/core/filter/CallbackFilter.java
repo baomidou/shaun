@@ -16,13 +16,13 @@ import org.pac4j.core.util.CommonHelper;
  * @since 2019-07-24
  */
 @Data
-public class DefaultCallbackFilter implements Pac4jFilter {
+public class CallbackFilter implements Pac4jFilter {
 
     private final Config config;
     private final Matcher matcher;
     private CallbackLogic<Boolean, J2EContext> callbackLogic = new DefaultCallbackLogic<>();
 
-    public DefaultCallbackFilter(final String callbackUrl, final Config config) {
+    public CallbackFilter(final String callbackUrl, final Config config) {
         this.config = config;
         if (CommonHelper.isNotBlank(callbackUrl)) {
             this.matcher = new OnlyPathMatcher(callbackUrl);

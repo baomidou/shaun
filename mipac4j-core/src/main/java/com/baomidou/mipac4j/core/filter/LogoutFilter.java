@@ -22,7 +22,7 @@ import static org.pac4j.core.util.CommonHelper.assertNotBlank;
  * @since 2019-07-24
  */
 @Slf4j
-public class DefaultLogoutFilter implements Pac4jFilter {
+public class LogoutFilter implements Pac4jFilter {
 
     private final Matcher logoutMatcher;
     private final AjaxRequestResolver ajaxRequestResolver = new DefaultAjaxRequestResolver();
@@ -30,8 +30,8 @@ public class DefaultLogoutFilter implements Pac4jFilter {
     private final String outThenUrl;
     private final ProfileManagerFactory profileManagerFactory;
 
-    public DefaultLogoutFilter(final String logoutUrl, final String outThenUrl, final LogoutExecutor logoutExecutor,
-                               final ProfileManagerFactory profileManagerFactory) {
+    public LogoutFilter(final String logoutUrl, final String outThenUrl, final LogoutExecutor logoutExecutor,
+                        final ProfileManagerFactory profileManagerFactory) {
         this.logoutExecutor = logoutExecutor;
         this.outThenUrl = outThenUrl;
         this.profileManagerFactory = profileManagerFactory;

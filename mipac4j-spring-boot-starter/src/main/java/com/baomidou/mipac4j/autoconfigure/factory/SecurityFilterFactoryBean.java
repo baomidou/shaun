@@ -1,8 +1,7 @@
 package com.baomidou.mipac4j.autoconfigure.factory;
 
 import com.baomidou.mipac4j.autoconfigure.properties.MIPac4jProperties;
-import com.baomidou.mipac4j.core.filter.DefaultSecurityFilter;
-import com.baomidou.mipac4j.core.filter.Pac4jFilter;
+import com.baomidou.mipac4j.core.filter.SecurityFilter;
 import com.baomidou.mipac4j.core.profile.ProfileManagerFactory;
 import org.pac4j.core.authorization.authorizer.Authorizer;
 import org.pac4j.core.client.Client;
@@ -21,7 +20,7 @@ import java.util.Map;
  * @author miemie
  * @since 2019-07-24
  */
-public class SecurityFilterFactoryBean extends AbstractPac4jFilterFactoryBean {
+public class SecurityFilterFactoryBean extends AbstractPac4jFilterFactoryBean<SecurityFilter> {
 
     private final Matcher matcher;
     private final Client client;
@@ -44,8 +43,8 @@ public class SecurityFilterFactoryBean extends AbstractPac4jFilterFactoryBean {
     }
 
     @Override
-    protected Pac4jFilter createInstance() {
-        DefaultSecurityFilter filter = new DefaultSecurityFilter();
+    protected SecurityFilter createInstance() {
+        SecurityFilter filter = new SecurityFilter();
         filter.setConfig(config);
         filter.setAuthorizers(authorizers);
         return filter;
