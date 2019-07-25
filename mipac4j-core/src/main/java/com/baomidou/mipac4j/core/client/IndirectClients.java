@@ -6,10 +6,10 @@ import lombok.Getter;
 import org.pac4j.core.client.Client;
 import org.pac4j.core.client.IndirectClient;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * @author miemie
@@ -21,7 +21,7 @@ public class IndirectClients {
     @Getter(AccessLevel.NONE)
     private final Map<String, ProfileConverter> profileConverterMap = new HashMap<>();
 
-    private final Set<IndirectClient> clientSet = new HashSet<>();
+    private final List<Client> clients = new ArrayList<>();
 
     /**
      * 不需要进行转换,直接通过 TokenGenerator 把 Profile 变为 token
@@ -40,7 +40,7 @@ public class IndirectClients {
      * @return this
      */
     public IndirectClients addClient(IndirectClient client, ProfileConverter converter) {
-        clientSet.add(client);
+        clients.add(client);
         profileConverterMap.put(client.getName(), converter);
         return this;
     }

@@ -1,12 +1,13 @@
 package com.baomidou.mipac4j.core.filter;
 
 import org.pac4j.core.context.J2EContext;
+import org.springframework.beans.factory.InitializingBean;
 
 /**
  * @author miemie
  * @since 2019-07-24
  */
-public interface Pac4jFilter {
+public interface Pac4jFilter extends InitializingBean {
 
     /**
      * 有多个子类时执行顺序(越小越优先)
