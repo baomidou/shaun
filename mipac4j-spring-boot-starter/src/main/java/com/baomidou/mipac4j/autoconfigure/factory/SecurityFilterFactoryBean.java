@@ -1,13 +1,13 @@
 package com.baomidou.mipac4j.autoconfigure.factory;
 
 import com.baomidou.mipac4j.autoconfigure.properties.MIPac4jProperties;
-import com.baomidou.mipac4j.core.config.Config;
 import com.baomidou.mipac4j.core.filter.DefaultSecurityFilter;
 import com.baomidou.mipac4j.core.filter.Pac4jFilter;
 import com.baomidou.mipac4j.core.profile.ProfileManagerFactory;
 import org.pac4j.core.authorization.authorizer.Authorizer;
 import org.pac4j.core.client.Client;
 import org.pac4j.core.client.Clients;
+import org.pac4j.core.config.Config;
 import org.pac4j.core.context.Pac4jConstants;
 import org.pac4j.core.context.session.SessionStore;
 import org.pac4j.core.matching.Matcher;
@@ -30,6 +30,7 @@ public class SecurityFilterFactoryBean extends AbstractPac4jFilterFactoryBean {
     private final MIPac4jProperties properties;
     private final ProfileManagerFactory profileManagerFactory;
     private Config config;
+    private String authorizers;
 
     public SecurityFilterFactoryBean(final MIPac4jProperties properties, final ListableBeanFactory beanFactory,
                                      final Matcher matcher, final Client client, final SessionStore sessionStore,
@@ -46,6 +47,7 @@ public class SecurityFilterFactoryBean extends AbstractPac4jFilterFactoryBean {
     protected Pac4jFilter createInstance() {
         DefaultSecurityFilter filter = new DefaultSecurityFilter();
         filter.setConfig(config);
+        filter.setAuthorizers(authorizers);
         return filter;
     }
 
@@ -55,7 +57,7 @@ public class SecurityFilterFactoryBean extends AbstractPac4jFilterFactoryBean {
         Map<String, Authorizer> authorizeMap = beanFactory.getBeansOfType(Authorizer.class);
         String au = properties.getAuthorizers();
         if (!CollectionUtils.isEmpty(authorizeMap)) {
-            config.setAuthorizeMap(authorizeMap);
+            config.setAuthorizers(authorizeMap);
             String s = String.join(Pac4jConstants.ELEMENT_SEPRATOR, authorizeMap.keySet());
             if (StringUtils.hasText(au)) {
                 au += (Pac4jConstants.ELEMENT_SEPRATOR + s);
@@ -63,13 +65,13 @@ public class SecurityFilterFactoryBean extends AbstractPac4jFilterFactoryBean {
                 au = s;
             }
         }
-        config.setAuthorizes(au);
+        this.authorizers = au;
         Clients clients = new Clients();
         clients.setClients(client);
         clients.setDefaultSecurityClients(client.getName());
         config.setClients(clients);
         config.setSessionStore(sessionStore);
         config.setProfileManagerFactory(profileManagerFactory);
-        config.setMatcher(matcher);
+        config.addMatcher(Pac4jConstants.MATCHERS, matcher);
     }
 }
