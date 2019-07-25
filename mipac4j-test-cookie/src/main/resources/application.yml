@@ -1,0 +1,5 @@
+mipac4j:
+  stateless: false
+  logout-url: /logout
+  exclude-path: /login
+  token-location: cookie

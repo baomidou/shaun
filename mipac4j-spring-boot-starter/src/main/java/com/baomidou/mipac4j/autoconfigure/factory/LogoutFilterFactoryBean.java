@@ -28,10 +28,12 @@ public class LogoutFilterFactoryBean extends AbstractPac4jFilterFactoryBean<Logo
     private MIPac4jProperties properties;
     private LogoutExecutor logoutExecutor;
     private ProfileManagerFactory profileManagerFactory;
-    private boolean willBeUse;
     private SessionStore sessionStore;
     private Client client;
 
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+    private boolean willBeUse;
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
     private Config config;

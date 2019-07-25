@@ -10,7 +10,6 @@ import org.pac4j.core.matching.Matcher;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.web.servlet.ConditionalOnMissingFilterBean;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -46,18 +45,27 @@ public class MIPac4jSecurityAutoConfiguration {
     @ConditionalOnMissingBean
     public SecurityFilter securityFilter(Client client, Matcher matcher, SessionStore sessionStore,
                                          ProfileManagerFactory profileManagerFactory) throws Exception {
-        SecurityFilterFactoryBean securityFilterFactoryBean = new SecurityFilterFactoryBean(properties, beanFactory,
-                matcher, client, sessionStore, profileManagerFactory);
-        return securityFilterFactoryBean.getObject();
+        SecurityFilterFactoryBean factory = new SecurityFilterFactoryBean();
+        factory.setAuthorizers(properties.getAuthorizers());
+        factory.setBeanFactory(beanFactory);
+        factory.setClient(client);
+        factory.setMatcher(matcher);
+        factory.setSessionStore(sessionStore);
+        factory.setProfileManagerFactory(profileManagerFactory);
+        return factory.getObject();
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public LogoutFilter logoutFilter(LogoutExecutor logoutExecutor, ProfileManagerFactory profileManagerFactory)
+    public LogoutFilter logoutFilter(Client client, SessionStore sessionStore, LogoutExecutor logoutExecutor, ProfileManagerFactory profileManagerFactory)
             throws Exception {
-        LogoutFilterFactoryBean logoutFilterFactoryBean = new LogoutFilterFactoryBean(properties, logoutExecutor,
-                profileManagerFactory);
-        return logoutFilterFactoryBean.getObject();
+        LogoutFilterFactoryBean factory = new LogoutFilterFactoryBean();
+        factory.setClient(client);
+        factory.setLogoutExecutor(logoutExecutor);
+        factory.setProfileManagerFactory(profileManagerFactory);
+        factory.setProperties(properties);
+        factory.setSessionStore(sessionStore);
+        return factory.getObject();
     }
 
     @Bean
@@ -68,8 +76,8 @@ public class MIPac4jSecurityAutoConfiguration {
     }
 
     @SuppressWarnings("all")
-    @Bean
-    @ConditionalOnMissingFilterBean(MIPac4jFilter.class)
+    @Bean(name = "mIPac4jFilterRegistrationBean")
+    @ConditionalOnMissingBean
     protected FilterRegistrationBean<MIPac4jFilter> mIPac4jFilterRegistrationBean(MIPac4jFilterFactoryBean miPac4jFilterFactoryBean) throws Exception {
         FilterRegistrationBean<MIPac4jFilter> filterRegistrationBean = new FilterRegistrationBean();
         filterRegistrationBean.setDispatcherTypes(EnumSet.allOf(DispatcherType.class));
