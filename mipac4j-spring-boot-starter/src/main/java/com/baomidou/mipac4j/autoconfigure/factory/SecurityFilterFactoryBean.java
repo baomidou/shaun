@@ -14,6 +14,7 @@ import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import com.baomidou.mipac4j.core.context.http.DoHttpAction;
 import com.baomidou.mipac4j.core.filter.SecurityFilter;
 import com.baomidou.mipac4j.core.profile.ProfileManagerFactory;
 
@@ -36,6 +37,7 @@ public class SecurityFilterFactoryBean extends AbstractPac4jFilterFactoryBean<Se
     private SessionStore sessionStore;
     private ListableBeanFactory beanFactory;
     private ProfileManagerFactory profileManagerFactory;
+    private DoHttpAction doHttpAction;
     private String authorizers;
 
     @Setter(AccessLevel.NONE)
@@ -48,6 +50,7 @@ public class SecurityFilterFactoryBean extends AbstractPac4jFilterFactoryBean<Se
         filter.setConfig(config);
         filter.setAuthorizers(authorizers);
         filter.setMarchers(Pac4jConstants.MATCHERS);
+        filter.setDoHttpAction(doHttpAction);
         return filter;
     }
 

@@ -20,6 +20,7 @@ import com.baomidou.mipac4j.autoconfigure.factory.MIPac4jFilterFactoryBean;
 import com.baomidou.mipac4j.autoconfigure.factory.SecurityFilterFactoryBean;
 import com.baomidou.mipac4j.autoconfigure.properties.MIPac4jProperties;
 import com.baomidou.mipac4j.core.context.J2EContextFactory;
+import com.baomidou.mipac4j.core.context.http.DoHttpAction;
 import com.baomidou.mipac4j.core.engine.LogoutExecutor;
 import com.baomidou.mipac4j.core.filter.LogoutFilter;
 import com.baomidou.mipac4j.core.filter.MIPac4jFilter;
@@ -44,7 +45,7 @@ public class MIPac4jSecurityAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public SecurityFilter securityFilter(Client client, Matcher matcher, SessionStore sessionStore,
-                                         ProfileManagerFactory profileManagerFactory) throws Exception {
+                                         ProfileManagerFactory profileManagerFactory, DoHttpAction doHttpAction) throws Exception {
         SecurityFilterFactoryBean factory = new SecurityFilterFactoryBean();
         factory.setAuthorizers(properties.getAuthorizers());
         factory.setBeanFactory(beanFactory);
@@ -52,12 +53,14 @@ public class MIPac4jSecurityAutoConfiguration {
         factory.setMatcher(matcher);
         factory.setSessionStore(sessionStore);
         factory.setProfileManagerFactory(profileManagerFactory);
+        factory.setDoHttpAction(doHttpAction);
         return factory.getObject();
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public LogoutFilter logoutFilter(Client client, SessionStore sessionStore, LogoutExecutor logoutExecutor, ProfileManagerFactory profileManagerFactory)
+    public LogoutFilter logoutFilter(Client client, SessionStore sessionStore, LogoutExecutor logoutExecutor,
+                                     ProfileManagerFactory profileManagerFactory)
             throws Exception {
         LogoutFilterFactoryBean factory = new LogoutFilterFactoryBean();
         factory.setClient(client);

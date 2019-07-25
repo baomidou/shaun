@@ -1,4 +1,10 @@
 mipac4j:
   logout-url: /logout
-  exclude-path: /login
+  exclude-path:
+    - /login
+    - /favicon.ico
   token-location: cookie
+
+logging:
+  level:
+    com.baomidou.mipac4j.core.context.http: debug
