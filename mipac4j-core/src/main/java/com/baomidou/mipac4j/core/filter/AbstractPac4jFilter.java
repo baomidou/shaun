@@ -1,7 +1,10 @@
 package com.baomidou.mipac4j.core.filter;
 
-import lombok.Data;
 import org.pac4j.core.context.J2EContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import lombok.Data;
 
 /**
  * @author miemie
@@ -9,6 +12,8 @@ import org.pac4j.core.context.J2EContext;
  */
 @Data
 public abstract class AbstractPac4jFilter implements Pac4jFilter {
+
+    protected Logger log = LoggerFactory.getLogger(getClass());
 
     /**
      * 这个 Filter 是否将被使用

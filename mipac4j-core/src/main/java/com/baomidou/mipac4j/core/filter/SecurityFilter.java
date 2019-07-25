@@ -1,11 +1,13 @@
 package com.baomidou.mipac4j.core.filter;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.pac4j.core.config.Config;
 import org.pac4j.core.context.J2EContext;
 import org.pac4j.core.engine.DefaultSecurityLogic;
 import org.pac4j.core.engine.SecurityLogic;
+import org.pac4j.core.util.CommonHelper;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * 安全 filter
@@ -25,13 +27,13 @@ public class SecurityFilter extends AbstractPac4jFilter {
     @Override
     public boolean filterChain(J2EContext context) {
         return securityLogic.perform(context, config, (ctx, pf, param) -> true, (code, ctx) -> false,
-                config.getClients().getDefaultSecurityClients(), authorizers, marchers,
-                false);
+                config.getClients().getDefaultSecurityClients(), authorizers, marchers, false);
     }
 
     @Override
     protected void initMustNeed() {
-
+        CommonHelper.assertNotBlank("marchers", marchers);
+        CommonHelper.assertNotNull("config", config);
     }
 
     @Override

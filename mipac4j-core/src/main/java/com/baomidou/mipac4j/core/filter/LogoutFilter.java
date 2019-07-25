@@ -1,7 +1,5 @@
 package com.baomidou.mipac4j.core.filter;
 
-import static org.pac4j.core.util.CommonHelper.assertNotBlank;
-
 import java.util.List;
 
 import org.pac4j.core.config.Config;
@@ -34,24 +32,14 @@ import lombok.Setter;
 public class LogoutFilter extends AbstractPac4jFilter {
 
     private LogoutLogic<Boolean, J2EContext> logoutLogic = new DefaultLogoutLogic<>();
-    private LogoutExecutor logoutExecutor;
-    private String outThenUrl;
-    private ProfileManagerFactory profileManagerFactory;
     private AjaxRequestResolver ajaxRequestResolver = new DefaultAjaxRequestResolver();
-    @Setter(AccessLevel.NONE)
-    private Matcher matcher;
-
+    private LogoutExecutor logoutExecutor = LogoutExecutor.DO_NOTHING;
+    private ProfileManagerFactory profileManagerFactory;
     private Config config;
     private String logoutUrl;
-
-    public LogoutFilter(final String logoutUrl, final String outThenUrl, final LogoutExecutor logoutExecutor,
-                        final ProfileManagerFactory profileManagerFactory) {
-        this.logoutExecutor = logoutExecutor;
-        this.outThenUrl = outThenUrl;
-        this.profileManagerFactory = profileManagerFactory;
-        assertNotBlank("logoutUrl", logoutUrl);
-        this.matcher = ctx -> ctx.getPath().equals(logoutUrl);
-    }
+    private String outThenUrl;
+    @Setter(AccessLevel.NONE)
+    private Matcher matcher;
 
     @SuppressWarnings("unchecked")
     @Override
@@ -59,7 +47,11 @@ public class LogoutFilter extends AbstractPac4jFilter {
         if (matcher.matches(context)) {
             logoutLogic.perform(context, config, ((code, ctx) -> true), outThenUrl, null, false, false, false);
             List<CommonProfile> profiles = profileManagerFactory.apply(context).getAll(false);
-            logoutExecutor.logout(context, profiles);
+            if (CommonHelper.isNotEmpty(profiles)) {
+                logoutExecutor.logout(context, profiles);
+            } else {
+                log.error("not find any profiles from logout");
+            }
             return false;
         }
         return true;
@@ -68,6 +60,11 @@ public class LogoutFilter extends AbstractPac4jFilter {
     @Override
     protected void initMustNeed() {
         CommonHelper.assertNotBlank("callbackUrl", logoutUrl);
+        CommonHelper.assertNotNull("config", config);
+        CommonHelper.assertNotNull("ajaxRequestResolver", ajaxRequestResolver);
+        CommonHelper.assertNotNull("profileManagerFactory", profileManagerFactory);
+        CommonHelper.assertNotNull("logoutExecutor", logoutExecutor);
+        CommonHelper.assertNotNull("logoutLogic", logoutLogic);
         this.matcher = new OnlyPathMatcher(logoutUrl);
     }
 
