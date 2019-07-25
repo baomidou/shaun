@@ -19,10 +19,10 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class SecurityFilter extends AbstractPac4jFilter {
 
-    private String authorizers;
     private SecurityLogic<Boolean, J2EContext> securityLogic = new DefaultSecurityLogic<>();
     private Config config;
     private String marchers;
+    private String authorizers;
 
     @Override
     public boolean filterChain(J2EContext context) {

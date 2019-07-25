@@ -1,10 +1,7 @@
 package com.baomidou.mipac4j.autoconfigure.factory;
 
-import com.baomidou.mipac4j.autoconfigure.properties.MIPac4jProperties;
-import com.baomidou.mipac4j.core.filter.SecurityFilter;
-import com.baomidou.mipac4j.core.profile.ProfileManagerFactory;
-import lombok.AccessLevel;
-import lombok.Setter;
+import java.util.Map;
+
 import org.pac4j.core.authorization.authorizer.Authorizer;
 import org.pac4j.core.client.Client;
 import org.pac4j.core.client.Clients;
@@ -16,12 +13,22 @@ import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import java.util.Map;
+import com.baomidou.mipac4j.autoconfigure.properties.MIPac4jProperties;
+import com.baomidou.mipac4j.core.filter.SecurityFilter;
+import com.baomidou.mipac4j.core.profile.ProfileManagerFactory;
+
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * @author miemie
  * @since 2019-07-24
  */
+@Data
+@EqualsAndHashCode(callSuper = true)
 public class SecurityFilterFactoryBean extends AbstractPac4jFilterFactoryBean<SecurityFilter> {
 
     private final Matcher matcher;
@@ -30,9 +37,12 @@ public class SecurityFilterFactoryBean extends AbstractPac4jFilterFactoryBean<Se
     private final ListableBeanFactory beanFactory;
     private final MIPac4jProperties properties;
     private final ProfileManagerFactory profileManagerFactory;
+
     @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
     private Config config;
     @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
     private String authorizers;
 
     public SecurityFilterFactoryBean(final MIPac4jProperties properties, final ListableBeanFactory beanFactory,
