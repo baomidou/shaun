@@ -1,6 +1,7 @@
 package com.baomidou.mipac4j.core.filter;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.pac4j.core.config.Config;
 import org.pac4j.core.context.J2EContext;
 import org.pac4j.core.context.Pac4jConstants;
@@ -14,7 +15,8 @@ import org.pac4j.core.engine.SecurityLogic;
  * @since 2019-07-24
  */
 @Data
-public class SecurityFilter implements Pac4jFilter {
+@EqualsAndHashCode(callSuper = true)
+public class SecurityFilter extends AbstractPac4jFilter {
 
     private String authorizers;
     private SecurityLogic<Boolean, J2EContext> securityLogic = new DefaultSecurityLogic<>();
@@ -28,7 +30,22 @@ public class SecurityFilter implements Pac4jFilter {
     }
 
     @Override
+    public boolean filterChain(J2EContext context) {
+        return false;
+    }
+
+    @Override
+    protected void initIfNeed() {
+
+    }
+
+    @Override
     public int order() {
         return 200;
+    }
+
+    @Override
+    public boolean isWillBeUse() {
+        return true;
     }
 }

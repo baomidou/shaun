@@ -1,7 +1,11 @@
 package com.baomidou.mipac4j.core.filter;
 
 import com.baomidou.mipac4j.core.engine.LogoutExecutor;
+import com.baomidou.mipac4j.core.matching.OnlyPathMatcher;
 import com.baomidou.mipac4j.core.profile.ProfileManagerFactory;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.pac4j.core.context.HttpConstants;
 import org.pac4j.core.context.J2EContext;
@@ -21,14 +25,18 @@ import static org.pac4j.core.util.CommonHelper.assertNotBlank;
  * @author miemie
  * @since 2019-07-24
  */
+@Data
 @Slf4j
-public class LogoutFilter implements Pac4jFilter {
+public class LogoutFilter extends AbstractPac4jFilter {
 
-    private final Matcher logoutMatcher;
-    private final AjaxRequestResolver ajaxRequestResolver = new DefaultAjaxRequestResolver();
-    private final LogoutExecutor logoutExecutor;
-    private final String outThenUrl;
-    private final ProfileManagerFactory profileManagerFactory;
+    private LogoutExecutor logoutExecutor;
+    private String outThenUrl;
+    private ProfileManagerFactory profileManagerFactory;
+    private AjaxRequestResolver ajaxRequestResolver = new DefaultAjaxRequestResolver();
+    @Setter(AccessLevel.NONE)
+    private Matcher matcher;
+
+    private String logoutUrl;
 
     public LogoutFilter(final String logoutUrl, final String outThenUrl, final LogoutExecutor logoutExecutor,
                         final ProfileManagerFactory profileManagerFactory) {
@@ -36,13 +44,12 @@ public class LogoutFilter implements Pac4jFilter {
         this.outThenUrl = outThenUrl;
         this.profileManagerFactory = profileManagerFactory;
         assertNotBlank("logoutUrl", logoutUrl);
-        this.logoutMatcher = ctx -> ctx.getPath().equals(logoutUrl);
+        this.matcher = ctx -> ctx.getPath().equals(logoutUrl);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public boolean goOnChain(J2EContext context) {
-        if (logoutMatcher.matches(context)) {
+    public boolean filterChain(J2EContext context) {
+        if (matcher.matches(context)) {
             log.debug("into logoutUrl");
             List<CommonProfile> profiles = profileManagerFactory.apply(context).getAll(false);
             logoutExecutor.logout(context, profiles);
@@ -54,6 +61,12 @@ public class LogoutFilter implements Pac4jFilter {
             return false;
         }
         return true;
+    }
+
+    @Override
+    protected void initIfNeed() {
+        CommonHelper.assertNotBlank("callbackUrl", logoutUrl);
+        this.matcher = new OnlyPathMatcher(logoutUrl);
     }
 
     @Override

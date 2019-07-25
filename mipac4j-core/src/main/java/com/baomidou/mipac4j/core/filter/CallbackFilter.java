@@ -3,6 +3,7 @@ package com.baomidou.mipac4j.core.filter;
 import com.baomidou.mipac4j.core.matching.OnlyPathMatcher;
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.Setter;
 import org.pac4j.core.config.Config;
 import org.pac4j.core.context.J2EContext;
@@ -19,7 +20,8 @@ import org.pac4j.core.util.CommonHelper;
  * @since 2019-07-24
  */
 @Data
-public class CallbackFilter implements Pac4jFilter {
+@EqualsAndHashCode(callSuper = true)
+public class CallbackFilter extends AbstractPac4jFilter {
 
     private final CallbackLogic<Boolean, J2EContext> callbackLogic = new DefaultCallbackLogic<>();
     @Setter(AccessLevel.NONE)
@@ -32,7 +34,7 @@ public class CallbackFilter implements Pac4jFilter {
     private SessionStore sessionStore;
 
     @Override
-    public boolean goOnChain(J2EContext context) {
+    public boolean filterChain(J2EContext context) {
         if (matcher.matches(context)) {
             return callbackLogic.perform(context, config, (code, ctx) -> false, indexUrl, false,
                     false, false, null);
@@ -41,11 +43,8 @@ public class CallbackFilter implements Pac4jFilter {
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
-        if (CommonHelper.isNotBlank(callbackUrl)) {
-            this.matcher = new OnlyPathMatcher(callbackUrl);
-        } else {
-            this.matcher = OnlyPathMatcher.NO_MATCHER;
-        }
+    protected void initIfNeed() {
+        CommonHelper.assertNotBlank("callbackUrl", callbackUrl);
+        this.matcher = new OnlyPathMatcher(callbackUrl);
     }
 }
