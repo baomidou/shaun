@@ -33,7 +33,6 @@ import java.util.EnumSet;
  * @author miemie
  * @since 2019-07-18
  */
-@SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 @AllArgsConstructor
 @Configuration
 @AutoConfigureAfter(MIPac4jAutoConfiguration.class)
