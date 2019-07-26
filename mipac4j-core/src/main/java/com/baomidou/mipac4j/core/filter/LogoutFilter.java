@@ -1,7 +1,11 @@
 package com.baomidou.mipac4j.core.filter;
 
-import java.util.List;
-
+import com.baomidou.mipac4j.core.engine.LogoutExecutor;
+import com.baomidou.mipac4j.core.matching.OnlyPathMatcher;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Setter;
 import org.pac4j.core.config.Config;
 import org.pac4j.core.context.J2EContext;
 import org.pac4j.core.engine.DefaultLogoutLogic;
@@ -10,15 +14,11 @@ import org.pac4j.core.http.ajax.AjaxRequestResolver;
 import org.pac4j.core.http.ajax.DefaultAjaxRequestResolver;
 import org.pac4j.core.matching.Matcher;
 import org.pac4j.core.profile.CommonProfile;
+import org.pac4j.core.profile.ProfileHelper;
 import org.pac4j.core.util.CommonHelper;
 
-import com.baomidou.mipac4j.core.engine.LogoutExecutor;
-import com.baomidou.mipac4j.core.matching.OnlyPathMatcher;
-
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Setter;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * 登出 filter
@@ -46,7 +46,8 @@ public class LogoutFilter extends AbstractPac4jFilter {
             logoutLogic.perform(context, config, ((code, ctx) -> true), outThenUrl, null, false, false, false);
             List<CommonProfile> profiles = config.getProfileManagerFactory().apply(context).getAll(false);
             if (CommonHelper.isNotEmpty(profiles)) {
-                logoutExecutor.logout(context, profiles);
+                Optional<CommonProfile> profile = ProfileHelper.flatIntoOneProfile(profiles);
+                logoutExecutor.logout(context, profile);
             } else {
                 log.error("not find any profiles from logout");
             }
