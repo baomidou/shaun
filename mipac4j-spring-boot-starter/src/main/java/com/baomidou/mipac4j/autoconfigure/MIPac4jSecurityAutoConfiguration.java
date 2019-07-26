@@ -1,19 +1,5 @@
 package com.baomidou.mipac4j.autoconfigure;
 
-import java.util.EnumSet;
-
-import javax.servlet.DispatcherType;
-
-import org.pac4j.core.client.Client;
-import org.pac4j.core.context.session.SessionStore;
-import org.pac4j.core.matching.Matcher;
-import org.springframework.beans.factory.ListableBeanFactory;
-import org.springframework.boot.autoconfigure.AutoConfigureAfter;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-
 import com.baomidou.mipac4j.autoconfigure.aop.AnnotationAspect;
 import com.baomidou.mipac4j.autoconfigure.factory.LogoutFilterFactoryBean;
 import com.baomidou.mipac4j.autoconfigure.factory.MIPac4jFilterFactoryBean;
@@ -24,10 +10,24 @@ import com.baomidou.mipac4j.core.context.http.DoHttpAction;
 import com.baomidou.mipac4j.core.engine.LogoutExecutor;
 import com.baomidou.mipac4j.core.filter.LogoutFilter;
 import com.baomidou.mipac4j.core.filter.MIPac4jFilter;
+import com.baomidou.mipac4j.core.filter.Pac4jFilter;
 import com.baomidou.mipac4j.core.filter.SecurityFilter;
 import com.baomidou.mipac4j.core.profile.ProfileManagerFactory;
-
 import lombok.AllArgsConstructor;
+import org.pac4j.core.authorization.authorizer.Authorizer;
+import org.pac4j.core.client.Client;
+import org.pac4j.core.context.session.SessionStore;
+import org.pac4j.core.matching.Matcher;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import javax.servlet.DispatcherType;
+import java.util.ArrayList;
+import java.util.EnumSet;
 
 /**
  * @author miemie
@@ -40,7 +40,7 @@ import lombok.AllArgsConstructor;
 public class MIPac4jSecurityAutoConfiguration {
 
     private final MIPac4jProperties properties;
-    private final ListableBeanFactory beanFactory;
+    private final ApplicationContext applicationContext;
 
     @Bean
     @ConditionalOnMissingBean
@@ -48,7 +48,7 @@ public class MIPac4jSecurityAutoConfiguration {
                                          ProfileManagerFactory profileManagerFactory, DoHttpAction doHttpAction) throws Exception {
         SecurityFilterFactoryBean factory = new SecurityFilterFactoryBean();
         factory.setAuthorizers(properties.getAuthorizers());
-        factory.setBeanFactory(beanFactory);
+        factory.setAuthorizeMap(applicationContext.getBeansOfType(Authorizer.class));
         factory.setClient(client);
         factory.setMatcher(matcher);
         factory.setSessionStore(sessionStore);
@@ -75,7 +75,9 @@ public class MIPac4jSecurityAutoConfiguration {
     @ConditionalOnMissingBean
     public MIPac4jFilterFactoryBean pac4jPlusFilterFactoryBean(J2EContextFactory j2EContextFactory,
                                                                SessionStore sessionStore) {
-        return new MIPac4jFilterFactoryBean(beanFactory, j2EContextFactory, sessionStore);
+        MIPac4jFilterFactoryBean factory = new MIPac4jFilterFactoryBean(j2EContextFactory, sessionStore);
+        factory.setPac4jFilters(new ArrayList<>(applicationContext.getBeansOfType(Pac4jFilter.class).values()));
+        return factory;
     }
 
     @SuppressWarnings("all")

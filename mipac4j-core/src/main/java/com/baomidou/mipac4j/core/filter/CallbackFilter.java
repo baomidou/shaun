@@ -11,7 +11,10 @@ import org.pac4j.core.context.session.SessionStore;
 import org.pac4j.core.engine.CallbackLogic;
 import org.pac4j.core.engine.DefaultCallbackLogic;
 import org.pac4j.core.matching.Matcher;
+import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.core.util.CommonHelper;
+
+import java.util.Optional;
 
 /**
  * 回调 filter
@@ -33,11 +36,14 @@ public class CallbackFilter extends AbstractPac4jFilter {
     private String callbackUrl;
     private SessionStore sessionStore;
 
+    @SuppressWarnings("unchecked")
     @Override
     public boolean filterChain(J2EContext context) {
         if (matcher.matches(context)) {
-            return callbackLogic.perform(context, config, (code, ctx) -> false, indexUrl, false,
+            callbackLogic.perform(context, config, (code, ctx) -> false, indexUrl, false,
                     false, false, null);
+            Optional<CommonProfile> optional = config.getProfileManagerFactory().apply(context).get(false);
+
         }
         return true;
     }

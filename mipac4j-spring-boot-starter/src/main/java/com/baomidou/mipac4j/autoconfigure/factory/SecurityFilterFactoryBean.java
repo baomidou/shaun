@@ -1,7 +1,9 @@
 package com.baomidou.mipac4j.autoconfigure.factory;
 
-import java.util.Map;
-
+import com.baomidou.mipac4j.core.context.http.DoHttpAction;
+import com.baomidou.mipac4j.core.filter.SecurityFilter;
+import com.baomidou.mipac4j.core.profile.ProfileManagerFactory;
+import lombok.*;
 import org.pac4j.core.authorization.authorizer.Authorizer;
 import org.pac4j.core.client.Client;
 import org.pac4j.core.client.Clients;
@@ -10,19 +12,10 @@ import org.pac4j.core.context.Pac4jConstants;
 import org.pac4j.core.context.session.SessionStore;
 import org.pac4j.core.matching.Matcher;
 import org.pac4j.core.util.CommonHelper;
-import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import com.baomidou.mipac4j.core.context.http.DoHttpAction;
-import com.baomidou.mipac4j.core.filter.SecurityFilter;
-import com.baomidou.mipac4j.core.profile.ProfileManagerFactory;
-
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import java.util.Map;
 
 /**
  * @author miemie
@@ -35,10 +28,10 @@ public class SecurityFilterFactoryBean extends AbstractPac4jFilterFactoryBean<Se
     private Matcher matcher;
     private Client client;
     private SessionStore sessionStore;
-    private ListableBeanFactory beanFactory;
     private ProfileManagerFactory profileManagerFactory;
     private DoHttpAction doHttpAction;
     private String authorizers;
+    private Map<String, Authorizer> authorizeMap;
 
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
@@ -63,7 +56,6 @@ public class SecurityFilterFactoryBean extends AbstractPac4jFilterFactoryBean<Se
         CommonHelper.assertNotNull("profileManagerFactory", profileManagerFactory);
 
         config = new Config();
-        Map<String, Authorizer> authorizeMap = beanFactory.getBeansOfType(Authorizer.class);
         String au = authorizers;
         if (!CollectionUtils.isEmpty(authorizeMap)) {
             config.setAuthorizers(authorizeMap);

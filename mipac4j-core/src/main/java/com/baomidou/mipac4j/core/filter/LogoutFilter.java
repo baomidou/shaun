@@ -14,10 +14,8 @@ import org.pac4j.core.http.ajax.AjaxRequestResolver;
 import org.pac4j.core.http.ajax.DefaultAjaxRequestResolver;
 import org.pac4j.core.matching.Matcher;
 import org.pac4j.core.profile.CommonProfile;
-import org.pac4j.core.profile.ProfileHelper;
 import org.pac4j.core.util.CommonHelper;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -44,13 +42,8 @@ public class LogoutFilter extends AbstractPac4jFilter {
     public boolean filterChain(J2EContext context) {
         if (matcher.matches(context)) {
             logoutLogic.perform(context, config, ((code, ctx) -> true), outThenUrl, null, false, false, false);
-            List<CommonProfile> profiles = config.getProfileManagerFactory().apply(context).getAll(false);
-            if (CommonHelper.isNotEmpty(profiles)) {
-                Optional<CommonProfile> profile = ProfileHelper.flatIntoOneProfile(profiles);
-                logoutExecutor.logout(context, profile);
-            } else {
-                log.error("not find any profiles from logout");
-            }
+            Optional<CommonProfile> profile = config.getProfileManagerFactory().apply(context).get(false);
+            logoutExecutor.logout(context, profile);
             return false;
         }
         return true;
