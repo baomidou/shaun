@@ -1,16 +1,17 @@
 package com.baomidou.mipac4j.core.filter;
 
-import com.baomidou.mipac4j.core.matching.OnlyPathMatcher;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Setter;
 import org.pac4j.core.config.Config;
 import org.pac4j.core.context.J2EContext;
 import org.pac4j.core.context.Pac4jConstants;
 import org.pac4j.core.engine.DefaultSecurityLogic;
 import org.pac4j.core.engine.SecurityLogic;
 import org.pac4j.core.matching.Matcher;
+
+import com.baomidou.mipac4j.core.matching.OnlyPathMatcher;
+
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.Setter;
 
 /**
  * 三方登陆 filter
@@ -20,8 +21,7 @@ import org.pac4j.core.matching.Matcher;
  * @since 2019-07-24
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class ThreeLandingFilter extends AbstractPac4jFilter {
+public class ThreeLandingFilter implements Pac4jFilter {
 
     private final SecurityLogic<Boolean, J2EContext> securityLogic = new DefaultSecurityLogic<>();
     @Setter(AccessLevel.NONE)
@@ -32,7 +32,7 @@ public class ThreeLandingFilter extends AbstractPac4jFilter {
     private String threeLandingUrl;
 
     @Override
-    public boolean filterChain(J2EContext context) {
+    public boolean goOnChain(J2EContext context) {
         if (matcher.matches(context)) {
             return securityLogic.perform(context, config, (ctx, pf, param) -> true, (code, ctx) -> false,
                     config.getClients().getDefaultSecurityClients(), null, Pac4jConstants.MATCHERS,
@@ -47,7 +47,7 @@ public class ThreeLandingFilter extends AbstractPac4jFilter {
     }
 
     @Override
-    protected void initMustNeed() {
+    public void afterPropertiesSet() throws Exception {
         this.matcher = new OnlyPathMatcher(threeLandingUrl);
         this.config = new Config();
     }

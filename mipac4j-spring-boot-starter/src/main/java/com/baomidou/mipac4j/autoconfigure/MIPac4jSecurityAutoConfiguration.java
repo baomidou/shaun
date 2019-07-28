@@ -14,10 +14,6 @@ import org.pac4j.core.credentials.authenticator.Authenticator;
 import org.pac4j.core.credentials.extractor.CredentialsExtractor;
 import org.pac4j.core.matching.Matcher;
 import org.pac4j.core.matching.PathMatcher;
-import org.pac4j.http.credentials.extractor.CookieExtractor;
-import org.pac4j.jwt.config.encryption.EncryptionConfiguration;
-import org.pac4j.jwt.config.signature.SignatureConfiguration;
-import org.pac4j.jwt.credentials.authenticator.JwtAuthenticator;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -33,17 +29,13 @@ import com.baomidou.mipac4j.autoconfigure.factory.SecurityFilterFactoryBean;
 import com.baomidou.mipac4j.autoconfigure.properties.MIPac4jProperties;
 import com.baomidou.mipac4j.core.client.TokenDirectClient;
 import com.baomidou.mipac4j.core.client.TokenIndirectClient;
-import com.baomidou.mipac4j.core.context.DefaultJ2EContextFactory;
 import com.baomidou.mipac4j.core.context.J2EContextFactory;
 import com.baomidou.mipac4j.core.context.http.DoHttpAction;
-import com.baomidou.mipac4j.core.context.session.NoSessionStore;
 import com.baomidou.mipac4j.core.engine.LogoutExecutor;
-import com.baomidou.mipac4j.core.extractor.TokenExtractor;
 import com.baomidou.mipac4j.core.filter.LogoutFilter;
 import com.baomidou.mipac4j.core.filter.MIPac4jFilter;
 import com.baomidou.mipac4j.core.filter.Pac4jFilter;
 import com.baomidou.mipac4j.core.filter.SecurityFilter;
-import com.baomidou.mipac4j.core.generator.DefaultJwtTokenGenerator;
 import com.baomidou.mipac4j.core.generator.TokenGenerator;
 import com.baomidou.mipac4j.core.profile.ProfileManagerFactory;
 
@@ -60,22 +52,14 @@ public class MIPac4jSecurityAutoConfiguration {
 
     private final MIPac4jProperties properties;
     private final ApplicationContext applicationContext;
-    private final SignatureConfiguration signatureConfiguration;
-    private final EncryptionConfiguration encryptionConfiguration;
+    private final Authenticator<TokenCredentials> authenticator;
+    private final CredentialsExtractor<TokenCredentials> credentialsExtractor;
+    private final TokenGenerator tokenGenerator;
+    private final SessionStore sessionStore;
 
-    @SuppressWarnings("unchecked")
     @Bean
     public MIPac4jFilter miPac4jFilter() {
         Client client;
-        CredentialsExtractor<TokenCredentials> credentialsExtractor;
-        if (properties.isStateless()) {
-            credentialsExtractor = new TokenExtractor(properties.getTokenLocation(), properties.getHeader(), properties.getParameter(), properties.getCookie());
-        } else {
-            credentialsExtractor = new CookieExtractor(properties.getCookie().getName());
-        }
-
-        Authenticator<TokenCredentials> authenticator = this.getOrDefault(Authenticator.class,
-                () -> new JwtAuthenticator(signatureConfiguration, encryptionConfiguration));
 
         if (properties.isStateless()) {
             client = new TokenDirectClient(credentialsExtractor, authenticator);
@@ -93,14 +77,8 @@ public class MIPac4jSecurityAutoConfiguration {
         if (!CollectionUtils.isEmpty(properties.getExcludeRegex())) {
             properties.getExcludeBranch().forEach(pathMatcher::excludeRegex);
         }
-
         Matcher matcher = pathMatcher;
 
-        SessionStore sessionStore = this.getOrDefault(SessionStore.class, () -> NoSessionStore.INSTANCE);
-        J2EContextFactory j2EContextFactory = this.getOrDefault(J2EContextFactory.class, () -> DefaultJ2EContextFactory.INSTANCE);
-        TokenGenerator tokenGenerator = this.getOrDefault(TokenGenerator.class,
-                () -> new DefaultJwtTokenGenerator(signatureConfiguration, encryptionConfiguration)
-                        .setExpireTime(properties.getExpireTime()));
         return null;
     }
 

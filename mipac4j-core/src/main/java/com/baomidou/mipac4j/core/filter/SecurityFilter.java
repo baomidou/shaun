@@ -9,7 +9,6 @@ import org.pac4j.core.util.CommonHelper;
 import com.baomidou.mipac4j.core.context.http.DoHttpAction;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 /**
  * 安全 filter
@@ -18,8 +17,7 @@ import lombok.EqualsAndHashCode;
  * @since 2019-07-24
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class SecurityFilter extends AbstractPac4jFilter {
+public class SecurityFilter implements Pac4jFilter {
 
     private SecurityLogic<Boolean, J2EContext> securityLogic = new DefaultSecurityLogic<>();
     private Config config;
@@ -28,19 +26,12 @@ public class SecurityFilter extends AbstractPac4jFilter {
     private DoHttpAction doHttpAction;
 
     @Override
-    public boolean filterChain(J2EContext context) {
+    public boolean goOnChain(J2EContext context) {
         return securityLogic.perform(context, config, (ctx, pf, param) -> true, (code, ctx) -> {
                     doHttpAction.adapt(code, ctx);
                     return false;
                 },
                 config.getClients().getDefaultSecurityClients(), authorizers, marchers, false);
-    }
-
-    @Override
-    protected void initMustNeed() {
-        CommonHelper.assertNotBlank("marchers", marchers);
-        CommonHelper.assertNotNull("config", config);
-        CommonHelper.assertNotNull("doHttpAction", doHttpAction);
     }
 
     @Override
@@ -51,5 +42,12 @@ public class SecurityFilter extends AbstractPac4jFilter {
     @Override
     public boolean isWillBeUse() {
         return true;
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        CommonHelper.assertNotBlank("marchers", marchers);
+        CommonHelper.assertNotNull("config", config);
+        CommonHelper.assertNotNull("doHttpAction", doHttpAction);
     }
 }
