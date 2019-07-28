@@ -53,6 +53,7 @@ public class MIPac4jFilter extends OncePerRequestFilter {
 
     @Override
     protected void initFilterBean() throws ServletException {
-        filterList = filterList.stream().sorted(Comparator.comparingInt(Pac4jFilter::order)).collect(Collectors.toList());
+        filterList = filterList.stream().peek(Pac4jFilter::initCheck)
+                .sorted(Comparator.comparingInt(Pac4jFilter::order)).collect(Collectors.toList());
     }
 }

@@ -49,7 +49,7 @@ public class CallbackFilter implements Pac4jFilter {
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void initCheck() {
         CommonHelper.assertNotBlank("callbackUrl", callbackUrl);
         this.matcher = new OnlyPathMatcher(callbackUrl);
     }

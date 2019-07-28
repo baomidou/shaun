@@ -11,6 +11,7 @@ import com.baomidou.mipac4j.core.matching.OnlyPathMatcher;
 
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Getter;
 import lombok.Setter;
 
 /**
@@ -27,6 +28,7 @@ public class ThreeLandingFilter implements Pac4jFilter {
     @Setter(AccessLevel.NONE)
     private Config config;
     @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
     private Matcher matcher;
 
     private String threeLandingUrl;
@@ -47,7 +49,7 @@ public class ThreeLandingFilter implements Pac4jFilter {
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void initCheck() {
         this.matcher = new OnlyPathMatcher(threeLandingUrl);
         this.config = new Config();
     }

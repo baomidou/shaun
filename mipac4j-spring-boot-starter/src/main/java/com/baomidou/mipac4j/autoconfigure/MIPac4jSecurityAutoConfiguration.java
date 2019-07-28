@@ -2,18 +2,23 @@ package com.baomidou.mipac4j.autoconfigure;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 import javax.servlet.DispatcherType;
 
 import org.pac4j.core.authorization.authorizer.Authorizer;
 import org.pac4j.core.client.Client;
+import org.pac4j.core.client.Clients;
+import org.pac4j.core.config.Config;
+import org.pac4j.core.context.Pac4jConstants;
 import org.pac4j.core.context.session.SessionStore;
 import org.pac4j.core.credentials.TokenCredentials;
 import org.pac4j.core.credentials.authenticator.Authenticator;
 import org.pac4j.core.credentials.extractor.CredentialsExtractor;
-import org.pac4j.core.matching.Matcher;
 import org.pac4j.core.matching.PathMatcher;
+import org.pac4j.core.util.CommonHelper;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -21,11 +26,11 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import com.baomidou.mipac4j.autoconfigure.aop.AnnotationAspect;
 import com.baomidou.mipac4j.autoconfigure.factory.LogoutFilterFactoryBean;
 import com.baomidou.mipac4j.autoconfigure.factory.MIPac4jFilterFactoryBean;
-import com.baomidou.mipac4j.autoconfigure.factory.SecurityFilterFactoryBean;
 import com.baomidou.mipac4j.autoconfigure.properties.MIPac4jProperties;
 import com.baomidou.mipac4j.core.client.TokenDirectClient;
 import com.baomidou.mipac4j.core.client.TokenIndirectClient;
@@ -36,7 +41,6 @@ import com.baomidou.mipac4j.core.filter.LogoutFilter;
 import com.baomidou.mipac4j.core.filter.MIPac4jFilter;
 import com.baomidou.mipac4j.core.filter.Pac4jFilter;
 import com.baomidou.mipac4j.core.filter.SecurityFilter;
-import com.baomidou.mipac4j.core.generator.TokenGenerator;
 import com.baomidou.mipac4j.core.profile.ProfileManagerFactory;
 
 import lombok.AllArgsConstructor;
@@ -54,8 +58,11 @@ public class MIPac4jSecurityAutoConfiguration {
     private final ApplicationContext applicationContext;
     private final Authenticator<TokenCredentials> authenticator;
     private final CredentialsExtractor<TokenCredentials> credentialsExtractor;
-    private final TokenGenerator tokenGenerator;
     private final SessionStore sessionStore;
+    private final ProfileManagerFactory profileManagerFactory;
+    private final J2EContextFactory j2EContextFactory;
+    private final DoHttpAction doHttpAction;
+    private final LogoutExecutor logoutExecutor;
 
     @Bean
     public MIPac4jFilter miPac4jFilter() {
@@ -77,24 +84,73 @@ public class MIPac4jSecurityAutoConfiguration {
         if (!CollectionUtils.isEmpty(properties.getExcludeRegex())) {
             properties.getExcludeBranch().forEach(pathMatcher::excludeRegex);
         }
-        Matcher matcher = pathMatcher;
 
-        return null;
-    }
+        List<Pac4jFilter> filterList = new ArrayList<>();
 
-    @Bean
-    @ConditionalOnMissingBean
-    public SecurityFilter securityFilter(Client client, Matcher matcher, SessionStore sessionStore,
-                                         ProfileManagerFactory profileManagerFactory, DoHttpAction doHttpAction) throws Exception {
-        SecurityFilterFactoryBean factory = new SecurityFilterFactoryBean();
-        factory.setAuthorizers(properties.getAuthorizers());
-        factory.setAuthorizeMap(applicationContext.getBeansOfType(Authorizer.class));
-        factory.setClient(client);
-        factory.setMatcher(matcher);
-        factory.setSessionStore(sessionStore);
-        factory.setProfileManagerFactory(profileManagerFactory);
-        factory.setDoHttpAction(doHttpAction);
-        return factory.getObject();
+        /* securityFilter begin */
+        Clients clients = new Clients();
+        clients.setClients(client);
+        clients.setDefaultSecurityClients(client.getName());
+        Config securityConfig = new Config(clients);
+
+        SecurityFilter securityFilter = new SecurityFilter();
+        String authorizers = properties.getAuthorizers();
+        Map<String, Authorizer> authorizeMap = applicationContext.getBeansOfType(Authorizer.class);
+        if (!CollectionUtils.isEmpty(authorizeMap)) {
+            securityConfig.setAuthorizers(authorizeMap);
+            String s = String.join(Pac4jConstants.ELEMENT_SEPRATOR, authorizeMap.keySet());
+            if (StringUtils.hasText(authorizers)) {
+                authorizers += (Pac4jConstants.ELEMENT_SEPRATOR + s);
+            } else {
+                authorizers = s;
+            }
+        }
+
+        securityConfig.setSessionStore(sessionStore);
+        securityConfig.setProfileManagerFactory(profileManagerFactory);
+        securityConfig.addMatcher(Pac4jConstants.MATCHERS, pathMatcher);
+
+        securityFilter.setConfig(securityConfig);
+        securityFilter.setAuthorizers(authorizers);
+        securityFilter.setMarchers(Pac4jConstants.MATCHERS);
+        securityFilter.setDoHttpAction(doHttpAction);
+
+        filterList.add(securityFilter);
+        /* securityFilter end */
+
+        /* logoutFilter begin */
+        if (CommonHelper.isNotBlank(properties.getLogoutUrl())) {
+            Clients logoutClients = new Clients();
+            clients.setClients(client);
+            clients.setDefaultSecurityClients(client.getName());
+
+            Config logoutConfig = new Config(logoutClients);
+            logoutConfig.setSessionStore(sessionStore);
+            logoutConfig.setProfileManagerFactory(profileManagerFactory);
+
+            LogoutFilter logoutFilter = new LogoutFilter();
+            logoutFilter.setConfig(logoutConfig);
+            logoutFilter.setLogoutUrl(properties.getLogoutUrl());
+            logoutFilter.setLogoutExecutor(logoutExecutor);
+            logoutFilter.setOutThenUrl(properties.getLoginUrl());
+
+            filterList.add(logoutFilter);
+        }
+        /* logoutFilter end */
+
+        /* threeLandingFilter begin */
+        // todo
+        /* threeLandingFilter end */
+
+        /* callbackFilter begin */
+        // todo
+        /* callbackFilter end */
+
+        MIPac4jFilter filter = new MIPac4jFilter();
+        filter.setFilterList(filterList);
+        filter.setSessionStore(sessionStore);
+        filter.setJ2EContextFactory(j2EContextFactory);
+        return filter;
     }
 
     @Bean

@@ -17,6 +17,7 @@ import com.baomidou.mipac4j.core.matching.OnlyPathMatcher;
 
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Getter;
 import lombok.Setter;
 
 /**
@@ -29,13 +30,15 @@ import lombok.Setter;
 public class LogoutFilter implements Pac4jFilter {
 
     private LogoutLogic<Boolean, J2EContext> logoutLogic = new DefaultLogoutLogic<>();
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+    private Matcher matcher;
+
     private AjaxRequestResolver ajaxRequestResolver = new DefaultAjaxRequestResolver();
-    private LogoutExecutor logoutExecutor = LogoutExecutor.DO_NOTHING;
+    private LogoutExecutor logoutExecutor;
     private Config config;
     private String logoutUrl;
     private String outThenUrl;
-    @Setter(AccessLevel.NONE)
-    private Matcher matcher;
 
     @Override
     public boolean goOnChain(J2EContext context) {
@@ -54,7 +57,7 @@ public class LogoutFilter implements Pac4jFilter {
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void initCheck() {
         CommonHelper.assertNotBlank("callbackUrl", logoutUrl);
         CommonHelper.assertNotNull("config", config);
         CommonHelper.assertNotNull("ajaxRequestResolver", ajaxRequestResolver);

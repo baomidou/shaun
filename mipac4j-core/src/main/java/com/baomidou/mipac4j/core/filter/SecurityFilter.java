@@ -40,12 +40,7 @@ public class SecurityFilter implements Pac4jFilter {
     }
 
     @Override
-    public boolean isWillBeUse() {
-        return true;
-    }
-
-    @Override
-    public void afterPropertiesSet() throws Exception {
+    public void initCheck() {
         CommonHelper.assertNotBlank("marchers", marchers);
         CommonHelper.assertNotNull("config", config);
         CommonHelper.assertNotNull("doHttpAction", doHttpAction);

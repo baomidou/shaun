@@ -33,15 +33,11 @@ public class LogoutFilterFactoryBean extends AbstractPac4jFilterFactoryBean<Logo
 
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
-    private boolean willBeUse;
-    @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
     private Config config;
 
     @Override
     protected LogoutFilter createInstance() {
         LogoutFilter filter = new LogoutFilter();
-        filter.setWillBeUse(willBeUse);
         filter.setLogoutExecutor(logoutExecutor);
         filter.setLogoutUrl(properties.getLogoutUrl());
         filter.setOutThenUrl(properties.getIndexUrl());
@@ -58,7 +54,6 @@ public class LogoutFilterFactoryBean extends AbstractPac4jFilterFactoryBean<Logo
             CommonHelper.assertNotNull("logoutExecutor", logoutExecutor);
             CommonHelper.assertNotNull("profileManagerFactory", profileManagerFactory);
 
-            willBeUse = true;
             config = new Config();
             Clients clients = new Clients();
             clients.setClients(client);
