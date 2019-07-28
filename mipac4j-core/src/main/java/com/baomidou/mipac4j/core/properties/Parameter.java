@@ -1,6 +1,6 @@
 package com.baomidou.mipac4j.core.properties;
 
-import org.springframework.http.HttpHeaders;
+import org.pac4j.core.context.HttpConstants;
 
 import lombok.Data;
 
@@ -14,7 +14,7 @@ public class Parameter {
     /**
      * parameter 的 name
      */
-    private String parameterName = HttpHeaders.AUTHORIZATION;
+    private String parameterName = HttpConstants.AUTHORIZATION_HEADER;
     /**
      * 支持 get 请求
      */

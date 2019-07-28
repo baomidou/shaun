@@ -1,17 +1,18 @@
 package com.baomidou.mipac4j.autoconfigure.properties;
 
+import java.util.List;
+import java.util.UUID;
+
+import org.pac4j.core.authorization.authorizer.Authorizer;
+import org.pac4j.core.authorization.checker.DefaultAuthorizationChecker;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+
 import com.baomidou.mipac4j.core.enums.TokenLocation;
 import com.baomidou.mipac4j.core.properties.Cookie;
 import com.baomidou.mipac4j.core.properties.Header;
 import com.baomidou.mipac4j.core.properties.Parameter;
-import lombok.Data;
-import org.pac4j.core.authorization.authorizer.Authorizer;
-import org.pac4j.core.authorization.checker.DefaultAuthorizationChecker;
-import org.pac4j.core.context.HttpConstants;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 
-import java.util.List;
-import java.util.UUID;
+import lombok.Data;
 
 /**
  * @author miemie
@@ -68,10 +69,6 @@ public class MIPac4jProperties {
      * callback url,非前后台分离下,才起作用,主要用于 IndirectClients 在 callback 环节使用
      */
     private String callbackUrl;
-    /**
-     * parameter 的 name
-     */
-    private String parameterName = HttpConstants.AUTHORIZATION_HEADER;
     /**
      * jwt 超时时间
      * <li> 以数字开头,以 "s" 结尾: 秒 , 例: 100s = 100秒 </li>

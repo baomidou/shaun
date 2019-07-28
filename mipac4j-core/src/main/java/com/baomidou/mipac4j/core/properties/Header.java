@@ -1,7 +1,8 @@
 package com.baomidou.mipac4j.core.properties;
 
+import org.pac4j.core.context.HttpConstants;
+
 import lombok.Data;
-import org.springframework.http.HttpHeaders;
 
 /**
  * @author miemie
@@ -13,7 +14,7 @@ public class Header {
     /**
      * header 的 name
      */
-    private String headerName = HttpHeaders.AUTHORIZATION;
+    private String headerName = HttpConstants.AUTHORIZATION_HEADER;
     /**
      * headerName 的值的前缀
      */
