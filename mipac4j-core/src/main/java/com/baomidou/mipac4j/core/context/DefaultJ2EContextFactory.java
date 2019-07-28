@@ -12,6 +12,8 @@ import org.pac4j.core.context.session.SessionStore;
  */
 public class DefaultJ2EContextFactory implements J2EContextFactory {
 
+    public static final DefaultJ2EContextFactory INSTANCE = new DefaultJ2EContextFactory();
+
     @Override
     public J2EContext applyContext(HttpServletRequest request, HttpServletResponse response, SessionStore<J2EContext> sessionStore) {
         return new IJ2EContext(request, response, sessionStore);

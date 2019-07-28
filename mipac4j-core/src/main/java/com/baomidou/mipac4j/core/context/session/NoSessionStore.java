@@ -11,6 +11,8 @@ import org.pac4j.core.context.session.SessionStore;
  */
 public class NoSessionStore implements SessionStore<J2EContext> {
 
+    public static final NoSessionStore INSTANCE = new NoSessionStore();
+
     @Override
     public String getOrCreateSessionId(J2EContext context) {
         return null;
