@@ -151,12 +151,15 @@ public class MIPac4jSecurityAutoConfiguration {
             /* threeLandingFilter begin */
             ThreeLandingFilter threeLandingFilter = new ThreeLandingFilter();
             threeLandingFilter.setConfig(sfConfig);
+            threeLandingFilter.setThreeLandingUrl(properties.getThreeLandingUrl());
             // todo
             /* threeLandingFilter end */
 
             /* callbackFilter begin */
             CallbackFilter callbackFilter = new CallbackFilter();
             callbackFilter.setConfig(sfConfig);
+            callbackFilter.setCallbackUrl(properties.getCallbackUrl());
+            callbackFilter.setIndexUrl(properties.getIndexUrl());
             // todo
             /* callbackFilter end */
             filterList.add(threeLandingFilter);
