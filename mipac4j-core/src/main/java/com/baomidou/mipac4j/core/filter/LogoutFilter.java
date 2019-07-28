@@ -29,7 +29,7 @@ import lombok.Setter;
 @Data
 public class LogoutFilter implements Pac4jFilter {
 
-    private LogoutLogic<Boolean, J2EContext> logoutLogic = new DefaultLogoutLogic<>();
+    private final LogoutLogic<Boolean, J2EContext> logoutLogic = new DefaultLogoutLogic<>();
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
     private Matcher matcher;
@@ -40,6 +40,7 @@ public class LogoutFilter implements Pac4jFilter {
     private String logoutUrl;
     private String outThenUrl;
 
+    @SuppressWarnings("unchecked")
     @Override
     public boolean goOnChain(J2EContext context) {
         if (matcher.matches(context)) {

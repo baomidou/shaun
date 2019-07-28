@@ -26,11 +26,10 @@ public class ThreeLandingFilter implements Pac4jFilter {
 
     private final SecurityLogic<Boolean, J2EContext> securityLogic = new DefaultSecurityLogic<>();
     @Setter(AccessLevel.NONE)
-    private Config config;
-    @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
     private Matcher matcher;
 
+    private Config config;
     private String threeLandingUrl;
 
     @Override

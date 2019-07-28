@@ -29,18 +29,20 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import com.baomidou.mipac4j.autoconfigure.aop.AnnotationAspect;
-import com.baomidou.mipac4j.autoconfigure.factory.LogoutFilterFactoryBean;
 import com.baomidou.mipac4j.autoconfigure.factory.MIPac4jFilterFactoryBean;
 import com.baomidou.mipac4j.autoconfigure.properties.MIPac4jProperties;
+import com.baomidou.mipac4j.core.client.IndirectClients;
 import com.baomidou.mipac4j.core.client.TokenDirectClient;
 import com.baomidou.mipac4j.core.client.TokenIndirectClient;
 import com.baomidou.mipac4j.core.context.J2EContextFactory;
 import com.baomidou.mipac4j.core.context.http.DoHttpAction;
 import com.baomidou.mipac4j.core.engine.LogoutExecutor;
+import com.baomidou.mipac4j.core.filter.CallbackFilter;
 import com.baomidou.mipac4j.core.filter.LogoutFilter;
 import com.baomidou.mipac4j.core.filter.MIPac4jFilter;
 import com.baomidou.mipac4j.core.filter.Pac4jFilter;
 import com.baomidou.mipac4j.core.filter.SecurityFilter;
+import com.baomidou.mipac4j.core.filter.ThreeLandingFilter;
 import com.baomidou.mipac4j.core.profile.ProfileManagerFactory;
 
 import lombok.AllArgsConstructor;
@@ -65,7 +67,8 @@ public class MIPac4jSecurityAutoConfiguration {
     private final LogoutExecutor logoutExecutor;
 
     @Bean
-    public MIPac4jFilter miPac4jFilter() {
+    @ConditionalOnMissingBean
+    public MIPac4jFilterFactoryBean miPac4jFilterFactoryBean() {
         Client client;
 
         if (properties.isStateless()) {
@@ -138,41 +141,30 @@ public class MIPac4jSecurityAutoConfiguration {
         }
         /* logoutFilter end */
 
-        /* threeLandingFilter begin */
-        // todo
-        /* threeLandingFilter end */
+        if (this.hasBean(IndirectClients.class)) {
+            IndirectClients indirectClients = applicationContext.getBean(IndirectClients.class);
+            Clients sfClients = new Clients(properties.getCallbackUrl(), indirectClients.getClients());
+            Config sfConfig = new Config(sfClients);
+            sfConfig.setSessionStore(sessionStore);
+            sfConfig.setProfileManagerFactory(profileManagerFactory);
 
-        /* callbackFilter begin */
-        // todo
-        /* callbackFilter end */
+            /* threeLandingFilter begin */
+            ThreeLandingFilter threeLandingFilter = new ThreeLandingFilter();
+            threeLandingFilter.setConfig(sfConfig);
+            // todo
+            /* threeLandingFilter end */
 
-        MIPac4jFilter filter = new MIPac4jFilter();
-        filter.setFilterList(filterList);
-        filter.setSessionStore(sessionStore);
-        filter.setJ2EContextFactory(j2EContextFactory);
-        return filter;
-    }
+            /* callbackFilter begin */
+            CallbackFilter callbackFilter = new CallbackFilter();
+            callbackFilter.setConfig(sfConfig);
+            // todo
+            /* callbackFilter end */
+            filterList.add(threeLandingFilter);
+            filterList.add(callbackFilter);
+        }
 
-    @Bean
-    @ConditionalOnMissingBean
-    public LogoutFilter logoutFilter(Client client, SessionStore sessionStore, LogoutExecutor logoutExecutor,
-                                     ProfileManagerFactory profileManagerFactory)
-            throws Exception {
-        LogoutFilterFactoryBean factory = new LogoutFilterFactoryBean();
-        factory.setClient(client);
-        factory.setLogoutExecutor(logoutExecutor);
-        factory.setProfileManagerFactory(profileManagerFactory);
-        factory.setProperties(properties);
-        factory.setSessionStore(sessionStore);
-        return factory.getObject();
-    }
-
-    @Bean
-    @ConditionalOnMissingBean
-    public MIPac4jFilterFactoryBean pac4jPlusFilterFactoryBean(J2EContextFactory j2EContextFactory,
-                                                               SessionStore sessionStore) {
         MIPac4jFilterFactoryBean factory = new MIPac4jFilterFactoryBean(j2EContextFactory, sessionStore);
-        factory.setPac4jFilters(new ArrayList<>(applicationContext.getBeansOfType(Pac4jFilter.class).values()));
+        factory.setPac4jFilters(filterList);
         return factory;
     }
 
@@ -195,9 +187,13 @@ public class MIPac4jSecurityAutoConfiguration {
     }
 
     private <T> T getOrDefault(Class<T> clazz, Supplier<T> supplier) {
-        if (applicationContext.getBeanNamesForType(clazz, false, false).length > 0) {
+        if (this.hasBean(clazz)) {
             return applicationContext.getBean(clazz);
         }
         return supplier.get();
+    }
+
+    private <T> boolean hasBean(Class<T> clazz) {
+        return applicationContext.getBeanNamesForType(clazz, false, false).length > 0;
     }
 }

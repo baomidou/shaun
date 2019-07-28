@@ -4,7 +4,6 @@ import java.util.Optional;
 
 import org.pac4j.core.config.Config;
 import org.pac4j.core.context.J2EContext;
-import org.pac4j.core.context.session.SessionStore;
 import org.pac4j.core.engine.CallbackLogic;
 import org.pac4j.core.engine.DefaultCallbackLogic;
 import org.pac4j.core.matching.Matcher;
@@ -31,12 +30,12 @@ public class CallbackFilter implements Pac4jFilter {
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
     private Matcher matcher;
-    private Config config;
 
+    private Config config;
     private String indexUrl;
     private String callbackUrl;
-    private SessionStore sessionStore;
 
+    @SuppressWarnings("unchecked")
     @Override
     public boolean goOnChain(J2EContext context) {
         if (matcher.matches(context)) {

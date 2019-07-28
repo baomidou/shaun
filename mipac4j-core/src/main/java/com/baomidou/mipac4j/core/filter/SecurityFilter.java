@@ -19,7 +19,7 @@ import lombok.Data;
 @Data
 public class SecurityFilter implements Pac4jFilter {
 
-    private SecurityLogic<Boolean, J2EContext> securityLogic = new DefaultSecurityLogic<>();
+    private final SecurityLogic<Boolean, J2EContext> securityLogic = new DefaultSecurityLogic<>();
     private Config config;
     private String marchers;
     private String authorizers;
