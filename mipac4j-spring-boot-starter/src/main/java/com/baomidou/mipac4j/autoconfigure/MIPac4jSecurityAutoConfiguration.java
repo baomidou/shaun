@@ -11,6 +11,7 @@ import javax.servlet.DispatcherType;
 import org.pac4j.core.authorization.authorizer.Authorizer;
 import org.pac4j.core.client.Client;
 import org.pac4j.core.client.Clients;
+import org.pac4j.core.client.IndirectClient;
 import org.pac4j.core.config.Config;
 import org.pac4j.core.context.Pac4jConstants;
 import org.pac4j.core.context.session.SessionStore;
@@ -31,11 +32,12 @@ import org.springframework.util.StringUtils;
 import com.baomidou.mipac4j.autoconfigure.aop.AnnotationAspect;
 import com.baomidou.mipac4j.autoconfigure.factory.MIPac4jFilterFactoryBean;
 import com.baomidou.mipac4j.autoconfigure.properties.MIPac4jProperties;
-import com.baomidou.mipac4j.core.client.IndirectClients;
 import com.baomidou.mipac4j.core.client.TokenDirectClient;
 import com.baomidou.mipac4j.core.client.TokenIndirectClient;
 import com.baomidou.mipac4j.core.context.J2EContextFactory;
+import com.baomidou.mipac4j.core.context.http.DefaultDoHttpAction;
 import com.baomidou.mipac4j.core.context.http.DoHttpAction;
+import com.baomidou.mipac4j.core.engine.CallbackExecutor;
 import com.baomidou.mipac4j.core.engine.LogoutExecutor;
 import com.baomidou.mipac4j.core.filter.CallbackFilter;
 import com.baomidou.mipac4j.core.filter.LogoutFilter;
@@ -63,8 +65,6 @@ public class MIPac4jSecurityAutoConfiguration {
     private final SessionStore sessionStore;
     private final ProfileManagerFactory profileManagerFactory;
     private final J2EContextFactory j2EContextFactory;
-    private final DoHttpAction doHttpAction;
-    private final LogoutExecutor logoutExecutor;
 
     @Bean
     @ConditionalOnMissingBean
@@ -115,6 +115,7 @@ public class MIPac4jSecurityAutoConfiguration {
         securityFilter.setConfig(securityConfig);
         securityFilter.setAuthorizers(authorizers);
         securityFilter.setMarchers(Pac4jConstants.MATCHERS);
+        DoHttpAction doHttpAction = this.getOrDefault(DoHttpAction.class, DefaultDoHttpAction::new);
         securityFilter.setDoHttpAction(doHttpAction);
 
         filterList.add(securityFilter);
@@ -132,6 +133,7 @@ public class MIPac4jSecurityAutoConfiguration {
             LogoutFilter logoutFilter = new LogoutFilter();
             logoutFilter.setConfig(logoutConfig);
             logoutFilter.setLogoutUrl(properties.getLogoutUrl());
+            LogoutExecutor logoutExecutor = this.getOrDefault(LogoutExecutor.class, () -> LogoutExecutor.DO_NOTHING);
             logoutFilter.setLogoutExecutor(logoutExecutor);
             logoutFilter.setOutThenUrl(properties.getLoginUrl());
 
@@ -139,9 +141,10 @@ public class MIPac4jSecurityAutoConfiguration {
         }
         /* logoutFilter end */
 
-        if (this.hasBean(IndirectClients.class)) {
-            IndirectClients indirectClients = applicationContext.getBean(IndirectClients.class);
-            Clients sfClients = new Clients(properties.getCallbackUrl(), indirectClients.getClients());
+        if (this.hasBean(IndirectClient.class)) {
+            Map<String, IndirectClient> indirectClientMap = applicationContext.getBeansOfType(IndirectClient.class,
+                    false, false);
+            Clients sfClients = new Clients(properties.getCallbackUrl(), new ArrayList<>(indirectClientMap.values()));
             Config sfConfig = new Config(sfClients);
             sfConfig.setProfileManagerFactory(profileManagerFactory);
 
@@ -149,7 +152,6 @@ public class MIPac4jSecurityAutoConfiguration {
             ThreeLandingFilter threeLandingFilter = new ThreeLandingFilter();
             threeLandingFilter.setConfig(sfConfig);
             threeLandingFilter.setThreeLandingUrl(properties.getThreeLandingUrl());
-            // todo
             /* threeLandingFilter end */
 
             /* callbackFilter begin */
@@ -157,8 +159,10 @@ public class MIPac4jSecurityAutoConfiguration {
             callbackFilter.setConfig(sfConfig);
             callbackFilter.setCallbackUrl(properties.getCallbackUrl());
             callbackFilter.setIndexUrl(properties.getIndexUrl());
-            // todo
+            CallbackExecutor callbackExecutor = this.getOrDefault(CallbackExecutor.class, () -> CallbackExecutor.DO_NOTHING);
+            callbackFilter.setCallbackExecutor(callbackExecutor);
             /* callbackFilter end */
+
             filterList.add(threeLandingFilter);
             filterList.add(callbackFilter);
         }

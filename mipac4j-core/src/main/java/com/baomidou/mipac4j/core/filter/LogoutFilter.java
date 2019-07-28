@@ -46,7 +46,7 @@ public class LogoutFilter implements Pac4jFilter {
         if (matcher.matches(context)) {
             logoutLogic.perform(context, config, ((code, ctx) -> true), outThenUrl, null, false, false, false);
             Optional<CommonProfile> profile = config.getProfileManagerFactory().apply(context).get(false);
-            logoutExecutor.logout(context, profile);
+            logoutExecutor.logout(context, profile.get());
             return false;
         }
         return true;

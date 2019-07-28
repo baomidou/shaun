@@ -10,6 +10,7 @@ import org.pac4j.core.matching.Matcher;
 import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.core.util.CommonHelper;
 
+import com.baomidou.mipac4j.core.engine.CallbackExecutor;
 import com.baomidou.mipac4j.core.matching.OnlyPathMatcher;
 
 import lombok.AccessLevel;
@@ -34,6 +35,7 @@ public class CallbackFilter implements Pac4jFilter {
     private Config config;
     private String indexUrl;
     private String callbackUrl;
+    private CallbackExecutor callbackExecutor;
 
     @SuppressWarnings("unchecked")
     @Override
@@ -41,8 +43,9 @@ public class CallbackFilter implements Pac4jFilter {
         if (matcher.matches(context)) {
             callbackLogic.perform(context, config, (code, ctx) -> false, indexUrl, false,
                     false, false, null);
-            Optional<CommonProfile> optional = config.getProfileManagerFactory().apply(context).get(false);
-
+            Optional<CommonProfile> profile = config.getProfileManagerFactory().apply(context).get(false);
+            callbackExecutor.callBack(context, profile.get());
+            return false;
         }
         return true;
     }

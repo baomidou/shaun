@@ -3,8 +3,6 @@ package com.baomidou.mipac4j.core.engine;
 import org.pac4j.core.context.WebContext;
 import org.pac4j.core.profile.CommonProfile;
 
-import java.util.Optional;
-
 /**
  * 登出执行器
  *
@@ -17,5 +15,5 @@ public interface LogoutExecutor<U extends CommonProfile> {
     LogoutExecutor DO_NOTHING = (ctx, pf) -> {
     };
 
-    void logout(WebContext context, Optional<U> profile);
+    void logout(WebContext context, U profile);
 }

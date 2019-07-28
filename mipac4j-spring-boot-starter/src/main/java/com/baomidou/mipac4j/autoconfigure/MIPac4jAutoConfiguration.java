@@ -19,10 +19,7 @@ import com.baomidou.mipac4j.autoconfigure.properties.MIPac4jProperties;
 import com.baomidou.mipac4j.core.context.DefaultJ2EContextFactory;
 import com.baomidou.mipac4j.core.context.J2EContextFactory;
 import com.baomidou.mipac4j.core.context.cookie.CookieContext;
-import com.baomidou.mipac4j.core.context.http.DefaultDoHttpAction;
-import com.baomidou.mipac4j.core.context.http.DoHttpAction;
 import com.baomidou.mipac4j.core.context.session.NoSessionStore;
-import com.baomidou.mipac4j.core.engine.LogoutExecutor;
 import com.baomidou.mipac4j.core.extractor.TokenExtractor;
 import com.baomidou.mipac4j.core.generator.DefaultJwtTokenGenerator;
 import com.baomidou.mipac4j.core.generator.TokenGenerator;
@@ -118,21 +115,6 @@ public class MIPac4jAutoConfiguration {
     @ConditionalOnMissingBean
     public CookieContext cookieContext(J2EContextFactory j2EContextFactory, TokenGenerator tokenGenerator, SessionStore sessionStore) {
         return new CookieContext(j2EContextFactory, tokenGenerator, sessionStore, properties.getCookie());
-    }
-
-    @Bean
-    @ConditionalOnMissingBean
-    public DoHttpAction doHttpAction() {
-        return new DefaultDoHttpAction();
-    }
-
-    /**
-     * logout 执行器
-     */
-    @Bean
-    @ConditionalOnMissingBean
-    public LogoutExecutor logoutExecutor() {
-        return LogoutExecutor.DO_NOTHING;
     }
 
     @Bean
