@@ -109,7 +109,6 @@ public class MIPac4jSecurityAutoConfiguration {
             }
         }
 
-        securityConfig.setSessionStore(sessionStore);
         securityConfig.setProfileManagerFactory(profileManagerFactory);
         securityConfig.addMatcher(Pac4jConstants.MATCHERS, pathMatcher);
 
@@ -128,7 +127,6 @@ public class MIPac4jSecurityAutoConfiguration {
             clients.setDefaultSecurityClients(client.getName());
 
             Config logoutConfig = new Config(logoutClients);
-            logoutConfig.setSessionStore(sessionStore);
             logoutConfig.setProfileManagerFactory(profileManagerFactory);
 
             LogoutFilter logoutFilter = new LogoutFilter();
@@ -145,7 +143,6 @@ public class MIPac4jSecurityAutoConfiguration {
             IndirectClients indirectClients = applicationContext.getBean(IndirectClients.class);
             Clients sfClients = new Clients(properties.getCallbackUrl(), indirectClients.getClients());
             Config sfConfig = new Config(sfClients);
-            sfConfig.setSessionStore(sessionStore);
             sfConfig.setProfileManagerFactory(profileManagerFactory);
 
             /* threeLandingFilter begin */
