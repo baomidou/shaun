@@ -5,7 +5,6 @@ import com.baomidou.mipac4j.core.context.DefaultJ2EContextFactory;
 import com.baomidou.mipac4j.core.context.J2EContextFactory;
 import com.baomidou.mipac4j.core.context.cookie.CookieContext;
 import com.baomidou.mipac4j.core.context.session.NoSessionStore;
-import com.baomidou.mipac4j.core.enums.TokenLocation;
 import com.baomidou.mipac4j.core.extractor.TokenExtractor;
 import com.baomidou.mipac4j.core.generator.DefaultJwtTokenGenerator;
 import com.baomidou.mipac4j.core.generator.TokenGenerator;
@@ -69,11 +68,7 @@ public class MIPac4jAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public CredentialsExtractor<TokenCredentials> credentialsExtractor() {
-        if (properties.isStateless()) {
-            return new TokenExtractor(properties.getTokenLocation(), properties.getHeader(), properties.getParameter(), properties.getCookie());
-        } else {
-            return new TokenExtractor(TokenLocation.COOKIE, properties.getHeader(), properties.getParameter(), properties.getCookie());
-        }
+        return new TokenExtractor(properties.getTokenLocation(), properties.getHeader(), properties.getParameter(), properties.getCookie());
     }
 
     /**

@@ -13,8 +13,6 @@ mipac4j:
     - /login
     - /auth/login
     - /favicon.ico
-  cookie:
-    http-only: true
 
 
 logging:

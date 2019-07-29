@@ -3,20 +3,19 @@ package com.baomidou.mipac4j.autoconfigure;
 import com.baomidou.mipac4j.autoconfigure.aop.AnnotationAspect;
 import com.baomidou.mipac4j.autoconfigure.factory.MIPac4jFilterFactoryBean;
 import com.baomidou.mipac4j.autoconfigure.properties.MIPac4jProperties;
-import com.baomidou.mipac4j.core.client.TokenDirectClient;
-import com.baomidou.mipac4j.core.client.TokenIndirectClient;
+import com.baomidou.mipac4j.core.client.TokenClient;
 import com.baomidou.mipac4j.core.context.J2EContextFactory;
 import com.baomidou.mipac4j.core.context.http.DefaultDoHttpAction;
 import com.baomidou.mipac4j.core.context.http.DoHttpAction;
-import com.baomidou.mipac4j.core.engine.CallbackExecutor;
 import com.baomidou.mipac4j.core.engine.LogoutExecutor;
-import com.baomidou.mipac4j.core.filter.*;
+import com.baomidou.mipac4j.core.filter.LogoutFilter;
+import com.baomidou.mipac4j.core.filter.MIPac4jFilter;
+import com.baomidou.mipac4j.core.filter.Pac4jFilter;
+import com.baomidou.mipac4j.core.filter.SecurityFilter;
 import com.baomidou.mipac4j.core.profile.ProfileManagerFactory;
 import lombok.AllArgsConstructor;
 import org.pac4j.core.authorization.authorizer.Authorizer;
-import org.pac4j.core.client.Client;
 import org.pac4j.core.client.Clients;
-import org.pac4j.core.client.IndirectClient;
 import org.pac4j.core.config.Config;
 import org.pac4j.core.context.Pac4jConstants;
 import org.pac4j.core.context.session.SessionStore;
@@ -61,13 +60,8 @@ public class MIPac4jSecurityAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public MIPac4jFilterFactoryBean miPac4jFilterFactoryBean() {
-        Client client;
-
-        if (properties.isStateless()) {
-            client = new TokenDirectClient(credentialsExtractor, authenticator);
-        } else {
-            client = new TokenIndirectClient(properties.getLoginUrl(), credentialsExtractor, authenticator);
-        }
+        TokenClient tokenClient = new TokenClient(credentialsExtractor, authenticator);
+        ;
 
         PathMatcher pathMatcher = new PathMatcher();
         if (!CollectionUtils.isEmpty(properties.getExcludePath())) {
@@ -84,8 +78,8 @@ public class MIPac4jSecurityAutoConfiguration {
 
         /* securityFilter begin */
         Clients securityClients = new Clients();
-        securityClients.setClients(client);
-        securityClients.setDefaultSecurityClients(client.getName());
+        securityClients.setClients(tokenClient);
+        securityClients.setDefaultSecurityClients(tokenClient.getName());
 
         Config securityConfig = new Config(securityClients);
         String authorizers = properties.getAuthorizers();
@@ -115,50 +109,42 @@ public class MIPac4jSecurityAutoConfiguration {
 
         /* logoutFilter begin */
         if (CommonHelper.isNotBlank(properties.getLogoutUrl())) {
-            Clients logoutClients = new Clients();
-            securityClients.setClients(client);
-            securityClients.setDefaultSecurityClients(client.getName());
-
-            Config logoutConfig = new Config(logoutClients);
-            logoutConfig.setProfileManagerFactory(profileManagerFactory);
-
             LogoutFilter logoutFilter = new LogoutFilter();
-            logoutFilter.setConfig(logoutConfig);
+            logoutFilter.setTokenDirectClient(tokenClient);
             logoutFilter.setLogoutUrl(properties.getLogoutUrl());
             LogoutExecutor logoutExecutor = this.getOrDefault(LogoutExecutor.class, () -> LogoutExecutor.DO_NOTHING);
             logoutFilter.setLogoutExecutor(logoutExecutor);
-            logoutFilter.setOutThenUrl(properties.getLoginUrl());
 
             filterList.add(logoutFilter);
         }
         /* logoutFilter end */
 
-        if (!properties.isStateless() && this.hasBean(IndirectClient.class)) {
-            Map<String, IndirectClient> indirectClientMap = applicationContext.getBeansOfType(IndirectClient.class,
-                    false, false);
-
-            Clients sfClients = new Clients(properties.getCallbackUrl(), new ArrayList<>(indirectClientMap.values()));
-            Config sfConfig = new Config(sfClients);
-            sfConfig.setProfileManagerFactory(profileManagerFactory);
-
-            /* threeLandingFilter begin */
-            ThreeLandingFilter threeLandingFilter = new ThreeLandingFilter();
-            threeLandingFilter.setConfig(sfConfig);
-            threeLandingFilter.setThreeLandingUrl(properties.getThreeLandingUrl());
-            /* threeLandingFilter end */
-
-            /* callbackFilter begin */
-            CallbackFilter callbackFilter = new CallbackFilter();
-            callbackFilter.setConfig(sfConfig);
-            callbackFilter.setCallbackUrl(properties.getCallbackUrl());
-            callbackFilter.setIndexUrl(properties.getIndexUrl());
-            CallbackExecutor callbackExecutor = this.getOrDefault(CallbackExecutor.class, () -> CallbackExecutor.DO_NOTHING);
-            callbackFilter.setCallbackExecutor(callbackExecutor);
-            /* callbackFilter end */
-
-            filterList.add(threeLandingFilter);
-            filterList.add(callbackFilter);
-        }
+//        if (!properties.isStateless() && this.hasBean(IndirectClient.class)) {
+//            Map<String, IndirectClient> indirectClientMap = applicationContext.getBeansOfType(IndirectClient.class,
+//                    false, false);
+//
+//            Clients sfClients = new Clients(properties.getCallbackUrl(), new ArrayList<>(indirectClientMap.values()));
+//            Config sfConfig = new Config(sfClients);
+//            sfConfig.setProfileManagerFactory(profileManagerFactory);
+//
+//            /* threeLandingFilter begin */
+//            ThreeLandingFilter threeLandingFilter = new ThreeLandingFilter();
+//            threeLandingFilter.setConfig(sfConfig);
+//            threeLandingFilter.setThreeLandingUrl(properties.getThreeLandingUrl());
+//            /* threeLandingFilter end */
+//
+//            /* callbackFilter begin */
+//            CallbackFilter callbackFilter = new CallbackFilter();
+//            callbackFilter.setConfig(sfConfig);
+//            callbackFilter.setCallbackUrl(properties.getCallbackUrl());
+//            callbackFilter.setIndexUrl(properties.getIndexUrl());
+//            CallbackExecutor callbackExecutor = this.getOrDefault(CallbackExecutor.class, () -> CallbackExecutor.DO_NOTHING);
+//            callbackFilter.setCallbackExecutor(callbackExecutor);
+//            /* callbackFilter end */
+//
+//            filterList.add(threeLandingFilter);
+//            filterList.add(callbackFilter);
+//        }
 
         MIPac4jFilterFactoryBean factory = new MIPac4jFilterFactoryBean(j2EContextFactory, sessionStore);
         factory.setPac4jFilters(filterList);

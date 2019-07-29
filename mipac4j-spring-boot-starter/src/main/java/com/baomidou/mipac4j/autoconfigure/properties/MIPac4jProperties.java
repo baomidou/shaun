@@ -19,11 +19,6 @@ import java.util.UUID;
 @Data
 @ConfigurationProperties("mipac4j")
 public class MIPac4jProperties {
-
-    /**
-     * 是否是前后台分离的
-     */
-    private boolean stateless = true;
     /**
      * jwt 加密盐值(默认加密方式只支持 32 位字符)
      */
@@ -48,25 +43,9 @@ public class MIPac4jProperties {
      */
     private Parameter parameter = new Parameter();
     /**
-     * 登陆 url,非前后台分离下,才起作用,主要用于请求到受保护页面进行 redirect,以及登出后 redirect
-     */
-    private String loginUrl;
-    /**
      * 登出 url
      */
     private String logoutUrl;
-    /**
-     * index url,非前后台分离下,才起作用,主要用于 IndirectClients 在 callback 环节获取到 profile 之后,跳转到的 index 页面
-     */
-    private String indexUrl;
-    /**
-     * 使用 oauth 或者 cas client 下,拦截的 url,会跳转到第三方网址进行登陆,然后 通过 callbackUrl 进行回调
-     */
-    private String threeLandingUrl;
-    /**
-     * callback url,非前后台分离下,才起作用,主要用于 IndirectClients 在 callback 环节使用
-     */
-    private String callbackUrl;
     /**
      * jwt 超时时间
      * <li> 以数字开头,以 "s" 结尾: 秒 , 例: 100s = 100秒 </li>
