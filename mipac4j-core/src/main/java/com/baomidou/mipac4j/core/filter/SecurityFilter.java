@@ -1,14 +1,12 @@
 package com.baomidou.mipac4j.core.filter;
 
+import com.baomidou.mipac4j.core.context.http.DoHttpAction;
+import lombok.Data;
 import org.pac4j.core.config.Config;
 import org.pac4j.core.context.J2EContext;
 import org.pac4j.core.engine.DefaultSecurityLogic;
 import org.pac4j.core.engine.SecurityLogic;
 import org.pac4j.core.util.CommonHelper;
-
-import com.baomidou.mipac4j.core.context.http.DoHttpAction;
-
-import lombok.Data;
 
 /**
  * 安全 filter
@@ -28,7 +26,7 @@ public class SecurityFilter implements Pac4jFilter {
     @Override
     public boolean goOnChain(J2EContext context) {
         return securityLogic.perform(context, config, (ctx, pf, param) -> true, (code, ctx) -> {
-                    doHttpAction.adapt(code, ctx);
+                    doHttpAction.adapt(null, ctx);
                     return false;
                 },
                 config.getClients().getDefaultSecurityClients(), authorizers, marchers, false);

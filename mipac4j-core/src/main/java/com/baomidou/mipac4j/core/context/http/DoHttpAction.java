@@ -1,6 +1,7 @@
 package com.baomidou.mipac4j.core.context.http;
 
 import org.pac4j.core.context.J2EContext;
+import org.pac4j.core.exception.HttpAction;
 
 /**
  * @author miemie
@@ -11,8 +12,8 @@ public interface DoHttpAction {
     /**
      * 执行处理
      *
-     * @param code    框架内产生的 http code
+     * @param action  框架内产生的 HttpAction
      * @param context J2EContext
      */
-    void adapt(int code, J2EContext context);
+    void adapt(HttpAction action, J2EContext context);
 }

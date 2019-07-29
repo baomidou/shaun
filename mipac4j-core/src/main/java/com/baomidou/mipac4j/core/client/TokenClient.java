@@ -27,4 +27,6 @@ public class TokenClient extends DirectClient<TokenCredentials, CommonProfile> {
     protected void clientInit() {
         // ignore
     }
+
+
 }
