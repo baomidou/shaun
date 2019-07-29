@@ -1,13 +1,18 @@
 package com.baomidou.mipac4j.autoconfigure;
 
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Supplier;
-
-import javax.servlet.DispatcherType;
-
+import com.baomidou.mipac4j.autoconfigure.aop.AnnotationAspect;
+import com.baomidou.mipac4j.autoconfigure.factory.MIPac4jFilterFactoryBean;
+import com.baomidou.mipac4j.autoconfigure.properties.MIPac4jProperties;
+import com.baomidou.mipac4j.core.client.TokenDirectClient;
+import com.baomidou.mipac4j.core.client.TokenIndirectClient;
+import com.baomidou.mipac4j.core.context.J2EContextFactory;
+import com.baomidou.mipac4j.core.context.http.DefaultDoHttpAction;
+import com.baomidou.mipac4j.core.context.http.DoHttpAction;
+import com.baomidou.mipac4j.core.engine.CallbackExecutor;
+import com.baomidou.mipac4j.core.engine.LogoutExecutor;
+import com.baomidou.mipac4j.core.filter.*;
+import com.baomidou.mipac4j.core.profile.ProfileManagerFactory;
+import lombok.AllArgsConstructor;
 import org.pac4j.core.authorization.authorizer.Authorizer;
 import org.pac4j.core.client.Client;
 import org.pac4j.core.client.Clients;
@@ -29,25 +34,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import com.baomidou.mipac4j.autoconfigure.aop.AnnotationAspect;
-import com.baomidou.mipac4j.autoconfigure.factory.MIPac4jFilterFactoryBean;
-import com.baomidou.mipac4j.autoconfigure.properties.MIPac4jProperties;
-import com.baomidou.mipac4j.core.client.TokenDirectClient;
-import com.baomidou.mipac4j.core.client.TokenIndirectClient;
-import com.baomidou.mipac4j.core.context.J2EContextFactory;
-import com.baomidou.mipac4j.core.context.http.DefaultDoHttpAction;
-import com.baomidou.mipac4j.core.context.http.DoHttpAction;
-import com.baomidou.mipac4j.core.engine.CallbackExecutor;
-import com.baomidou.mipac4j.core.engine.LogoutExecutor;
-import com.baomidou.mipac4j.core.filter.CallbackFilter;
-import com.baomidou.mipac4j.core.filter.LogoutFilter;
-import com.baomidou.mipac4j.core.filter.MIPac4jFilter;
-import com.baomidou.mipac4j.core.filter.Pac4jFilter;
-import com.baomidou.mipac4j.core.filter.SecurityFilter;
-import com.baomidou.mipac4j.core.filter.ThreeLandingFilter;
-import com.baomidou.mipac4j.core.profile.ProfileManagerFactory;
-
-import lombok.AllArgsConstructor;
+import javax.servlet.DispatcherType;
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Supplier;
 
 /**
  * @author miemie
@@ -91,10 +83,10 @@ public class MIPac4jSecurityAutoConfiguration {
         List<Pac4jFilter> filterList = new ArrayList<>();
 
         /* securityFilter begin */
-        Clients clients = new Clients();
-        clients.setClients(client);
-        clients.setDefaultSecurityClients(client.getName());
-        Config securityConfig = new Config(clients);
+        Clients securityClients = new Clients();
+        securityClients.setClients(client);
+        securityClients.setDefaultSecurityClients(client.getName());
+        Config securityConfig = new Config(securityClients);
 
         SecurityFilter securityFilter = new SecurityFilter();
         String authorizers = properties.getAuthorizers();
@@ -124,8 +116,8 @@ public class MIPac4jSecurityAutoConfiguration {
         /* logoutFilter begin */
         if (CommonHelper.isNotBlank(properties.getLogoutUrl())) {
             Clients logoutClients = new Clients();
-            clients.setClients(client);
-            clients.setDefaultSecurityClients(client.getName());
+            securityClients.setClients(client);
+            securityClients.setDefaultSecurityClients(client.getName());
 
             Config logoutConfig = new Config(logoutClients);
             logoutConfig.setProfileManagerFactory(profileManagerFactory);
