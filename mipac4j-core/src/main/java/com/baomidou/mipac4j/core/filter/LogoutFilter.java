@@ -1,7 +1,11 @@
 package com.baomidou.mipac4j.core.filter;
 
-import java.util.Optional;
-
+import com.baomidou.mipac4j.core.engine.LogoutExecutor;
+import com.baomidou.mipac4j.core.matching.OnlyPathMatcher;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.pac4j.core.config.Config;
 import org.pac4j.core.context.J2EContext;
 import org.pac4j.core.engine.DefaultLogoutLogic;
@@ -12,13 +16,7 @@ import org.pac4j.core.matching.Matcher;
 import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.core.util.CommonHelper;
 
-import com.baomidou.mipac4j.core.engine.LogoutExecutor;
-import com.baomidou.mipac4j.core.matching.OnlyPathMatcher;
-
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import java.util.Optional;
 
 /**
  * 登出 filter
@@ -59,11 +57,10 @@ public class LogoutFilter implements Pac4jFilter {
 
     @Override
     public void initCheck() {
-        CommonHelper.assertNotBlank("callbackUrl", logoutUrl);
+        CommonHelper.assertNotBlank("logoutUrl", logoutUrl);
+        CommonHelper.assertNotBlank("outThenUrl", outThenUrl);
         CommonHelper.assertNotNull("config", config);
-        CommonHelper.assertNotNull("ajaxRequestResolver", ajaxRequestResolver);
         CommonHelper.assertNotNull("logoutExecutor", logoutExecutor);
-        CommonHelper.assertNotNull("logoutLogic", logoutLogic);
         this.matcher = new OnlyPathMatcher(logoutUrl);
     }
 }

@@ -1,18 +1,17 @@
 package com.baomidou.mipac4j.core.filter;
 
+import com.baomidou.mipac4j.core.matching.OnlyPathMatcher;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.pac4j.core.config.Config;
 import org.pac4j.core.context.J2EContext;
 import org.pac4j.core.context.Pac4jConstants;
 import org.pac4j.core.engine.DefaultSecurityLogic;
 import org.pac4j.core.engine.SecurityLogic;
 import org.pac4j.core.matching.Matcher;
-
-import com.baomidou.mipac4j.core.matching.OnlyPathMatcher;
-
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import org.pac4j.core.util.CommonHelper;
 
 /**
  * 三方登陆 filter
@@ -49,7 +48,8 @@ public class ThreeLandingFilter implements Pac4jFilter {
 
     @Override
     public void initCheck() {
+        CommonHelper.assertNotBlank("threeLandingUrl", threeLandingUrl);
+        CommonHelper.assertNotNull("config", config);
         this.matcher = new OnlyPathMatcher(threeLandingUrl);
-        this.config = new Config();
     }
 }

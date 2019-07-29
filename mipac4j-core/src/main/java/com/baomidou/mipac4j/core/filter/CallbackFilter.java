@@ -1,7 +1,11 @@
 package com.baomidou.mipac4j.core.filter;
 
-import java.util.Optional;
-
+import com.baomidou.mipac4j.core.engine.CallbackExecutor;
+import com.baomidou.mipac4j.core.matching.OnlyPathMatcher;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.pac4j.core.config.Config;
 import org.pac4j.core.context.J2EContext;
 import org.pac4j.core.engine.CallbackLogic;
@@ -10,13 +14,7 @@ import org.pac4j.core.matching.Matcher;
 import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.core.util.CommonHelper;
 
-import com.baomidou.mipac4j.core.engine.CallbackExecutor;
-import com.baomidou.mipac4j.core.matching.OnlyPathMatcher;
-
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import java.util.Optional;
 
 /**
  * 回调 filter
@@ -53,6 +51,10 @@ public class CallbackFilter implements Pac4jFilter {
     @Override
     public void initCheck() {
         CommonHelper.assertNotBlank("callbackUrl", callbackUrl);
+        CommonHelper.assertNotBlank("callbackUrl", callbackUrl);
+        CommonHelper.assertNotBlank("indexUrl", indexUrl);
+        CommonHelper.assertNotNull("callbackExecutor", callbackExecutor);
+        CommonHelper.assertNotNull("config", config);
         this.matcher = new OnlyPathMatcher(callbackUrl);
     }
 }
