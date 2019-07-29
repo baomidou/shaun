@@ -177,8 +177,7 @@ public class MIPac4jSecurityAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public AnnotationAspect annotationAspect(ProfileManagerFactory profileManagerFactory, SessionStore sessionStore,
-                                             J2EContextFactory j2EContextFactory) {
+    public AnnotationAspect annotationAspect() {
         return new AnnotationAspect(profileManagerFactory, sessionStore, j2EContextFactory);
     }
 
