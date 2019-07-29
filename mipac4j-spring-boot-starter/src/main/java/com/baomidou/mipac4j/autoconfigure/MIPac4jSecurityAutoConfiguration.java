@@ -86,9 +86,8 @@ public class MIPac4jSecurityAutoConfiguration {
         Clients securityClients = new Clients();
         securityClients.setClients(client);
         securityClients.setDefaultSecurityClients(client.getName());
-        Config securityConfig = new Config(securityClients);
 
-        SecurityFilter securityFilter = new SecurityFilter();
+        Config securityConfig = new Config(securityClients);
         String authorizers = properties.getAuthorizers();
         Map<String, Authorizer> authorizeMap = applicationContext.getBeansOfType(Authorizer.class);
         if (!CollectionUtils.isEmpty(authorizeMap)) {
@@ -104,6 +103,7 @@ public class MIPac4jSecurityAutoConfiguration {
         securityConfig.setProfileManagerFactory(profileManagerFactory);
         securityConfig.addMatcher(Pac4jConstants.MATCHERS, pathMatcher);
 
+        SecurityFilter securityFilter = new SecurityFilter();
         securityFilter.setConfig(securityConfig);
         securityFilter.setAuthorizers(authorizers);
         securityFilter.setMarchers(Pac4jConstants.MATCHERS);
@@ -136,6 +136,7 @@ public class MIPac4jSecurityAutoConfiguration {
         if (this.hasBean(IndirectClient.class)) {
             Map<String, IndirectClient> indirectClientMap = applicationContext.getBeansOfType(IndirectClient.class,
                     false, false);
+
             Clients sfClients = new Clients(properties.getCallbackUrl(), new ArrayList<>(indirectClientMap.values()));
             Config sfConfig = new Config(sfClients);
             sfConfig.setProfileManagerFactory(profileManagerFactory);
