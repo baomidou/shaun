@@ -1,8 +1,13 @@
 mipac4j:
   stateless: false
-  logout-url: /logout
-  exclude-path: /login
-  token-location: cookie
+  login-url: /login.html
+  logout-url: /logout.html
+  index-url: /index.html
+  three-landing-url: /three-landing.html
+  callback-url: /callback.html
+  exclude-path:
+    - /login.html
+    - /favicon.ico
 
 logging:
   level:

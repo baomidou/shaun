@@ -133,7 +133,7 @@ public class MIPac4jSecurityAutoConfiguration {
         }
         /* logoutFilter end */
 
-        if (this.hasBean(IndirectClient.class)) {
+        if (!properties.isStateless() && this.hasBean(IndirectClient.class)) {
             Map<String, IndirectClient> indirectClientMap = applicationContext.getBeansOfType(IndirectClient.class,
                     false, false);
 
