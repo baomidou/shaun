@@ -1,10 +1,20 @@
 package com.baomidou.mipac4j.autoconfigure;
 
+import com.baomidou.mipac4j.autoconfigure.properties.MIPac4jProperties;
+import com.baomidou.mipac4j.core.context.DefaultJ2EContextFactory;
+import com.baomidou.mipac4j.core.context.J2EContextFactory;
+import com.baomidou.mipac4j.core.context.cookie.CookieContext;
+import com.baomidou.mipac4j.core.context.session.NoSessionStore;
+import com.baomidou.mipac4j.core.enums.TokenLocation;
+import com.baomidou.mipac4j.core.extractor.TokenExtractor;
+import com.baomidou.mipac4j.core.generator.DefaultJwtTokenGenerator;
+import com.baomidou.mipac4j.core.generator.TokenGenerator;
+import com.baomidou.mipac4j.core.profile.ProfileManagerFactory;
+import lombok.AllArgsConstructor;
 import org.pac4j.core.context.session.SessionStore;
 import org.pac4j.core.credentials.TokenCredentials;
 import org.pac4j.core.credentials.authenticator.Authenticator;
 import org.pac4j.core.credentials.extractor.CredentialsExtractor;
-import org.pac4j.http.credentials.extractor.CookieExtractor;
 import org.pac4j.jwt.config.encryption.EncryptionConfiguration;
 import org.pac4j.jwt.config.encryption.SecretEncryptionConfiguration;
 import org.pac4j.jwt.config.signature.SecretSignatureConfiguration;
@@ -14,18 +24,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import com.baomidou.mipac4j.autoconfigure.properties.MIPac4jProperties;
-import com.baomidou.mipac4j.core.context.DefaultJ2EContextFactory;
-import com.baomidou.mipac4j.core.context.J2EContextFactory;
-import com.baomidou.mipac4j.core.context.cookie.CookieContext;
-import com.baomidou.mipac4j.core.context.session.NoSessionStore;
-import com.baomidou.mipac4j.core.extractor.TokenExtractor;
-import com.baomidou.mipac4j.core.generator.DefaultJwtTokenGenerator;
-import com.baomidou.mipac4j.core.generator.TokenGenerator;
-import com.baomidou.mipac4j.core.profile.ProfileManagerFactory;
-
-import lombok.AllArgsConstructor;
 
 /**
  * @author miemie
@@ -74,7 +72,7 @@ public class MIPac4jAutoConfiguration {
         if (properties.isStateless()) {
             return new TokenExtractor(properties.getTokenLocation(), properties.getHeader(), properties.getParameter(), properties.getCookie());
         } else {
-            return new CookieExtractor(properties.getCookie().getName());
+            return new TokenExtractor(TokenLocation.COOKIE, properties.getHeader(), properties.getParameter(), properties.getCookie());
         }
     }
 
