@@ -1,49 +1,62 @@
 package mipac4j.test.cookie;
 
-import org.pac4j.core.profile.CommonProfile;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.baomidou.mipac4j.core.annotation.RequireAnyPermission;
 import com.baomidou.mipac4j.core.annotation.RequireAnyRole;
 import com.baomidou.mipac4j.core.context.cookie.CookieContext;
-
 import lombok.AllArgsConstructor;
+import org.pac4j.core.profile.CommonProfile;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 
 /**
  * @author miemie
  * @since 2019-07-25
  */
 @AllArgsConstructor
-@RestController
+@Controller
 public class TestController {
 
     private final CookieContext cookieContext;
 
-    @GetMapping("login")
-    public String login() {
+    @GetMapping("auth/login")
+    public String authLogin() {
         CommonProfile profile = new CommonProfile();
         profile.setId("111111111111");
         profile.setLinkedId("22222222222");
         profile.addRole("admin");
         profile.addPermission("add");
-        return cookieContext.generateAndAddCookie(profile);
+        cookieContext.generateAndAddCookie(profile);
+        return "index";
     }
 
-    @GetMapping("a1")
-    public String a1() {
-        return "a1";
+    @GetMapping("/login")
+    public String login() {
+        return "login";
     }
 
-    @GetMapping("a2")
+    @GetMapping("/index")
+    public String index() {
+        return "index";
+    }
+
+    @GetMapping("/a1")
+    public String a1(Model model) {
+        model.addAttribute("a", "a1");
+        return "a";
+    }
+
+    @GetMapping("/a2")
     @RequireAnyRole("admin")
-    public String a2() {
-        return "a2";
+    public String a2(Model model) {
+        model.addAttribute("a", "a2");
+        return "a";
     }
 
-    @GetMapping("a3")
+    @GetMapping("/a3")
     @RequireAnyPermission("add")
-    public String a3() {
-        return "a3";
+    public String a3(Model model) {
+        model.addAttribute("a", "a3");
+        return "a";
     }
 }

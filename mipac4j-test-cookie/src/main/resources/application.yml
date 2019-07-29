@@ -1,13 +1,21 @@
+spring:
+  thymeleaf:
+    cache: false
+
 mipac4j:
   stateless: false
-  login-url: /login.html
-  logout-url: /logout.html
-  index-url: /index.html
-  three-landing-url: /three-landing.html
-  callback-url: /callback.html
+  login-url: /login
+  logout-url: /logout
+  index-url: /index
+  three-landing-url: /three-landing
+  callback-url: /callback
   exclude-path:
-    - /login.html
+    - /login
+    - /auth/login
     - /favicon.ico
+  cookie:
+    http-only: true
+
 
 logging:
   level:

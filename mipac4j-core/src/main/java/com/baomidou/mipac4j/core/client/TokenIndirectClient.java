@@ -21,6 +21,7 @@ public class TokenIndirectClient extends IndirectClient<TokenCredentials, Common
                                final Authenticator<TokenCredentials> tokenAuthenticator) {
         defaultCredentialsExtractor(credentialsExtractor);
         defaultAuthenticator(tokenAuthenticator);
+        setCallbackUrl(loginUrl);
         defaultRedirectActionBuilder(ctx -> {
             final String finalLoginUrl = getUrlResolver().compute(loginUrl, ctx);
             return RedirectAction.redirect(finalLoginUrl);

@@ -1,18 +1,16 @@
 package com.baomidou.mipac4j.autoconfigure.properties;
 
-import java.util.List;
-import java.util.UUID;
-
-import org.pac4j.core.authorization.authorizer.Authorizer;
-import org.pac4j.core.authorization.checker.DefaultAuthorizationChecker;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-
 import com.baomidou.mipac4j.core.enums.TokenLocation;
 import com.baomidou.mipac4j.core.properties.Cookie;
 import com.baomidou.mipac4j.core.properties.Header;
 import com.baomidou.mipac4j.core.properties.Parameter;
-
 import lombok.Data;
+import org.pac4j.core.authorization.authorizer.Authorizer;
+import org.pac4j.core.authorization.checker.DefaultAuthorizationChecker;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+
+import java.util.List;
+import java.util.UUID;
 
 /**
  * @author miemie
