@@ -36,6 +36,7 @@ ext {
             "pac4j-oauth"                        : "org.pac4j:pac4j-oauth:${pac4jVersion}",
             "pac4j-cas"                          : "org.pac4j:pac4j-cas:${pac4jVersion}",
             "spring-web"                         : "org.springframework:spring-web:${springVersion}",
+            "spring-webmvc"                      : "org.springframework:spring-webmvc:${springVersion}",
             "servlet-api"                        : "javax.servlet:javax.servlet-api:4.0.1",
             "spring-aop"                         : "org.springframework:spring-aop:${springVersion}",
             "spring-context"                     : "org.springframework:spring-context:${springVersion}",

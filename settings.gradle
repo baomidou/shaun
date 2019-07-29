@@ -4,4 +4,5 @@ include "mipac4j-spring-boot-starter"
 include 'mipac4j-test-stateless-header'
 include 'mipac4j-test-stateless-cookie'
 include 'mipac4j-test-cookie'
+include 'mipac4j-stateless-spring-boot-starter'
 

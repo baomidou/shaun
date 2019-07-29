@@ -1,0 +1,4 @@
+# Auto Configure
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.baomidou.mipac4j.stateless.autoconfigure.MIPac4jAutoConfiguration,\
+  com.baomidou.mipac4j.stateless.autoconfigure.MIPac4jSecurityAutoConfiguration
