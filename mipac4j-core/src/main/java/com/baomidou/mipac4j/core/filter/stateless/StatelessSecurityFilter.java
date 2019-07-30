@@ -1,7 +1,6 @@
 package com.baomidou.mipac4j.core.filter.stateless;
 
 import com.baomidou.mipac4j.core.client.TokenClient;
-import com.baomidou.mipac4j.core.context.http.DoHttpAction;
 import com.baomidou.mipac4j.core.filter.Pac4jFilter;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +33,6 @@ public class StatelessSecurityFilter implements Pac4jFilter {
     private TokenClient tokenClient;
     private String authorizers;
     private Map<String, Authorizer> authorizerMap;
-    private DoHttpAction doHttpAction;
 
     @Override
     public boolean goOnChain(J2EContext context) {
@@ -60,8 +58,7 @@ public class StatelessSecurityFilter implements Pac4jFilter {
             } else {
                 action = HttpAction.unauthorized(context);
             }
-            doHttpAction.adapt(action, context);
-            return false;
+            throw action;
         }
         return true;
     }
@@ -75,6 +72,5 @@ public class StatelessSecurityFilter implements Pac4jFilter {
     public void initCheck() {
         CommonHelper.assertNotNull("tokenClient", tokenClient);
         CommonHelper.assertNotNull("pathMatcher", pathMatcher);
-        CommonHelper.assertNotNull("doHttpAction", doHttpAction);
     }
 }

@@ -3,6 +3,7 @@ package com.baomidou.mipac4j.core.interceptor;
 import com.baomidou.mipac4j.core.context.J2EContextFactory;
 import com.baomidou.mipac4j.core.filter.Pac4jFilter;
 import lombok.Data;
+import lombok.experimental.Accessors;
 import org.pac4j.core.context.J2EContext;
 import org.pac4j.core.context.session.SessionStore;
 import org.pac4j.core.util.CommonHelper;
@@ -20,6 +21,7 @@ import java.util.List;
  * @since 2019-07-29
  */
 @Data
+@Accessors(chain = true)
 public class MIPac4jInterceptor implements HandlerInterceptor, InitializingBean {
 
     private List<Pac4jFilter> filterList = Collections.emptyList();

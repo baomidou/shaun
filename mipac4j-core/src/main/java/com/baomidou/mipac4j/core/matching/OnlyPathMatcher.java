@@ -11,11 +11,6 @@ import org.pac4j.core.util.CommonHelper;
 public class OnlyPathMatcher implements Matcher {
 
     /**
-     * 默认不匹配任何路径
-     */
-    public static final Matcher NO_MATCHER = (ctx) -> false;
-
-    /**
      * 需要匹配的路径
      */
     private final String path;
@@ -23,6 +18,10 @@ public class OnlyPathMatcher implements Matcher {
     public OnlyPathMatcher(String path) {
         CommonHelper.assertNotBlank("path", path);
         this.path = path;
+    }
+
+    public static OnlyPathMatcher instance(final String path) {
+        return new OnlyPathMatcher(path);
     }
 
     @Override

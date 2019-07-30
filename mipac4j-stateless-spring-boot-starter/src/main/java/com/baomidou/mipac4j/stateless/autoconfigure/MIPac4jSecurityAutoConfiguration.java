@@ -2,22 +2,20 @@ package com.baomidou.mipac4j.stateless.autoconfigure;
 
 import com.baomidou.mipac4j.core.client.TokenClient;
 import com.baomidou.mipac4j.core.context.J2EContextFactory;
-import com.baomidou.mipac4j.core.context.http.DefaultDoHttpAction;
-import com.baomidou.mipac4j.core.context.http.DoHttpAction;
+import com.baomidou.mipac4j.core.context.session.NoSessionStore;
 import com.baomidou.mipac4j.core.engine.LogoutExecutor;
-import com.baomidou.mipac4j.core.filter.LogoutFilter;
 import com.baomidou.mipac4j.core.filter.MIPac4jFilter;
 import com.baomidou.mipac4j.core.filter.Pac4jFilter;
-import com.baomidou.mipac4j.core.filter.SecurityFilter;
+import com.baomidou.mipac4j.core.filter.stateless.StatelessLogoutFilter;
+import com.baomidou.mipac4j.core.filter.stateless.StatelessSecurityFilter;
 import com.baomidou.mipac4j.core.interceptor.MIPac4jInterceptor;
+import com.baomidou.mipac4j.core.matching.OnlyPathMatcher;
 import com.baomidou.mipac4j.core.profile.ProfileManagerFactory;
 import com.baomidou.mipac4j.stateless.autoconfigure.aop.AnnotationAspect;
 import com.baomidou.mipac4j.stateless.autoconfigure.factory.MIPac4jFilterFactoryBean;
 import com.baomidou.mipac4j.stateless.autoconfigure.properties.MIPac4jProperties;
 import lombok.AllArgsConstructor;
 import org.pac4j.core.authorization.authorizer.Authorizer;
-import org.pac4j.core.client.Clients;
-import org.pac4j.core.config.Config;
 import org.pac4j.core.context.J2EContext;
 import org.pac4j.core.context.Pac4jConstants;
 import org.pac4j.core.context.session.SessionStore;
@@ -57,7 +55,7 @@ public class MIPac4jSecurityAutoConfiguration implements WebMvcConfigurer {
     private final ApplicationContext applicationContext;
     private final Authenticator<TokenCredentials> authenticator;
     private final CredentialsExtractor<TokenCredentials> credentialsExtractor;
-    private final SessionStore<J2EContext> sessionStore;
+    private final SessionStore<J2EContext> sessionStore = NoSessionStore.INSTANCE;
     private final ProfileManagerFactory profileManagerFactory;
     private final J2EContextFactory j2EContextFactory;
 
@@ -70,7 +68,6 @@ public class MIPac4jSecurityAutoConfiguration implements WebMvcConfigurer {
     @ConditionalOnMissingBean
     public MIPac4jInterceptor miPac4jInterceptor() {
         TokenClient tokenClient = new TokenClient(credentialsExtractor, authenticator);
-        ;
 
         PathMatcher pathMatcher = new PathMatcher();
         if (!CollectionUtils.isEmpty(properties.getExcludePath())) {
@@ -86,15 +83,9 @@ public class MIPac4jSecurityAutoConfiguration implements WebMvcConfigurer {
         List<Pac4jFilter> filterList = new ArrayList<>();
 
         /* securityFilter begin */
-        Clients securityClients = new Clients();
-        securityClients.setClients(tokenClient);
-        securityClients.setDefaultSecurityClients(tokenClient.getName());
-
-        Config securityConfig = new Config(securityClients);
         String authorizers = properties.getAuthorizers();
         Map<String, Authorizer> authorizeMap = applicationContext.getBeansOfType(Authorizer.class);
         if (!CollectionUtils.isEmpty(authorizeMap)) {
-            securityConfig.setAuthorizers(authorizeMap);
             String s = String.join(Pac4jConstants.ELEMENT_SEPRATOR, authorizeMap.keySet());
             if (StringUtils.hasText(authorizers)) {
                 authorizers += (Pac4jConstants.ELEMENT_SEPRATOR + s);
@@ -103,61 +94,27 @@ public class MIPac4jSecurityAutoConfiguration implements WebMvcConfigurer {
             }
         }
 
-        securityConfig.setProfileManagerFactory(profileManagerFactory);
-        securityConfig.addMatcher(Pac4jConstants.MATCHERS, pathMatcher);
-
-        SecurityFilter securityFilter = new SecurityFilter();
-        securityFilter.setConfig(securityConfig);
+        StatelessSecurityFilter securityFilter = new StatelessSecurityFilter();
+        securityFilter.setAuthorizerMap(authorizeMap);
         securityFilter.setAuthorizers(authorizers);
-        securityFilter.setMarchers(Pac4jConstants.MATCHERS);
-        DoHttpAction doHttpAction = this.getOrDefault(DoHttpAction.class, DefaultDoHttpAction::new);
-        securityFilter.setDoHttpAction(doHttpAction);
+        securityFilter.setTokenClient(tokenClient);
 
         filterList.add(securityFilter);
         /* securityFilter end */
 
         /* logoutFilter begin */
         if (CommonHelper.isNotBlank(properties.getLogoutUrl())) {
-            LogoutFilter logoutFilter = new LogoutFilter();
-            logoutFilter.setTokenDirectClient(tokenClient);
-            logoutFilter.setLogoutUrl(properties.getLogoutUrl());
+            StatelessLogoutFilter logoutFilter = new StatelessLogoutFilter();
+            logoutFilter.setTokenClient(tokenClient);
+            logoutFilter.setPathMatcher(OnlyPathMatcher.instance(properties.getLogoutUrl()));
             LogoutExecutor logoutExecutor = this.getOrDefault(LogoutExecutor.class, () -> LogoutExecutor.DO_NOTHING);
             logoutFilter.setLogoutExecutor(logoutExecutor);
 
             filterList.add(logoutFilter);
         }
-        /* logoutFilter end */
 
-//        if (!properties.isStateless() && this.hasBean(IndirectClient.class)) {
-//            Map<String, IndirectClient> indirectClientMap = applicationContext.getBeansOfType(IndirectClient.class,
-//                    false, false);
-//
-//            Clients sfClients = new Clients(properties.getCallbackUrl(), new ArrayList<>(indirectClientMap.values()));
-//            Config sfConfig = new Config(sfClients);
-//            sfConfig.setProfileManagerFactory(profileManagerFactory);
-//
-//            /* threeLandingFilter begin */
-//            ThreeLandingFilter threeLandingFilter = new ThreeLandingFilter();
-//            threeLandingFilter.setConfig(sfConfig);
-//            threeLandingFilter.setThreeLandingUrl(properties.getThreeLandingUrl());
-//            /* threeLandingFilter end */
-//
-//            /* callbackFilter begin */
-//            CallbackFilter callbackFilter = new CallbackFilter();
-//            callbackFilter.setConfig(sfConfig);
-//            callbackFilter.setCallbackUrl(properties.getCallbackUrl());
-//            callbackFilter.setIndexUrl(properties.getIndexUrl());
-//            CallbackExecutor callbackExecutor = this.getOrDefault(CallbackExecutor.class, () -> CallbackExecutor.DO_NOTHING);
-//            callbackFilter.setCallbackExecutor(callbackExecutor);
-//            /* callbackFilter end */
-//
-//            filterList.add(threeLandingFilter);
-//            filterList.add(callbackFilter);
-//        }
-
-        MIPac4jInterceptor factory = new MIPac4jInterceptor(sessionStore, j2EContextFactory);
-        factory.setFilterList(filterList);
-        return factory;
+        MIPac4jInterceptor interceptor = new MIPac4jInterceptor(sessionStore, j2EContextFactory);
+        return interceptor.setFilterList(filterList);
     }
 
     @SuppressWarnings("all")

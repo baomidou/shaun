@@ -10,10 +10,10 @@ import org.pac4j.core.profile.CommonProfile;
  * @since 2019-07-22
  */
 @FunctionalInterface
-public interface LogoutExecutor<U extends CommonProfile> {
+public interface LogoutExecutor {
 
     LogoutExecutor DO_NOTHING = (ctx, pf) -> {
     };
 
-    void logout(WebContext context, U profile);
+    void logout(WebContext context, CommonProfile profile);
 }
