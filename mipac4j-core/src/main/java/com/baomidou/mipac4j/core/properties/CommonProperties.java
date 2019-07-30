@@ -1,11 +1,11 @@
 package com.baomidou.mipac4j.core.properties;
 
-import lombok.Data;
+import java.util.List;
+
 import org.pac4j.core.authorization.authorizer.Authorizer;
 import org.pac4j.core.authorization.checker.DefaultAuthorizationChecker;
 
-import java.util.List;
-import java.util.UUID;
+import lombok.Data;
 
 /**
  * @author miemie
@@ -13,10 +13,7 @@ import java.util.UUID;
  */
 @Data
 public class CommonProperties {
-    /**
-     * jwt 加密盐值(默认加密方式只支持 32 位字符)
-     */
-    private String salt = UUID.randomUUID().toString().replace("-", "");
+
     /**
      * 登出 url
      */
