@@ -12,7 +12,6 @@ import org.pac4j.core.authorization.authorizer.RequireAllRolesAuthorizer;
 import org.pac4j.core.authorization.authorizer.RequireAnyPermissionAuthorizer;
 import org.pac4j.core.authorization.authorizer.RequireAnyRoleAuthorizer;
 import org.pac4j.core.context.J2EContext;
-import org.pac4j.core.context.Pac4jConstants;
 import org.pac4j.core.context.session.SessionStore;
 import org.pac4j.core.exception.HttpAction;
 import org.pac4j.core.profile.CommonProfile;
@@ -24,6 +23,7 @@ import com.baomidou.mipac4j.core.annotation.RequireAnyRole;
 import com.baomidou.mipac4j.core.context.J2EContextFactory;
 import com.baomidou.mipac4j.core.context.session.NoSessionStore;
 import com.baomidou.mipac4j.core.util.J2EContextUtil;
+import com.baomidou.mipac4j.core.util.ProfileHolder;
 
 import lombok.AllArgsConstructor;
 
@@ -62,7 +62,7 @@ public class AnnotationAspect {
 
     @SuppressWarnings("unchecked")
     private List<CommonProfile> isAuthenticated(J2EContext context) {
-        final CommonProfile commonProfile = (CommonProfile) context.getRequestAttribute(Pac4jConstants.USER_PROFILES);
+        final CommonProfile commonProfile = ProfileHolder.getProfile(context);
         List<CommonProfile> commonProfiles = Collections.singletonList(commonProfile);
         if (!IS_AUTHENTICATED_AUTHORIZER.isAuthorized(context, commonProfiles)) {
             throw HttpAction.unauthorized(context);

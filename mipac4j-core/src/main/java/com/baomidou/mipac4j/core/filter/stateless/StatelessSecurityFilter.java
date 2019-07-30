@@ -1,22 +1,24 @@
 package com.baomidou.mipac4j.core.filter.stateless;
 
-import com.baomidou.mipac4j.core.client.TokenClient;
-import com.baomidou.mipac4j.core.filter.Pac4jFilter;
-import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+import java.util.Collections;
+import java.util.Map;
+
 import org.pac4j.core.authorization.authorizer.Authorizer;
 import org.pac4j.core.authorization.checker.AuthorizationChecker;
 import org.pac4j.core.authorization.checker.DefaultAuthorizationChecker;
 import org.pac4j.core.context.J2EContext;
-import org.pac4j.core.context.Pac4jConstants;
 import org.pac4j.core.credentials.TokenCredentials;
 import org.pac4j.core.exception.HttpAction;
 import org.pac4j.core.matching.PathMatcher;
 import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.core.util.CommonHelper;
 
-import java.util.Collections;
-import java.util.Map;
+import com.baomidou.mipac4j.core.client.TokenClient;
+import com.baomidou.mipac4j.core.filter.Pac4jFilter;
+import com.baomidou.mipac4j.core.util.ProfileHolder;
+
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 前后分离的安全 filter
@@ -46,7 +48,7 @@ public class StatelessSecurityFilter implements Pac4jFilter {
 
             HttpAction action;
             if (profile != null) {
-                context.setRequestAttribute(Pac4jConstants.USER_PROFILES, profile);
+                ProfileHolder.setProfile(context, profile);
                 if (authorizationChecker.isAuthorized(context, Collections.singletonList(profile),
                         authorizers, authorizerMap)) {
                     log.debug("authenticated and authorized -> grant access");
