@@ -24,6 +24,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.baomidou.mipac4j.core.client.TokenClient;
 import com.baomidou.mipac4j.core.context.J2EContextFactory;
+import com.baomidou.mipac4j.core.context.session.NoSessionStore;
 import com.baomidou.mipac4j.core.engine.LogoutExecutor;
 import com.baomidou.mipac4j.core.filter.Pac4jFilter;
 import com.baomidou.mipac4j.core.filter.stateless.StatelessLogoutFilter;
@@ -105,7 +106,8 @@ public class MIPac4jSecurityAutoConfiguration implements WebMvcConfigurer {
         }
 
         MIPac4jInterceptor interceptor = new MIPac4jInterceptor();
-        return interceptor.setJ2EContextFactory(j2EContextFactory).setFilterList(filterList);
+        return interceptor.setJ2EContextFactory(j2EContextFactory).setSessionStore(NoSessionStore.INSTANCE)
+                .setFilterList(filterList);
     }
 
     @Bean

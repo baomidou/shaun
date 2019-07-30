@@ -16,7 +16,6 @@ import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import com.baomidou.mipac4j.core.context.J2EContextFactory;
-import com.baomidou.mipac4j.core.context.session.NoSessionStore;
 import com.baomidou.mipac4j.core.filter.Pac4jFilter;
 
 import lombok.Data;
@@ -32,7 +31,7 @@ public class MIPac4jInterceptor implements HandlerInterceptor, InitializingBean 
 
     private List<Pac4jFilter> filterList = Collections.emptyList();
 
-    private final SessionStore<J2EContext> sessionStore = NoSessionStore.INSTANCE;
+    private SessionStore<J2EContext> sessionStore;
 
     private J2EContextFactory j2EContextFactory;
 
