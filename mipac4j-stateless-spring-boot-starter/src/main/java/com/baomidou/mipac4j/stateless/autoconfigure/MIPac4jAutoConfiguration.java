@@ -19,7 +19,6 @@ import com.baomidou.mipac4j.core.context.cookie.CookieContext;
 import com.baomidou.mipac4j.core.extractor.TokenExtractor;
 import com.baomidou.mipac4j.core.generator.DefaultJwtTokenGenerator;
 import com.baomidou.mipac4j.core.generator.TokenGenerator;
-import com.baomidou.mipac4j.core.profile.ProfileManagerFactory;
 import com.baomidou.mipac4j.stateless.autoconfigure.properties.MIPac4jProperties;
 
 import lombok.AllArgsConstructor;
@@ -92,14 +91,11 @@ public class MIPac4jAutoConfiguration {
         return new CookieContext(j2EContextFactory, tokenGenerator, properties.getCookie());
     }
 
+    /**
+     * 生成 J2EContext 的工厂类
+     */
     @Bean
     public J2EContextFactory j2EContextFactory() {
         return new DefaultJ2EContextFactory();
-    }
-
-    @Bean
-    @ConditionalOnMissingBean
-    public ProfileManagerFactory profileManagerFactory() {
-        return ProfileManagerFactory.DEFAULT;
     }
 }
