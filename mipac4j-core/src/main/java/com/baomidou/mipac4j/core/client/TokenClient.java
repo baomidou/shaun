@@ -1,12 +1,13 @@
 package com.baomidou.mipac4j.core.client;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.pac4j.core.client.DirectClient;
 import org.pac4j.core.credentials.TokenCredentials;
 import org.pac4j.core.credentials.authenticator.Authenticator;
 import org.pac4j.core.credentials.extractor.CredentialsExtractor;
 import org.pac4j.core.profile.CommonProfile;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * 检索 token 并验证
@@ -27,6 +28,4 @@ public class TokenClient extends DirectClient<TokenCredentials, CommonProfile> {
     protected void clientInit() {
         // ignore
     }
-
-
 }
