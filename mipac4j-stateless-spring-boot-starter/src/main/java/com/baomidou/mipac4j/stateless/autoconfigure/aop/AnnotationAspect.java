@@ -1,22 +1,31 @@
 package com.baomidou.mipac4j.stateless.autoconfigure.aop;
 
+import java.util.Collections;
+import java.util.List;
+
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+import org.pac4j.core.authorization.authorizer.AbstractRequireElementAuthorizer;
+import org.pac4j.core.authorization.authorizer.IsAuthenticatedAuthorizer;
+import org.pac4j.core.authorization.authorizer.RequireAllPermissionsAuthorizer;
+import org.pac4j.core.authorization.authorizer.RequireAllRolesAuthorizer;
+import org.pac4j.core.authorization.authorizer.RequireAnyPermissionAuthorizer;
+import org.pac4j.core.authorization.authorizer.RequireAnyRoleAuthorizer;
+import org.pac4j.core.context.J2EContext;
+import org.pac4j.core.context.Pac4jConstants;
+import org.pac4j.core.context.session.SessionStore;
+import org.pac4j.core.exception.HttpAction;
+import org.pac4j.core.profile.CommonProfile;
+
 import com.baomidou.mipac4j.core.annotation.RequireAllPermission;
 import com.baomidou.mipac4j.core.annotation.RequireAllRole;
 import com.baomidou.mipac4j.core.annotation.RequireAnyPermission;
 import com.baomidou.mipac4j.core.annotation.RequireAnyRole;
 import com.baomidou.mipac4j.core.context.J2EContextFactory;
-import com.baomidou.mipac4j.core.profile.ProfileManagerFactory;
+import com.baomidou.mipac4j.core.context.session.NoSessionStore;
 import com.baomidou.mipac4j.core.util.J2EContextUtil;
-import lombok.AllArgsConstructor;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
-import org.pac4j.core.authorization.authorizer.*;
-import org.pac4j.core.context.J2EContext;
-import org.pac4j.core.context.session.SessionStore;
-import org.pac4j.core.exception.HttpAction;
-import org.pac4j.core.profile.CommonProfile;
 
-import java.util.List;
+import lombok.AllArgsConstructor;
 
 /**
  * @author miemie
@@ -28,8 +37,7 @@ public class AnnotationAspect {
 
     private static final IsAuthenticatedAuthorizer IS_AUTHENTICATED_AUTHORIZER = new IsAuthenticatedAuthorizer();
 
-    private final ProfileManagerFactory profileManagerFactory;
-    private final SessionStore sessionStore;
+    private final SessionStore sessionStore = NoSessionStore.INSTANCE;
     private final J2EContextFactory j2EContextFactory;
 
     @Before("@annotation(requireAnyRole)")
@@ -53,17 +61,18 @@ public class AnnotationAspect {
     }
 
     @SuppressWarnings("unchecked")
-    private <U extends CommonProfile> List<U> isAuthenticated(J2EContext webContext) {
-        final List<U> profiles = profileManagerFactory.apply(webContext).getAll(false);
-        if (!IS_AUTHENTICATED_AUTHORIZER.isAuthorized(webContext, profiles)) {
-            throw HttpAction.unauthorized(webContext);
+    private List<CommonProfile> isAuthenticated(J2EContext context) {
+        final CommonProfile commonProfile = (CommonProfile) context.getRequestAttribute(Pac4jConstants.USER_PROFILES);
+        List<CommonProfile> commonProfiles = Collections.singletonList(commonProfile);
+        if (!IS_AUTHENTICATED_AUTHORIZER.isAuthorized(context, commonProfiles)) {
+            throw HttpAction.unauthorized(context);
         }
-        return profiles;
+        return commonProfiles;
     }
 
-    private <U extends CommonProfile> void isAuthorized(final AbstractRequireElementAuthorizer<String, U> authorizer) {
+    private void isAuthorized(final AbstractRequireElementAuthorizer<String, CommonProfile> authorizer) {
         J2EContext j2EContext = J2EContextUtil.getJ2EContext(j2EContextFactory, sessionStore);
-        final List<U> profiles = this.isAuthenticated(j2EContext);
+        final List<CommonProfile> profiles = this.isAuthenticated(j2EContext);
         if (!authorizer.isAuthorized(j2EContext, profiles)) {
             throw HttpAction.forbidden(j2EContext);
         }

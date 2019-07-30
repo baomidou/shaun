@@ -1,14 +1,5 @@
 package com.baomidou.mipac4j.stateless.autoconfigure;
 
-import com.baomidou.mipac4j.core.context.J2EContextFactory;
-import com.baomidou.mipac4j.core.context.cookie.CookieContext;
-import com.baomidou.mipac4j.core.extractor.TokenExtractor;
-import com.baomidou.mipac4j.core.generator.DefaultJwtTokenGenerator;
-import com.baomidou.mipac4j.core.generator.TokenGenerator;
-import com.baomidou.mipac4j.core.profile.ProfileManagerFactory;
-import com.baomidou.mipac4j.stateless.autoconfigure.properties.MIPac4jProperties;
-import lombok.AllArgsConstructor;
-import org.pac4j.core.context.session.SessionStore;
 import org.pac4j.core.credentials.TokenCredentials;
 import org.pac4j.core.credentials.authenticator.Authenticator;
 import org.pac4j.core.credentials.extractor.CredentialsExtractor;
@@ -21,6 +12,17 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import com.baomidou.mipac4j.core.context.DefaultJ2EContextFactory;
+import com.baomidou.mipac4j.core.context.J2EContextFactory;
+import com.baomidou.mipac4j.core.context.cookie.CookieContext;
+import com.baomidou.mipac4j.core.extractor.TokenExtractor;
+import com.baomidou.mipac4j.core.generator.DefaultJwtTokenGenerator;
+import com.baomidou.mipac4j.core.generator.TokenGenerator;
+import com.baomidou.mipac4j.core.profile.ProfileManagerFactory;
+import com.baomidou.mipac4j.stateless.autoconfigure.properties.MIPac4jProperties;
+
+import lombok.AllArgsConstructor;
 
 /**
  * @author miemie
@@ -86,8 +88,13 @@ public class MIPac4jAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean
-    public CookieContext cookieContext(J2EContextFactory j2EContextFactory, TokenGenerator tokenGenerator, SessionStore sessionStore) {
-        return new CookieContext(j2EContextFactory, tokenGenerator, sessionStore, properties.getCookie());
+    public CookieContext cookieContext(J2EContextFactory j2EContextFactory, TokenGenerator tokenGenerator) {
+        return new CookieContext(j2EContextFactory, tokenGenerator, properties.getCookie());
+    }
+
+    @Bean
+    public J2EContextFactory j2EContextFactory() {
+        return new DefaultJ2EContextFactory();
     }
 
     @Bean

@@ -1,24 +1,12 @@
 package com.baomidou.mipac4j.stateless.autoconfigure;
 
-import com.baomidou.mipac4j.core.client.TokenClient;
-import com.baomidou.mipac4j.core.context.J2EContextFactory;
-import com.baomidou.mipac4j.core.context.session.NoSessionStore;
-import com.baomidou.mipac4j.core.engine.LogoutExecutor;
-import com.baomidou.mipac4j.core.filter.MIPac4jFilter;
-import com.baomidou.mipac4j.core.filter.Pac4jFilter;
-import com.baomidou.mipac4j.core.filter.stateless.StatelessLogoutFilter;
-import com.baomidou.mipac4j.core.filter.stateless.StatelessSecurityFilter;
-import com.baomidou.mipac4j.core.interceptor.MIPac4jInterceptor;
-import com.baomidou.mipac4j.core.matching.OnlyPathMatcher;
-import com.baomidou.mipac4j.core.profile.ProfileManagerFactory;
-import com.baomidou.mipac4j.stateless.autoconfigure.aop.AnnotationAspect;
-import com.baomidou.mipac4j.stateless.autoconfigure.factory.MIPac4jFilterFactoryBean;
-import com.baomidou.mipac4j.stateless.autoconfigure.properties.MIPac4jProperties;
-import lombok.AllArgsConstructor;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Supplier;
+
 import org.pac4j.core.authorization.authorizer.Authorizer;
-import org.pac4j.core.context.J2EContext;
 import org.pac4j.core.context.Pac4jConstants;
-import org.pac4j.core.context.session.SessionStore;
 import org.pac4j.core.credentials.TokenCredentials;
 import org.pac4j.core.credentials.authenticator.Authenticator;
 import org.pac4j.core.credentials.extractor.CredentialsExtractor;
@@ -26,7 +14,6 @@ import org.pac4j.core.matching.PathMatcher;
 import org.pac4j.core.util.CommonHelper;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -35,12 +22,18 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import javax.servlet.DispatcherType;
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Supplier;
+import com.baomidou.mipac4j.core.client.TokenClient;
+import com.baomidou.mipac4j.core.context.J2EContextFactory;
+import com.baomidou.mipac4j.core.engine.LogoutExecutor;
+import com.baomidou.mipac4j.core.filter.Pac4jFilter;
+import com.baomidou.mipac4j.core.filter.stateless.StatelessLogoutFilter;
+import com.baomidou.mipac4j.core.filter.stateless.StatelessSecurityFilter;
+import com.baomidou.mipac4j.core.interceptor.MIPac4jInterceptor;
+import com.baomidou.mipac4j.core.matching.OnlyPathMatcher;
+import com.baomidou.mipac4j.stateless.autoconfigure.aop.AnnotationAspect;
+import com.baomidou.mipac4j.stateless.autoconfigure.properties.MIPac4jProperties;
+
+import lombok.AllArgsConstructor;
 
 /**
  * @author miemie
@@ -55,8 +48,6 @@ public class MIPac4jSecurityAutoConfiguration implements WebMvcConfigurer {
     private final ApplicationContext applicationContext;
     private final Authenticator<TokenCredentials> authenticator;
     private final CredentialsExtractor<TokenCredentials> credentialsExtractor;
-    private final SessionStore<J2EContext> sessionStore = NoSessionStore.INSTANCE;
-    private final ProfileManagerFactory profileManagerFactory;
     private final J2EContextFactory j2EContextFactory;
 
     @Override
@@ -95,6 +86,7 @@ public class MIPac4jSecurityAutoConfiguration implements WebMvcConfigurer {
         }
 
         StatelessSecurityFilter securityFilter = new StatelessSecurityFilter();
+        securityFilter.setPathMatcher(pathMatcher);
         securityFilter.setAuthorizerMap(authorizeMap);
         securityFilter.setAuthorizers(authorizers);
         securityFilter.setTokenClient(tokenClient);
@@ -113,25 +105,14 @@ public class MIPac4jSecurityAutoConfiguration implements WebMvcConfigurer {
             filterList.add(logoutFilter);
         }
 
-        MIPac4jInterceptor interceptor = new MIPac4jInterceptor(sessionStore, j2EContextFactory);
-        return interceptor.setFilterList(filterList);
-    }
-
-    @SuppressWarnings("all")
-    @Bean(name = "mIPac4jFilterRegistrationBean")
-    @ConditionalOnMissingBean
-    protected FilterRegistrationBean<MIPac4jFilter> mIPac4jFilterRegistrationBean(MIPac4jFilterFactoryBean miPac4jFilterFactoryBean) throws Exception {
-        FilterRegistrationBean<MIPac4jFilter> filterRegistrationBean = new FilterRegistrationBean();
-        filterRegistrationBean.setDispatcherTypes(EnumSet.allOf(DispatcherType.class));
-        filterRegistrationBean.setFilter(miPac4jFilterFactoryBean.getObject());
-        filterRegistrationBean.setOrder(1);
-        return filterRegistrationBean;
+        MIPac4jInterceptor interceptor = new MIPac4jInterceptor();
+        return interceptor.setJ2EContextFactory(j2EContextFactory).setFilterList(filterList);
     }
 
     @Bean
     @ConditionalOnMissingBean
     public AnnotationAspect annotationAspect() {
-        return new AnnotationAspect(profileManagerFactory, sessionStore, j2EContextFactory);
+        return new AnnotationAspect(j2EContextFactory);
     }
 
     private <T> T getOrDefault(Class<T> clazz, Supplier<T> supplier) {

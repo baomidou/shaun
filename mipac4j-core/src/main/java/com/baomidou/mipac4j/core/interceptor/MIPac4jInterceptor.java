@@ -1,9 +1,13 @@
 package com.baomidou.mipac4j.core.interceptor;
 
-import com.baomidou.mipac4j.core.context.J2EContextFactory;
-import com.baomidou.mipac4j.core.filter.Pac4jFilter;
-import lombok.Data;
-import lombok.experimental.Accessors;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.pac4j.core.context.J2EContext;
 import org.pac4j.core.context.session.SessionStore;
 import org.pac4j.core.util.CommonHelper;
@@ -11,10 +15,12 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.Collections;
-import java.util.List;
+import com.baomidou.mipac4j.core.context.J2EContextFactory;
+import com.baomidou.mipac4j.core.context.session.NoSessionStore;
+import com.baomidou.mipac4j.core.filter.Pac4jFilter;
+
+import lombok.Data;
+import lombok.experimental.Accessors;
 
 /**
  * @author miemie
@@ -26,14 +32,9 @@ public class MIPac4jInterceptor implements HandlerInterceptor, InitializingBean 
 
     private List<Pac4jFilter> filterList = Collections.emptyList();
 
-    private final SessionStore<J2EContext> sessionStore;￿
+    private final SessionStore<J2EContext> sessionStore = NoSessionStore.INSTANCE;
 
-    private final J2EContextFactory j2EContextFactory;
-
-    public MIPac4jInterceptor(SessionStore<J2EContext> sessionStore, J2EContextFactory j2EContextFactory) {
-        this.sessionStore = sessionStore;
-        this.j2EContextFactory = j2EContextFactory;
-    }
+    private J2EContextFactory j2EContextFactory;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -52,5 +53,7 @@ public class MIPac4jInterceptor implements HandlerInterceptor, InitializingBean 
     public void afterPropertiesSet() throws Exception {
         CommonHelper.assertNotNull("sessionStore", sessionStore);
         CommonHelper.assertNotNull("j2EContextFactory", j2EContextFactory);
+        filterList = filterList.stream().peek(Pac4jFilter::initCheck)
+                .sorted(Comparator.comparingInt(Pac4jFilter::order)).collect(Collectors.toList());
     }
 }

@@ -1,14 +1,17 @@
 package com.baomidou.mipac4j.core.context.cookie;
 
-import com.baomidou.mipac4j.core.context.J2EContextFactory;
-import com.baomidou.mipac4j.core.generator.TokenGenerator;
-import com.baomidou.mipac4j.core.properties.Cookie;
-import com.baomidou.mipac4j.core.util.J2EContextUtil;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import org.pac4j.core.context.J2EContext;
 import org.pac4j.core.context.session.SessionStore;
 import org.pac4j.core.profile.CommonProfile;
+
+import com.baomidou.mipac4j.core.context.J2EContextFactory;
+import com.baomidou.mipac4j.core.context.session.NoSessionStore;
+import com.baomidou.mipac4j.core.generator.TokenGenerator;
+import com.baomidou.mipac4j.core.properties.Cookie;
+import com.baomidou.mipac4j.core.util.J2EContextUtil;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
 /**
  * 操作 cookie 的类
@@ -20,12 +23,9 @@ import org.pac4j.core.profile.CommonProfile;
 @AllArgsConstructor
 public class CookieContext {
 
+    private final SessionStore sessionStore = NoSessionStore.INSTANCE;
     private final J2EContextFactory j2EContextFactory;
-
     private final TokenGenerator tokenGenerator;
-
-    private final SessionStore sessionStore;
-
     private final Cookie cookie;
 
     /**
