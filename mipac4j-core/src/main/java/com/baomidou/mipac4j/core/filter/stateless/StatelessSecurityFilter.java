@@ -49,8 +49,7 @@ public class StatelessSecurityFilter implements Pac4jFilter {
             HttpAction action;
             if (profile != null) {
                 ProfileHolder.setProfile(context, profile);
-                if (authorizationChecker.isAuthorized(context, Collections.singletonList(profile),
-                        authorizers, authorizerMap)) {
+                if (authorizationChecker.isAuthorized(context, Collections.singletonList(profile), authorizers, authorizerMap)) {
                     log.debug("authenticated and authorized -> grant access");
                     return true;
                 } else {
