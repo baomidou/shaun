@@ -97,7 +97,6 @@ public class MIPac4jSecurityAutoConfiguration implements WebMvcConfigurer {
         /* logoutFilter begin */
         if (CommonHelper.isNotBlank(properties.getLogoutUrl())) {
             StatelessLogoutFilter logoutFilter = new StatelessLogoutFilter();
-            logoutFilter.setTokenClient(tokenClient);
             logoutFilter.setPathMatcher(OnlyPathMatcher.instance(properties.getLogoutUrl()));
             LogoutExecutor logoutExecutor = this.getOrDefault(LogoutExecutor.class, () -> LogoutExecutor.DO_NOTHING);
             logoutFilter.setLogoutExecutor(logoutExecutor);
