@@ -24,9 +24,14 @@ public class MIPac4jInterceptor implements HandlerInterceptor, InitializingBean 
 
     private List<Pac4jFilter> filterList = Collections.emptyList();
 
-    private SessionStore<J2EContext> sessionStore;￿
+    private final SessionStore<J2EContext> sessionStore;￿
 
-    private J2EContextFactory j2EContextFactory;
+    private final J2EContextFactory j2EContextFactory;
+
+    public MIPac4jInterceptor(SessionStore<J2EContext> sessionStore, J2EContextFactory j2EContextFactory) {
+        this.sessionStore = sessionStore;
+        this.j2EContextFactory = j2EContextFactory;
+    }
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {

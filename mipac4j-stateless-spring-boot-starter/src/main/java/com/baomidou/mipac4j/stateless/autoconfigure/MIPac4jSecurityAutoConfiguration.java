@@ -1,6 +1,7 @@
 package com.baomidou.mipac4j.stateless.autoconfigure;
 
 import com.baomidou.mipac4j.core.client.TokenClient;
+import com.baomidou.mipac4j.core.context.J2EContextFactory;
 import com.baomidou.mipac4j.core.context.http.DefaultDoHttpAction;
 import com.baomidou.mipac4j.core.context.http.DoHttpAction;
 import com.baomidou.mipac4j.core.engine.LogoutExecutor;
@@ -8,6 +9,7 @@ import com.baomidou.mipac4j.core.filter.LogoutFilter;
 import com.baomidou.mipac4j.core.filter.MIPac4jFilter;
 import com.baomidou.mipac4j.core.filter.Pac4jFilter;
 import com.baomidou.mipac4j.core.filter.SecurityFilter;
+import com.baomidou.mipac4j.core.interceptor.MIPac4jInterceptor;
 import com.baomidou.mipac4j.core.profile.ProfileManagerFactory;
 import com.baomidou.mipac4j.stateless.autoconfigure.aop.AnnotationAspect;
 import com.baomidou.mipac4j.stateless.autoconfigure.factory.MIPac4jFilterFactoryBean;
@@ -16,6 +18,7 @@ import lombok.AllArgsConstructor;
 import org.pac4j.core.authorization.authorizer.Authorizer;
 import org.pac4j.core.client.Clients;
 import org.pac4j.core.config.Config;
+import org.pac4j.core.context.J2EContext;
 import org.pac4j.core.context.Pac4jConstants;
 import org.pac4j.core.context.session.SessionStore;
 import org.pac4j.core.credentials.TokenCredentials;
@@ -31,6 +34,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.servlet.DispatcherType;
 import java.util.ArrayList;
@@ -46,18 +51,24 @@ import java.util.function.Supplier;
 @AllArgsConstructor
 @Configuration
 @AutoConfigureAfter(MIPac4jAutoConfiguration.class)
-public class MIPac4jSecurityAutoConfiguration {
+public class MIPac4jSecurityAutoConfiguration implements WebMvcConfigurer {
 
     private final MIPac4jProperties properties;
     private final ApplicationContext applicationContext;
     private final Authenticator<TokenCredentials> authenticator;
     private final CredentialsExtractor<TokenCredentials> credentialsExtractor;
-    private final SessionStore sessionStore;
+    private final SessionStore<J2EContext> sessionStore;
     private final ProfileManagerFactory profileManagerFactory;
+    private final J2EContextFactory j2EContextFactory;
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(miPac4jInterceptor()).addPathPatterns("/**");
+    }
 
     @Bean
     @ConditionalOnMissingBean
-    public MIPac4jFilterFactoryBean miPac4jFilterFactoryBean() {
+    public MIPac4jInterceptor miPac4jInterceptor() {
         TokenClient tokenClient = new TokenClient(credentialsExtractor, authenticator);
         ;
 
@@ -144,8 +155,8 @@ public class MIPac4jSecurityAutoConfiguration {
 //            filterList.add(callbackFilter);
 //        }
 
-        MIPac4jFilterFactoryBean factory = new MIPac4jFilterFactoryBean(j2EContextFactory, sessionStore);
-        factory.setPac4jFilters(filterList);
+        MIPac4jInterceptor factory = new MIPac4jInterceptor(sessionStore, j2EContextFactory);
+        factory.setFilterList(filterList);
         return factory;
     }
 
