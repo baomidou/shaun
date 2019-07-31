@@ -1,4 +1,4 @@
 dependencies {
-    api project(":mipac4j-stateless-spring-boot-starter")
+    api project(":shaun-stateless-spring-boot-starter")
     testImplementation "${lib.'shiro-spring-boot-web-starter'}"
 }

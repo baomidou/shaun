@@ -1,5 +1,5 @@
 dependencies {
-    api project(":mipac4j-core")
+    api project(":shaun-core")
     api "${lib.'pac4j-jwt'}"
     api "${lib.'spring-web'}"
     api "${lib.'spring-aop'}"

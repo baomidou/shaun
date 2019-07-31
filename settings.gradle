@@ -1,8 +1,8 @@
-rootProject.name = "mipac4j"
-include "mipac4j-core"
-include "mipac4j-spring-boot-starter"
-include 'mipac4j-test-stateless-header'
-include 'mipac4j-test-stateless-cookie'
-include 'mipac4j-test-cookie'
-include 'mipac4j-stateless-spring-boot-starter'
+rootProject.name = "shaun"
+include "shaun-core"
+include "shaun-spring-boot-starter"
+include 'shaun-test-stateless-header'
+include 'shaun-test-stateless-cookie'
+include 'shaun-test-cookie'
+include 'shaun-stateless-spring-boot-starter'
 
