@@ -19,6 +19,10 @@ public abstract class ProfileHolder {
         setProfile(context.getRequest(), profile);
     }
 
+    public static <U extends CommonProfile> void setProfile(U profile) {
+        setProfile(J2EContextUtil.request(), profile);
+    }
+
     public static <U extends CommonProfile> void setProfile(HttpServletRequest request, U profile) {
         request.setAttribute(Pac4jConstants.USER_PROFILES, profile);
     }
@@ -29,10 +33,6 @@ public abstract class ProfileHolder {
 
     public static <U extends CommonProfile> U getProfile() {
         return getProfile(J2EContextUtil.request());
-    }
-
-    public static <U extends CommonProfile> void setProfile(U profile) {
-        setProfile(J2EContextUtil.request(), profile);
     }
 
     public static <U extends CommonProfile> U getProfile(HttpServletRequest request) {
