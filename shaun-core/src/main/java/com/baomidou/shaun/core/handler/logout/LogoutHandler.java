@@ -1,4 +1,4 @@
-package com.baomidou.shaun.core.handler;
+package com.baomidou.shaun.core.handler.logout;
 
 import org.pac4j.core.context.J2EContext;
 import org.pac4j.core.profile.CommonProfile;
@@ -13,7 +13,7 @@ import org.pac4j.core.profile.CommonProfile;
 public interface LogoutHandler<U extends CommonProfile> {
 
     /**
-     * 登出炒作
+     * 登出操作
      *
      * @param context 上下文
      * @param profile 自己的 profile

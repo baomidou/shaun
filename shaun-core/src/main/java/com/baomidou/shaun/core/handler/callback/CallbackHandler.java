@@ -1,4 +1,4 @@
-package com.baomidou.shaun.core.handler;
+package com.baomidou.shaun.core.handler.callback;
 
 import org.pac4j.core.context.WebContext;
 import org.pac4j.core.profile.CommonProfile;

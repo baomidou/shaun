@@ -2,7 +2,7 @@ package com.baomidou.shaun.core.filter;
 
 import com.baomidou.shaun.core.engine.CallbackLogic;
 import com.baomidou.shaun.core.engine.DefaultCallbackLogic;
-import com.baomidou.shaun.core.handler.CallbackHandler;
+import com.baomidou.shaun.core.handler.callback.CallbackHandler;
 import com.baomidou.shaun.core.matching.OnlyPathMatcher;
 import lombok.Data;
 import org.pac4j.core.config.Config;

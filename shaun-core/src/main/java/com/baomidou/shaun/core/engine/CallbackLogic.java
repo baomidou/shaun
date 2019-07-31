@@ -1,6 +1,6 @@
 package com.baomidou.shaun.core.engine;
 
-import com.baomidou.shaun.core.handler.CallbackHandler;
+import com.baomidou.shaun.core.handler.callback.CallbackHandler;
 import org.pac4j.core.config.Config;
 import org.pac4j.core.context.J2EContext;
 

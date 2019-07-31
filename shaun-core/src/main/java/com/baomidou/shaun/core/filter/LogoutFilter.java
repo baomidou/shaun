@@ -1,6 +1,6 @@
 package com.baomidou.shaun.core.filter;
 
-import com.baomidou.shaun.core.handler.LogoutHandler;
+import com.baomidou.shaun.core.handler.logout.LogoutHandler;
 import com.baomidou.shaun.core.matching.OnlyPathMatcher;
 import com.baomidou.shaun.core.profile.ProfileManagerFactory;
 import lombok.Data;

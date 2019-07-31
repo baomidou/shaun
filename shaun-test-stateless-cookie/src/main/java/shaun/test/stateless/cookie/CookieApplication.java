@@ -1,8 +1,8 @@
 package shaun.test.stateless.cookie;
 
 import com.baomidou.shaun.core.context.cookie.CookieContext;
-import com.baomidou.shaun.core.handler.CookieLogoutHandler;
-import com.baomidou.shaun.core.handler.LogoutHandler;
+import com.baomidou.shaun.core.handler.logout.CookieLogoutHandler;
+import com.baomidou.shaun.core.handler.logout.LogoutHandler;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;

@@ -9,7 +9,7 @@ import com.baomidou.shaun.core.filter.LogoutFilter;
 import com.baomidou.shaun.core.filter.MIPac4jFilter;
 import com.baomidou.shaun.core.filter.SecurityFilter;
 import com.baomidou.shaun.core.filter.ShaunFilter;
-import com.baomidou.shaun.core.handler.LogoutHandler;
+import com.baomidou.shaun.core.handler.logout.LogoutHandler;
 import com.baomidou.shaun.core.matching.OnlyPathMatcher;
 import com.baomidou.shaun.core.profile.ProfileManagerFactory;
 import lombok.AllArgsConstructor;

@@ -1,4 +1,4 @@
-package com.baomidou.shaun.core.handler;
+package com.baomidou.shaun.core.handler.logout;
 
 import com.baomidou.shaun.core.context.cookie.CookieContext;
 import lombok.AllArgsConstructor;

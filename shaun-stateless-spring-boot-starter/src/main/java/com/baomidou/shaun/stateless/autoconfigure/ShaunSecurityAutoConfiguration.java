@@ -6,7 +6,7 @@ import com.baomidou.shaun.core.context.session.NoSessionStore;
 import com.baomidou.shaun.core.filter.ShaunFilter;
 import com.baomidou.shaun.core.filter.stateless.StatelessLogoutFilter;
 import com.baomidou.shaun.core.filter.stateless.StatelessSecurityFilter;
-import com.baomidou.shaun.core.handler.LogoutHandler;
+import com.baomidou.shaun.core.handler.logout.LogoutHandler;
 import com.baomidou.shaun.core.interceptor.ShaunInterceptor;
 import com.baomidou.shaun.core.matching.OnlyPathMatcher;
 import com.baomidou.shaun.stateless.autoconfigure.aop.AnnotationAspect;

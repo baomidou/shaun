@@ -1,6 +1,6 @@
 package com.baomidou.shaun.core.engine;
 
-import com.baomidou.shaun.core.handler.CallbackHandler;
+import com.baomidou.shaun.core.handler.callback.CallbackHandler;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.pac4j.core.client.BaseClient;
