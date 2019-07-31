@@ -1,6 +1,6 @@
 package com.baomidou.shaun.core.handler.callback;
 
-import org.pac4j.core.context.WebContext;
+import org.pac4j.core.context.J2EContext;
 import org.pac4j.core.profile.CommonProfile;
 
 /**
@@ -16,5 +16,5 @@ public interface CallbackHandler<R extends CommonProfile> {
      * @param profile callback 获取到的 profile
      * @return 自己的 profile
      */
-    R callBack(WebContext context, CommonProfile profile);
+    R callBack(J2EContext context, CommonProfile profile);
 }
