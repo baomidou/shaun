@@ -33,6 +33,11 @@ public class CallbackFilter implements ShaunFilter {
     }
 
     @Override
+    public int order() {
+        return 100;
+    }
+
+    @Override
     public void initCheck() {
         CommonHelper.assertNotBlank("indexUrl", indexUrl);
         CommonHelper.assertNotNull("callbackExecutor", callbackHandler);

@@ -32,7 +32,7 @@ public class SecurityFilter implements ShaunFilter {
 
     @Override
     public int order() {
-        return 200;
+        return 300;
     }
 
     @Override

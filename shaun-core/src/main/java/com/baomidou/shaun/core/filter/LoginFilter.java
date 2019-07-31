@@ -64,11 +64,6 @@ public class LoginFilter implements ShaunFilter {
     }
 
     @Override
-    public int order() {
-        return 300;
-    }
-
-    @Override
     public void initCheck() {
         CommonHelper.assertNotNull("client", client);
         CommonHelper.assertNotNull("credentialsExtractor", credentialsExtractor);

@@ -40,7 +40,7 @@ public class LogoutFilter implements ShaunFilter {
 
     @Override
     public int order() {
-        return 300;
+        return 400;
     }
 
     @Override

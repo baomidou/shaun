@@ -33,7 +33,7 @@ public class ThreeLandingFilter implements ShaunFilter {
 
     @Override
     public int order() {
-        return 100;
+        return 200;
     }
 
     @Override
