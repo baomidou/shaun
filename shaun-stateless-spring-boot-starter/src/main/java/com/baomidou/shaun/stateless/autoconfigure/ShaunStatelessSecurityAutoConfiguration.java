@@ -12,7 +12,6 @@ import org.pac4j.core.credentials.authenticator.Authenticator;
 import org.pac4j.core.credentials.extractor.CredentialsExtractor;
 import org.pac4j.core.matching.PathMatcher;
 import org.pac4j.core.util.CommonHelper;
-import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.ApplicationContext;
@@ -53,7 +52,7 @@ public class ShaunStatelessSecurityAutoConfiguration implements WebMvcConfigurer
     private final Authenticator<TokenCredentials> authenticator;
     private final CredentialsExtractor<TokenCredentials> credentialsExtractor;
     private final J2EContextFactory j2EContextFactory;
-    private final ObjectProvider<LogoutHandler> logoutHandlerObjectProvider;
+    private final LogoutHandler logoutHandler;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -103,7 +102,6 @@ public class ShaunStatelessSecurityAutoConfiguration implements WebMvcConfigurer
         if (CommonHelper.isNotBlank(properties.getLogoutUrl())) {
             StatelessLogoutFilter logoutFilter = new StatelessLogoutFilter();
             logoutFilter.setPathMatcher(OnlyPathMatcher.instance(properties.getLogoutUrl()));
-            LogoutHandler logoutHandler = logoutHandlerObjectProvider.getIfAvailable();
             logoutFilter.setLogoutExecutor(logoutHandler);
 
             filterList.add(logoutFilter);
