@@ -1,18 +1,10 @@
 package com.baomidou.shaun.stateless.autoconfigure;
 
-import com.baomidou.shaun.core.client.TokenClient;
-import com.baomidou.shaun.core.context.J2EContextFactory;
-import com.baomidou.shaun.core.context.session.NoSessionStore;
-import com.baomidou.shaun.core.filter.ShaunFilter;
-import com.baomidou.shaun.core.filter.stateless.StatelessLogoutFilter;
-import com.baomidou.shaun.core.filter.stateless.StatelessSecurityFilter;
-import com.baomidou.shaun.core.handler.logout.LogoutHandler;
-import com.baomidou.shaun.core.interceptor.ShaunInterceptor;
-import com.baomidou.shaun.core.matching.OnlyPathMatcher;
-import com.baomidou.shaun.stateless.autoconfigure.aop.AnnotationAspect;
-import com.baomidou.shaun.stateless.autoconfigure.properties.ShaunProperties;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Supplier;
+
 import org.pac4j.core.authorization.authorizer.Authorizer;
 import org.pac4j.core.context.Pac4jConstants;
 import org.pac4j.core.credentials.TokenCredentials;
@@ -31,10 +23,20 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Supplier;
+import com.baomidou.shaun.core.client.TokenClient;
+import com.baomidou.shaun.core.context.J2EContextFactory;
+import com.baomidou.shaun.core.context.session.NoSessionStore;
+import com.baomidou.shaun.core.filter.ShaunFilter;
+import com.baomidou.shaun.core.filter.stateless.StatelessLogoutFilter;
+import com.baomidou.shaun.core.filter.stateless.StatelessSecurityFilter;
+import com.baomidou.shaun.core.handler.logout.LogoutHandler;
+import com.baomidou.shaun.core.interceptor.ShaunInterceptor;
+import com.baomidou.shaun.core.matching.OnlyPathMatcher;
+import com.baomidou.shaun.stateless.autoconfigure.aop.AnnotationAspect;
+import com.baomidou.shaun.stateless.autoconfigure.properties.ShaunStatelessProperties;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
 /**
  * @author miemie
@@ -43,10 +45,10 @@ import java.util.function.Supplier;
 @Data
 @AllArgsConstructor
 @Configuration
-@AutoConfigureAfter(ShaunAutoConfiguration.class)
-public class ShaunSecurityAutoConfiguration implements WebMvcConfigurer {
+@AutoConfigureAfter(ShaunStatelessAutoConfiguration.class)
+public class ShaunStatelessSecurityAutoConfiguration implements WebMvcConfigurer {
 
-    private final ShaunProperties properties;
+    private final ShaunStatelessProperties properties;
     private final ApplicationContext applicationContext;
     private final Authenticator<TokenCredentials> authenticator;
     private final CredentialsExtractor<TokenCredentials> credentialsExtractor;
@@ -55,12 +57,12 @@ public class ShaunSecurityAutoConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(miPac4jInterceptor()).addPathPatterns("/**");
+        registry.addInterceptor(shaunInterceptor()).addPathPatterns("/**");
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public ShaunInterceptor miPac4jInterceptor() {
+    public ShaunInterceptor shaunInterceptor() {
         TokenClient tokenClient = new TokenClient(credentialsExtractor, authenticator);
 
         PathMatcher pathMatcher = new PathMatcher();

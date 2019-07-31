@@ -1,13 +1,5 @@
 package com.baomidou.shaun.stateless.autoconfigure;
 
-import com.baomidou.shaun.core.context.DefaultJ2EContextFactory;
-import com.baomidou.shaun.core.context.J2EContextFactory;
-import com.baomidou.shaun.core.context.cookie.CookieContext;
-import com.baomidou.shaun.core.extractor.TokenExtractor;
-import com.baomidou.shaun.core.generator.DefaultJwtTokenGenerator;
-import com.baomidou.shaun.core.generator.TokenGenerator;
-import com.baomidou.shaun.stateless.autoconfigure.properties.ShaunProperties;
-import lombok.AllArgsConstructor;
 import org.pac4j.core.credentials.TokenCredentials;
 import org.pac4j.core.credentials.authenticator.Authenticator;
 import org.pac4j.core.credentials.extractor.CredentialsExtractor;
@@ -22,16 +14,26 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.baomidou.shaun.core.context.DefaultJ2EContextFactory;
+import com.baomidou.shaun.core.context.J2EContextFactory;
+import com.baomidou.shaun.core.context.cookie.CookieContext;
+import com.baomidou.shaun.core.extractor.TokenExtractor;
+import com.baomidou.shaun.core.generator.DefaultJwtTokenGenerator;
+import com.baomidou.shaun.core.generator.TokenGenerator;
+import com.baomidou.shaun.stateless.autoconfigure.properties.ShaunStatelessProperties;
+
+import lombok.AllArgsConstructor;
+
 /**
  * @author miemie
  * @since 2019-07-18
  */
 @AllArgsConstructor
 @Configuration
-@EnableConfigurationProperties(ShaunProperties.class)
-public class ShaunAutoConfiguration {
+@EnableConfigurationProperties(ShaunStatelessProperties.class)
+public class ShaunStatelessAutoConfiguration {
 
-    private final ShaunProperties properties;
+    private final ShaunStatelessProperties properties;
 
     /**
      * jwt 签名类

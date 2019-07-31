@@ -11,6 +11,7 @@ import javax.servlet.DispatcherType;
 import org.pac4j.core.authorization.authorizer.Authorizer;
 import org.pac4j.core.client.Clients;
 import org.pac4j.core.config.Config;
+import org.pac4j.core.context.J2EContext;
 import org.pac4j.core.context.Pac4jConstants;
 import org.pac4j.core.context.session.SessionStore;
 import org.pac4j.core.credentials.TokenCredentials;
@@ -26,6 +27,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.baomidou.shaun.autoconfigure.aop.AnnotationAspect;
 import com.baomidou.shaun.autoconfigure.factory.ShaunFilterFactoryBean;
@@ -37,6 +40,7 @@ import com.baomidou.shaun.core.filter.MIPac4jFilter;
 import com.baomidou.shaun.core.filter.SecurityFilter;
 import com.baomidou.shaun.core.filter.ShaunFilter;
 import com.baomidou.shaun.core.handler.logout.LogoutHandler;
+import com.baomidou.shaun.core.interceptor.ShaunInterceptor;
 import com.baomidou.shaun.core.matching.OnlyPathMatcher;
 import com.baomidou.shaun.core.profile.ProfileManagerFactory;
 
@@ -49,22 +53,26 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 @Configuration
 @AutoConfigureAfter(ShaunAutoConfiguration.class)
-public class ShaunSecurityAutoConfiguration {
+public class ShaunSecurityAutoConfiguration implements WebMvcConfigurer {
 
     private final ShaunProperties properties;
     private final ApplicationContext applicationContext;
     private final Authenticator<TokenCredentials> authenticator;
     private final CredentialsExtractor<TokenCredentials> credentialsExtractor;
-    private final SessionStore sessionStore;
+    private final SessionStore<J2EContext> sessionStore;
     private final ProfileManagerFactory profileManagerFactory;
     private final J2EContextFactory j2EContextFactory;
     private final LogoutHandler logoutHandler;
 
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(shaunInterceptor()).addPathPatterns("/**");
+    }
+
     @Bean
     @ConditionalOnMissingBean
-    public ShaunFilterFactoryBean miPac4jFilterFactoryBean() {
+    public ShaunInterceptor shaunInterceptor() {
         TokenClient tokenClient = new TokenClient(credentialsExtractor, authenticator);
-        ;
 
         PathMatcher pathMatcher = new PathMatcher();
         if (!CollectionUtils.isEmpty(properties.getExcludePath())) {
@@ -146,9 +154,8 @@ public class ShaunSecurityAutoConfiguration {
 //            filterList.add(callbackFilter);
 //        }
 
-        ShaunFilterFactoryBean factory = new ShaunFilterFactoryBean(j2EContextFactory, sessionStore);
-        factory.setPac4jFilters(filterList);
-        return factory;
+        return new ShaunInterceptor().setJ2EContextFactory(j2EContextFactory).setSessionStore(sessionStore)
+                .setFilterList(filterList);
     }
 
     @SuppressWarnings("all")
