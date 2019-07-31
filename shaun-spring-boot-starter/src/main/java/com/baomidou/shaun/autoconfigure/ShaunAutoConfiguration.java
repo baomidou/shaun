@@ -1,18 +1,12 @@
 package com.baomidou.shaun.autoconfigure;
 
-import com.baomidou.shaun.autoconfigure.properties.ShaunProperties;
-import com.baomidou.shaun.core.context.DefaultJ2EContextFactory;
-import com.baomidou.shaun.core.context.J2EContextFactory;
-import com.baomidou.shaun.core.context.session.NoSessionStore;
-import com.baomidou.shaun.core.extractor.TokenExtractor;
-import com.baomidou.shaun.core.generator.DefaultJwtTokenGenerator;
-import com.baomidou.shaun.core.generator.TokenGenerator;
-import com.baomidou.shaun.core.profile.ProfileManagerFactory;
-import lombok.AllArgsConstructor;
+import org.pac4j.core.context.J2EContext;
+import org.pac4j.core.context.session.J2ESessionStore;
 import org.pac4j.core.context.session.SessionStore;
 import org.pac4j.core.credentials.TokenCredentials;
 import org.pac4j.core.credentials.authenticator.Authenticator;
 import org.pac4j.core.credentials.extractor.CredentialsExtractor;
+import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.jwt.config.encryption.EncryptionConfiguration;
 import org.pac4j.jwt.config.encryption.SecretEncryptionConfiguration;
 import org.pac4j.jwt.config.signature.SecretSignatureConfiguration;
@@ -22,6 +16,19 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import com.baomidou.shaun.autoconfigure.properties.ShaunProperties;
+import com.baomidou.shaun.core.context.DefaultJ2EContextFactory;
+import com.baomidou.shaun.core.context.J2EContextFactory;
+import com.baomidou.shaun.core.extractor.TokenExtractor;
+import com.baomidou.shaun.core.generator.DefaultJwtTokenGenerator;
+import com.baomidou.shaun.core.generator.TokenGenerator;
+import com.baomidou.shaun.core.handler.logout.LogoutHandler;
+import com.baomidou.shaun.core.handler.logout.SessionLogoutHandler;
+import com.baomidou.shaun.core.profile.ProfileContext;
+import com.baomidou.shaun.core.profile.ProfileManagerFactory;
+
+import lombok.AllArgsConstructor;
 
 /**
  * @author miemie
@@ -39,8 +46,8 @@ public class ShaunAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean
-    public SessionStore sessionStore() {
-        return NoSessionStore.INSTANCE;
+    public SessionStore<J2EContext> sessionStore() {
+        return new J2ESessionStore();
     }
 
     /**
@@ -104,5 +111,19 @@ public class ShaunAutoConfiguration {
     @ConditionalOnMissingBean
     public ProfileManagerFactory profileManagerFactory() {
         return ProfileManagerFactory.DEFAULT;
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public ProfileContext profileContext(ProfileManagerFactory profileManagerFactory,
+                                         SessionStore<J2EContext> sessionStore,
+                                         J2EContextFactory j2EContextFactory) {
+        return new ProfileContext(profileManagerFactory, sessionStore, j2EContextFactory);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public LogoutHandler<CommonProfile> logoutHandler(ProfileContext profileContext) {
+        return new SessionLogoutHandler(profileContext, null);
     }
 }
