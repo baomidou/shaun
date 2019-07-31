@@ -1,11 +1,10 @@
 package com.baomidou.mipac4j.core.properties;
 
-import java.util.List;
-
+import lombok.Data;
 import org.pac4j.core.authorization.authorizer.Authorizer;
 import org.pac4j.core.authorization.checker.DefaultAuthorizationChecker;
 
-import lombok.Data;
+import java.util.List;
 
 /**
  * @author miemie
@@ -19,18 +18,9 @@ public class CommonProperties {
      */
     private String logoutUrl;
     /**
-     * jwt 超时时间
-     * <li> 以数字开头,以 "s" 结尾: 秒 , 例: 100s = 100秒 </li>
-     * <li> 以数字开头,以 "m" 结尾: 分 , 例: 100m = 100分钟 </li>
-     * <li> 以数字开头,以 "h" 结尾: 小时 , 例: 100h = 100小时 </li>
-     * <li> 以数字开头,以 "d" 结尾: 天 , 例: 30d = 30天 </li>
-     * <li> 以 "o" 开头(不是零),中间是数字,以上面的结尾: 特殊的超时时间.
-     * "o" 后面的表示宽容时间(还有什么好的描述吗?)
-     * 例2: o30m = 如果生成 jwt 时的时间在 23:29:59 及之前则 jwt 有效时间到今天 23:59:59 为止,否则顺延一天到明天的 23:59:59 为止
-     * 例2: o5h = 如果生成 jwt 时的时间在 18:59:59 及之前则 jwt 有效时间到今天 23:59:59 为止,否则顺延一天到明天的 23:59:59 为止
-     * </li>
+     * jwt 超时时间(单位秒)
      */
-    private String expireTime;
+    private Integer expireTime;
     /**
      * authorizers,多个以逗号分隔(不包含自己注入的 {@link Authorizer})
      * 默认支持的一些参考 {@link DefaultAuthorizationChecker}

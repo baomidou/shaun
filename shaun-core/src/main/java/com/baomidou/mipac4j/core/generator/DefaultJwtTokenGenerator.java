@@ -1,23 +1,20 @@
 package com.baomidou.mipac4j.core.generator;
 
+import com.baomidou.mipac4j.core.util.ExpireTimeUtil;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.experimental.Accessors;
 import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.jwt.config.encryption.EncryptionConfiguration;
 import org.pac4j.jwt.config.signature.SignatureConfiguration;
 import org.pac4j.jwt.profile.JwtGenerator;
-
-import com.baomidou.mipac4j.core.enums.ExpireType;
-import com.baomidou.mipac4j.core.util.ExpireTimeUtil;
-
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Setter;
 
 /**
  * @author miemie
  * @since 2019-07-18
  */
 @Data
+@Accessors(chain = true)
 @AllArgsConstructor
 public class DefaultJwtTokenGenerator implements TokenGenerator {
 
@@ -28,12 +25,7 @@ public class DefaultJwtTokenGenerator implements TokenGenerator {
     /**
      * jwt 超时时间
      */
-    private String expireTime;
-    /**
-     * 类型
-     */
-    @Setter(AccessLevel.NONE)
-    private ExpireType expireType;
+    private Integer expireTime;
 
     public DefaultJwtTokenGenerator(SignatureConfiguration signatureConfiguration, EncryptionConfiguration encryptionConfiguration) {
         this.signatureConfiguration = signatureConfiguration;
@@ -44,8 +36,8 @@ public class DefaultJwtTokenGenerator implements TokenGenerator {
     @SuppressWarnings("unchecked")
     public <U extends CommonProfile> String generate(final U profile) {
         JwtGenerator jwtGenerator = new JwtGenerator(signatureConfiguration, encryptionConfiguration);
-        if (expireType != null) {
-            jwtGenerator.setExpirationTime(ExpireTimeUtil.getTargetDate(expireType, expireTime));
+        if (expireTime != null) {
+            jwtGenerator.setExpirationTime(ExpireTimeUtil.getTargetDate(expireTime));
         }
         return jwtGenerator.generate(profile);
     }
@@ -55,15 +47,9 @@ public class DefaultJwtTokenGenerator implements TokenGenerator {
      */
     @Override
     public Integer getAge() {
-        if (expireType != null) {
-            return ExpireTimeUtil.getExpireTime(expireType, expireTime) - 1;
+        if (expireTime != null) {
+            return expireTime - 1;
         }
         return null;
-    }
-
-    public DefaultJwtTokenGenerator setExpireTime(String expireTime) {
-        this.expireTime = expireTime;
-        this.expireType = ExpireType.chooseType(expireTime);
-        return this;
     }
 }

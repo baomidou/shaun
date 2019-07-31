@@ -1,10 +1,8 @@
 package com.baomidou.mipac4j.core.util;
 
-import java.util.Date;
-
 import org.springframework.lang.NonNull;
 
-import com.baomidou.mipac4j.core.enums.ExpireType;
+import java.util.Date;
 
 /**
  * @author miemie
@@ -13,25 +11,13 @@ import com.baomidou.mipac4j.core.enums.ExpireType;
 public abstract class ExpireTimeUtil {
 
     /**
-     * 获取超时时间
+     * 获取超时时间 Date
      *
-     * @param strExp 表达式
-     * @return 时间, 秒级
-     */
-    @NonNull
-    public static Integer getExpireTime(ExpireType type, String strExp) {
-        return type.getSecond(strExp);
-    }
-
-    /**
-     * 获取超时时间
-     *
-     * @param strExp 表达式
+     * @param expireTime 表达式
      * @return 到期时间
      */
     @NonNull
-    public static Date getTargetDate(ExpireType type, String strExp) {
-        long second = (long) type.getSecond(strExp);
-        return new Date(System.currentTimeMillis() + second);
+    public static Date getTargetDate(Integer expireTime) {
+        return new Date(System.currentTimeMillis() + expireTime);
     }
 }
