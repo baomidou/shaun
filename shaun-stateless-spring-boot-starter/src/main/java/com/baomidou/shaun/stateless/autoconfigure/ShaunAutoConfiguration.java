@@ -1,6 +1,13 @@
 package com.baomidou.shaun.stateless.autoconfigure;
 
+import com.baomidou.shaun.core.context.DefaultJ2EContextFactory;
+import com.baomidou.shaun.core.context.J2EContextFactory;
+import com.baomidou.shaun.core.context.cookie.CookieContext;
+import com.baomidou.shaun.core.extractor.TokenExtractor;
+import com.baomidou.shaun.core.generator.DefaultJwtTokenGenerator;
+import com.baomidou.shaun.core.generator.TokenGenerator;
 import com.baomidou.shaun.stateless.autoconfigure.properties.ShaunProperties;
+import lombok.AllArgsConstructor;
 import org.pac4j.core.credentials.TokenCredentials;
 import org.pac4j.core.credentials.authenticator.Authenticator;
 import org.pac4j.core.credentials.extractor.CredentialsExtractor;
@@ -14,15 +21,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import com.baomidou.shaun.core.context.DefaultJ2EContextFactory;
-import com.baomidou.shaun.core.context.J2EContextFactory;
-import com.baomidou.shaun.core.context.cookie.CookieContext;
-import com.baomidou.shaun.core.extractor.TokenExtractor;
-import com.baomidou.shaun.core.generator.DefaultJwtTokenGenerator;
-import com.baomidou.shaun.core.generator.TokenGenerator;
-
-import lombok.AllArgsConstructor;
 
 /**
  * @author miemie
@@ -88,7 +86,7 @@ public class ShaunAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean
-    @ConditionalOnProperty(prefix = "mipac4j", name = "token-location", havingValue = "cookie")
+    @ConditionalOnProperty(prefix = "shaun", name = "token-location", havingValue = "cookie")
     public CookieContext cookieContext(J2EContextFactory j2EContextFactory, TokenGenerator tokenGenerator) {
         return new CookieContext(j2EContextFactory, tokenGenerator, properties.getCookie());
     }
@@ -97,6 +95,7 @@ public class ShaunAutoConfiguration {
      * 生成 J2EContext 的工厂类
      */
     @Bean
+    @ConditionalOnMissingBean
     public J2EContextFactory j2EContextFactory() {
         return new DefaultJ2EContextFactory();
     }

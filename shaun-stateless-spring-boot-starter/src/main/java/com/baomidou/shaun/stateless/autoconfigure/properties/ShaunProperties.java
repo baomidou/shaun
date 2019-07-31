@@ -1,17 +1,15 @@
 package com.baomidou.shaun.stateless.autoconfigure.properties;
 
-import java.util.UUID;
-
-import org.springframework.boot.context.properties.ConfigurationProperties;
-
 import com.baomidou.shaun.core.enums.TokenLocation;
 import com.baomidou.shaun.core.properties.CommonProperties;
 import com.baomidou.shaun.core.properties.Cookie;
 import com.baomidou.shaun.core.properties.Header;
 import com.baomidou.shaun.core.properties.Parameter;
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+
+import java.util.UUID;
 
 /**
  * @author miemie
@@ -19,7 +17,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-@ConfigurationProperties("mipac4j")
+@ConfigurationProperties("shaun")
 public class ShaunProperties extends CommonProperties {
 
     /**
