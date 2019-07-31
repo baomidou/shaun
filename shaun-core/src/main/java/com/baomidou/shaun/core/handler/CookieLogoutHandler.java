@@ -12,7 +12,7 @@ import org.pac4j.core.profile.CommonProfile;
  */
 @Data
 @AllArgsConstructor
-public class DefaultCookieLogoutHandler implements LogoutHandler<CommonProfile> {
+public class CookieLogoutHandler implements LogoutHandler<CommonProfile> {
 
     private final CookieContext cookieContext;
 

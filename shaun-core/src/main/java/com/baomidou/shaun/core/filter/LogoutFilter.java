@@ -5,7 +5,6 @@ import com.baomidou.shaun.core.matching.OnlyPathMatcher;
 import com.baomidou.shaun.core.profile.ProfileManagerFactory;
 import lombok.Data;
 import org.pac4j.core.client.Client;
-import org.pac4j.core.client.IndirectClient;
 import org.pac4j.core.context.J2EContext;
 import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.core.profile.ProfileManager;
@@ -33,12 +32,7 @@ public class LogoutFilter implements ShaunFilter {
         if (pathMatcher.matches(context)) {
             ProfileManager manager = profileManagerFactory.apply(context);
             List<CommonProfile> profiles = manager.getAll(true);
-            manager.logout();
-            context.getSessionStore().destroySession(context);
             logoutHandler.logout(context, profiles.get(0));
-            if (client instanceof IndirectClient) {
-                client.redirect(context);
-            }
             return false;
         }
         return true;

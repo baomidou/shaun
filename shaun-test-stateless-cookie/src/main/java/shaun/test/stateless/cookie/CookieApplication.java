@@ -1,6 +1,7 @@
 package shaun.test.stateless.cookie;
 
 import com.baomidou.shaun.core.context.cookie.CookieContext;
+import com.baomidou.shaun.core.handler.CookieLogoutHandler;
 import com.baomidou.shaun.core.handler.LogoutHandler;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -19,6 +20,6 @@ public class CookieApplication {
 
     @Bean
     public LogoutHandler logoutExecutor(CookieContext cookieContext) {
-        return (ctx, profiles) -> cookieContext.clearCookie();
+        return new CookieLogoutHandler(cookieContext);
     }
 }
