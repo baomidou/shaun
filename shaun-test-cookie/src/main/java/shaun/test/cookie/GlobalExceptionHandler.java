@@ -12,6 +12,14 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({HttpAction.class})
     public String httpCodeException(HttpAction action) {
-        return "你没有权限";
+        switch (action.getCode()) {
+            case 302:
+                return "";
+            case 401:
+                return "请登录";
+            case 403:
+                return "你没有权限";
+        }
+        return "";
     }
 }

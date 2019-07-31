@@ -1,19 +1,23 @@
 package com.baomidou.shaun.core.filter;
 
-import com.baomidou.shaun.core.client.TokenClient;
 import com.baomidou.shaun.core.engine.LogoutExecutor;
 import com.baomidou.shaun.core.matching.OnlyPathMatcher;
+import com.baomidou.shaun.core.profile.ProfileManagerFactory;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import org.pac4j.core.client.Client;
+import org.pac4j.core.client.IndirectClient;
 import org.pac4j.core.context.J2EContext;
-import org.pac4j.core.credentials.TokenCredentials;
 import org.pac4j.core.http.ajax.AjaxRequestResolver;
 import org.pac4j.core.http.ajax.DefaultAjaxRequestResolver;
 import org.pac4j.core.matching.Matcher;
 import org.pac4j.core.profile.CommonProfile;
+import org.pac4j.core.profile.ProfileManager;
 import org.pac4j.core.util.CommonHelper;
+
+import java.util.List;
 
 /**
  * 登出 filter
@@ -31,15 +35,21 @@ public class LogoutFilter implements ShaunFilter {
     private AjaxRequestResolver ajaxRequestResolver = new DefaultAjaxRequestResolver();
     private LogoutExecutor logoutExecutor;
     private String logoutUrl;
-    private TokenClient tokenDirectClient;
+    private Client client;
+    private ProfileManagerFactory profileManagerFactory;
 
     @SuppressWarnings("unchecked")
     @Override
     public boolean goOnChain(J2EContext context) {
         if (matcher.matches(context)) {
-            final TokenCredentials credentials = tokenDirectClient.getCredentials(context);
-            final CommonProfile profile = tokenDirectClient.getUserProfile(credentials, context);
-            logoutExecutor.logout(context, profile);
+            ProfileManager manager = profileManagerFactory.apply(context);
+            List<CommonProfile> profiles = manager.getAll(true);
+            manager.logout();
+            context.getSessionStore().destroySession(context);
+            logoutExecutor.logout(context, profiles.get(0));
+            if (client instanceof IndirectClient) {
+                client.redirect(context);
+            }
             return false;
         }
         return true;
