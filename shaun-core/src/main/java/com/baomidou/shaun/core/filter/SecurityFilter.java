@@ -1,11 +1,11 @@
 package com.baomidou.shaun.core.filter;
 
 import com.baomidou.shaun.core.context.http.DoHttpAction;
+import com.baomidou.shaun.core.engine.DefaultSecurityLogic;
+import com.baomidou.shaun.core.engine.SecurityLogic;
 import lombok.Data;
 import org.pac4j.core.config.Config;
 import org.pac4j.core.context.J2EContext;
-import org.pac4j.core.engine.DefaultSecurityLogic;
-import org.pac4j.core.engine.SecurityLogic;
 import org.pac4j.core.util.CommonHelper;
 
 /**
@@ -17,7 +17,7 @@ import org.pac4j.core.util.CommonHelper;
 @Data
 public class SecurityFilter implements ShaunFilter {
 
-    private final SecurityLogic<Boolean, J2EContext> securityLogic = new DefaultSecurityLogic<>();
+    private final SecurityLogic securityLogic = new DefaultSecurityLogic();
     private Config config;
     private String marchers;
     private String authorizers;
@@ -25,11 +25,7 @@ public class SecurityFilter implements ShaunFilter {
 
     @Override
     public boolean goOnChain(J2EContext context) {
-        return securityLogic.perform(context, config, (ctx, pf, param) -> true, (code, ctx) -> {
-                    doHttpAction.adapt(null, ctx);
-                    return false;
-                },
-                config.getClients().getDefaultSecurityClients(), authorizers, marchers, false);
+        return securityLogic.perform(context, config, config.getClients().getDefaultSecurityClients(), authorizers, marchers);
     }
 
     @Override
