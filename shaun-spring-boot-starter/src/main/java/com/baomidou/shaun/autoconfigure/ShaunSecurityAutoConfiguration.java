@@ -1,18 +1,13 @@
 package com.baomidou.shaun.autoconfigure;
 
-import com.baomidou.shaun.autoconfigure.aop.AnnotationAspect;
-import com.baomidou.shaun.autoconfigure.factory.ShaunFilterFactoryBean;
-import com.baomidou.shaun.autoconfigure.properties.ShaunProperties;
-import com.baomidou.shaun.core.client.TokenClient;
-import com.baomidou.shaun.core.context.J2EContextFactory;
-import com.baomidou.shaun.core.filter.LogoutFilter;
-import com.baomidou.shaun.core.filter.MIPac4jFilter;
-import com.baomidou.shaun.core.filter.SecurityFilter;
-import com.baomidou.shaun.core.filter.ShaunFilter;
-import com.baomidou.shaun.core.handler.logout.LogoutHandler;
-import com.baomidou.shaun.core.matching.OnlyPathMatcher;
-import com.baomidou.shaun.core.profile.ProfileManagerFactory;
-import lombok.AllArgsConstructor;
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Supplier;
+
+import javax.servlet.DispatcherType;
+
 import org.pac4j.core.authorization.authorizer.Authorizer;
 import org.pac4j.core.client.Clients;
 import org.pac4j.core.config.Config;
@@ -32,12 +27,20 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import javax.servlet.DispatcherType;
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Supplier;
+import com.baomidou.shaun.autoconfigure.aop.AnnotationAspect;
+import com.baomidou.shaun.autoconfigure.factory.ShaunFilterFactoryBean;
+import com.baomidou.shaun.autoconfigure.properties.ShaunProperties;
+import com.baomidou.shaun.core.client.TokenClient;
+import com.baomidou.shaun.core.context.J2EContextFactory;
+import com.baomidou.shaun.core.filter.LogoutFilter;
+import com.baomidou.shaun.core.filter.MIPac4jFilter;
+import com.baomidou.shaun.core.filter.SecurityFilter;
+import com.baomidou.shaun.core.filter.ShaunFilter;
+import com.baomidou.shaun.core.handler.logout.LogoutHandler;
+import com.baomidou.shaun.core.matching.OnlyPathMatcher;
+import com.baomidou.shaun.core.profile.ProfileManagerFactory;
+
+import lombok.AllArgsConstructor;
 
 /**
  * @author miemie
@@ -55,6 +58,7 @@ public class ShaunSecurityAutoConfiguration {
     private final SessionStore sessionStore;
     private final ProfileManagerFactory profileManagerFactory;
     private final J2EContextFactory j2EContextFactory;
+    private final LogoutHandler logoutHandler;
 
     @Bean
     @ConditionalOnMissingBean
@@ -109,8 +113,7 @@ public class ShaunSecurityAutoConfiguration {
             logoutFilter.setClient(tokenClient);
             logoutFilter.setPathMatcher(OnlyPathMatcher.instance(properties.getLogoutUrl()));
             logoutFilter.setProfileManagerFactory(profileManagerFactory);
-            LogoutHandler logoutExecutor = this.getOrDefault(LogoutHandler.class, () -> LogoutHandler.DO_NOTHING);
-            logoutFilter.setLogoutHandler(logoutExecutor);
+            logoutFilter.setLogoutHandler(logoutHandler);
 
             filterList.add(logoutFilter);
         }

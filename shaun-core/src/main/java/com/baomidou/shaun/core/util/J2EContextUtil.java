@@ -16,10 +16,15 @@ import com.baomidou.shaun.core.context.J2EContextFactory;
  */
 public abstract class J2EContextUtil {
 
-    @SuppressWarnings("all")
     public static J2EContext getJ2EContext(final J2EContextFactory j2EContextFactory, SessionStore sessionStore) {
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-        HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
-        return j2EContextFactory.applyContext(request, response, sessionStore);
+        return j2EContextFactory.applyContext(request(), response(), sessionStore);
+    }
+
+    public static HttpServletRequest request() {
+        return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+    }
+
+    public static HttpServletResponse response() {
+        return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
     }
 }

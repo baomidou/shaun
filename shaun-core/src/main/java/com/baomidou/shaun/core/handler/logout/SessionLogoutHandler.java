@@ -1,13 +1,13 @@
 package com.baomidou.shaun.core.handler.logout;
 
-import com.baomidou.shaun.core.profile.ProfileManagerFactory;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import org.pac4j.core.client.IndirectClient;
 import org.pac4j.core.context.J2EContext;
-import org.pac4j.core.context.session.SessionStore;
 import org.pac4j.core.profile.CommonProfile;
-import org.pac4j.core.profile.ProfileManager;
+
+import com.baomidou.shaun.core.profile.ProfileContext;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
 /**
  * @author miemie
@@ -17,15 +17,12 @@ import org.pac4j.core.profile.ProfileManager;
 @AllArgsConstructor
 public class SessionLogoutHandler implements LogoutHandler<CommonProfile> {
 
-    private final ProfileManagerFactory profileManagerFactory;
-    private final SessionStore<J2EContext> sessionStore;
+    private final ProfileContext profileContext;
     private final IndirectClient client;
 
     @Override
     public void logout(J2EContext context, CommonProfile profile) {
-        ProfileManager manager = profileManagerFactory.apply(context);
-        manager.logout();
-        sessionStore.destroySession(context);
+        profileContext.logout(context);
         client.redirect(context); // 不抛出这个异常
     }
 }
