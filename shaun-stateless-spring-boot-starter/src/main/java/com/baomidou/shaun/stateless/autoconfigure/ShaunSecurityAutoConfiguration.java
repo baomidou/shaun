@@ -12,6 +12,7 @@ import com.baomidou.shaun.core.matching.OnlyPathMatcher;
 import com.baomidou.shaun.stateless.autoconfigure.aop.AnnotationAspect;
 import com.baomidou.shaun.stateless.autoconfigure.properties.ShaunProperties;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import org.pac4j.core.authorization.authorizer.Authorizer;
 import org.pac4j.core.context.Pac4jConstants;
 import org.pac4j.core.credentials.TokenCredentials;
@@ -19,6 +20,7 @@ import org.pac4j.core.credentials.authenticator.Authenticator;
 import org.pac4j.core.credentials.extractor.CredentialsExtractor;
 import org.pac4j.core.matching.PathMatcher;
 import org.pac4j.core.util.CommonHelper;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.ApplicationContext;
@@ -38,6 +40,7 @@ import java.util.function.Supplier;
  * @author miemie
  * @since 2019-07-18
  */
+@Data
 @AllArgsConstructor
 @Configuration
 @AutoConfigureAfter(ShaunAutoConfiguration.class)
@@ -48,6 +51,7 @@ public class ShaunSecurityAutoConfiguration implements WebMvcConfigurer {
     private final Authenticator<TokenCredentials> authenticator;
     private final CredentialsExtractor<TokenCredentials> credentialsExtractor;
     private final J2EContextFactory j2EContextFactory;
+    private final ObjectProvider<LogoutHandler> logoutHandlerObjectProvider;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -97,8 +101,8 @@ public class ShaunSecurityAutoConfiguration implements WebMvcConfigurer {
         if (CommonHelper.isNotBlank(properties.getLogoutUrl())) {
             StatelessLogoutFilter logoutFilter = new StatelessLogoutFilter();
             logoutFilter.setPathMatcher(OnlyPathMatcher.instance(properties.getLogoutUrl()));
-            LogoutHandler logoutExecutor = this.getOrDefault(LogoutHandler.class, () -> LogoutHandler.DO_NOTHING);
-            logoutFilter.setLogoutExecutor(logoutExecutor);
+            LogoutHandler logoutHandler = logoutHandlerObjectProvider.getIfAvailable();
+            logoutFilter.setLogoutExecutor(logoutHandler);
 
             filterList.add(logoutFilter);
         }

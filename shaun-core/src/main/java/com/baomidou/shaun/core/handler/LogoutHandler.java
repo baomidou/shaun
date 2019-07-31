@@ -1,6 +1,6 @@
 package com.baomidou.shaun.core.handler;
 
-import org.pac4j.core.context.WebContext;
+import org.pac4j.core.context.J2EContext;
 import org.pac4j.core.profile.CommonProfile;
 
 /**
@@ -12,8 +12,11 @@ import org.pac4j.core.profile.CommonProfile;
 @FunctionalInterface
 public interface LogoutHandler<U extends CommonProfile> {
 
-    LogoutHandler DO_NOTHING = (ctx, pf) -> {
-    };
-
-    void logout(WebContext context, U profile);
+    /**
+     * 登出炒作
+     *
+     * @param context 上下文
+     * @param profile 自己的 profile
+     */
+    void logout(J2EContext context, U profile);
 }
