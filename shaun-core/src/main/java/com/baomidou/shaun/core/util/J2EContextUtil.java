@@ -14,9 +14,10 @@ import com.baomidou.shaun.core.context.J2EContextFactory;
  * @author miemie
  * @since 2019-07-20
  */
+@SuppressWarnings("unchecked")
 public abstract class J2EContextUtil {
 
-    public static J2EContext getJ2EContext(final J2EContextFactory j2EContextFactory, SessionStore sessionStore) {
+    public static J2EContext getJ2EContext(final J2EContextFactory j2EContextFactory, final SessionStore<J2EContext> sessionStore) {
         return j2EContextFactory.applyContext(request(), response(), sessionStore);
     }
 

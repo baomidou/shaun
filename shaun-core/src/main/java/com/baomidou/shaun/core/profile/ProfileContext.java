@@ -28,8 +28,12 @@ public class ProfileContext {
 
     public <U extends CommonProfile> void login(U profile) {
         J2EContext context = J2EContextUtil.getJ2EContext(j2EContextFactory, sessionStore);
-        ProfileManager manager = profileManagerFactory.apply(context);
+        ProfileManager manager = getProfileManager(context);
         manager.save(true, profile, false);
+    }
+
+    public <U extends CommonProfile> ProfileManager<U> getProfileManager(J2EContext context) {
+        return profileManagerFactory.apply(context);
     }
 
     public void logout() {
@@ -39,6 +43,6 @@ public class ProfileContext {
     public void logout(J2EContext context) {
         ProfileManager manager = profileManagerFactory.apply(context);
         manager.logout();
-        sessionStore.destroySession(context);
+        context.getSessionStore().destroySession(context);
     }
 }
