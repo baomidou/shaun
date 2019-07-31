@@ -2,7 +2,7 @@ spring:
   thymeleaf:
     cache: false
 
-mipac4j:
+shaun:
   stateless: false
   login-url: /login
   logout-url: /logout

@@ -1,4 +1,4 @@
-mipac4j:
+shaun:
   logout-url: /logout
   exclude-path:
     - /login
