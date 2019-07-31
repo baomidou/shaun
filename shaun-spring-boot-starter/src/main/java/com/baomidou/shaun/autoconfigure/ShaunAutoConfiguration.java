@@ -3,7 +3,6 @@ package com.baomidou.shaun.autoconfigure;
 import com.baomidou.shaun.autoconfigure.properties.ShaunProperties;
 import com.baomidou.shaun.core.context.DefaultJ2EContextFactory;
 import com.baomidou.shaun.core.context.J2EContextFactory;
-import com.baomidou.shaun.core.context.cookie.CookieContext;
 import com.baomidou.shaun.core.context.session.NoSessionStore;
 import com.baomidou.shaun.core.extractor.TokenExtractor;
 import com.baomidou.shaun.core.generator.DefaultJwtTokenGenerator;
@@ -99,15 +98,6 @@ public class ShaunAutoConfiguration {
     @ConditionalOnMissingBean
     public J2EContextFactory j2EContextFactory() {
         return DefaultJ2EContextFactory.INSTANCE;
-    }
-
-    /**
-     * 操作 cookie 类
-     */
-    @Bean
-    @ConditionalOnMissingBean
-    public CookieContext cookieContext(J2EContextFactory j2EContextFactory, TokenGenerator tokenGenerator, SessionStore sessionStore) {
-        return new CookieContext(j2EContextFactory, tokenGenerator, sessionStore, properties.getCookie());
     }
 
     @Bean
