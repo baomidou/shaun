@@ -1,10 +1,17 @@
 package com.baomidou.shaun.stateless.autoconfigure;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Supplier;
-
+import com.baomidou.shaun.core.client.TokenClient;
+import com.baomidou.shaun.core.context.J2EContextFactory;
+import com.baomidou.shaun.core.context.session.NoSessionStore;
+import com.baomidou.shaun.core.filter.ShaunFilter;
+import com.baomidou.shaun.core.filter.stateless.StatelessLogoutFilter;
+import com.baomidou.shaun.core.filter.stateless.StatelessSecurityFilter;
+import com.baomidou.shaun.core.handler.LogoutHandler;
+import com.baomidou.shaun.core.interceptor.ShaunInterceptor;
+import com.baomidou.shaun.core.matching.OnlyPathMatcher;
+import com.baomidou.shaun.stateless.autoconfigure.aop.AnnotationAspect;
+import com.baomidou.shaun.stateless.autoconfigure.properties.ShaunProperties;
+import lombok.AllArgsConstructor;
 import org.pac4j.core.authorization.authorizer.Authorizer;
 import org.pac4j.core.context.Pac4jConstants;
 import org.pac4j.core.credentials.TokenCredentials;
@@ -22,19 +29,10 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import com.baomidou.shaun.core.client.TokenClient;
-import com.baomidou.shaun.core.context.J2EContextFactory;
-import com.baomidou.shaun.core.context.session.NoSessionStore;
-import com.baomidou.shaun.core.engine.LogoutExecutor;
-import com.baomidou.shaun.core.filter.ShaunFilter;
-import com.baomidou.shaun.core.filter.stateless.StatelessLogoutFilter;
-import com.baomidou.shaun.core.filter.stateless.StatelessSecurityFilter;
-import com.baomidou.shaun.core.interceptor.ShaunInterceptor;
-import com.baomidou.shaun.core.matching.OnlyPathMatcher;
-import com.baomidou.shaun.stateless.autoconfigure.aop.AnnotationAspect;
-import com.baomidou.shaun.stateless.autoconfigure.properties.ShaunProperties;
-
-import lombok.AllArgsConstructor;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Supplier;
 
 /**
  * @author miemie
@@ -99,7 +97,7 @@ public class ShaunSecurityAutoConfiguration implements WebMvcConfigurer {
         if (CommonHelper.isNotBlank(properties.getLogoutUrl())) {
             StatelessLogoutFilter logoutFilter = new StatelessLogoutFilter();
             logoutFilter.setPathMatcher(OnlyPathMatcher.instance(properties.getLogoutUrl()));
-            LogoutExecutor logoutExecutor = this.getOrDefault(LogoutExecutor.class, () -> LogoutExecutor.DO_NOTHING);
+            LogoutHandler logoutExecutor = this.getOrDefault(LogoutHandler.class, () -> LogoutHandler.DO_NOTHING);
             logoutFilter.setLogoutExecutor(logoutExecutor);
 
             filterList.add(logoutFilter);

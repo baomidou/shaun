@@ -7,11 +7,11 @@ import com.baomidou.shaun.core.client.TokenClient;
 import com.baomidou.shaun.core.context.J2EContextFactory;
 import com.baomidou.shaun.core.context.http.DefaultDoHttpAction;
 import com.baomidou.shaun.core.context.http.DoHttpAction;
-import com.baomidou.shaun.core.engine.LogoutExecutor;
 import com.baomidou.shaun.core.filter.LogoutFilter;
 import com.baomidou.shaun.core.filter.MIPac4jFilter;
 import com.baomidou.shaun.core.filter.SecurityFilter;
 import com.baomidou.shaun.core.filter.ShaunFilter;
+import com.baomidou.shaun.core.handler.LogoutHandler;
 import com.baomidou.shaun.core.profile.ProfileManagerFactory;
 import lombok.AllArgsConstructor;
 import org.pac4j.core.authorization.authorizer.Authorizer;
@@ -112,8 +112,8 @@ public class ShaunSecurityAutoConfiguration {
             LogoutFilter logoutFilter = new LogoutFilter();
             logoutFilter.setClient(tokenClient);
             logoutFilter.setLogoutUrl(properties.getLogoutUrl());
-            LogoutExecutor logoutExecutor = this.getOrDefault(LogoutExecutor.class, () -> LogoutExecutor.DO_NOTHING);
-            logoutFilter.setLogoutExecutor(logoutExecutor);
+            LogoutHandler logoutExecutor = this.getOrDefault(LogoutHandler.class, () -> LogoutHandler.DO_NOTHING);
+            logoutFilter.setLogoutHandler(logoutExecutor);
 
             filterList.add(logoutFilter);
         }

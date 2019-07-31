@@ -9,5 +9,5 @@ import org.pac4j.core.context.J2EContext;
  */
 public interface SecurityLogic {
 
-    boolean perform(J2EContext context, Config config, String clients, String authorizers, String matchers);
+    boolean perform(J2EContext context, Config config, String clients, String authorizers);
 }

@@ -1,14 +1,13 @@
 package com.baomidou.shaun.core.filter.stateless;
 
-import com.baomidou.shaun.core.engine.LogoutExecutor;
 import com.baomidou.shaun.core.filter.ShaunFilter;
+import com.baomidou.shaun.core.handler.LogoutHandler;
 import com.baomidou.shaun.core.matching.OnlyPathMatcher;
 import com.baomidou.shaun.core.util.ProfileHolder;
+import lombok.Data;
 import org.pac4j.core.context.J2EContext;
 import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.core.util.CommonHelper;
-
-import lombok.Data;
 
 /**
  * 登出 filter
@@ -21,7 +20,7 @@ import lombok.Data;
 public class StatelessLogoutFilter implements ShaunFilter {
 
     private OnlyPathMatcher pathMatcher;
-    private LogoutExecutor logoutExecutor;
+    private LogoutHandler logoutExecutor;
 
     @Override
     public boolean goOnChain(J2EContext context) {

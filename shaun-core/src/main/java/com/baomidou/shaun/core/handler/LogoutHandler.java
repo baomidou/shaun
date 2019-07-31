@@ -1,4 +1,4 @@
-package com.baomidou.shaun.core.engine;
+package com.baomidou.shaun.core.handler;
 
 import org.pac4j.core.context.WebContext;
 import org.pac4j.core.profile.CommonProfile;
@@ -10,9 +10,9 @@ import org.pac4j.core.profile.CommonProfile;
  * @since 2019-07-22
  */
 @FunctionalInterface
-public interface LogoutExecutor<U extends CommonProfile> {
+public interface LogoutHandler<U extends CommonProfile> {
 
-    LogoutExecutor DO_NOTHING = (ctx, pf) -> {
+    LogoutHandler DO_NOTHING = (ctx, pf) -> {
     };
 
     void logout(WebContext context, U profile);
