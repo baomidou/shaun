@@ -7,8 +7,6 @@ import lombok.Data;
 import org.pac4j.core.client.Client;
 import org.pac4j.core.client.IndirectClient;
 import org.pac4j.core.context.J2EContext;
-import org.pac4j.core.http.ajax.AjaxRequestResolver;
-import org.pac4j.core.http.ajax.DefaultAjaxRequestResolver;
 import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.core.profile.ProfileManager;
 import org.pac4j.core.util.CommonHelper;
@@ -25,8 +23,6 @@ import java.util.List;
 public class LogoutFilter implements ShaunFilter {
 
     private OnlyPathMatcher pathMatcher;
-
-    private AjaxRequestResolver ajaxRequestResolver = new DefaultAjaxRequestResolver();
     private Client client;
     private LogoutHandler logoutHandler;
     private ProfileManagerFactory profileManagerFactory;
@@ -58,5 +54,6 @@ public class LogoutFilter implements ShaunFilter {
         CommonHelper.assertNotNull("client", client);
         CommonHelper.assertNotNull("logoutExecutor", logoutHandler);
         CommonHelper.assertNotNull("pathMatcher", pathMatcher);
+        CommonHelper.assertNotNull("profileManagerFactory", profileManagerFactory);
     }
 }

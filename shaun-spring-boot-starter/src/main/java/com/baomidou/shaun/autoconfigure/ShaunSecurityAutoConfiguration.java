@@ -5,13 +5,12 @@ import com.baomidou.shaun.autoconfigure.factory.ShaunFilterFactoryBean;
 import com.baomidou.shaun.autoconfigure.properties.ShaunProperties;
 import com.baomidou.shaun.core.client.TokenClient;
 import com.baomidou.shaun.core.context.J2EContextFactory;
-import com.baomidou.shaun.core.context.http.DefaultDoHttpAction;
-import com.baomidou.shaun.core.context.http.DoHttpAction;
 import com.baomidou.shaun.core.filter.LogoutFilter;
 import com.baomidou.shaun.core.filter.MIPac4jFilter;
 import com.baomidou.shaun.core.filter.SecurityFilter;
 import com.baomidou.shaun.core.filter.ShaunFilter;
 import com.baomidou.shaun.core.handler.LogoutHandler;
+import com.baomidou.shaun.core.matching.OnlyPathMatcher;
 import com.baomidou.shaun.core.profile.ProfileManagerFactory;
 import lombok.AllArgsConstructor;
 import org.pac4j.core.authorization.authorizer.Authorizer;
@@ -95,14 +94,11 @@ public class ShaunSecurityAutoConfiguration {
         }
 
         securityConfig.setProfileManagerFactory(profileManagerFactory);
-        securityConfig.addMatcher(Pac4jConstants.MATCHERS, pathMatcher);
 
         SecurityFilter securityFilter = new SecurityFilter();
         securityFilter.setConfig(securityConfig);
         securityFilter.setAuthorizers(authorizers);
-        securityFilter.setMarchers(Pac4jConstants.MATCHERS);
-        DoHttpAction doHttpAction = this.getOrDefault(DoHttpAction.class, DefaultDoHttpAction::new);
-        securityFilter.setDoHttpAction(doHttpAction);
+        securityFilter.setPathMatcher(pathMatcher);
 
         filterList.add(securityFilter);
         /* securityFilter end */
@@ -111,7 +107,8 @@ public class ShaunSecurityAutoConfiguration {
         if (CommonHelper.isNotBlank(properties.getLogoutUrl())) {
             LogoutFilter logoutFilter = new LogoutFilter();
             logoutFilter.setClient(tokenClient);
-            logoutFilter.setLogoutUrl(properties.getLogoutUrl());
+            logoutFilter.setPathMatcher(OnlyPathMatcher.instance(properties.getLogoutUrl()));
+            logoutFilter.setProfileManagerFactory(profileManagerFactory);
             LogoutHandler logoutExecutor = this.getOrDefault(LogoutHandler.class, () -> LogoutHandler.DO_NOTHING);
             logoutFilter.setLogoutHandler(logoutExecutor);
 
