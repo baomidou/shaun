@@ -25,7 +25,7 @@ public class StatelessLogoutFilter implements ShaunFilter {
     @Override
     public boolean goOnChain(J2EContext context) {
         if (pathMatcher.matches(context)) {
-            final CommonProfile profile = ProfileHolder.getProfile(context);
+            final CommonProfile profile = ProfileHolder.get(context, false);
             logoutExecutor.logout(context, profile);
             return false;
         }

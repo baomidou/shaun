@@ -1,11 +1,10 @@
 package com.baomidou.shaun.core.filter.stateless;
 
-import java.util.Collections;
-import java.util.Map;
-
 import com.baomidou.shaun.core.client.TokenClient;
 import com.baomidou.shaun.core.filter.ShaunFilter;
 import com.baomidou.shaun.core.util.ProfileHolder;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.pac4j.core.authorization.authorizer.Authorizer;
 import org.pac4j.core.authorization.checker.AuthorizationChecker;
 import org.pac4j.core.authorization.checker.DefaultAuthorizationChecker;
@@ -16,8 +15,8 @@ import org.pac4j.core.matching.PathMatcher;
 import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.core.util.CommonHelper;
 
-import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+import java.util.Collections;
+import java.util.Map;
 
 /**
  * 前后分离的安全 filter
@@ -47,7 +46,7 @@ public class StatelessSecurityFilter implements ShaunFilter {
 
             HttpAction action;
             if (profile != null) {
-                ProfileHolder.setProfile(context, profile);
+                ProfileHolder.save(context, profile, false);
                 if (authorizationChecker.isAuthorized(context, Collections.singletonList(profile), authorizers, authorizerMap)) {
                     log.debug("authenticated and authorized -> grant access");
                     return true;
