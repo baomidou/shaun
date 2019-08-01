@@ -20,7 +20,7 @@ public abstract class ProfileHolder {
     private static final String key = Pac4jConstants.USER_PROFILES;
 
     public static <U extends UserProfile> void save(U profile, boolean saveInSession) {
-        save(JEEContextUtil.request(), profile, saveInSession);
+        save(JEEContextFactory.request(), profile, saveInSession);
     }
 
     public static <U extends UserProfile> void save(JEEContext context, U profile, boolean saveInSession) {
@@ -43,7 +43,7 @@ public abstract class ProfileHolder {
     }
 
     public static <U extends UserProfile> U get(boolean readFromSession) {
-        return get(JEEContextUtil.request(), readFromSession);
+        return get(JEEContextFactory.request(), readFromSession);
     }
 
     public static <U extends UserProfile> U get(JEEContext context, boolean readFromSession) {

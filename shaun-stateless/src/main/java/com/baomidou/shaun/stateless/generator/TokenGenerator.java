@@ -1,4 +1,4 @@
-package com.baomidou.shaun.core.generator;
+package com.baomidou.shaun.stateless.generator;
 
 import org.pac4j.core.profile.CommonProfile;
 

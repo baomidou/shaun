@@ -1,6 +1,5 @@
 package com.baomidou.shaun.stateless.autoconfigure;
 
-import com.baomidou.shaun.core.context.JEEContextFactory;
 import com.baomidou.shaun.core.filter.ShaunFilter;
 import com.baomidou.shaun.core.handler.LogoutHandler;
 import com.baomidou.shaun.core.interceptor.ShaunInterceptor;
@@ -20,9 +19,9 @@ import org.pac4j.core.credentials.authenticator.Authenticator;
 import org.pac4j.core.credentials.extractor.CredentialsExtractor;
 import org.pac4j.core.matching.PathMatcher;
 import org.pac4j.core.util.CommonHelper;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.CollectionUtils;
@@ -31,9 +30,9 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Supplier;
 
 /**
  * @author miemie
@@ -46,11 +45,10 @@ import java.util.function.Supplier;
 public class ShaunStatelessSecurityAutoConfiguration implements WebMvcConfigurer {
 
     private final ShaunStatelessProperties properties;
-    private final ApplicationContext applicationContext;
     private final Authenticator<TokenCredentials> authenticator;
     private final CredentialsExtractor<TokenCredentials> credentialsExtractor;
-    private final JEEContextFactory j2EContextFactory;
-    private final LogoutHandler logoutHandler;
+    private final ObjectProvider<LogoutHandler> logoutHandlerProvider;
+    private final ObjectProvider<List<Authorizer>> authorizerProvider;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -77,8 +75,12 @@ public class ShaunStatelessSecurityAutoConfiguration implements WebMvcConfigurer
 
         /* securityFilter begin */
         String authorizers = properties.getAuthorizers();
-        Map<String, Authorizer> authorizeMap = applicationContext.getBeansOfType(Authorizer.class);
-        if (!CollectionUtils.isEmpty(authorizeMap)) {
+        List<Authorizer> authorizerList = authorizerProvider.getIfAvailable();
+        Map<String, Authorizer> authorizeMap = new HashMap<>();
+        if (!CollectionUtils.isEmpty(authorizerList)) {
+            for (Authorizer authorizer : authorizerList) {
+                authorizeMap.put(authorizer.getClass().getSimpleName(), authorizer);
+            }
             String s = String.join(Pac4jConstants.ELEMENT_SEPARATOR, authorizeMap.keySet());
             if (StringUtils.hasText(authorizers)) {
                 authorizers += (Pac4jConstants.ELEMENT_SEPARATOR + s);
@@ -100,30 +102,19 @@ public class ShaunStatelessSecurityAutoConfiguration implements WebMvcConfigurer
         if (CommonHelper.isNotBlank(properties.getLogoutUrl())) {
             LogoutFilter logoutFilter = new LogoutFilter();
             logoutFilter.setPathMatcher(new OnlyPathMatcher(properties.getLogoutUrl()));
-            logoutFilter.setLogoutExecutor(logoutHandler);
+            logoutFilter.setLogoutExecutor(logoutHandlerProvider.getIfAvailable());
 
             filterList.add(logoutFilter);
         }
 
         ShaunInterceptor interceptor = new ShaunInterceptor();
-        return interceptor.setJeeContextFactory(j2EContextFactory).setSessionStore(NoSessionStore.INSTANCE)
+        return interceptor.setSessionStore(NoSessionStore.INSTANCE)
                 .setFilterList(filterList);
     }
 
     @Bean
     @ConditionalOnMissingBean
     public AnnotationAspect annotationAspect() {
-        return new AnnotationAspect(j2EContextFactory);
-    }
-
-    private <T> T getOrDefault(Class<T> clazz, Supplier<T> supplier) {
-        if (this.hasBean(clazz)) {
-            return applicationContext.getBean(clazz);
-        }
-        return supplier.get();
-    }
-
-    private <T> boolean hasBean(Class<T> clazz) {
-        return applicationContext.getBeanNamesForType(clazz, false, false).length > 0;
+        return new AnnotationAspect();
     }
 }

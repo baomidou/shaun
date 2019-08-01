@@ -1,6 +1,5 @@
 package com.baomidou.shaun.core.util;
 
-import com.baomidou.shaun.core.context.JEEContextFactory;
 import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.context.session.SessionStore;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -13,11 +12,15 @@ import javax.servlet.http.HttpServletResponse;
  * @author miemie
  * @since 2019-07-20
  */
-@SuppressWarnings("unchecked")
-public abstract class JEEContextUtil {
+public abstract class JEEContextFactory {
 
-    public static JEEContext getJEEContext(final JEEContextFactory jeeContextFactory, final SessionStore<JEEContext> sessionStore) {
-        return jeeContextFactory.applyContext(request(), response(), sessionStore);
+    public static JEEContext getJEEContext(final SessionStore<JEEContext> sessionStore) {
+        return getJEEContext(request(), response(), sessionStore);
+    }
+
+    public static JEEContext getJEEContext(final HttpServletRequest request, final HttpServletResponse response,
+                                           final SessionStore<JEEContext> sessionStore) {
+        return new JEEContext(request, response, sessionStore);
     }
 
     public static HttpServletRequest request() {

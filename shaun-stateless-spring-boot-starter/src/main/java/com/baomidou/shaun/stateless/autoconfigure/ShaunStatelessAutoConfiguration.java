@@ -1,13 +1,11 @@
 package com.baomidou.shaun.stateless.autoconfigure;
 
-import com.baomidou.shaun.core.context.DefaultJEEContextFactory;
-import com.baomidou.shaun.core.context.JEEContextFactory;
-import com.baomidou.shaun.core.generator.DefaultJwtTokenGenerator;
-import com.baomidou.shaun.core.generator.TokenGenerator;
 import com.baomidou.shaun.core.handler.LogoutHandler;
 import com.baomidou.shaun.stateless.autoconfigure.properties.ShaunStatelessProperties;
 import com.baomidou.shaun.stateless.cookie.CookieContext;
 import com.baomidou.shaun.stateless.extractor.TokenExtractor;
+import com.baomidou.shaun.stateless.generator.DefaultJwtTokenGenerator;
+import com.baomidou.shaun.stateless.generator.TokenGenerator;
 import com.baomidou.shaun.stateless.handler.CookieLogoutHandler;
 import lombok.AllArgsConstructor;
 import org.pac4j.core.credentials.TokenCredentials;
@@ -90,8 +88,8 @@ public class ShaunStatelessAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     @ConditionalOnProperty(prefix = "shaun", name = "token-location", havingValue = "cookie")
-    public CookieContext cookieContext(JEEContextFactory jeeContextFactory, TokenGenerator tokenGenerator) {
-        return new CookieContext(jeeContextFactory, tokenGenerator, properties.getCookie());
+    public CookieContext cookieContext(TokenGenerator tokenGenerator) {
+        return new CookieContext(tokenGenerator, properties.getCookie());
     }
 
     /**
@@ -102,14 +100,5 @@ public class ShaunStatelessAutoConfiguration {
     @ConditionalOnProperty(prefix = "shaun", name = "token-location", havingValue = "cookie")
     public LogoutHandler<UserProfile> logoutHandler(CookieContext cookieContext) {
         return new CookieLogoutHandler(cookieContext);
-    }
-
-    /**
-     * 生成 J2EContext 的工厂类
-     */
-    @Bean
-    @ConditionalOnMissingBean
-    public JEEContextFactory jeeContextFactory() {
-        return new DefaultJEEContextFactory();
     }
 }

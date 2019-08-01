@@ -4,8 +4,7 @@ import com.baomidou.shaun.core.annotation.RequireAllPermission;
 import com.baomidou.shaun.core.annotation.RequireAllRole;
 import com.baomidou.shaun.core.annotation.RequireAnyPermission;
 import com.baomidou.shaun.core.annotation.RequireAnyRole;
-import com.baomidou.shaun.core.context.JEEContextFactory;
-import com.baomidou.shaun.core.util.JEEContextUtil;
+import com.baomidou.shaun.core.util.JEEContextFactory;
 import com.baomidou.shaun.core.util.ProfileHolder;
 import com.baomidou.shaun.stateless.session.NoSessionStore;
 import lombok.AllArgsConstructor;
@@ -32,7 +31,6 @@ public class AnnotationAspect {
     private static final IsAuthenticatedAuthorizer IS_AUTHENTICATED_AUTHORIZER = new IsAuthenticatedAuthorizer();
 
     private final SessionStore<JEEContext> sessionStore = NoSessionStore.INSTANCE;
-    private final JEEContextFactory j2EContextFactory;
 
     @Before("@annotation(requireAnyRole)")
     public void beforeRequireAnyRole(final RequireAnyRole requireAnyRole) {
@@ -65,7 +63,7 @@ public class AnnotationAspect {
     }
 
     private void isAuthorized(final AbstractRequireElementAuthorizer<String, CommonProfile> authorizer) {
-        JEEContext j2EContext = JEEContextUtil.getJEEContext(j2EContextFactory, sessionStore);
+        JEEContext j2EContext = JEEContextFactory.getJEEContext(sessionStore);
         final List<CommonProfile> profiles = this.isAuthenticated(j2EContext);
         if (!authorizer.isAuthorized(j2EContext, profiles)) {
             throw ForbiddenAction.INSTANCE;
