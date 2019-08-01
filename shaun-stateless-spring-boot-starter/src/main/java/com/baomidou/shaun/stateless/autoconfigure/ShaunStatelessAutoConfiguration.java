@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.baomidou.shaun.core.authorizer.AuthorizationProfile;
-import com.baomidou.shaun.core.authorizer.DefaultAuthorizationContext;
+import com.baomidou.shaun.core.authorizer.DefaultAuthorizationProfile;
 import com.baomidou.shaun.core.handler.LogoutHandler;
 import com.baomidou.shaun.stateless.autoconfigure.properties.ShaunStatelessProperties;
 import com.baomidou.shaun.stateless.cookie.CookieContext;
@@ -109,6 +109,6 @@ public class ShaunStatelessAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public AuthorizationProfile<UserProfile> authorizationContext() {
-        return new DefaultAuthorizationContext<>();
+        return new DefaultAuthorizationProfile<>();
     }
 }
