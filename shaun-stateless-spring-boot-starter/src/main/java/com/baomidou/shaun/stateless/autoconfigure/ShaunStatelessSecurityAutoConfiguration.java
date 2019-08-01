@@ -23,7 +23,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import com.baomidou.shaun.core.authorizer.AuthorizationContext;
+import com.baomidou.shaun.core.authorizer.AuthorizationProfile;
 import com.baomidou.shaun.core.filter.ShaunFilter;
 import com.baomidou.shaun.core.handler.LogoutHandler;
 import com.baomidou.shaun.core.interceptor.ShaunInterceptor;
@@ -117,7 +117,7 @@ public class ShaunStatelessSecurityAutoConfiguration implements WebMvcConfigurer
 
     @Bean
     @ConditionalOnMissingBean
-    public AnnotationAspect annotationAspect(AuthorizationContext<UserProfile> authorizationContext) {
-        return new AnnotationAspect(authorizationContext);
+    public AnnotationAspect annotationAspect(AuthorizationProfile<UserProfile> authorizationProfile) {
+        return new AnnotationAspect(authorizationProfile);
     }
 }

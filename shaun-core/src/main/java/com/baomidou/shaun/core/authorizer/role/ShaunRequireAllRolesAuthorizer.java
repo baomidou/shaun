@@ -6,7 +6,7 @@ import org.pac4j.core.authorization.authorizer.RequireAllRolesAuthorizer;
 import org.pac4j.core.context.WebContext;
 import org.pac4j.core.profile.UserProfile;
 
-import com.baomidou.shaun.core.authorizer.AuthorizationContext;
+import com.baomidou.shaun.core.authorizer.AuthorizationProfile;
 
 /**
  * @author miemie
@@ -14,20 +14,20 @@ import com.baomidou.shaun.core.authorizer.AuthorizationContext;
  */
 public class ShaunRequireAllRolesAuthorizer<U extends UserProfile> extends RequireAllRolesAuthorizer<U> {
 
-    private final AuthorizationContext<U> authorizationContext;
+    private final AuthorizationProfile<U> authorizationProfile;
 
-    public ShaunRequireAllRolesAuthorizer(AuthorizationContext<U> authorizationContext, String... roles) {
+    public ShaunRequireAllRolesAuthorizer(AuthorizationProfile<U> authorizationProfile, String... roles) {
         super(roles);
-        this.authorizationContext = authorizationContext;
+        this.authorizationProfile = authorizationProfile;
     }
 
-    public static <U extends UserProfile> RequireAllRolesAuthorizer<U> requireAllRoles(AuthorizationContext<U> authorizationContext, String... roles) {
-        return new ShaunRequireAllRolesAuthorizer<>(authorizationContext, roles);
+    public static <U extends UserProfile> RequireAllRolesAuthorizer<U> requireAllRoles(AuthorizationProfile<U> authorizationProfile, String... roles) {
+        return new ShaunRequireAllRolesAuthorizer<>(authorizationProfile, roles);
     }
 
     @Override
     protected boolean check(WebContext context, U profile, String element) {
-        Set<String> roles = authorizationContext.roles(profile);
+        Set<String> roles = authorizationProfile.roles(profile);
         return roles.contains(element);
     }
 }
