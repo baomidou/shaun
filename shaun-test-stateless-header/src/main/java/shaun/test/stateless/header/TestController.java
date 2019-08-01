@@ -2,7 +2,7 @@ package shaun.test.stateless.header;
 
 import com.baomidou.shaun.core.annotation.RequireAnyPermission;
 import com.baomidou.shaun.core.annotation.RequireAnyRole;
-import com.baomidou.shaun.core.generator.TokenGenerator;
+import com.baomidou.shaun.stateless.generator.TokenGenerator;
 import lombok.AllArgsConstructor;
 import org.pac4j.jwt.profile.JwtProfile;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -1,13 +1,9 @@
 dependencies {
-    api project(":shaun-core")
     api project(":shaun-stateless")
-    api "${lib.'pac4j-jwt'}"
     api "${lib.'spring-aop'}"
     api "org.aspectj:aspectjweaver:1.9.4"
     implementation "${lib.'spring-boot-autoconfigure'}"
     implementation "${lib.'spring-boot-starter-web'}"
-    implementation "${lib.'spring-web'}"
-    implementation "${lib.'servlet-api'}"
     annotationProcessor "${lib.'spring-boot-autoconfigure-processor'}"
     annotationProcessor "${lib.'spring-boot-configuration-processor'}"
     implementation "${lib.'spring-boot-autoconfigure-processor'}"

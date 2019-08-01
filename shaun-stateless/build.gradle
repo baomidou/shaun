@@ -1,6 +1,7 @@
 dependencies {
     api project(":shaun-core")
     api "${lib.'pac4j-jwt'}"
+    api "${lib.'pac4j-http'}"
     implementation "${lib.'spring-web'}"
     implementation "${lib.'servlet-api'}"
 }

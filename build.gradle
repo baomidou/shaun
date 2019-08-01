@@ -31,6 +31,7 @@ ext {
     ]
 
     lib = [
+            "pac4j-core"                         : "org.pac4j:pac4j-core:${pac4jVersion}",
             "pac4j-jwt"                          : "org.pac4j:pac4j-jwt:${pac4jVersion}",
             "pac4j-http"                         : "org.pac4j:pac4j-http:${pac4jVersion}",
             "pac4j-oauth"                        : "org.pac4j:pac4j-oauth:${pac4jVersion}",

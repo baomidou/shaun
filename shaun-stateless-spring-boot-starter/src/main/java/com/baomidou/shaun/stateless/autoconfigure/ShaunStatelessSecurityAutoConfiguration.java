@@ -108,8 +108,7 @@ public class ShaunStatelessSecurityAutoConfiguration implements WebMvcConfigurer
         }
 
         ShaunInterceptor interceptor = new ShaunInterceptor();
-        return interceptor.setSessionStore(NoSessionStore.INSTANCE)
-                .setFilterList(filterList);
+        return interceptor.setSessionStore(NoSessionStore.INSTANCE).setFilterList(filterList);
     }
 
     @Bean
