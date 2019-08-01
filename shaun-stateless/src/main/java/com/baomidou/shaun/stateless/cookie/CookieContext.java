@@ -8,7 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.context.session.SessionStore;
-import org.pac4j.core.profile.CommonProfile;
+import org.pac4j.core.profile.UserProfile;
 
 /**
  * 操作 cookie 的类
@@ -29,10 +29,10 @@ public class CookieContext {
      *
      * @return token
      */
-    public <U extends CommonProfile> String generateAndAddCookie(final U profile) {
+    public <U extends UserProfile> String generateAndAddCookie(final U profile) {
         String token = tokenGenerator.generate(profile);
-        JEEContext JEEContext = JEEContextFactory.getJEEContext(sessionStore);
-        JEEContext.addResponseCookie(getCookie(token));
+        JEEContext jeeContext = JEEContextFactory.getJEEContext(sessionStore);
+        jeeContext.addResponseCookie(getCookie(token));
         return token;
     }
 
@@ -40,10 +40,10 @@ public class CookieContext {
      * 清除 cookie
      */
     public void clearCookie() {
-        JEEContext JEEContext = JEEContextFactory.getJEEContext(sessionStore);
+        JEEContext jeeContext = JEEContextFactory.getJEEContext(sessionStore);
         org.pac4j.core.context.Cookie cookie = getCookie("");
         cookie.setMaxAge(0);
-        JEEContext.addResponseCookie(cookie);
+        jeeContext.addResponseCookie(cookie);
     }
 
     private org.pac4j.core.context.Cookie getCookie(final String token) {

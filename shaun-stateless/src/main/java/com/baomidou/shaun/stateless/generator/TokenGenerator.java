@@ -1,6 +1,6 @@
 package com.baomidou.shaun.stateless.generator;
 
-import org.pac4j.core.profile.CommonProfile;
+import org.pac4j.core.profile.UserProfile;
 
 /**
  * @author miemie
@@ -13,7 +13,7 @@ public interface TokenGenerator {
      * @param <U>     泛型
      * @return token
      */
-    <U extends CommonProfile> String generate(final U profile);
+    <U extends UserProfile> String generate(final U profile);
 
     /**
      * 获取存活时间
