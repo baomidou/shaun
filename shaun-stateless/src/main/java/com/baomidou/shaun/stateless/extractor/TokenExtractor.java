@@ -30,10 +30,10 @@ public class TokenExtractor implements CredentialsExtractor<TokenCredentials> {
 
     public TokenExtractor(TokenLocation tokenLocation, Header header, Parameter parameter, Cookie cookie) {
         this.tokenLocation = tokenLocation;
-        this.headerExtractor = new HeaderExtractor(header.getHeaderName(), header.getPrefixHeader());
+        this.headerExtractor = new HeaderExtractor(header.getName(), header.getPrefix());
         this.headerExtractor.setTrimValue(header.isTrimValue());
         this.cookieExtractor = new CookieExtractor(cookie.getName());
-        this.parameterExtractor = new ParameterExtractor(parameter.getParameterName(),
+        this.parameterExtractor = new ParameterExtractor(parameter.getName(),
                 parameter.isSupportGetRequest(), parameter.isSupportPostRequest());
     }
 

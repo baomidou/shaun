@@ -3,12 +3,10 @@ package com.baomidou.shaun.stateless.cookie;
 import com.baomidou.shaun.core.util.JEEContextFactory;
 import com.baomidou.shaun.stateless.generator.TokenGenerator;
 import com.baomidou.shaun.stateless.properties.Cookie;
-import com.baomidou.shaun.stateless.session.NoSessionStore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.pac4j.core.context.JEEContext;
-import org.pac4j.core.context.session.SessionStore;
-import org.pac4j.core.profile.UserProfile;
+import org.pac4j.core.profile.CommonProfile;
 
 /**
  * 操作 cookie 的类
@@ -20,7 +18,6 @@ import org.pac4j.core.profile.UserProfile;
 @AllArgsConstructor
 public class CookieContext {
 
-    private final SessionStore<JEEContext> sessionStore = NoSessionStore.INSTANCE;
     private final TokenGenerator tokenGenerator;
     private final Cookie cookie;
 
@@ -29,9 +26,9 @@ public class CookieContext {
      *
      * @return token
      */
-    public <U extends UserProfile> String generateAndAddCookie(final U profile) {
+    public <U extends CommonProfile> String generateAndAddCookie(final U profile) {
         String token = tokenGenerator.generate(profile);
-        JEEContext jeeContext = JEEContextFactory.getJEEContext(sessionStore);
+        JEEContext jeeContext = JEEContextFactory.getJEEContext();
         jeeContext.addResponseCookie(getCookie(token));
         return token;
     }
@@ -40,7 +37,7 @@ public class CookieContext {
      * 清除 cookie
      */
     public void clearCookie() {
-        JEEContext jeeContext = JEEContextFactory.getJEEContext(sessionStore);
+        JEEContext jeeContext = JEEContextFactory.getJEEContext();
         org.pac4j.core.context.Cookie cookie = getCookie("");
         cookie.setMaxAge(0);
         jeeContext.addResponseCookie(cookie);

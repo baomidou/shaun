@@ -13,7 +13,7 @@ public class Parameter {
     /**
      * parameter 的 name
      */
-    private String parameterName = HttpConstants.AUTHORIZATION_HEADER;
+    private String name = HttpConstants.AUTHORIZATION_HEADER;
     /**
      * 支持 get 请求
      */

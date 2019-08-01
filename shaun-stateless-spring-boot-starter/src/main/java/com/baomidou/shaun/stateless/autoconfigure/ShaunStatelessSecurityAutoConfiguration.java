@@ -4,12 +4,12 @@ import com.baomidou.shaun.core.filter.ShaunFilter;
 import com.baomidou.shaun.core.handler.LogoutHandler;
 import com.baomidou.shaun.core.interceptor.ShaunInterceptor;
 import com.baomidou.shaun.core.matching.OnlyPathMatcher;
+import com.baomidou.shaun.core.util.JEEContextFactory;
 import com.baomidou.shaun.stateless.autoconfigure.aop.AnnotationAspect;
 import com.baomidou.shaun.stateless.autoconfigure.properties.ShaunStatelessProperties;
 import com.baomidou.shaun.stateless.client.TokenClient;
 import com.baomidou.shaun.stateless.filter.LogoutFilter;
 import com.baomidou.shaun.stateless.filter.SecurityFilter;
-import com.baomidou.shaun.stateless.session.NoSessionStore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.pac4j.core.authorization.authorizer.Authorizer;
@@ -108,7 +108,7 @@ public class ShaunStatelessSecurityAutoConfiguration implements WebMvcConfigurer
         }
 
         ShaunInterceptor interceptor = new ShaunInterceptor();
-        return interceptor.setSessionStore(NoSessionStore.INSTANCE).setFilterList(filterList);
+        return interceptor.setSessionStore(JEEContextFactory.sessionStore).setFilterList(filterList);
     }
 
     @Bean

@@ -13,11 +13,11 @@ public class Header {
     /**
      * header 的 name
      */
-    private String headerName = HttpConstants.AUTHORIZATION_HEADER;
+    private String name = HttpConstants.AUTHORIZATION_HEADER;
     /**
      * headerName 的值的前缀
      */
-    private String prefixHeader = "";
+    private String prefix = "";
     /**
      * 去除空串
      */

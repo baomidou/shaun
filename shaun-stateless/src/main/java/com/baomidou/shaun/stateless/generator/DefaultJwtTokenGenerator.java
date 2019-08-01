@@ -33,9 +33,8 @@ public class DefaultJwtTokenGenerator implements TokenGenerator {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public <U extends CommonProfile> String generate(final U profile) {
-        JwtGenerator jwtGenerator = new JwtGenerator(signatureConfiguration, encryptionConfiguration);
+        JwtGenerator<U> jwtGenerator = new JwtGenerator<>(signatureConfiguration, encryptionConfiguration);
         if (expireTime != null) {
             jwtGenerator.setExpirationTime(ExpireTimeUtil.getTargetDate(expireTime));
         }
