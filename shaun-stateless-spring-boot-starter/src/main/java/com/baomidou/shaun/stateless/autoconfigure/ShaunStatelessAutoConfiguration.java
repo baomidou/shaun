@@ -13,7 +13,7 @@ import lombok.AllArgsConstructor;
 import org.pac4j.core.credentials.TokenCredentials;
 import org.pac4j.core.credentials.authenticator.Authenticator;
 import org.pac4j.core.credentials.extractor.CredentialsExtractor;
-import org.pac4j.core.profile.CommonProfile;
+import org.pac4j.core.profile.UserProfile;
 import org.pac4j.jwt.config.encryption.EncryptionConfiguration;
 import org.pac4j.jwt.config.encryption.SecretEncryptionConfiguration;
 import org.pac4j.jwt.config.signature.SecretSignatureConfiguration;
@@ -100,7 +100,7 @@ public class ShaunStatelessAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     @ConditionalOnProperty(prefix = "shaun", name = "token-location", havingValue = "cookie")
-    public LogoutHandler<CommonProfile> logoutHandler(CookieContext cookieContext) {
+    public LogoutHandler<UserProfile> logoutHandler(CookieContext cookieContext) {
         return new CookieLogoutHandler(cookieContext);
     }
 
