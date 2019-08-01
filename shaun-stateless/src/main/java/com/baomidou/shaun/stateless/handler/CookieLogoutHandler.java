@@ -5,7 +5,7 @@ import com.baomidou.shaun.stateless.cookie.CookieContext;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.pac4j.core.context.JEEContext;
-import org.pac4j.core.profile.CommonProfile;
+import org.pac4j.core.profile.UserProfile;
 
 /**
  * @author miemie
@@ -13,12 +13,12 @@ import org.pac4j.core.profile.CommonProfile;
  */
 @Data
 @AllArgsConstructor
-public class CookieLogoutHandler implements LogoutHandler<CommonProfile> {
+public class CookieLogoutHandler implements LogoutHandler<UserProfile> {
 
     private final CookieContext cookieContext;
 
     @Override
-    public void logout(JEEContext context, CommonProfile profile) {
+    public void logout(JEEContext context, UserProfile profile) {
         cookieContext.clearCookie();
     }
 }

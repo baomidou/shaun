@@ -1,16 +1,16 @@
 package com.baomidou.shaun.stateless.autoconfigure;
 
-import com.baomidou.shaun.core.client.TokenClient;
 import com.baomidou.shaun.core.context.JEEContextFactory;
-import com.baomidou.shaun.core.context.session.NoSessionStore;
 import com.baomidou.shaun.core.filter.ShaunFilter;
-import com.baomidou.shaun.core.filter.stateless.StatelessLogoutFilter;
-import com.baomidou.shaun.core.filter.stateless.StatelessSecurityFilter;
 import com.baomidou.shaun.core.handler.LogoutHandler;
 import com.baomidou.shaun.core.interceptor.ShaunInterceptor;
 import com.baomidou.shaun.core.matching.OnlyPathMatcher;
 import com.baomidou.shaun.stateless.autoconfigure.aop.AnnotationAspect;
 import com.baomidou.shaun.stateless.autoconfigure.properties.ShaunStatelessProperties;
+import com.baomidou.shaun.stateless.client.TokenClient;
+import com.baomidou.shaun.stateless.filter.LogoutFilter;
+import com.baomidou.shaun.stateless.filter.SecurityFilter;
+import com.baomidou.shaun.stateless.session.NoSessionStore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.pac4j.core.authorization.authorizer.Authorizer;
@@ -79,15 +79,15 @@ public class ShaunStatelessSecurityAutoConfiguration implements WebMvcConfigurer
         String authorizers = properties.getAuthorizers();
         Map<String, Authorizer> authorizeMap = applicationContext.getBeansOfType(Authorizer.class);
         if (!CollectionUtils.isEmpty(authorizeMap)) {
-            String s = String.join(Pac4jConstants.ELEMENT_SEPRATOR, authorizeMap.keySet());
+            String s = String.join(Pac4jConstants.ELEMENT_SEPARATOR, authorizeMap.keySet());
             if (StringUtils.hasText(authorizers)) {
-                authorizers += (Pac4jConstants.ELEMENT_SEPRATOR + s);
+                authorizers += (Pac4jConstants.ELEMENT_SEPARATOR + s);
             } else {
                 authorizers = s;
             }
         }
 
-        StatelessSecurityFilter securityFilter = new StatelessSecurityFilter();
+        SecurityFilter securityFilter = new SecurityFilter();
         securityFilter.setPathMatcher(pathMatcher);
         securityFilter.setAuthorizerMap(authorizeMap);
         securityFilter.setAuthorizers(authorizers);
@@ -98,8 +98,8 @@ public class ShaunStatelessSecurityAutoConfiguration implements WebMvcConfigurer
 
         /* logoutFilter begin */
         if (CommonHelper.isNotBlank(properties.getLogoutUrl())) {
-            StatelessLogoutFilter logoutFilter = new StatelessLogoutFilter();
-            logoutFilter.setPathMatcher(OnlyPathMatcher.instance(properties.getLogoutUrl()));
+            LogoutFilter logoutFilter = new LogoutFilter();
+            logoutFilter.setPathMatcher(new OnlyPathMatcher(properties.getLogoutUrl()));
             logoutFilter.setLogoutExecutor(logoutHandler);
 
             filterList.add(logoutFilter);

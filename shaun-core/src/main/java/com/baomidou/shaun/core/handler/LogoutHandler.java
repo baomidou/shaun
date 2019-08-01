@@ -1,7 +1,7 @@
 package com.baomidou.shaun.core.handler;
 
 import org.pac4j.core.context.JEEContext;
-import org.pac4j.core.profile.CommonProfile;
+import org.pac4j.core.profile.UserProfile;
 
 /**
  * 登出执行器
@@ -10,7 +10,7 @@ import org.pac4j.core.profile.CommonProfile;
  * @since 2019-07-22
  */
 @FunctionalInterface
-public interface LogoutHandler<U extends CommonProfile> {
+public interface LogoutHandler<U extends UserProfile> {
 
     /**
      * 登出操作
