@@ -1,13 +1,5 @@
 package com.baomidou.shaun.stateless.autoconfigure;
 
-import com.baomidou.shaun.core.handler.LogoutHandler;
-import com.baomidou.shaun.stateless.autoconfigure.properties.ShaunStatelessProperties;
-import com.baomidou.shaun.stateless.cookie.CookieContext;
-import com.baomidou.shaun.stateless.extractor.TokenExtractor;
-import com.baomidou.shaun.stateless.generator.DefaultJwtTokenGenerator;
-import com.baomidou.shaun.stateless.generator.TokenGenerator;
-import com.baomidou.shaun.stateless.handler.CookieLogoutHandler;
-import lombok.AllArgsConstructor;
 import org.pac4j.core.credentials.TokenCredentials;
 import org.pac4j.core.credentials.authenticator.Authenticator;
 import org.pac4j.core.credentials.extractor.CredentialsExtractor;
@@ -22,6 +14,18 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import com.baomidou.shaun.core.authorizer.AuthorizationContext;
+import com.baomidou.shaun.core.authorizer.DefaultAuthorizationContext;
+import com.baomidou.shaun.core.handler.LogoutHandler;
+import com.baomidou.shaun.stateless.autoconfigure.properties.ShaunStatelessProperties;
+import com.baomidou.shaun.stateless.cookie.CookieContext;
+import com.baomidou.shaun.stateless.extractor.TokenExtractor;
+import com.baomidou.shaun.stateless.generator.DefaultJwtTokenGenerator;
+import com.baomidou.shaun.stateless.generator.TokenGenerator;
+import com.baomidou.shaun.stateless.handler.CookieLogoutHandler;
+
+import lombok.AllArgsConstructor;
 
 /**
  * @author miemie
@@ -100,5 +104,11 @@ public class ShaunStatelessAutoConfiguration {
     @ConditionalOnProperty(prefix = "shaun", name = "token-location", havingValue = "cookie")
     public LogoutHandler<UserProfile> logoutHandler(CookieContext cookieContext) {
         return new CookieLogoutHandler(cookieContext);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public AuthorizationContext<UserProfile> authorizationContext() {
+        return new DefaultAuthorizationContext<>();
     }
 }

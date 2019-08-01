@@ -1,23 +1,17 @@
 package com.baomidou.shaun.stateless.autoconfigure;
 
-import com.baomidou.shaun.core.filter.ShaunFilter;
-import com.baomidou.shaun.core.handler.LogoutHandler;
-import com.baomidou.shaun.core.interceptor.ShaunInterceptor;
-import com.baomidou.shaun.core.matching.OnlyPathMatcher;
-import com.baomidou.shaun.core.util.JEEContextFactory;
-import com.baomidou.shaun.stateless.autoconfigure.aop.AnnotationAspect;
-import com.baomidou.shaun.stateless.autoconfigure.properties.ShaunStatelessProperties;
-import com.baomidou.shaun.stateless.client.TokenClient;
-import com.baomidou.shaun.stateless.filter.LogoutFilter;
-import com.baomidou.shaun.stateless.filter.SecurityFilter;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.pac4j.core.authorization.authorizer.Authorizer;
 import org.pac4j.core.context.Pac4jConstants;
 import org.pac4j.core.credentials.TokenCredentials;
 import org.pac4j.core.credentials.authenticator.Authenticator;
 import org.pac4j.core.credentials.extractor.CredentialsExtractor;
 import org.pac4j.core.matching.PathMatcher;
+import org.pac4j.core.profile.UserProfile;
 import org.pac4j.core.util.CommonHelper;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
@@ -29,10 +23,20 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.baomidou.shaun.core.authorizer.AuthorizationContext;
+import com.baomidou.shaun.core.filter.ShaunFilter;
+import com.baomidou.shaun.core.handler.LogoutHandler;
+import com.baomidou.shaun.core.interceptor.ShaunInterceptor;
+import com.baomidou.shaun.core.matching.OnlyPathMatcher;
+import com.baomidou.shaun.core.util.JEEContextFactory;
+import com.baomidou.shaun.stateless.autoconfigure.aop.AnnotationAspect;
+import com.baomidou.shaun.stateless.autoconfigure.properties.ShaunStatelessProperties;
+import com.baomidou.shaun.stateless.client.TokenClient;
+import com.baomidou.shaun.stateless.filter.LogoutFilter;
+import com.baomidou.shaun.stateless.filter.SecurityFilter;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
 /**
  * @author miemie
@@ -113,7 +117,7 @@ public class ShaunStatelessSecurityAutoConfiguration implements WebMvcConfigurer
 
     @Bean
     @ConditionalOnMissingBean
-    public AnnotationAspect annotationAspect() {
-        return new AnnotationAspect();
+    public AnnotationAspect annotationAspect(AuthorizationContext<UserProfile> authorizationContext) {
+        return new AnnotationAspect(authorizationContext);
     }
 }

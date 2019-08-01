@@ -1,22 +1,30 @@
 package com.baomidou.shaun.stateless.autoconfigure.aop;
 
+import java.util.Collections;
+import java.util.List;
+
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+import org.pac4j.core.authorization.authorizer.AbstractRequireElementAuthorizer;
+import org.pac4j.core.authorization.authorizer.IsAuthenticatedAuthorizer;
+import org.pac4j.core.context.JEEContext;
+import org.pac4j.core.exception.http.ForbiddenAction;
+import org.pac4j.core.exception.http.UnauthorizedAction;
+import org.pac4j.core.profile.UserProfile;
+
 import com.baomidou.shaun.core.annotation.RequireAllPermission;
 import com.baomidou.shaun.core.annotation.RequireAllRole;
 import com.baomidou.shaun.core.annotation.RequireAnyPermission;
 import com.baomidou.shaun.core.annotation.RequireAnyRole;
+import com.baomidou.shaun.core.authorizer.AuthorizationContext;
+import com.baomidou.shaun.core.authorizer.permission.ShaunRequireAllPermissionsAuthorizer;
+import com.baomidou.shaun.core.authorizer.permission.ShaunRequireAnyPermissionAuthorizer;
+import com.baomidou.shaun.core.authorizer.role.ShaunRequireAllRolesAuthorizer;
+import com.baomidou.shaun.core.authorizer.role.ShaunRequireAnyRolesAuthorizer;
 import com.baomidou.shaun.core.util.JEEContextFactory;
 import com.baomidou.shaun.core.util.ProfileHolder;
-import lombok.AllArgsConstructor;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
-import org.pac4j.core.authorization.authorizer.*;
-import org.pac4j.core.context.JEEContext;
-import org.pac4j.core.exception.http.ForbiddenAction;
-import org.pac4j.core.exception.http.UnauthorizedAction;
-import org.pac4j.core.profile.CommonProfile;
 
-import java.util.Collections;
-import java.util.List;
+import lombok.AllArgsConstructor;
 
 /**
  * @author miemie
@@ -26,41 +34,42 @@ import java.util.List;
 @Aspect
 public class AnnotationAspect {
 
-    private static final IsAuthenticatedAuthorizer IS_AUTHENTICATED_AUTHORIZER = new IsAuthenticatedAuthorizer();
+    private static final IsAuthenticatedAuthorizer<UserProfile> IS_AUTHENTICATED_AUTHORIZER = new IsAuthenticatedAuthorizer<>();
+
+    private final AuthorizationContext<UserProfile> authorizationContext;
 
     @Before("@annotation(requireAnyRole)")
     public void beforeRequireAnyRole(final RequireAnyRole requireAnyRole) {
-        this.isAuthorized(RequireAnyRoleAuthorizer.requireAnyRole(requireAnyRole.value()));
+        this.isAuthorized(ShaunRequireAnyRolesAuthorizer.requireAnyRole(authorizationContext, requireAnyRole.value()));
     }
 
     @Before("@annotation(requireAllRole)")
     public void beforeRequireAllRole(final RequireAllRole requireAllRole) {
-        this.isAuthorized(RequireAllRolesAuthorizer.requireAllRoles(requireAllRole.value()));
+        this.isAuthorized(ShaunRequireAllRolesAuthorizer.requireAllRoles(authorizationContext, requireAllRole.value()));
     }
 
     @Before("@annotation(requireAnyPermission)")
     public void beforeRequireAnyPermission(final RequireAnyPermission requireAnyPermission) {
-        this.isAuthorized(RequireAnyPermissionAuthorizer.requireAnyPermission(requireAnyPermission.value()));
+        this.isAuthorized(ShaunRequireAnyPermissionAuthorizer.requireAnyPermission(authorizationContext, requireAnyPermission.value()));
     }
 
     @Before("@annotation(requireAllPermission)")
     public void beforeRequireAllPermission(final RequireAllPermission requireAllPermission) {
-        this.isAuthorized(RequireAllPermissionsAuthorizer.requireAllPermissions(requireAllPermission.value()));
+        this.isAuthorized(ShaunRequireAllPermissionsAuthorizer.requireAllPermissions(authorizationContext, requireAllPermission.value()));
     }
 
-    @SuppressWarnings("unchecked")
-    private List<CommonProfile> isAuthenticated(JEEContext context) {
-        final CommonProfile commonProfile = ProfileHolder.get(context, false);
-        List<CommonProfile> commonProfiles = Collections.singletonList(commonProfile);
-        if (!IS_AUTHENTICATED_AUTHORIZER.isAuthorized(context, commonProfiles)) {
+    private List<UserProfile> isAuthenticated(JEEContext context) {
+        final UserProfile userProfile = ProfileHolder.get(context, false);
+        List<UserProfile> userProfiles = Collections.singletonList(userProfile);
+        if (!IS_AUTHENTICATED_AUTHORIZER.isAuthorized(context, userProfiles)) {
             throw UnauthorizedAction.INSTANCE;
         }
-        return commonProfiles;
+        return userProfiles;
     }
 
-    private void isAuthorized(final AbstractRequireElementAuthorizer<String, CommonProfile> authorizer) {
+    private void isAuthorized(final AbstractRequireElementAuthorizer<String, UserProfile> authorizer) {
         JEEContext j2EContext = JEEContextFactory.getJEEContext();
-        final List<CommonProfile> profiles = this.isAuthenticated(j2EContext);
+        final List<UserProfile> profiles = this.isAuthenticated(j2EContext);
         if (!authorizer.isAuthorized(j2EContext, profiles)) {
             throw ForbiddenAction.INSTANCE;
         }
