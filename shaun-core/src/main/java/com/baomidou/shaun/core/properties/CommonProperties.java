@@ -18,10 +18,6 @@ public class CommonProperties {
      */
     private String logoutUrl;
     /**
-     * jwt 超时时间(单位秒)
-     */
-    private Integer expireTime;
-    /**
      * authorizers,多个以逗号分隔(不包含自己注入的 {@link Authorizer})
      * 默认支持的一些参考 {@link DefaultAuthorizationChecker}
      */

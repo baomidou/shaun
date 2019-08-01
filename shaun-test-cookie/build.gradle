@@ -1,4 +1,0 @@
-dependencies {
-    api project(":shaun-spring-boot-starter")
-    api "${lib.'spring-boot-starter-thymeleaf'}"
-}

@@ -12,8 +12,6 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class DefaultJEEContextFactory implements JEEContextFactory {
 
-    public static final DefaultJEEContextFactory INSTANCE = new DefaultJEEContextFactory();
-
     @Override
     public JEEContext applyContext(HttpServletRequest request, HttpServletResponse response, SessionStore<JEEContext> sessionStore) {
         return new JEEContext(request, response, sessionStore);

@@ -20,10 +20,6 @@ public class OnlyPathMatcher implements Matcher {
         this.path = path;
     }
 
-    public static OnlyPathMatcher instance(final String path) {
-        return new OnlyPathMatcher(path);
-    }
-
     @Override
     public boolean matches(WebContext context) {
         return path.equals(context.getPath());

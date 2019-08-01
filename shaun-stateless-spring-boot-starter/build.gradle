@@ -1,5 +1,6 @@
 dependencies {
     api project(":shaun-core")
+    api project(":shaun-stateless")
     api "${lib.'pac4j-jwt'}"
     api "${lib.'spring-aop'}"
     api "org.aspectj:aspectjweaver:1.9.4"

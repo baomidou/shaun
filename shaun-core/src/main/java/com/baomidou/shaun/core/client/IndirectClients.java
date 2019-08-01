@@ -1,12 +1,11 @@
 package com.baomidou.shaun.core.client;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import lombok.Getter;
 import org.pac4j.core.client.Client;
 import org.pac4j.core.client.IndirectClient;
 
-import lombok.Getter;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author miemie

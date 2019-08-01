@@ -5,16 +5,17 @@ import com.baomidou.shaun.core.annotation.RequireAllRole;
 import com.baomidou.shaun.core.annotation.RequireAnyPermission;
 import com.baomidou.shaun.core.annotation.RequireAnyRole;
 import com.baomidou.shaun.core.context.JEEContextFactory;
-import com.baomidou.shaun.core.context.session.NoSessionStore;
 import com.baomidou.shaun.core.util.JEEContextUtil;
 import com.baomidou.shaun.core.util.ProfileHolder;
+import com.baomidou.shaun.stateless.session.NoSessionStore;
 import lombok.AllArgsConstructor;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.pac4j.core.authorization.authorizer.*;
-import org.pac4j.core.context.J2EContext;
+import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.context.session.SessionStore;
-import org.pac4j.core.exception.HttpAction;
+import org.pac4j.core.exception.http.ForbiddenAction;
+import org.pac4j.core.exception.http.UnauthorizedAction;
 import org.pac4j.core.profile.CommonProfile;
 
 import java.util.Collections;
@@ -30,7 +31,7 @@ public class AnnotationAspect {
 
     private static final IsAuthenticatedAuthorizer IS_AUTHENTICATED_AUTHORIZER = new IsAuthenticatedAuthorizer();
 
-    private final SessionStore sessionStore = NoSessionStore.INSTANCE;
+    private final SessionStore<JEEContext> sessionStore = NoSessionStore.INSTANCE;
     private final JEEContextFactory j2EContextFactory;
 
     @Before("@annotation(requireAnyRole)")
@@ -54,20 +55,20 @@ public class AnnotationAspect {
     }
 
     @SuppressWarnings("unchecked")
-    private List<CommonProfile> isAuthenticated(J2EContext context) {
-        final CommonProfile commonProfile = ProfileHolder.getProfile(context);
+    private List<CommonProfile> isAuthenticated(JEEContext context) {
+        final CommonProfile commonProfile = ProfileHolder.get(context, false);
         List<CommonProfile> commonProfiles = Collections.singletonList(commonProfile);
         if (!IS_AUTHENTICATED_AUTHORIZER.isAuthorized(context, commonProfiles)) {
-            throw HttpAction.unauthorized(context);
+            throw UnauthorizedAction.INSTANCE;
         }
         return commonProfiles;
     }
 
     private void isAuthorized(final AbstractRequireElementAuthorizer<String, CommonProfile> authorizer) {
-        J2EContext j2EContext = JEEContextUtil.getJEEContext(j2EContextFactory, sessionStore);
+        JEEContext j2EContext = JEEContextUtil.getJEEContext(j2EContextFactory, sessionStore);
         final List<CommonProfile> profiles = this.isAuthenticated(j2EContext);
         if (!authorizer.isAuthorized(j2EContext, profiles)) {
-            throw HttpAction.forbidden(j2EContext);
+            throw ForbiddenAction.INSTANCE;
         }
     }
 }
