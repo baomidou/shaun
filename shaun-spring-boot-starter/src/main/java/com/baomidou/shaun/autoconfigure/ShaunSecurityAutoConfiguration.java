@@ -1,13 +1,17 @@
 package com.baomidou.shaun.autoconfigure;
 
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Supplier;
-
-import javax.servlet.DispatcherType;
-
+import com.baomidou.shaun.autoconfigure.aop.AnnotationAspect;
+import com.baomidou.shaun.autoconfigure.properties.ShaunProperties;
+import com.baomidou.shaun.core.client.TokenClient;
+import com.baomidou.shaun.core.context.J2EContextFactory;
+import com.baomidou.shaun.core.filter.LogoutFilter;
+import com.baomidou.shaun.core.filter.SecurityFilter;
+import com.baomidou.shaun.core.filter.ShaunFilter;
+import com.baomidou.shaun.core.handler.logout.LogoutHandler;
+import com.baomidou.shaun.core.interceptor.ShaunInterceptor;
+import com.baomidou.shaun.core.matching.OnlyPathMatcher;
+import com.baomidou.shaun.core.profile.ProfileManagerFactory;
+import lombok.AllArgsConstructor;
 import org.pac4j.core.authorization.authorizer.Authorizer;
 import org.pac4j.core.client.Clients;
 import org.pac4j.core.config.Config;
@@ -21,7 +25,6 @@ import org.pac4j.core.matching.PathMatcher;
 import org.pac4j.core.util.CommonHelper;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,21 +33,10 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import com.baomidou.shaun.autoconfigure.aop.AnnotationAspect;
-import com.baomidou.shaun.autoconfigure.factory.ShaunFilterFactoryBean;
-import com.baomidou.shaun.autoconfigure.properties.ShaunProperties;
-import com.baomidou.shaun.core.client.TokenClient;
-import com.baomidou.shaun.core.context.J2EContextFactory;
-import com.baomidou.shaun.core.filter.LogoutFilter;
-import com.baomidou.shaun.core.filter.MIPac4jFilter;
-import com.baomidou.shaun.core.filter.SecurityFilter;
-import com.baomidou.shaun.core.filter.ShaunFilter;
-import com.baomidou.shaun.core.handler.logout.LogoutHandler;
-import com.baomidou.shaun.core.interceptor.ShaunInterceptor;
-import com.baomidou.shaun.core.matching.OnlyPathMatcher;
-import com.baomidou.shaun.core.profile.ProfileManagerFactory;
-
-import lombok.AllArgsConstructor;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Supplier;
 
 /**
  * @author miemie
@@ -156,17 +148,6 @@ public class ShaunSecurityAutoConfiguration implements WebMvcConfigurer {
 
         return new ShaunInterceptor().setJ2EContextFactory(j2EContextFactory).setSessionStore(sessionStore)
                 .setFilterList(filterList);
-    }
-
-    @SuppressWarnings("all")
-    @Bean(name = "mIPac4jFilterRegistrationBean")
-    @ConditionalOnMissingBean
-    protected FilterRegistrationBean<MIPac4jFilter> mIPac4jFilterRegistrationBean(ShaunFilterFactoryBean miPac4jFilterFactoryBean) throws Exception {
-        FilterRegistrationBean<MIPac4jFilter> filterRegistrationBean = new FilterRegistrationBean();
-        filterRegistrationBean.setDispatcherTypes(EnumSet.allOf(DispatcherType.class));
-        filterRegistrationBean.setFilter(miPac4jFilterFactoryBean.getObject());
-        filterRegistrationBean.setOrder(1);
-        return filterRegistrationBean;
     }
 
     @Bean
