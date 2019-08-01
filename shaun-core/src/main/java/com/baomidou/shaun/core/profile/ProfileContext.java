@@ -4,7 +4,7 @@ import com.baomidou.shaun.core.context.JEEContextFactory;
 import com.baomidou.shaun.core.util.JEEContextUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.pac4j.core.context.J2EContext;
+import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.context.session.SessionStore;
 import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.core.profile.ProfileManager;
@@ -22,23 +22,23 @@ public class ProfileContext {
 
     private final ProfileManagerFactory profileManagerFactory;
     private final SessionStore sessionStore;
-    private final JEEContextFactory j2EContextFactory;
+    private final JEEContextFactory jeeContextFactory;
 
     public <U extends CommonProfile> void login(U profile) {
-        J2EContext context = JEEContextUtil.getJEEContext(j2EContextFactory, sessionStore);
+        JEEContext context = JEEContextUtil.getJEEContext(jeeContextFactory, sessionStore);
         ProfileManager manager = getProfileManager(context);
         manager.save(true, profile, false);
     }
 
-    public <U extends CommonProfile> ProfileManager<U> getProfileManager(J2EContext context) {
+    public <U extends CommonProfile> ProfileManager<U> getProfileManager(JEEContext context) {
         return profileManagerFactory.apply(context);
     }
 
     public void logout() {
-        logout(JEEContextUtil.getJEEContext(j2EContextFactory, sessionStore));
+        logout(JEEContextUtil.getJEEContext(jeeContextFactory, sessionStore));
     }
 
-    public void logout(J2EContext context) {
+    public void logout(JEEContext context) {
         ProfileManager manager = profileManagerFactory.apply(context);
         manager.logout();
         context.getSessionStore().destroySession(context);

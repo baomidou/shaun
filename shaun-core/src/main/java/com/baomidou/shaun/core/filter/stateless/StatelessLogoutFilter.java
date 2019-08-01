@@ -5,7 +5,7 @@ import com.baomidou.shaun.core.handler.logout.LogoutHandler;
 import com.baomidou.shaun.core.matching.OnlyPathMatcher;
 import com.baomidou.shaun.core.util.ProfileHolder;
 import lombok.Data;
-import org.pac4j.core.context.J2EContext;
+import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.core.util.CommonHelper;
 
@@ -23,7 +23,7 @@ public class StatelessLogoutFilter implements ShaunFilter {
     private LogoutHandler logoutExecutor;
 
     @Override
-    public boolean goOnChain(J2EContext context) {
+    public boolean goOnChain(JEEContext context) {
         if (pathMatcher.matches(context)) {
             final CommonProfile profile = ProfileHolder.get(context, false);
             logoutExecutor.logout(context, profile);
