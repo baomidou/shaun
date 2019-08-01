@@ -1,16 +1,16 @@
 package com.baomidou.shaun.core.context;
 
+import org.pac4j.core.context.JEEContext;
+import org.pac4j.core.context.session.SessionStore;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.pac4j.core.context.J2EContext;
-import org.pac4j.core.context.session.SessionStore;
 
 /**
  * @author miemie
  * @since 2019-07-20
  */
-public interface J2EContextFactory {
+public interface JEEContextFactory {
 
     /**
      * 构建 J2EContext
@@ -20,5 +20,5 @@ public interface J2EContextFactory {
      * @param sessionStore sessionStore
      * @return J2EContext
      */
-    J2EContext applyContext(HttpServletRequest request, HttpServletResponse response, SessionStore<J2EContext> sessionStore);
+    JEEContext applyContext(HttpServletRequest request, HttpServletResponse response, SessionStore<JEEContext> sessionStore);
 }

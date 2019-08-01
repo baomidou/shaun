@@ -1,5 +1,16 @@
 package com.baomidou.shaun.autoconfigure;
 
+import com.baomidou.shaun.autoconfigure.properties.ShaunProperties;
+import com.baomidou.shaun.core.context.DefaultJEEContextFactory;
+import com.baomidou.shaun.core.context.JEEContextFactory;
+import com.baomidou.shaun.core.extractor.TokenExtractor;
+import com.baomidou.shaun.core.generator.DefaultJwtTokenGenerator;
+import com.baomidou.shaun.core.generator.TokenGenerator;
+import com.baomidou.shaun.core.handler.logout.LogoutHandler;
+import com.baomidou.shaun.core.handler.logout.SessionLogoutHandler;
+import com.baomidou.shaun.core.profile.ProfileContext;
+import com.baomidou.shaun.core.profile.ProfileManagerFactory;
+import lombok.AllArgsConstructor;
 import org.pac4j.core.context.J2EContext;
 import org.pac4j.core.context.session.J2ESessionStore;
 import org.pac4j.core.context.session.SessionStore;
@@ -16,19 +27,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import com.baomidou.shaun.autoconfigure.properties.ShaunProperties;
-import com.baomidou.shaun.core.context.DefaultJ2EContextFactory;
-import com.baomidou.shaun.core.context.J2EContextFactory;
-import com.baomidou.shaun.core.extractor.TokenExtractor;
-import com.baomidou.shaun.core.generator.DefaultJwtTokenGenerator;
-import com.baomidou.shaun.core.generator.TokenGenerator;
-import com.baomidou.shaun.core.handler.logout.LogoutHandler;
-import com.baomidou.shaun.core.handler.logout.SessionLogoutHandler;
-import com.baomidou.shaun.core.profile.ProfileContext;
-import com.baomidou.shaun.core.profile.ProfileManagerFactory;
-
-import lombok.AllArgsConstructor;
 
 /**
  * @author miemie
@@ -103,8 +101,8 @@ public class ShaunAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean
-    public J2EContextFactory j2EContextFactory() {
-        return DefaultJ2EContextFactory.INSTANCE;
+    public JEEContextFactory j2EContextFactory() {
+        return DefaultJEEContextFactory.INSTANCE;
     }
 
     @Bean
@@ -117,7 +115,7 @@ public class ShaunAutoConfiguration {
     @ConditionalOnMissingBean
     public ProfileContext profileContext(ProfileManagerFactory profileManagerFactory,
                                          SessionStore<J2EContext> sessionStore,
-                                         J2EContextFactory j2EContextFactory) {
+                                         JEEContextFactory j2EContextFactory) {
         return new ProfileContext(profileManagerFactory, sessionStore, j2EContextFactory);
     }
 

@@ -1,10 +1,18 @@
 package com.baomidou.shaun.stateless.autoconfigure;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Supplier;
-
+import com.baomidou.shaun.core.client.TokenClient;
+import com.baomidou.shaun.core.context.JEEContextFactory;
+import com.baomidou.shaun.core.context.session.NoSessionStore;
+import com.baomidou.shaun.core.filter.ShaunFilter;
+import com.baomidou.shaun.core.filter.stateless.StatelessLogoutFilter;
+import com.baomidou.shaun.core.filter.stateless.StatelessSecurityFilter;
+import com.baomidou.shaun.core.handler.logout.LogoutHandler;
+import com.baomidou.shaun.core.interceptor.ShaunInterceptor;
+import com.baomidou.shaun.core.matching.OnlyPathMatcher;
+import com.baomidou.shaun.stateless.autoconfigure.aop.AnnotationAspect;
+import com.baomidou.shaun.stateless.autoconfigure.properties.ShaunStatelessProperties;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import org.pac4j.core.authorization.authorizer.Authorizer;
 import org.pac4j.core.context.Pac4jConstants;
 import org.pac4j.core.credentials.TokenCredentials;
@@ -22,20 +30,10 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import com.baomidou.shaun.core.client.TokenClient;
-import com.baomidou.shaun.core.context.J2EContextFactory;
-import com.baomidou.shaun.core.context.session.NoSessionStore;
-import com.baomidou.shaun.core.filter.ShaunFilter;
-import com.baomidou.shaun.core.filter.stateless.StatelessLogoutFilter;
-import com.baomidou.shaun.core.filter.stateless.StatelessSecurityFilter;
-import com.baomidou.shaun.core.handler.logout.LogoutHandler;
-import com.baomidou.shaun.core.interceptor.ShaunInterceptor;
-import com.baomidou.shaun.core.matching.OnlyPathMatcher;
-import com.baomidou.shaun.stateless.autoconfigure.aop.AnnotationAspect;
-import com.baomidou.shaun.stateless.autoconfigure.properties.ShaunStatelessProperties;
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Supplier;
 
 /**
  * @author miemie
@@ -51,7 +49,7 @@ public class ShaunStatelessSecurityAutoConfiguration implements WebMvcConfigurer
     private final ApplicationContext applicationContext;
     private final Authenticator<TokenCredentials> authenticator;
     private final CredentialsExtractor<TokenCredentials> credentialsExtractor;
-    private final J2EContextFactory j2EContextFactory;
+    private final JEEContextFactory j2EContextFactory;
     private final LogoutHandler logoutHandler;
 
     @Override

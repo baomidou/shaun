@@ -3,7 +3,7 @@ package com.baomidou.shaun.autoconfigure;
 import com.baomidou.shaun.autoconfigure.aop.AnnotationAspect;
 import com.baomidou.shaun.autoconfigure.properties.ShaunProperties;
 import com.baomidou.shaun.core.client.TokenClient;
-import com.baomidou.shaun.core.context.J2EContextFactory;
+import com.baomidou.shaun.core.context.JEEContextFactory;
 import com.baomidou.shaun.core.filter.LogoutFilter;
 import com.baomidou.shaun.core.filter.SecurityFilter;
 import com.baomidou.shaun.core.filter.ShaunFilter;
@@ -53,7 +53,7 @@ public class ShaunSecurityAutoConfiguration implements WebMvcConfigurer {
     private final CredentialsExtractor<TokenCredentials> credentialsExtractor;
     private final SessionStore<J2EContext> sessionStore;
     private final ProfileManagerFactory profileManagerFactory;
-    private final J2EContextFactory j2EContextFactory;
+    private final JEEContextFactory j2EContextFactory;
     private final LogoutHandler logoutHandler;
 
     @Override

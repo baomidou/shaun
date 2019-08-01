@@ -1,6 +1,6 @@
 package com.baomidou.shaun.core.filter;
 
-import org.pac4j.core.context.J2EContext;
+import org.pac4j.core.context.JEEContext;
 
 /**
  * @author miemie
@@ -14,7 +14,7 @@ public interface ShaunFilter {
      * @param context webContext
      * @return 是否继续执行
      */
-    boolean goOnChain(J2EContext context);
+    boolean goOnChain(JEEContext context);
 
     /**
      * 有多个子类时执行顺序(越小越优先)

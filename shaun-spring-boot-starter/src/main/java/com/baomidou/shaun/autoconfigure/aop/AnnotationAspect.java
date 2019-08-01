@@ -4,9 +4,9 @@ import com.baomidou.shaun.core.annotation.RequireAllPermission;
 import com.baomidou.shaun.core.annotation.RequireAllRole;
 import com.baomidou.shaun.core.annotation.RequireAnyPermission;
 import com.baomidou.shaun.core.annotation.RequireAnyRole;
-import com.baomidou.shaun.core.context.J2EContextFactory;
+import com.baomidou.shaun.core.context.JEEContextFactory;
 import com.baomidou.shaun.core.profile.ProfileManagerFactory;
-import com.baomidou.shaun.core.util.J2EContextUtil;
+import com.baomidou.shaun.core.util.JEEContextUtil;
 import lombok.AllArgsConstructor;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -30,7 +30,7 @@ public class AnnotationAspect {
 
     private final ProfileManagerFactory profileManagerFactory;
     private final SessionStore sessionStore;
-    private final J2EContextFactory j2EContextFactory;
+    private final JEEContextFactory j2EContextFactory;
 
     @Before("@annotation(requireAnyRole)")
     public void beforeRequireAnyRole(final RequireAnyRole requireAnyRole) {
@@ -62,7 +62,7 @@ public class AnnotationAspect {
     }
 
     private <U extends CommonProfile> void isAuthorized(final AbstractRequireElementAuthorizer<String, U> authorizer) {
-        J2EContext j2EContext = J2EContextUtil.getJ2EContext(j2EContextFactory, sessionStore);
+        J2EContext j2EContext = JEEContextUtil.getJEEContext(j2EContextFactory, sessionStore);
         final List<U> profiles = this.isAuthenticated(j2EContext);
         if (!authorizer.isAuthorized(j2EContext, profiles)) {
             throw HttpAction.forbidden(j2EContext);

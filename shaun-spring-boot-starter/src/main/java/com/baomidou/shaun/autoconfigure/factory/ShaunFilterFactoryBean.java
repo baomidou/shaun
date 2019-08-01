@@ -1,6 +1,6 @@
 package com.baomidou.shaun.autoconfigure.factory;
 
-import com.baomidou.shaun.core.context.J2EContextFactory;
+import com.baomidou.shaun.core.context.JEEContextFactory;
 import com.baomidou.shaun.core.filter.MIPac4jFilter;
 import com.baomidou.shaun.core.filter.ShaunFilter;
 import lombok.Data;
@@ -21,11 +21,11 @@ import java.util.List;
 public class ShaunFilterFactoryBean implements FactoryBean<MIPac4jFilter>, InitializingBean {
 
     private final SessionStore sessionStore;
-    private final J2EContextFactory j2EContextFactory;
+    private final JEEContextFactory j2EContextFactory;
     private MIPac4jFilter instance;
     private List<ShaunFilter> pac4jFilters;
 
-    public ShaunFilterFactoryBean(J2EContextFactory j2EContextFactory, SessionStore sessionStore) {
+    public ShaunFilterFactoryBean(JEEContextFactory j2EContextFactory, SessionStore sessionStore) {
         this.j2EContextFactory = j2EContextFactory;
         this.sessionStore = sessionStore;
     }
