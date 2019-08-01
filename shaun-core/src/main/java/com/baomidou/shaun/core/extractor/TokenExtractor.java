@@ -13,6 +13,8 @@ import org.pac4j.core.credentials.extractor.HeaderExtractor;
 import org.pac4j.core.credentials.extractor.ParameterExtractor;
 import org.pac4j.http.credentials.extractor.CookieExtractor;
 
+import java.util.Optional;
+
 /**
  * 定义了从 WebContext 取 token 的方式
  *
@@ -38,8 +40,8 @@ public class TokenExtractor implements CredentialsExtractor<TokenCredentials> {
     }
 
     @Override
-    public TokenCredentials extract(WebContext context) {
-        TokenCredentials credentials = null;
+    public Optional<TokenCredentials> extract(WebContext context) {
+        Optional<TokenCredentials> credentials = Optional.empty();
         switch (tokenLocation) {
             case HEADER:
                 credentials = headerExtractor.extract(context);
@@ -52,22 +54,22 @@ public class TokenExtractor implements CredentialsExtractor<TokenCredentials> {
                 break;
             case HEADER_OR_COOKIE:
                 credentials = headerExtractor.extract(context);
-                if (credentials == null) {
+                if (!credentials.isPresent()) {
                     credentials = cookieExtractor.extract(context);
                 }
                 break;
             case HEADER_OR_PARAMETER:
                 credentials = headerExtractor.extract(context);
-                if (credentials == null) {
+                if (!credentials.isPresent()) {
                     credentials = parameterExtractor.extract(context);
                 }
                 break;
             case HEADER_OR_COOKIE_OR_PARAMETER:
                 credentials = headerExtractor.extract(context);
-                if (credentials == null) {
+                if (!credentials.isPresent()) {
                     credentials = cookieExtractor.extract(context);
                 }
-                if (credentials == null) {
+                if (!credentials.isPresent()) {
                     credentials = parameterExtractor.extract(context);
                 }
                 break;

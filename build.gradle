@@ -25,7 +25,7 @@ ext {
     libraries = [
             springVersion = "5.1.6.RELEASE",
             springBootVersion = "2.1.6.RELEASE",
-            pac4jVersion = "3.7.0",
+            pac4jVersion = "4.0.0-RC1",
             shiroVersion = "1.4.1",
             junitVersion = "5.4.0"
     ]
