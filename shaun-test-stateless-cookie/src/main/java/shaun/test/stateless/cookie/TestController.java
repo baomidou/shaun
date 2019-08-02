@@ -1,12 +1,14 @@
 package shaun.test.stateless.cookie;
 
-import com.baomidou.shaun.core.annotation.RequireAnyPermission;
-import com.baomidou.shaun.core.annotation.RequireAnyRole;
-import com.baomidou.shaun.stateless.cookie.CookieContext;
-import lombok.AllArgsConstructor;
 import org.pac4j.jwt.profile.JwtProfile;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.baomidou.shaun.core.annotation.RequireAnyPermission;
+import com.baomidou.shaun.core.annotation.RequireAnyRole;
+import com.baomidou.shaun.core.cookie.CookieContext;
+
+import lombok.AllArgsConstructor;
 
 /**
  * @author miemie

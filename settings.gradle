@@ -1,6 +1,5 @@
 rootProject.name = "shaun"
 include "shaun-core"
-include 'shaun-stateless'
-include 'shaun-stateless-spring-boot-starter'
+include 'shaun-spring-boot-starter'
 include 'shaun-test-stateless-header'
 include 'shaun-test-stateless-cookie'
