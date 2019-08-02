@@ -1,33 +1,25 @@
 package com.baomidou.shaun.core.authorizer.role;
 
-import java.util.Set;
-
-import org.pac4j.core.authorization.authorizer.RequireAnyRoleAuthorizer;
-import org.pac4j.core.context.WebContext;
-import org.pac4j.core.profile.UserProfile;
-
+import com.baomidou.shaun.core.authorizer.AbstranctAuthorizer;
 import com.baomidou.shaun.core.authorizer.AuthorizationProfile;
+import org.pac4j.core.profile.UserProfile;
 
 /**
  * @author miemie
  * @since 2019-08-01
  */
-public class ShaunRequireAnyRolesAuthorizer<U extends UserProfile> extends RequireAnyRoleAuthorizer<U> {
-
-    private final AuthorizationProfile<U> authorizationProfile;
+public class ShaunRequireAnyRolesAuthorizer<U extends UserProfile> extends AbstranctAuthorizer<U> {
 
     public ShaunRequireAnyRolesAuthorizer(AuthorizationProfile<U> authorizationProfile, String... roles) {
-        super(roles);
-        this.authorizationProfile = authorizationProfile;
+        super(authorizationProfile, roles);
     }
 
-    public static <U extends UserProfile> RequireAnyRoleAuthorizer<U> requireAnyRole(AuthorizationProfile<U> authorizationProfile, String... roles) {
+    public static <U extends UserProfile> ShaunRequireAnyRolesAuthorizer<U> requireAnyRole(AuthorizationProfile<U> authorizationProfile, String... roles) {
         return new ShaunRequireAnyRolesAuthorizer<>(authorizationProfile, roles);
     }
 
     @Override
-    protected boolean check(WebContext context, U profile, String element) {
-        Set<String> roles = authorizationProfile.roles(profile);
-        return roles.contains(element);
+    public boolean isAuthorized(U profile) {
+        return requireAny(profile.getRoles());
     }
 }
