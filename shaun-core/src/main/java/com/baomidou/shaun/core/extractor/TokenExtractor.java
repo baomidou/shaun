@@ -10,9 +10,9 @@ import org.pac4j.core.credentials.extractor.ParameterExtractor;
 import org.pac4j.http.credentials.extractor.CookieExtractor;
 
 import com.baomidou.shaun.core.enums.TokenLocation;
-import com.baomidou.shaun.stateless.properties.Cookie;
-import com.baomidou.shaun.stateless.properties.Header;
-import com.baomidou.shaun.stateless.properties.Parameter;
+import com.baomidou.shaun.core.properties.Cookie;
+import com.baomidou.shaun.core.properties.Header;
+import com.baomidou.shaun.core.properties.Parameter;
 
 import lombok.Data;
 

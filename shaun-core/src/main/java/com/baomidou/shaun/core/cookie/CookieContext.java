@@ -4,8 +4,8 @@ import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.profile.CommonProfile;
 
 import com.baomidou.shaun.core.generator.TokenGenerator;
+import com.baomidou.shaun.core.properties.Cookie;
 import com.baomidou.shaun.core.util.JEEContextFactory;
-import com.baomidou.shaun.stateless.properties.Cookie;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
