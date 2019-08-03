@@ -12,7 +12,6 @@ import org.pac4j.jwt.config.signature.SecretSignatureConfiguration;
 import org.pac4j.jwt.config.signature.SignatureConfiguration;
 import org.pac4j.jwt.credentials.authenticator.JwtAuthenticator;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -98,11 +97,10 @@ public class ShaunAutoConfiguration {
     }
 
     /**
-     * 默认 cookie 模式下的登出操作类
+     * 登出操作类
      */
     @Bean
     @ConditionalOnMissingBean
-    @ConditionalOnProperty(prefix = "shaun", name = "token-location", havingValue = "cookie")
     public LogoutHandler<UserProfile> logoutHandler(SecurityManager securityManager) {
         return new DefaultLogoutHandler(securityManager);
     }

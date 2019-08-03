@@ -6,10 +6,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.pac4j.core.authorization.authorizer.Authorizer;
+import org.pac4j.core.client.IndirectClient;
 import org.pac4j.core.context.Pac4jConstants;
 import org.pac4j.core.credentials.TokenCredentials;
 import org.pac4j.core.credentials.authenticator.Authenticator;
 import org.pac4j.core.credentials.extractor.CredentialsExtractor;
+import org.pac4j.core.http.ajax.AjaxRequestResolver;
 import org.pac4j.core.matching.PathMatcher;
 import org.pac4j.core.profile.UserProfile;
 import org.pac4j.core.util.CommonHelper;
@@ -27,9 +29,14 @@ import com.baomidou.shaun.autoconfigure.aop.AnnotationAspect;
 import com.baomidou.shaun.autoconfigure.properties.ShaunProperties;
 import com.baomidou.shaun.core.authorizer.AuthorizationProfile;
 import com.baomidou.shaun.core.client.TokenClient;
+import com.baomidou.shaun.core.context.GlobalConfig;
+import com.baomidou.shaun.core.enums.TokenLocation;
+import com.baomidou.shaun.core.filter.CallbackFilter;
 import com.baomidou.shaun.core.filter.LogoutFilter;
 import com.baomidou.shaun.core.filter.SecurityFilter;
+import com.baomidou.shaun.core.filter.SfFilter;
 import com.baomidou.shaun.core.filter.ShaunFilter;
+import com.baomidou.shaun.core.handler.CallbackHandler;
 import com.baomidou.shaun.core.handler.LogoutHandler;
 import com.baomidou.shaun.core.interceptor.ShaunInterceptor;
 import com.baomidou.shaun.core.matching.OnlyPathMatcher;
@@ -49,9 +56,12 @@ public class ShaunSecurityAutoConfiguration implements WebMvcConfigurer {
 
     private final ShaunProperties properties;
     private final Authenticator<TokenCredentials> authenticator;
+    private final AjaxRequestResolver ajaxRequestResolver;
     private final CredentialsExtractor<TokenCredentials> credentialsExtractor;
     private final ObjectProvider<LogoutHandler> logoutHandlerProvider;
+    private final ObjectProvider<CallbackHandler> callbackHandlerProvider;
     private final ObjectProvider<List<Authorizer>> authorizerProvider;
+    private final ObjectProvider<List<IndirectClient>> indirectClientsProvider;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -61,9 +71,15 @@ public class ShaunSecurityAutoConfiguration implements WebMvcConfigurer {
     @Bean
     @ConditionalOnMissingBean
     public ShaunInterceptor shaunInterceptor() {
-        TokenClient tokenClient = new TokenClient(credentialsExtractor, authenticator);
+        GlobalConfig.setAjaxRequestResolver(ajaxRequestResolver);
+        if (CommonHelper.isNotBlank(properties.getLoginUrl())) {
+            GlobalConfig.setStateless(false);
+            CommonHelper.assertTrue(properties.getTokenLocation() == TokenLocation.COOKIE,
+                    "非前后端分离的项目请设置 tokenLocation 值为 \"cookie\"");
+        }
+        final TokenClient tokenClient = new TokenClient(credentialsExtractor, authenticator);
 
-        PathMatcher pathMatcher = new PathMatcher();
+        final PathMatcher pathMatcher = new PathMatcher();
         if (!CollectionUtils.isEmpty(properties.getExcludePath())) {
             properties.getExcludePath().forEach(pathMatcher::excludePath);
         }
@@ -74,12 +90,12 @@ public class ShaunSecurityAutoConfiguration implements WebMvcConfigurer {
             properties.getExcludeBranch().forEach(pathMatcher::excludeRegex);
         }
 
-        List<ShaunFilter> filterList = new ArrayList<>();
+        final List<ShaunFilter> filterList = new ArrayList<>();
 
         /* securityFilter begin */
         String authorizers = properties.getAuthorizers();
-        List<Authorizer> authorizerList = authorizerProvider.getIfAvailable();
-        Map<String, Authorizer> authorizeMap = new HashMap<>();
+        final List<Authorizer> authorizerList = authorizerProvider.getIfAvailable();
+        final Map<String, Authorizer> authorizeMap = new HashMap<>();
         if (!CollectionUtils.isEmpty(authorizerList)) {
             for (Authorizer authorizer : authorizerList) {
                 authorizeMap.put(authorizer.getClass().getSimpleName(), authorizer);
@@ -92,7 +108,7 @@ public class ShaunSecurityAutoConfiguration implements WebMvcConfigurer {
             }
         }
 
-        SecurityFilter securityFilter = new SecurityFilter();
+        final SecurityFilter securityFilter = new SecurityFilter();
         securityFilter.setPathMatcher(pathMatcher);
         securityFilter.setAuthorizerMap(authorizeMap);
         securityFilter.setAuthorizers(authorizers);
@@ -103,11 +119,33 @@ public class ShaunSecurityAutoConfiguration implements WebMvcConfigurer {
 
         /* logoutFilter begin */
         if (CommonHelper.isNotBlank(properties.getLogoutUrl())) {
-            LogoutFilter logoutFilter = new LogoutFilter();
+            final LogoutFilter logoutFilter = new LogoutFilter();
             logoutFilter.setPathMatcher(new OnlyPathMatcher(properties.getLogoutUrl()));
             logoutFilter.setLogoutExecutor(logoutHandlerProvider.getIfAvailable());
 
             filterList.add(logoutFilter);
+        }
+        /* logoutFilter end */
+
+        List<IndirectClient> indirectClients = indirectClientsProvider.getIfAvailable();
+        if (CommonHelper.isNotEmpty(indirectClients)) {
+            CommonHelper.assertTrue(!GlobalConfig.isStateless(), "要用三方登录只支持非前后分离的项目");
+            final String sfLoginUrl = properties.getSfLoginUrl();
+            CommonHelper.assertNotBlank("sfLoginUrl", sfLoginUrl);
+            final String callbackUrl = properties.getCallbackUrl();
+            CommonHelper.assertNotBlank("callbackUrl", callbackUrl);
+
+            final CallbackHandler callbackHandler = callbackHandlerProvider.getIfAvailable();
+            CommonHelper.assertNotNull("callbackHandler", callbackHandler);
+            indirectClients.forEach(i -> i.setCallbackUrl(callbackUrl));
+
+            final SfFilter sfFilter = new SfFilter();
+            //todo
+            filterList.add(sfFilter);
+
+            final CallbackFilter callbackFilter = new CallbackFilter();
+            //todo
+            filterList.add(callbackFilter);
         }
 
         ShaunInterceptor interceptor = new ShaunInterceptor();
