@@ -1,6 +1,5 @@
 package com.baomidou.shaun.core.handler;
 
-import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.profile.UserProfile;
 
 /**
@@ -15,8 +14,7 @@ public interface LogoutHandler<U extends UserProfile> {
     /**
      * 登出操作
      *
-     * @param context 上下文
      * @param profile 自己的 profile
      */
-    void logout(JEEContext context, U profile);
+    void logout(U profile);
 }

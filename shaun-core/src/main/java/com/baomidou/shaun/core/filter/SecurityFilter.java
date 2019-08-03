@@ -1,4 +1,4 @@
-package com.baomidou.shaun.core.filter.stateless;
+package com.baomidou.shaun.core.filter;
 
 import java.util.Collections;
 import java.util.Map;
@@ -11,12 +11,13 @@ import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.credentials.TokenCredentials;
 import org.pac4j.core.exception.http.ForbiddenAction;
 import org.pac4j.core.exception.http.UnauthorizedAction;
+import org.pac4j.core.http.ajax.AjaxRequestResolver;
 import org.pac4j.core.matching.PathMatcher;
 import org.pac4j.core.profile.UserProfile;
 import org.pac4j.core.util.CommonHelper;
 
 import com.baomidou.shaun.core.client.TokenClient;
-import com.baomidou.shaun.core.filter.ShaunFilter;
+import com.baomidou.shaun.core.context.GlobalConfig;
 import com.baomidou.shaun.core.util.ProfileHolder;
 
 import lombok.Data;
@@ -33,6 +34,7 @@ import lombok.extern.slf4j.Slf4j;
 public class SecurityFilter implements ShaunFilter {
 
     private AuthorizationChecker authorizationChecker = new DefaultAuthorizationChecker();
+    private AjaxRequestResolver ajaxRequestResolver;
     private PathMatcher pathMatcher;
     private TokenClient tokenClient;
     private String authorizers;
@@ -62,9 +64,21 @@ public class SecurityFilter implements ShaunFilter {
                         log.debug("forbidden");
                         throw ForbiddenAction.INSTANCE;
                     }
+                } else {
+                    if (GlobalConfig.isStatelessOrAjax(context)) {
+                        throw UnauthorizedAction.INSTANCE;
+                    } else {
+                        GlobalConfig.gotoLoginUrl(context);
+                        return false;
+                    }
                 }
             } else {
-                throw UnauthorizedAction.INSTANCE;
+                if (GlobalConfig.isStatelessOrAjax(context)) {
+                    throw UnauthorizedAction.INSTANCE;
+                } else {
+                    GlobalConfig.gotoLoginUrl(context);
+                    return false;
+                }
             }
         }
         return true;

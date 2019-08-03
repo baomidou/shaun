@@ -25,9 +25,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.baomidou.shaun.core.authorizer.AuthorizationProfile;
 import com.baomidou.shaun.core.client.TokenClient;
+import com.baomidou.shaun.core.filter.LogoutFilter;
+import com.baomidou.shaun.core.filter.SecurityFilter;
 import com.baomidou.shaun.core.filter.ShaunFilter;
-import com.baomidou.shaun.core.filter.stateless.LogoutFilter;
-import com.baomidou.shaun.core.filter.stateless.SecurityFilter;
 import com.baomidou.shaun.core.handler.LogoutHandler;
 import com.baomidou.shaun.core.interceptor.ShaunInterceptor;
 import com.baomidou.shaun.core.matching.OnlyPathMatcher;

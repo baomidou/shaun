@@ -1,6 +1,5 @@
 package com.baomidou.shaun.core.handler;
 
-import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.profile.UserProfile;
 
 import com.baomidou.shaun.core.cookie.CookieContext;
@@ -19,7 +18,7 @@ public class CookieLogoutHandler implements LogoutHandler<UserProfile> {
     private final CookieContext cookieContext;
 
     @Override
-    public void logout(JEEContext context, UserProfile profile) {
+    public void logout(UserProfile profile) {
         cookieContext.clearCookie();
     }
 }

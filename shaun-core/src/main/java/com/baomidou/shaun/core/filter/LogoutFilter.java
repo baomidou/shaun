@@ -1,10 +1,10 @@
-package com.baomidou.shaun.core.filter.stateless;
+package com.baomidou.shaun.core.filter;
 
 import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.profile.UserProfile;
 import org.pac4j.core.util.CommonHelper;
 
-import com.baomidou.shaun.core.filter.ShaunFilter;
+import com.baomidou.shaun.core.context.GlobalConfig;
 import com.baomidou.shaun.core.handler.LogoutHandler;
 import com.baomidou.shaun.core.matching.OnlyPathMatcher;
 import com.baomidou.shaun.core.util.ProfileHolder;
@@ -28,7 +28,10 @@ public class LogoutFilter implements ShaunFilter {
     public boolean goOnChain(JEEContext context) {
         if (pathMatcher.matches(context)) {
             final UserProfile profile = ProfileHolder.get(context);
-            logoutExecutor.logout(context, profile);
+            logoutExecutor.logout(profile);
+            if (!GlobalConfig.isStatelessOrAjax(context)) {
+                GlobalConfig.gotoLoginUrl(context);
+            }
             return false;
         }
         return true;
