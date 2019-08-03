@@ -19,12 +19,12 @@ import org.springframework.context.annotation.Configuration;
 
 import com.baomidou.shaun.core.authorizer.AuthorizationProfile;
 import com.baomidou.shaun.core.authorizer.DefaultAuthorizationProfile;
-import com.baomidou.shaun.core.cookie.CookieContext;
 import com.baomidou.shaun.core.extractor.TokenExtractor;
 import com.baomidou.shaun.core.generator.DefaultJwtTokenGenerator;
 import com.baomidou.shaun.core.generator.TokenGenerator;
-import com.baomidou.shaun.core.handler.CookieLogoutHandler;
+import com.baomidou.shaun.core.handler.DefaultLogoutHandler;
 import com.baomidou.shaun.core.handler.LogoutHandler;
+import com.baomidou.shaun.core.mgt.SecurityManager;
 import com.baomidou.shaun.stateless.autoconfigure.properties.ShaunStatelessProperties;
 
 import lombok.AllArgsConstructor;
@@ -93,9 +93,8 @@ public class ShaunStatelessAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean
-    @ConditionalOnProperty(prefix = "shaun", name = "token-location", havingValue = "cookie")
-    public CookieContext cookieContext(TokenGenerator tokenGenerator) {
-        return new CookieContext(tokenGenerator, properties.getCookie());
+    public SecurityManager cookieContext(TokenGenerator tokenGenerator) {
+        return new SecurityManager(tokenGenerator, properties.getCookie());
     }
 
     /**
@@ -104,8 +103,8 @@ public class ShaunStatelessAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     @ConditionalOnProperty(prefix = "shaun", name = "token-location", havingValue = "cookie")
-    public LogoutHandler<UserProfile> logoutHandler(CookieContext cookieContext) {
-        return new CookieLogoutHandler(cookieContext);
+    public LogoutHandler<UserProfile> logoutHandler(SecurityManager securityManager) {
+        return new DefaultLogoutHandler(securityManager);
     }
 
     @Bean

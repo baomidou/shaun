@@ -31,6 +31,15 @@ public class SecurityManager {
         return token;
     }
 
+    public boolean dropUser() {
+        if (!GlobalConfig.isStateless()) {
+            JEEContext jeeContext = JEEContextFactory.getJEEContext();
+            jeeContext.addResponseCookie(getCookie(""));
+            return true;
+        }
+        return false;
+    }
+
     private org.pac4j.core.context.Cookie getCookie(final String token) {
         org.pac4j.core.context.Cookie c = new org.pac4j.core.context.Cookie(cookie.getName(), token);
         Integer age = tokenGenerator.getAge();

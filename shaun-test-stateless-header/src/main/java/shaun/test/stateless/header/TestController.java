@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.baomidou.shaun.core.annotation.RequireAnyPermission;
 import com.baomidou.shaun.core.annotation.RequireAnyRole;
-import com.baomidou.shaun.core.generator.TokenGenerator;
+import com.baomidou.shaun.core.mgt.SecurityManager;
 
 import lombok.AllArgsConstructor;
 
@@ -18,7 +18,7 @@ import lombok.AllArgsConstructor;
 @RestController
 public class TestController {
 
-    private final TokenGenerator tokenGenerator;
+    private final SecurityManager securityManager;
 
     @GetMapping("login")
     public String login() {
@@ -27,7 +27,7 @@ public class TestController {
         profile.setLinkedId("22222222222");
         profile.addRole("admin");
         profile.addPermission("add");
-        return tokenGenerator.generate(profile);
+        return securityManager.login(profile);
     }
 
     @GetMapping("a1")

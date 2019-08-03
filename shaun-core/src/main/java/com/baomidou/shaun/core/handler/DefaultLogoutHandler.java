@@ -2,7 +2,7 @@ package com.baomidou.shaun.core.handler;
 
 import org.pac4j.core.profile.UserProfile;
 
-import com.baomidou.shaun.core.cookie.CookieContext;
+import com.baomidou.shaun.core.mgt.SecurityManager;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,12 +13,12 @@ import lombok.Data;
  */
 @Data
 @AllArgsConstructor
-public class CookieLogoutHandler implements LogoutHandler<UserProfile> {
+public class DefaultLogoutHandler implements LogoutHandler<UserProfile> {
 
-    private final CookieContext cookieContext;
+    private final SecurityManager securityManager;
 
     @Override
     public void logout(UserProfile profile) {
-        cookieContext.clearCookie();
+        securityManager.dropUser();
     }
 }
