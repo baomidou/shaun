@@ -1,4 +1,4 @@
-package com.baomidou.shaun.stateless.autoconfigure.aop;
+package com.baomidou.shaun.autoconfigure.aop;
 
 import java.util.Collections;
 

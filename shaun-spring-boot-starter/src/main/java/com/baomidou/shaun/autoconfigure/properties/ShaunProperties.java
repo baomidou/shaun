@@ -1,4 +1,4 @@
-package com.baomidou.shaun.stateless.autoconfigure.properties;
+package com.baomidou.shaun.autoconfigure.properties;
 
 import java.util.List;
 import java.util.UUID;
@@ -20,7 +20,7 @@ import lombok.Data;
  */
 @Data
 @ConfigurationProperties("shaun")
-public class ShaunStatelessProperties {
+public class ShaunProperties {
 
     /**
      * 登录页面 url,非分离模式下进行 redirect

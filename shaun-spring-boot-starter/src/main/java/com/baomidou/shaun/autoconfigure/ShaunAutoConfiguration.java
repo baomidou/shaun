@@ -1,4 +1,4 @@
-package com.baomidou.shaun.stateless.autoconfigure;
+package com.baomidou.shaun.autoconfigure;
 
 import org.pac4j.core.credentials.TokenCredentials;
 import org.pac4j.core.credentials.authenticator.Authenticator;
@@ -17,6 +17,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.baomidou.shaun.autoconfigure.properties.ShaunProperties;
 import com.baomidou.shaun.core.authorizer.AuthorizationProfile;
 import com.baomidou.shaun.core.authorizer.DefaultAuthorizationProfile;
 import com.baomidou.shaun.core.extractor.TokenExtractor;
@@ -25,7 +26,6 @@ import com.baomidou.shaun.core.generator.TokenGenerator;
 import com.baomidou.shaun.core.handler.DefaultLogoutHandler;
 import com.baomidou.shaun.core.handler.LogoutHandler;
 import com.baomidou.shaun.core.mgt.SecurityManager;
-import com.baomidou.shaun.stateless.autoconfigure.properties.ShaunStatelessProperties;
 
 import lombok.AllArgsConstructor;
 
@@ -35,10 +35,10 @@ import lombok.AllArgsConstructor;
  */
 @AllArgsConstructor
 @Configuration
-@EnableConfigurationProperties(ShaunStatelessProperties.class)
-public class ShaunStatelessAutoConfiguration {
+@EnableConfigurationProperties(ShaunProperties.class)
+public class ShaunAutoConfiguration {
 
-    private final ShaunStatelessProperties properties;
+    private final ShaunProperties properties;
 
     /**
      * jwt 签名类

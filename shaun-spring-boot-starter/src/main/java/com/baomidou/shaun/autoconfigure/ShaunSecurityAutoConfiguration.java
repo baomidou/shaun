@@ -1,4 +1,4 @@
-package com.baomidou.shaun.stateless.autoconfigure;
+package com.baomidou.shaun.autoconfigure;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,6 +23,8 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import com.baomidou.shaun.autoconfigure.aop.AnnotationAspect;
+import com.baomidou.shaun.autoconfigure.properties.ShaunProperties;
 import com.baomidou.shaun.core.authorizer.AuthorizationProfile;
 import com.baomidou.shaun.core.client.TokenClient;
 import com.baomidou.shaun.core.filter.LogoutFilter;
@@ -31,8 +33,6 @@ import com.baomidou.shaun.core.filter.ShaunFilter;
 import com.baomidou.shaun.core.handler.LogoutHandler;
 import com.baomidou.shaun.core.interceptor.ShaunInterceptor;
 import com.baomidou.shaun.core.matching.OnlyPathMatcher;
-import com.baomidou.shaun.stateless.autoconfigure.aop.AnnotationAspect;
-import com.baomidou.shaun.stateless.autoconfigure.properties.ShaunStatelessProperties;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -44,10 +44,10 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 @Configuration
-@AutoConfigureAfter(ShaunStatelessAutoConfiguration.class)
-public class ShaunStatelessSecurityAutoConfiguration implements WebMvcConfigurer {
+@AutoConfigureAfter(ShaunAutoConfiguration.class)
+public class ShaunSecurityAutoConfiguration implements WebMvcConfigurer {
 
-    private final ShaunStatelessProperties properties;
+    private final ShaunProperties properties;
     private final Authenticator<TokenCredentials> authenticator;
     private final CredentialsExtractor<TokenCredentials> credentialsExtractor;
     private final ObjectProvider<LogoutHandler> logoutHandlerProvider;
