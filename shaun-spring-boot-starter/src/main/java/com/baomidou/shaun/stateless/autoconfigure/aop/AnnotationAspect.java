@@ -58,7 +58,7 @@ public class AnnotationAspect {
     }
 
     private UserProfile isAuthenticated(JEEContext context) {
-        final UserProfile userProfile = ProfileHolder.get(context, false);
+        final UserProfile userProfile = ProfileHolder.get(context);
         if (!IS_AUTHENTICATED_AUTHORIZER.isAuthorized(context, Collections.singletonList(userProfile))) {
             throw UnauthorizedAction.INSTANCE;
         }

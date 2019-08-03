@@ -27,7 +27,7 @@ public class LogoutFilter implements ShaunFilter {
     @Override
     public boolean goOnChain(JEEContext context) {
         if (pathMatcher.matches(context)) {
-            final UserProfile profile = ProfileHolder.get(context, false);
+            final UserProfile profile = ProfileHolder.get(context);
             logoutExecutor.logout(context, profile);
             return false;
         }

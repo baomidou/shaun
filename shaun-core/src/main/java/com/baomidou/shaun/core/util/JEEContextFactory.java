@@ -1,13 +1,13 @@
 package com.baomidou.shaun.core.util;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.pac4j.core.context.JEEContext;
-import org.pac4j.core.context.session.JEESessionStore;
-import org.pac4j.core.context.session.SessionStore;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import com.baomidou.shaun.core.context.session.NoSessionStore;
 
 /**
  * @author miemie
@@ -15,23 +15,12 @@ import javax.servlet.http.HttpServletResponse;
  */
 public abstract class JEEContextFactory {
 
-    public static final SessionStore<JEEContext> sessionStore = new JEESessionStore();
-
     public static JEEContext getJEEContext() {
-        return getJEEContext(request(), response(), sessionStore);
-    }
-
-    public static JEEContext getJEEContext(final SessionStore<JEEContext> sessionStore) {
-        return getJEEContext(request(), response(), sessionStore);
+        return getJEEContext(request(), response());
     }
 
     public static JEEContext getJEEContext(final HttpServletRequest request, final HttpServletResponse response) {
-        return new JEEContext(request, response, sessionStore);
-    }
-
-    public static JEEContext getJEEContext(final HttpServletRequest request, final HttpServletResponse response,
-                                           final SessionStore<JEEContext> sessionStore) {
-        return new JEEContext(request, response, sessionStore);
+        return new JEEContext(request, response, NoSessionStore.INSTANCE);
     }
 
     public static HttpServletRequest request() {

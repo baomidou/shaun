@@ -51,7 +51,7 @@ public class SecurityFilter implements ShaunFilter {
                 log.debug("profile: {}", profile);
 
                 if (profile.isPresent()) {
-                    ProfileHolder.save(context, profile.get(), false);
+                    ProfileHolder.save(context, profile.get());
 
                     log.debug("authorizers: {}", authorizers);
                     if (authorizationChecker.isAuthorized(context, Collections.singletonList(profile.get()),
