@@ -23,6 +23,10 @@ import lombok.Data;
 public class ShaunStatelessProperties {
 
     /**
+     * 登录页面 url,非分离模式下进行 redirect
+     */
+    private String loginUrl;
+    /**
      * 登出 url
      */
     private String logoutUrl;
