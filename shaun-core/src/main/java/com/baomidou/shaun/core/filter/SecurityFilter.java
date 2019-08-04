@@ -9,7 +9,6 @@ import org.pac4j.core.authorization.checker.AuthorizationChecker;
 import org.pac4j.core.authorization.checker.DefaultAuthorizationChecker;
 import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.credentials.TokenCredentials;
-import org.pac4j.core.exception.http.ForbiddenAction;
 import org.pac4j.core.exception.http.UnauthorizedAction;
 import org.pac4j.core.matching.PathMatcher;
 import org.pac4j.core.profile.UserProfile;
@@ -45,36 +44,23 @@ public class SecurityFilter implements ShaunFilter {
 
             final Optional<TokenCredentials> credentials = tokenClient.getCredentials(context);
             log.debug("credentials: {}", credentials);
-
             if (credentials.isPresent()) {
                 final Optional<UserProfile> profile = tokenClient.getUserProfile(credentials.get(), context);
                 log.debug("profile: {}", profile);
-
                 if (profile.isPresent()) {
-                    ProfileHolder.save(context, credentials.get().getToken(), profile.get());
-
                     log.debug("authorizers: {}", authorizers);
                     if (authorizationChecker.isAuthorized(context, Collections.singletonList(profile.get()),
                             authorizers, authorizerMap)) {
+                        ProfileHolder.save(context, credentials.get().getToken(), profile.get());
                         log.debug("authenticated and authorized -> grant access");
                         return true;
-                    } else {
-                        log.debug("forbidden");
-                        throw ForbiddenAction.INSTANCE;
-                    }
-                } else {
-                    if (GlobalConfig.isStatelessOrAjax(context)) {
-                        throw UnauthorizedAction.INSTANCE;
-                    } else {
-                        GlobalConfig.gotoLoginUrl(context);
                     }
                 }
+            }
+            if (GlobalConfig.isStatelessOrAjax(context)) {
+                throw UnauthorizedAction.INSTANCE;
             } else {
-                if (GlobalConfig.isStatelessOrAjax(context)) {
-                    throw UnauthorizedAction.INSTANCE;
-                } else {
-                    GlobalConfig.gotoLoginUrl(context);
-                }
+                GlobalConfig.gotoLoginUrl(context);
             }
             return false;
         }

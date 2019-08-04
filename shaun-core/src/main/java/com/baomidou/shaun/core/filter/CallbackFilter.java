@@ -54,14 +54,11 @@ public class CallbackFilter implements ShaunFilter {
             final Client foundClient = foundClients.get(0);
             log.debug("foundClient: {}", foundClient);
             assertNotNull("foundClient", foundClient);
-
             final Optional<Credentials> credentials = foundClient.getCredentials(context);
             log.debug("credentials: {}", credentials);
-
             if (credentials.isPresent()) {
                 final Optional<UserProfile> profile = foundClient.getUserProfile(credentials.get(), context);
                 log.debug("profile: {}", profile);
-
                 if (profile.isPresent()) {
                     CommonProfile commonProfile = callbackHandler.callBack(context, profile.get());
                     securityManager.login(commonProfile);
