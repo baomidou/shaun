@@ -6,6 +6,8 @@ import org.pac4j.core.context.HttpConstants;
 import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.http.ajax.AjaxRequestResolver;
 
+import com.baomidou.shaun.core.util.JEEContextFactory;
+
 /**
  * 全局快捷工具类
  *
@@ -52,10 +54,24 @@ public class GlobalConfig {
     }
 
     /**
-     * 判断是否是前后分离下的 或者是 ajax 的
+     * 判断请求是否 ajax 的
+     */
+    public static boolean isAjax() {
+        return isAjax(JEEContextFactory.getJEEContext());
+    }
+
+    /**
+     * 判断请求是否 ajax 的
+     */
+    public static boolean isAjax(JEEContext context) {
+        return ajaxRequestResolver.isAjax(context);
+    }
+
+    /**
+     * 判断请求是否是前后分离下的 或者是 ajax 的
      */
     public static boolean isStatelessOrAjax(JEEContext context) {
-        return stateless || ajaxRequestResolver.isAjax(context);
+        return stateless || isAjax(context);
     }
 
     public static void gotoLoginUrl(JEEContext context) {
