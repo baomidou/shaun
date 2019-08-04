@@ -4,8 +4,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.pac4j.core.authorization.authorizer.Authorizer;
+import org.pac4j.core.client.Client;
+import org.pac4j.core.client.Clients;
 import org.pac4j.core.client.IndirectClient;
 import org.pac4j.core.context.Pac4jConstants;
 import org.pac4j.core.credentials.TokenCredentials;
@@ -34,12 +37,13 @@ import com.baomidou.shaun.core.enums.TokenLocation;
 import com.baomidou.shaun.core.filter.CallbackFilter;
 import com.baomidou.shaun.core.filter.LogoutFilter;
 import com.baomidou.shaun.core.filter.SecurityFilter;
-import com.baomidou.shaun.core.filter.SfFilter;
+import com.baomidou.shaun.core.filter.SfLoginFilter;
 import com.baomidou.shaun.core.filter.ShaunFilter;
 import com.baomidou.shaun.core.handler.CallbackHandler;
 import com.baomidou.shaun.core.handler.LogoutHandler;
 import com.baomidou.shaun.core.interceptor.ShaunInterceptor;
 import com.baomidou.shaun.core.matching.OnlyPathMatcher;
+import com.baomidou.shaun.core.mgt.SecurityManager;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -57,6 +61,7 @@ public class ShaunSecurityAutoConfiguration implements WebMvcConfigurer {
     private final ShaunProperties properties;
     private final Authenticator<TokenCredentials> authenticator;
     private final AjaxRequestResolver ajaxRequestResolver;
+    private final SecurityManager securityManager;
     private final CredentialsExtractor<TokenCredentials> credentialsExtractor;
     private final ObjectProvider<LogoutHandler> logoutHandlerProvider;
     private final ObjectProvider<CallbackHandler> callbackHandlerProvider;
@@ -74,6 +79,7 @@ public class ShaunSecurityAutoConfiguration implements WebMvcConfigurer {
         GlobalConfig.setAjaxRequestResolver(ajaxRequestResolver);
         if (CommonHelper.isNotBlank(properties.getLoginUrl())) {
             GlobalConfig.setStateless(false);
+            GlobalConfig.setLoginUrl(properties.getLoginUrl());
             CommonHelper.assertTrue(properties.getTokenLocation() == TokenLocation.COOKIE,
                     "非前后端分离的项目请设置 tokenLocation 值为 \"cookie\"");
         }
@@ -137,14 +143,21 @@ public class ShaunSecurityAutoConfiguration implements WebMvcConfigurer {
 
             final CallbackHandler callbackHandler = callbackHandlerProvider.getIfAvailable();
             CommonHelper.assertNotNull("callbackHandler", callbackHandler);
-            indirectClients.forEach(i -> i.setCallbackUrl(callbackUrl));
+            List<Client> clientList = indirectClients.stream().peek(i -> i.setAjaxRequestResolver(ajaxRequestResolver))
+                    .collect(Collectors.toList());
+            Clients clients = new Clients(callbackUrl, clientList);
 
-            final SfFilter sfFilter = new SfFilter();
-            //todo
-            filterList.add(sfFilter);
+            final SfLoginFilter sfLoginFilter = new SfLoginFilter();
+            sfLoginFilter.setClients(clients);
+            sfLoginFilter.setPathMatcher(new OnlyPathMatcher(properties.getSfLoginUrl()));
+            filterList.add(sfLoginFilter);
 
             final CallbackFilter callbackFilter = new CallbackFilter();
-            //todo
+            callbackFilter.setClients(clients);
+            callbackFilter.setCallbackHandler(callbackHandlerProvider.getIfAvailable());
+            callbackFilter.setIndexUrl(properties.getIndexUrl());
+            callbackFilter.setPathMatcher(new OnlyPathMatcher(properties.getCallbackUrl()));
+            callbackFilter.setSecurityManager(securityManager);
             filterList.add(callbackFilter);
         }
 

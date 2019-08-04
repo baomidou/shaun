@@ -101,7 +101,7 @@ public class ShaunAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean
-    public LogoutHandler<UserProfile> logoutHandler(SecurityManager securityManager) {
+    public LogoutHandler logoutHandler(SecurityManager securityManager) {
         return new DefaultLogoutHandler(securityManager);
     }
 

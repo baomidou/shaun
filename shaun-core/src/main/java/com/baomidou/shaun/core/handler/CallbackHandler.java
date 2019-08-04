@@ -1,13 +1,14 @@
 package com.baomidou.shaun.core.handler;
 
 import org.pac4j.core.context.JEEContext;
+import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.core.profile.UserProfile;
 
 /**
  * @author miemie
  * @since 2019-07-26
  */
-public interface CallbackHandler<R extends UserProfile> {
+public interface CallbackHandler<R extends CommonProfile> {
 
     /**
      * callback 之后对返回获取到的 profile 转换成自己的 profile

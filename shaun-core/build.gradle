@@ -2,6 +2,8 @@ dependencies {
     api "${lib.'pac4j-core'}"
     api "${lib.'pac4j-jwt'}"
     api "${lib.'pac4j-http'}"
+    implementation "${lib.'pac4j-oauth'}"
+    implementation "${lib.'pac4j-cas'}"
     implementation "${lib.'spring-webmvc'}"
     implementation "${lib.'servlet-api'}"
 }

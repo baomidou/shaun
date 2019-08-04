@@ -15,11 +15,16 @@ public class GlobalConfig {
     /**
      * 是否是前后端分离的
      */
-    private static boolean stateless;
+    private static boolean stateless = true;
     /**
      * 登录页面
      */
     private static String loginUrl;
+    /**
+     * index url
+     * 三分登录的回调成功后 redirect 的主页
+     */
+    private String indexUrl;
     /**
      * ajax 判断器
      */
@@ -45,12 +50,20 @@ public class GlobalConfig {
         GlobalConfig.ajaxRequestResolver = ajaxRequestResolver;
     }
 
+    public static AjaxRequestResolver getAjaxRequestResolver() {
+        return ajaxRequestResolver;
+    }
+
     public static boolean isStatelessOrAjax(JEEContext context) {
         return stateless && !ajaxRequestResolver.isAjax(context);
     }
 
     public static void gotoLoginUrl(JEEContext context) {
-        context.setResponseHeader(HttpConstants.LOCATION_HEADER, loginUrl);
+        gotoUrl(context, loginUrl);
+    }
+
+    public static void gotoUrl(JEEContext context, String url) {
+        context.setResponseHeader(HttpConstants.LOCATION_HEADER, url);
         HttpServletResponse response = context.getNativeResponse();
         response.setStatus(HttpConstants.FOUND);
     }

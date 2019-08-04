@@ -81,4 +81,9 @@ public class ShaunProperties {
      * 三分登录的回调地址
      */
     private String callbackUrl;
+    /**
+     * index url
+     * 三分登录的回调成功后 redirect 的主页
+     */
+    private String indexUrl;
 }
