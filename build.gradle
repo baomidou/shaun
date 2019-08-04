@@ -58,10 +58,10 @@ ext {
 
 allprojects {
     group = "com.baomidou"
-    version = "0.0.1"
+    version = "0.0.1.1-SNAPSHOT"
 }
 
-description = "easy security by pac4j"
+description = "easy security for web by pac4j"
 
 subprojects {
     apply plugin: 'java-library'
