@@ -23,11 +23,6 @@ public class GlobalConfig {
      */
     private static String loginUrl;
     /**
-     * index url
-     * 三分登录的回调成功后 redirect 的主页
-     */
-    private String indexUrl;
-    /**
      * ajax 判断器
      */
     private static AjaxRequestResolver ajaxRequestResolver;
@@ -56,8 +51,11 @@ public class GlobalConfig {
         return ajaxRequestResolver;
     }
 
+    /**
+     * 判断是否是前后分离下的 或者是 ajax 的
+     */
     public static boolean isStatelessOrAjax(JEEContext context) {
-        return stateless && !ajaxRequestResolver.isAjax(context);
+        return stateless || ajaxRequestResolver.isAjax(context);
     }
 
     public static void gotoLoginUrl(JEEContext context) {
