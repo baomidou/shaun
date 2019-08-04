@@ -49,6 +49,7 @@ public class ShaunProperties {
     private Integer expireTime;
     /**
      * token 的存放位置
+     * 前后不分离下,只支持 cookie ,且必须手动设置为 cookie
      */
     private TokenLocation tokenLocation = TokenLocation.HEADER;
     /**
