@@ -3,7 +3,6 @@ package com.baomidou.shaun.core.mgt;
 import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.profile.CommonProfile;
 
-import com.baomidou.shaun.core.context.GlobalConfig;
 import com.baomidou.shaun.core.enums.TokenLocation;
 import com.baomidou.shaun.core.generator.TokenGenerator;
 import com.baomidou.shaun.core.properties.Cookie;
@@ -28,7 +27,7 @@ public class SecurityManager {
 
     public <U extends CommonProfile> String login(U profile) {
         String token = tokenGenerator.generate(profile);
-        if (!GlobalConfig.isStateless() || tokenLocation == TokenLocation.COOKIE) {
+        if (tokenLocation == TokenLocation.COOKIE) {
             JEEContext jeeContext = JEEContextFactory.getJEEContext();
             jeeContext.addResponseCookie(getCookie(token, tokenGenerator.getAge()));
         }
