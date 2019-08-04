@@ -10,7 +10,7 @@ import org.pac4j.core.authorization.checker.DefaultAuthorizationChecker;
 import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.credentials.TokenCredentials;
 import org.pac4j.core.exception.http.UnauthorizedAction;
-import org.pac4j.core.matching.PathMatcher;
+import org.pac4j.core.matching.Matcher;
 import org.pac4j.core.profile.UserProfile;
 import org.pac4j.core.util.CommonHelper;
 
@@ -32,7 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 public class SecurityFilter implements ShaunFilter {
 
     private AuthorizationChecker authorizationChecker = new DefaultAuthorizationChecker();
-    private PathMatcher pathMatcher;
+    private Matcher pathMatcher;
     private TokenClient tokenClient;
     private String authorizers;
     private Map<String, Authorizer> authorizerMap;

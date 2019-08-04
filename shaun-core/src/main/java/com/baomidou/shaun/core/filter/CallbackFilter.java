@@ -13,13 +13,13 @@ import org.pac4j.core.client.finder.DefaultCallbackClientFinder;
 import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.credentials.Credentials;
 import org.pac4j.core.exception.http.UnauthorizedAction;
+import org.pac4j.core.matching.Matcher;
 import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.core.profile.UserProfile;
 import org.pac4j.core.util.CommonHelper;
 
 import com.baomidou.shaun.core.context.GlobalConfig;
 import com.baomidou.shaun.core.handler.CallbackHandler;
-import com.baomidou.shaun.core.matching.OnlyPathMatcher;
 import com.baomidou.shaun.core.mgt.SecurityManager;
 
 import lombok.Data;
@@ -37,7 +37,7 @@ import lombok.extern.slf4j.Slf4j;
 public class CallbackFilter implements ShaunFilter {
 
     private ClientFinder clientFinder = new DefaultCallbackClientFinder();
-    private OnlyPathMatcher pathMatcher;
+    private Matcher pathMatcher;
     private Clients clients;
     private SecurityManager securityManager;
     private String indexUrl;
