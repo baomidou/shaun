@@ -9,12 +9,12 @@ import java.util.Optional;
 import org.pac4j.core.client.Client;
 import org.pac4j.core.client.Clients;
 import org.pac4j.core.client.finder.ClientFinder;
-import org.pac4j.core.client.finder.DefaultSecurityClientFinder;
 import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.exception.http.FoundAction;
 import org.pac4j.core.exception.http.RedirectionAction;
 import org.pac4j.core.util.CommonHelper;
 
+import com.baomidou.shaun.core.client.finder.DefaultSfClientFinder;
 import com.baomidou.shaun.core.context.GlobalConfig;
 import com.baomidou.shaun.core.matching.OnlyPathMatcher;
 
@@ -32,7 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 @Data
 public class SfLoginFilter implements ShaunFilter {
 
-    private ClientFinder clientFinder = new DefaultSecurityClientFinder();
+    private ClientFinder clientFinder = new DefaultSfClientFinder();
     private OnlyPathMatcher pathMatcher;
     private Clients clients;
 
