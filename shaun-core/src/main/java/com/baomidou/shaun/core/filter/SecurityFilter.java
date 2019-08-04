@@ -23,7 +23,7 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * 前后分离的安全 filter
+ * security filter
  *
  * @author miemie
  * @since 2019-07-24

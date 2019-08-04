@@ -10,7 +10,7 @@ import lombok.EqualsAndHashCode;
 
 /**
  * 检索 token 并验证
- *separate
+ *
  * @author miemie
  * @since 2019-07-20
  */

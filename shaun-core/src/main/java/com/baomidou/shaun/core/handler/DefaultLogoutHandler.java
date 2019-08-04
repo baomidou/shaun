@@ -8,6 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
+ * 默认登出操作
+ *
  * @author miemie
  * @since 2019-07-31
  */

@@ -1,8 +1,7 @@
 package com.baomidou.shaun.core.enums;
 
 /**
- * 没有 session,不推荐使用 session 存任何东西
- * 本项目除个别地方会用到 session 外(流程正常的话会及时销毁 session)
+ * token 存放位置
  *
  * @author miemie
  * @since 2019-07-20

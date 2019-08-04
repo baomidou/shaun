@@ -13,6 +13,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
+ * 安全管理器,封装下,统一的登录登出
+ *
  * @author miemie
  * @since 2019-08-02
  */

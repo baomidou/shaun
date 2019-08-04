@@ -12,7 +12,7 @@ import com.baomidou.shaun.core.util.ProfileHolder;
 import lombok.Data;
 
 /**
- * 登出 filter
+ * logout filter
  *
  * @author miemie
  * @since 2019-07-24

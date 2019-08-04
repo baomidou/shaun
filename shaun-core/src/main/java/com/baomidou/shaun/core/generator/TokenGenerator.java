@@ -3,6 +3,8 @@ package com.baomidou.shaun.core.generator;
 import org.pac4j.core.profile.CommonProfile;
 
 /**
+ * token 生成器
+ *
  * @author miemie
  * @since 2019-07-20
  */

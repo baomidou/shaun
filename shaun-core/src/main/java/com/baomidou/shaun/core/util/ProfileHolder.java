@@ -8,7 +8,7 @@ import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.profile.UserProfile;
 
 /**
- * 前后端分离下使用
+ * 统一的存放登录用户信息
  *
  * @author miemie
  * @since 2019-07-30

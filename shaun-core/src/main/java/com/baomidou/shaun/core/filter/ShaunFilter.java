@@ -3,6 +3,8 @@ package com.baomidou.shaun.core.filter;
 import org.pac4j.core.context.JEEContext;
 
 /**
+ * 内部 filter
+ *
  * @author miemie
  * @since 2019-07-24
  */

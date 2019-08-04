@@ -5,6 +5,8 @@ import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.core.profile.UserProfile;
 
 /**
+ * 回调操作
+ *
  * @author miemie
  * @since 2019-07-26
  */

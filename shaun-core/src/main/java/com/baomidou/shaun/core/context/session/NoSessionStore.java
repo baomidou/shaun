@@ -6,6 +6,8 @@ import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.context.session.SessionStore;
 
 /**
+ * 不用 session(替换掉 pac4j 提供的)
+ *
  * @author miemie
  * @since 2019-08-03
  */

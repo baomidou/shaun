@@ -7,6 +7,8 @@ import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.http.ajax.AjaxRequestResolver;
 
 /**
+ * 全局快捷工具类
+ *
  * @author miemie
  * @since 2019-08-03
  */
