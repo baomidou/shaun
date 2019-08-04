@@ -63,15 +63,15 @@ public class ShaunProperties {
      * 取 token 的方式之 parameter
      */
     private Parameter parameter = new Parameter();
+    /**
+     * 登出 url
+     */
+    private String logoutUrl;
 
     /**
      * 登录页面 url,非分离模式下进行 redirect
      */
     private String loginUrl;
-    /**
-     * 登出 url
-     */
-    private String logoutUrl;
     /**
      * 触发三方登录的url
      */
