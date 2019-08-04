@@ -86,5 +86,6 @@ public class CallbackFilter implements ShaunFilter {
         CommonHelper.assertNotNull("clients", clients);
         CommonHelper.assertNotNull("securityManager", securityManager);
         CommonHelper.assertNotNull("pathMatcher", pathMatcher);
+        CommonHelper.assertNotNull("callbackHandler", callbackHandler);
     }
 }
