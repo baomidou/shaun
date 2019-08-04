@@ -76,13 +76,6 @@ public class ShaunSecurityAutoConfiguration implements WebMvcConfigurer {
     @Bean
     @ConditionalOnMissingBean
     public ShaunInterceptor shaunInterceptor() {
-        GlobalConfig.setAjaxRequestResolver(ajaxRequestResolver);
-        if (CommonHelper.isNotBlank(properties.getLoginUrl())) {
-            GlobalConfig.setStateless(false);
-            GlobalConfig.setLoginUrl(properties.getLoginUrl());
-            CommonHelper.assertTrue(properties.getTokenLocation() == TokenLocation.COOKIE,
-                    "非前后端分离的项目请设置 tokenLocation 值为 \"cookie\"");
-        }
         final TokenClient tokenClient = new TokenClient(credentialsExtractor, authenticator);
 
         final PathMatcher pathMatcher = new PathMatcher();
@@ -94,6 +87,15 @@ public class ShaunSecurityAutoConfiguration implements WebMvcConfigurer {
         }
         if (!CollectionUtils.isEmpty(properties.getExcludeRegex())) {
             properties.getExcludeBranch().forEach(pathMatcher::excludeRegex);
+        }
+
+        GlobalConfig.setAjaxRequestResolver(ajaxRequestResolver);
+        if (CommonHelper.isNotBlank(properties.getLoginUrl())) {
+            GlobalConfig.setStateless(false);
+            GlobalConfig.setLoginUrl(properties.getLoginUrl());
+            pathMatcher.excludePath(properties.getLoginUrl());
+            CommonHelper.assertTrue(properties.getTokenLocation() == TokenLocation.COOKIE,
+                    "非前后端分离的项目请设置 tokenLocation 值为 \"cookie\"");
         }
 
         final List<ShaunFilter> filterList = new ArrayList<>();

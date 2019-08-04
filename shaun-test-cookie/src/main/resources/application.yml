@@ -1,0 +1,13 @@
+shaun:
+  token-location: cookie
+  login-url: /login
+  logout-url: /logout
+  sf-login-url: /sf
+  callback-url: /callback
+  exclude-path:
+    - /auth/login
+    - /favicon.ico
+
+spring:
+  thymeleaf:
+    cache: false

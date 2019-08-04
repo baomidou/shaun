@@ -93,7 +93,7 @@ public class ShaunAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public SecurityManager cookieContext(TokenGenerator tokenGenerator) {
-        return new SecurityManager(tokenGenerator, properties.getCookie());
+        return new SecurityManager(tokenGenerator, properties.getTokenLocation(), properties.getCookie());
     }
 
     /**
