@@ -28,7 +28,7 @@ public class SecurityManager {
 
     public <U extends CommonProfile> String login(U profile) {
         String token = tokenGenerator.generate(profile);
-        if (!GlobalConfig.isStateless()) {
+        if (!GlobalConfig.isStateless() || tokenLocation == TokenLocation.COOKIE) {
             JEEContext jeeContext = JEEContextFactory.getJEEContext();
             jeeContext.addResponseCookie(getCookie(token, tokenGenerator.getAge()));
         }
