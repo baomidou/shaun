@@ -66,7 +66,7 @@ public class CallbackFilter implements ShaunFilter {
                     return false;
                 }
             }
-            if (GlobalConfig.getAjaxRequestResolver().isAjax(context)) {
+            if (GlobalConfig.isAjax(context)) {
                 throw UnauthorizedAction.INSTANCE;
             }
             GlobalConfig.gotoLoginUrl(context);
