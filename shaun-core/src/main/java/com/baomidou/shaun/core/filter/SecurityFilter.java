@@ -67,7 +67,6 @@ public class SecurityFilter implements ShaunFilter {
                         throw UnauthorizedAction.INSTANCE;
                     } else {
                         GlobalConfig.gotoLoginUrl(context);
-                        return false;
                     }
                 }
             } else {
@@ -75,9 +74,9 @@ public class SecurityFilter implements ShaunFilter {
                     throw UnauthorizedAction.INSTANCE;
                 } else {
                     GlobalConfig.gotoLoginUrl(context);
-                    return false;
                 }
             }
+            return false;
         }
         return true;
     }
