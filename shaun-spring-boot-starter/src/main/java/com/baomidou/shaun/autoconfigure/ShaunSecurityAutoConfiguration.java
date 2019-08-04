@@ -140,6 +140,8 @@ public class ShaunSecurityAutoConfiguration implements WebMvcConfigurer {
             CommonHelper.assertNotBlank("sfLoginUrl", sfLoginUrl);
             final String callbackUrl = properties.getCallbackUrl();
             CommonHelper.assertNotBlank("callbackUrl", callbackUrl);
+            final String indexUrl = properties.getIndexUrl();
+            CommonHelper.assertNotBlank("indexUrl", indexUrl);
 
             final CallbackHandler callbackHandler = callbackHandlerProvider.getIfAvailable();
             CommonHelper.assertNotNull("callbackHandler", callbackHandler);
@@ -149,13 +151,13 @@ public class ShaunSecurityAutoConfiguration implements WebMvcConfigurer {
 
             final SfLoginFilter sfLoginFilter = new SfLoginFilter();
             sfLoginFilter.setClients(clients);
-            sfLoginFilter.setPathMatcher(new OnlyPathMatcher(properties.getSfLoginUrl()));
+            sfLoginFilter.setPathMatcher(new OnlyPathMatcher(sfLoginUrl));
             filterList.add(sfLoginFilter);
 
             final CallbackFilter callbackFilter = new CallbackFilter();
             callbackFilter.setClients(clients);
             callbackFilter.setCallbackHandler(callbackHandlerProvider.getIfAvailable());
-            callbackFilter.setIndexUrl(properties.getIndexUrl());
+            callbackFilter.setIndexUrl(indexUrl);
             callbackFilter.setPathMatcher(new OnlyPathMatcher(properties.getCallbackUrl()));
             callbackFilter.setSecurityManager(securityManager);
             filterList.add(callbackFilter);
