@@ -67,7 +67,6 @@ subprojects {
     apply plugin: 'java-library'
     apply plugin: 'signing'
     apply plugin: 'maven-publish'
-    apply plugin: 'com.github.hierynomus.license'
 
     sourceCompatibility = "${javaVersion}"
     targetCompatibility = "${javaVersion}"
@@ -90,14 +89,6 @@ subprojects {
                 attributes 'Build-Timestamp': new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
             }
         }
-    }
-
-    license {
-        encoding = "UTF-8"
-        header = rootProject.file("license.txt")
-        includes(["**/*.java"])
-        exclude "**/*Test.java"
-        mapping "java", "SLASHSTAR_STYLE"
     }
 
     repositories {
@@ -174,15 +165,15 @@ subprojects {
                 artifact javadocJar
 
                 pom {
-                    name = 'mybatis-plus'
+                    name = 'shaun'
                     packaging 'jar'
-                    description = 'An enhanced toolkit of Mybatis to simplify development.'
-                    url = 'https://github.com/baomidou/mybatis-plus'
+                    description = 'easy security for web by pac4j.'
+                    url = 'https://gitee.com/baomidou/shaun'
 
                     scm {
                         connection = 'scm:git@github.com:Codearte/gradle-nexus-staging-plugin.git'
                         developerConnection = 'scm:git@github.com:Codearte/gradle-nexus-staging-plugin.git'
-                        url = 'https://github.com/baomidou/mybatis-plus'
+                        url = 'https://gitee.com/baomidou/shaun'
                     }
 
                     licenses {
@@ -195,8 +186,8 @@ subprojects {
                     developers {
                         developer {
                             id = 'baomidou'
-                            name = 'hubin'
-                            email = 'jobob@qq.com'
+                            name = 'miemie'
+                            email = 'wonderming@vip.qq.com'
                         }
                     }
 
