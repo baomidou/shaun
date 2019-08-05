@@ -117,6 +117,10 @@ subprojects {
         from sourceSets.main.allJava
     }
 
+    test {
+        useJUnitPlatform()
+    }
+
     javadoc {
         afterEvaluate {
             configure(options) {
