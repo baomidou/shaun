@@ -2,6 +2,7 @@ package com.baomidou.shaun.core.util;
 
 import org.springframework.lang.NonNull;
 
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -18,6 +19,8 @@ public abstract class ExpireTimeUtil {
      */
     @NonNull
     public static Date getTargetDate(Integer expireTime) {
-        return new Date(System.currentTimeMillis() + expireTime);
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.SECOND, expireTime);
+        return calendar.getTime();
     }
 }
