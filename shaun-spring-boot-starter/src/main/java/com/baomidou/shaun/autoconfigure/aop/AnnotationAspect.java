@@ -10,16 +10,15 @@ import org.pac4j.core.exception.http.ForbiddenAction;
 import org.pac4j.core.exception.http.UnauthorizedAction;
 import org.pac4j.core.profile.UserProfile;
 
-import com.baomidou.shaun.core.annotation.RequireAllPermission;
-import com.baomidou.shaun.core.annotation.RequireAllRole;
-import com.baomidou.shaun.core.annotation.RequireAnyPermission;
-import com.baomidou.shaun.core.annotation.RequireAnyRole;
+import com.baomidou.shaun.core.annotation.RequirePermissions;
+import com.baomidou.shaun.core.annotation.RequireRoles;
 import com.baomidou.shaun.core.authorizer.AuthorizationProfile;
 import com.baomidou.shaun.core.authorizer.Authorizer;
 import com.baomidou.shaun.core.authorizer.permission.ShaunRequireAllPermissionsAuthorizer;
 import com.baomidou.shaun.core.authorizer.permission.ShaunRequireAnyPermissionAuthorizer;
 import com.baomidou.shaun.core.authorizer.role.ShaunRequireAllRolesAuthorizer;
 import com.baomidou.shaun.core.authorizer.role.ShaunRequireAnyRolesAuthorizer;
+import com.baomidou.shaun.core.enums.Logical;
 import com.baomidou.shaun.core.util.JEEContextFactory;
 import com.baomidou.shaun.core.util.ProfileHolder;
 
@@ -37,24 +36,22 @@ public class AnnotationAspect {
 
     private final AuthorizationProfile<UserProfile> authorizationProfile;
 
-    @Before("@annotation(requireAnyRole)")
-    public void beforeRequireAnyRole(final RequireAnyRole requireAnyRole) {
-        this.isAuthorized(ShaunRequireAnyRolesAuthorizer.requireAnyRole(authorizationProfile, requireAnyRole.value()));
+    @Before("@annotation(requireRoles)")
+    public void beforeRequireAnyRole(final RequireRoles requireRoles) {
+        if (requireRoles.logical() == Logical.AND) {
+            this.isAuthorized(ShaunRequireAllRolesAuthorizer.requireAllRoles(authorizationProfile, requireRoles.value()));
+            return;
+        }
+        this.isAuthorized(ShaunRequireAnyRolesAuthorizer.requireAnyRole(authorizationProfile, requireRoles.value()));
     }
 
-    @Before("@annotation(requireAllRole)")
-    public void beforeRequireAllRole(final RequireAllRole requireAllRole) {
-        this.isAuthorized(ShaunRequireAllRolesAuthorizer.requireAllRoles(authorizationProfile, requireAllRole.value()));
-    }
-
-    @Before("@annotation(requireAnyPermission)")
-    public void beforeRequireAnyPermission(final RequireAnyPermission requireAnyPermission) {
-        this.isAuthorized(ShaunRequireAnyPermissionAuthorizer.requireAnyPermission(authorizationProfile, requireAnyPermission.value()));
-    }
-
-    @Before("@annotation(requireAllPermission)")
-    public void beforeRequireAllPermission(final RequireAllPermission requireAllPermission) {
-        this.isAuthorized(ShaunRequireAllPermissionsAuthorizer.requireAllPermissions(authorizationProfile, requireAllPermission.value()));
+    @Before("@annotation(requirePermissions)")
+    public void beforeRequireAllPermission(final RequirePermissions requirePermissions) {
+        if (requirePermissions.logical() == Logical.AND) {
+            this.isAuthorized(ShaunRequireAllPermissionsAuthorizer.requireAllPermissions(authorizationProfile, requirePermissions.value()));
+            return;
+        }
+        this.isAuthorized(ShaunRequireAnyPermissionAuthorizer.requireAnyPermission(authorizationProfile, requirePermissions.value()));
     }
 
     private UserProfile isAuthenticated(JEEContext context) {

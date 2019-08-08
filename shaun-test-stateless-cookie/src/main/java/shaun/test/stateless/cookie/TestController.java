@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.baomidou.shaun.core.annotation.RequireAnyPermission;
-import com.baomidou.shaun.core.annotation.RequireAnyRole;
+import com.baomidou.shaun.core.annotation.RequireRoles;
 import com.baomidou.shaun.core.mgt.SecurityManager;
 
 import lombok.AllArgsConstructor;
@@ -36,7 +36,7 @@ public class TestController {
     }
 
     @GetMapping("a2")
-    @RequireAnyRole("admin")
+    @RequireRoles("admin")
     public String a2() {
         return "a2";
     }

@@ -5,13 +5,17 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import com.baomidou.shaun.core.enums.Logical;
+
 /**
  * @author miemie
  * @since 2019-06-29
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface RequireAllPermission {
+public @interface RequirePermissions {
 
     String[] value() default {};
+
+    Logical logical() default Logical.AND;
 }
