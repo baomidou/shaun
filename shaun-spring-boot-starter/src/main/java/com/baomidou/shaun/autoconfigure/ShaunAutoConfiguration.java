@@ -19,10 +19,13 @@ import org.springframework.context.annotation.Configuration;
 import com.baomidou.shaun.autoconfigure.properties.ShaunProperties;
 import com.baomidou.shaun.core.authorizer.AuthorizationProfile;
 import com.baomidou.shaun.core.authorizer.DefaultAuthorizationProfile;
+import com.baomidou.shaun.core.client.TokenClient;
 import com.baomidou.shaun.core.extractor.TokenExtractor;
 import com.baomidou.shaun.core.generator.DefaultJwtTokenGenerator;
 import com.baomidou.shaun.core.generator.TokenGenerator;
+import com.baomidou.shaun.core.handler.DefaultHttpActionHandler;
 import com.baomidou.shaun.core.handler.DefaultLogoutHandler;
+import com.baomidou.shaun.core.handler.HttpActionHandler;
 import com.baomidou.shaun.core.handler.LogoutHandler;
 import com.baomidou.shaun.core.mgt.SecurityManager;
 
@@ -55,6 +58,16 @@ public class ShaunAutoConfiguration {
     @ConditionalOnMissingBean
     public EncryptionConfiguration encryptionConfiguration() {
         return new SecretEncryptionConfiguration(properties.getSalt());
+    }
+
+    /**
+     * client
+     */
+    @Bean
+    @ConditionalOnMissingBean
+    public TokenClient tokenClient(CredentialsExtractor<TokenCredentials> credentialsExtractor,
+                                   Authenticator<TokenCredentials> authenticator) {
+        return new TokenClient(credentialsExtractor, authenticator);
     }
 
     /**
@@ -105,15 +118,30 @@ public class ShaunAutoConfiguration {
         return new DefaultLogoutHandler(securityManager);
     }
 
+    /**
+     * ajax 判定器
+     */
     @Bean
     @ConditionalOnMissingBean
     public AjaxRequestResolver ajaxRequestResolver() {
         return new DefaultAjaxRequestResolver();
     }
 
+    /**
+     * 获取用户权限相关
+     */
     @Bean
     @ConditionalOnMissingBean
     public AuthorizationProfile<UserProfile> authorizationContext() {
         return new DefaultAuthorizationProfile<>();
+    }
+
+    /**
+     * 异常处理类
+     */
+    @Bean
+    @ConditionalOnMissingBean
+    public HttpActionHandler httpActionHandler() {
+        return new DefaultHttpActionHandler();
     }
 }

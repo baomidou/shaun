@@ -16,6 +16,7 @@ import org.pac4j.core.util.CommonHelper;
 
 import com.baomidou.shaun.core.client.TokenClient;
 import com.baomidou.shaun.core.context.GlobalConfig;
+import com.baomidou.shaun.core.handler.HttpActionHandler;
 import com.baomidou.shaun.core.util.ProfileHolder;
 
 import lombok.Data;
@@ -36,6 +37,7 @@ public class SecurityFilter implements ShaunFilter {
     private TokenClient tokenClient;
     private String authorizers;
     private Map<String, Authorizer> authorizerMap;
+    private HttpActionHandler httpActionHandler;
 
     @Override
     public boolean goOnChain(JEEContext context) {
@@ -58,7 +60,8 @@ public class SecurityFilter implements ShaunFilter {
                 }
             }
             if (GlobalConfig.isStatelessOrAjax(context)) {
-                throw UnauthorizedAction.INSTANCE;
+                httpActionHandler.preHandle(UnauthorizedAction.INSTANCE, context);
+                return false;
             } else {
                 GlobalConfig.gotoLoginUrl(context);
             }
@@ -76,5 +79,6 @@ public class SecurityFilter implements ShaunFilter {
     public void initCheck() {
         CommonHelper.assertNotNull("tokenClient", tokenClient);
         CommonHelper.assertNotNull("pathMatcher", pathMatcher);
+        CommonHelper.assertNotNull("httpActionHandler", httpActionHandler);
     }
 }

@@ -11,9 +11,6 @@ import org.pac4j.core.client.Client;
 import org.pac4j.core.client.Clients;
 import org.pac4j.core.client.IndirectClient;
 import org.pac4j.core.context.Pac4jConstants;
-import org.pac4j.core.credentials.TokenCredentials;
-import org.pac4j.core.credentials.authenticator.Authenticator;
-import org.pac4j.core.credentials.extractor.CredentialsExtractor;
 import org.pac4j.core.http.ajax.AjaxRequestResolver;
 import org.pac4j.core.matching.PathMatcher;
 import org.pac4j.core.profile.UserProfile;
@@ -25,8 +22,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.baomidou.shaun.autoconfigure.aop.AnnotationAspect;
 import com.baomidou.shaun.autoconfigure.properties.ShaunProperties;
@@ -40,8 +35,8 @@ import com.baomidou.shaun.core.filter.SecurityFilter;
 import com.baomidou.shaun.core.filter.SfLoginFilter;
 import com.baomidou.shaun.core.filter.ShaunFilter;
 import com.baomidou.shaun.core.handler.CallbackHandler;
+import com.baomidou.shaun.core.handler.HttpActionHandler;
 import com.baomidou.shaun.core.handler.LogoutHandler;
-import com.baomidou.shaun.core.interceptor.ShaunInterceptor;
 import com.baomidou.shaun.core.matching.OnlyPathMatcher;
 import com.baomidou.shaun.core.mgt.SecurityManager;
 
@@ -56,28 +51,21 @@ import lombok.Data;
 @AllArgsConstructor
 @Configuration
 @AutoConfigureAfter(ShaunAutoConfiguration.class)
-public class ShaunSecurityAutoConfiguration implements WebMvcConfigurer {
+public class ShaunFilterAutoConfiguration {
 
     private final ShaunProperties properties;
-    private final Authenticator<TokenCredentials> authenticator;
+    private final TokenClient tokenClient;
     private final AjaxRequestResolver ajaxRequestResolver;
     private final SecurityManager securityManager;
-    private final CredentialsExtractor<TokenCredentials> credentialsExtractor;
+    private final HttpActionHandler httpActionHandler;
     private final ObjectProvider<LogoutHandler> logoutHandlerProvider;
     private final ObjectProvider<CallbackHandler> callbackHandlerProvider;
     private final ObjectProvider<List<Authorizer>> authorizerProvider;
     private final ObjectProvider<List<IndirectClient>> indirectClientsProvider;
 
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(shaunInterceptor()).addPathPatterns("/**");
-    }
-
     @Bean
-    @ConditionalOnMissingBean
-    public ShaunInterceptor shaunInterceptor() {
-        final TokenClient tokenClient = new TokenClient(credentialsExtractor, authenticator);
-
+    @ConditionalOnMissingBean(ShaunFilter.class)
+    public List<ShaunFilter> shaunFilters() {
         final PathMatcher pathMatcher = new PathMatcher();
         if (!CollectionUtils.isEmpty(properties.getExcludePath())) {
             properties.getExcludePath().forEach(pathMatcher::excludePath);
@@ -121,6 +109,7 @@ public class ShaunSecurityAutoConfiguration implements WebMvcConfigurer {
         securityFilter.setAuthorizerMap(authorizeMap);
         securityFilter.setAuthorizers(authorizers);
         securityFilter.setTokenClient(tokenClient);
+        securityFilter.setHttpActionHandler(httpActionHandler);
 
         filterList.add(securityFilter);
         /* securityFilter end */
@@ -162,11 +151,10 @@ public class ShaunSecurityAutoConfiguration implements WebMvcConfigurer {
             callbackFilter.setIndexUrl(indexUrl);
             callbackFilter.setPathMatcher(new OnlyPathMatcher(properties.getCallbackUrl()));
             callbackFilter.setSecurityManager(securityManager);
+            callbackFilter.setHttpActionHandler(httpActionHandler);
             filterList.add(callbackFilter);
         }
-
-        ShaunInterceptor interceptor = new ShaunInterceptor();
-        return interceptor.setFilterList(filterList);
+        return filterList;
     }
 
     @Bean

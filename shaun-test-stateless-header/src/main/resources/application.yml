@@ -1,0 +1,9 @@
+shaun:
+  model: web_filter
+  exclude-path:
+    - /login
+
+logging:
+  level:
+    org.pac4j: debug
+    com.baomidou.shaun: debug

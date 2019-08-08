@@ -20,6 +20,7 @@ import org.pac4j.core.util.CommonHelper;
 
 import com.baomidou.shaun.core.context.GlobalConfig;
 import com.baomidou.shaun.core.handler.CallbackHandler;
+import com.baomidou.shaun.core.handler.HttpActionHandler;
 import com.baomidou.shaun.core.mgt.SecurityManager;
 
 import lombok.Data;
@@ -42,6 +43,7 @@ public class CallbackFilter implements ShaunFilter {
     private SecurityManager securityManager;
     private String indexUrl;
     private CallbackHandler callbackHandler;
+    private HttpActionHandler httpActionHandler;
 
     @Override
     public boolean goOnChain(JEEContext context) {
@@ -67,7 +69,8 @@ public class CallbackFilter implements ShaunFilter {
                 }
             }
             if (GlobalConfig.isAjax(context)) {
-                throw UnauthorizedAction.INSTANCE;
+                httpActionHandler.preHandle(UnauthorizedAction.INSTANCE, context);
+                return false;
             }
             GlobalConfig.gotoLoginUrl(context);
             return false;
@@ -87,5 +90,6 @@ public class CallbackFilter implements ShaunFilter {
         CommonHelper.assertNotNull("securityManager", securityManager);
         CommonHelper.assertNotNull("pathMatcher", pathMatcher);
         CommonHelper.assertNotNull("callbackHandler", callbackHandler);
+        CommonHelper.assertNotNull("httpActionHandler", httpActionHandler);
     }
 }

@@ -1,4 +1,4 @@
-package com.baomidou.shaun.core.interceptor;
+package com.baomidou.shaun.core.models;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -20,8 +20,6 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 /**
- * 使用 Interceptor 的好处是可以用全局异常拦截器处理抛出的异常
- *
  * @author miemie
  * @since 2019-07-29
  */
