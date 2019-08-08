@@ -101,7 +101,7 @@ public class ShaunAutoConfiguration {
     }
 
     /**
-     * 操作 cookie 类
+     * 全局安全管理器
      */
     @Bean
     @ConditionalOnMissingBean

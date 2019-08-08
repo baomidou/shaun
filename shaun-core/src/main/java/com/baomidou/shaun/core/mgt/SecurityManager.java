@@ -13,6 +13,7 @@ import lombok.Data;
 
 /**
  * 安全管理器,封装下,统一的登录登出
+ * cookie模式下登录自动设置cookie到response,登出自动清除cookie
  *
  * @author miemie
  * @since 2019-08-02
