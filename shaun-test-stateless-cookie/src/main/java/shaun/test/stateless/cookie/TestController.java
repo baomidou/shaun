@@ -4,7 +4,7 @@ import org.pac4j.jwt.profile.JwtProfile;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.baomidou.shaun.core.annotation.RequireAnyPermission;
+import com.baomidou.shaun.core.annotation.RequirePermissions;
 import com.baomidou.shaun.core.annotation.RequireRoles;
 import com.baomidou.shaun.core.mgt.SecurityManager;
 
@@ -42,7 +42,7 @@ public class TestController {
     }
 
     @GetMapping("a3")
-    @RequireAnyPermission("add")
+    @RequirePermissions("add")
     public String a3() {
         return "a3";
     }

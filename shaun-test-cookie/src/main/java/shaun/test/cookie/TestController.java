@@ -5,7 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import com.baomidou.shaun.core.annotation.RequireAnyPermission;
+import com.baomidou.shaun.core.annotation.RequirePermissions;
 import com.baomidou.shaun.core.annotation.RequireRoles;
 import com.baomidou.shaun.core.mgt.SecurityManager;
 
@@ -55,7 +55,7 @@ public class TestController {
     }
 
     @GetMapping("/a3")
-    @RequireAnyPermission("add")
+    @RequirePermissions("add")
     public String a3(Model model) {
         model.addAttribute("a", "a3");
         return "a";
