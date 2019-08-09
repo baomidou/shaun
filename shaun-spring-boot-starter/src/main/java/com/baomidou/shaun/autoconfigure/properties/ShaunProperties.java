@@ -1,19 +1,18 @@
 package com.baomidou.shaun.autoconfigure.properties;
 
-import java.util.List;
-import java.util.UUID;
-
-import org.pac4j.core.authorization.authorizer.Authorizer;
-import org.pac4j.core.authorization.checker.DefaultAuthorizationChecker;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-
 import com.baomidou.shaun.core.enums.Model;
 import com.baomidou.shaun.core.enums.TokenLocation;
 import com.baomidou.shaun.core.properties.Cookie;
 import com.baomidou.shaun.core.properties.Header;
 import com.baomidou.shaun.core.properties.Parameter;
-
 import lombok.Data;
+import org.pac4j.core.authorization.authorizer.Authorizer;
+import org.pac4j.core.authorization.checker.DefaultAuthorizationChecker;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
+
+import java.util.List;
+import java.util.UUID;
 
 /**
  * @author miemie
@@ -60,15 +59,18 @@ public class ShaunProperties {
     /**
      * 取 token 的方式之 header
      */
-    private Header header = new Header();
+    @NestedConfigurationProperty
+    private final Header header = new Header();
     /**
      * 取 token 的方式之 cookie
      */
-    private Cookie cookie = new Cookie();
+    @NestedConfigurationProperty
+    private final Cookie cookie = new Cookie();
     /**
      * 取 token 的方式之 parameter
      */
-    private Parameter parameter = new Parameter();
+    @NestedConfigurationProperty
+    private final Parameter parameter = new Parameter();
     /**
      * 登出 url
      */
