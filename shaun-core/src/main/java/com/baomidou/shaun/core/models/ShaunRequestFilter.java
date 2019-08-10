@@ -28,7 +28,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class ShaunOncePerRequestFilter extends OncePerRequestFilter {
+public class ShaunRequestFilter extends OncePerRequestFilter {
 
     private List<ShaunFilter> filterList = Collections.emptyList();
 

@@ -13,7 +13,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.baomidou.shaun.core.filter.ShaunFilter;
 import com.baomidou.shaun.core.models.ShaunInterceptor;
-import com.baomidou.shaun.core.models.ShaunOncePerRequestFilter;
+import com.baomidou.shaun.core.models.ShaunRequestFilter;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -41,8 +41,8 @@ public class ShaunModelAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     @ConditionalOnProperty(prefix = "shaun", name = "model", havingValue = "web_filter")
-    public ShaunOncePerRequestFilter shaunOncePerRequestFilter() {
-        ShaunOncePerRequestFilter oncePerRequestFilter = new ShaunOncePerRequestFilter();
+    public ShaunRequestFilter shaunOncePerRequestFilter() {
+        ShaunRequestFilter oncePerRequestFilter = new ShaunRequestFilter();
         oncePerRequestFilter.setFilterList(filters);
         return oncePerRequestFilter;
     }
