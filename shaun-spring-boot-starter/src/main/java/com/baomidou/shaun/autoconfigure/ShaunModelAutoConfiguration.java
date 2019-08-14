@@ -12,6 +12,8 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -31,6 +33,7 @@ public class ShaunModelAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
+    @ConditionalOnClass(HandlerInterceptor.class)
     @ConditionalOnProperty(prefix = "shaun", name = "model", havingValue = "interceptor", matchIfMissing = true)
     public ShaunInterceptor shaunInterceptor() {
         ShaunInterceptor interceptor = new ShaunInterceptor();
@@ -39,6 +42,7 @@ public class ShaunModelAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
+    @ConditionalOnClass(OncePerRequestFilter.class)
     @ConditionalOnProperty(prefix = "shaun", name = "model", havingValue = "web_filter")
     public ShaunRequestFilter shaunOncePerRequestFilter() {
         ShaunRequestFilter oncePerRequestFilter = new ShaunRequestFilter();
@@ -49,7 +53,7 @@ public class ShaunModelAutoConfiguration {
     @Configuration
     @AutoConfigureAfter(ShaunModelAutoConfiguration.class)
     @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
-    @ConditionalOnClass(WebMvcConfigurer.class)
+    @ConditionalOnClass({HandlerInterceptor.class, WebMvcConfigurer.class})
     @ConditionalOnProperty(prefix = "shaun", name = "model", havingValue = "interceptor", matchIfMissing = true)
     public static class ShaunWebConfiguration {
 
