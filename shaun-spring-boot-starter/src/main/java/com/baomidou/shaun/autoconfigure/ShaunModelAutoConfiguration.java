@@ -1,22 +1,21 @@
 package com.baomidou.shaun.autoconfigure;
 
-import java.util.List;
-
+import com.baomidou.shaun.core.filter.ShaunFilter;
+import com.baomidou.shaun.core.models.ShaunInterceptor;
+import com.baomidou.shaun.core.models.ShaunOncePerRequestFilter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import com.baomidou.shaun.core.filter.ShaunFilter;
-import com.baomidou.shaun.core.models.ShaunInterceptor;
-import com.baomidou.shaun.core.models.ShaunRequestFilter;
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import java.util.List;
 
 /**
  * @author miemie
@@ -41,23 +40,29 @@ public class ShaunModelAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     @ConditionalOnProperty(prefix = "shaun", name = "model", havingValue = "web_filter")
-    public ShaunRequestFilter shaunOncePerRequestFilter() {
-        ShaunRequestFilter oncePerRequestFilter = new ShaunRequestFilter();
+    public ShaunOncePerRequestFilter shaunOncePerRequestFilter() {
+        ShaunOncePerRequestFilter oncePerRequestFilter = new ShaunOncePerRequestFilter();
         oncePerRequestFilter.setFilterList(filters);
         return oncePerRequestFilter;
     }
 
     @Configuration
     @AutoConfigureAfter(ShaunModelAutoConfiguration.class)
-    @ConditionalOnBean(ShaunInterceptor.class)
-    @AllArgsConstructor
-    public static class ShaunWebMvcConfiguration implements WebMvcConfigurer {
+    @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
+    @ConditionalOnClass(WebMvcConfigurer.class)
+    @ConditionalOnProperty(prefix = "shaun", name = "model", havingValue = "interceptor", matchIfMissing = true)
+    public static class ShaunWebConfiguration {
 
-        private final ShaunInterceptor interceptor;
+        @Configuration
+        @AllArgsConstructor
+        public static class ShaunWebMvcConfiguration implements WebMvcConfigurer {
 
-        @Override
-        public void addInterceptors(InterceptorRegistry registry) {
-            registry.addInterceptor(interceptor).addPathPatterns("/**");
+            private final ShaunInterceptor shaunInterceptor;
+
+            @Override
+            public void addInterceptors(InterceptorRegistry registry) {
+                registry.addInterceptor(shaunInterceptor).addPathPatterns("/**");
+            }
         }
     }
 }
