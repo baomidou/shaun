@@ -1,4 +1,4 @@
-## 一个基于 pac4j 的安全框架
+## 一个基于 [pac4j](https://github.com/pac4j/pac4j) 的安全框架
 
 ### 特点:
 1. 简单
