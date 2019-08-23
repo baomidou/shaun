@@ -1,15 +1,13 @@
 package com.baomidou.shaun.core.mgt;
 
-import org.pac4j.core.context.JEEContext;
-import org.pac4j.core.profile.CommonProfile;
-
 import com.baomidou.shaun.core.enums.TokenLocation;
 import com.baomidou.shaun.core.generator.TokenGenerator;
 import com.baomidou.shaun.core.properties.Cookie;
 import com.baomidou.shaun.core.util.JEEContextFactory;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.pac4j.core.context.JEEContext;
+import org.pac4j.core.profile.CommonProfile;
 
 /**
  * 安全管理器,封装下,统一的登录登出
@@ -26,6 +24,13 @@ public class SecurityManager {
     private final TokenLocation tokenLocation;
     private final Cookie cookie;
 
+    /**
+     * 统一登录封装
+     *
+     * @param profile 登录用户
+     * @param <U>     泛型
+     * @return token
+     */
     public <U extends CommonProfile> String login(U profile) {
         String token = tokenGenerator.generate(profile);
         if (tokenLocation == TokenLocation.COOKIE) {
@@ -35,6 +40,13 @@ public class SecurityManager {
         return token;
     }
 
+    /**
+     * 移除用户
+     * <p>
+     * 只在 cookie 存 token 模式下生效
+     *
+     * @return 是否成功
+     */
     public boolean dropUser() {
         if (tokenLocation == TokenLocation.COOKIE) {
             JEEContext jeeContext = JEEContextFactory.getJEEContext();
