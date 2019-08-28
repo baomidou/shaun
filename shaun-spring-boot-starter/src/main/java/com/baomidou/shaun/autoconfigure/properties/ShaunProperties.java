@@ -48,9 +48,16 @@ public class ShaunProperties {
      */
     private String salt = UUID.randomUUID().toString().replace("-", "");
     /**
-     * jwt 超时时间(单位秒)
+     * jwt 超时时间
+     * <li> 10s : 表示10秒有效 </li>
+     * <li> 10m 结尾: 表示10分钟有效 </li>
+     * <li> 10h 结尾: 表示10小时有效 </li>
+     * <p>
+     * <li> 1d : 表示有效时间到第二天 00:00:00  </li>
+     * <li> 2d1h : 表示有效时间到第二天 01:00:00 </li>
+     * <b> `d` 后面 只支持上面三个(`s`,`m`,`h`)之一 </b>
      */
-    private Integer expireTime;
+    private String expireTime;
     /**
      * token 的存放位置
      * 前后不分离下,只支持 cookie ,且必须手动设置为 cookie

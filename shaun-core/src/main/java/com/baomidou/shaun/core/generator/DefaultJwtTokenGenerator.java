@@ -1,17 +1,15 @@
 package com.baomidou.shaun.core.generator;
 
+import com.baomidou.shaun.core.util.ExpireTimeUtil;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.experimental.Accessors;
 import org.pac4j.core.credentials.TokenCredentials;
 import org.pac4j.core.credentials.authenticator.Authenticator;
 import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.jwt.config.encryption.EncryptionConfiguration;
 import org.pac4j.jwt.config.signature.SignatureConfiguration;
 import org.pac4j.jwt.profile.JwtGenerator;
-
-import com.baomidou.shaun.core.util.ExpireTimeUtil;
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.experimental.Accessors;
 
 /**
  * 默认使用 pac4j 的 JwtGenerator 生成 token(jwt)
@@ -33,7 +31,7 @@ public class DefaultJwtTokenGenerator implements TokenGenerator {
     /**
      * jwt 超时时间
      */
-    private Integer expireTime;
+    private String expireTime;
 
     public DefaultJwtTokenGenerator(SignatureConfiguration signatureConfiguration, EncryptionConfiguration encryptionConfiguration) {
         this.signatureConfiguration = signatureConfiguration;
@@ -55,7 +53,7 @@ public class DefaultJwtTokenGenerator implements TokenGenerator {
     @Override
     public Integer getAge() {
         if (expireTime != null) {
-            return expireTime - 1;
+            return ExpireTimeUtil.getTargetSecond(expireTime) - 1;
         }
         return null;
     }
