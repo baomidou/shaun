@@ -15,7 +15,7 @@ import com.baomidou.shaun.core.enums.Logical;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface RequireRoles {
 
-    String[] value() default {};
+    String[] value();
 
-    Logical logical() default Logical.AND;
+    Logical logical() default Logical.OR;
 }
