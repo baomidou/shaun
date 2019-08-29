@@ -1,15 +1,6 @@
 package com.baomidou.shaun.autoconfigure.aop;
 
-import java.util.Collections;
-
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
-import org.pac4j.core.authorization.authorizer.IsAuthenticatedAuthorizer;
-import org.pac4j.core.context.JEEContext;
-import org.pac4j.core.exception.http.ForbiddenAction;
-import org.pac4j.core.exception.http.UnauthorizedAction;
-import org.pac4j.core.profile.UserProfile;
-
+import com.baomidou.shaun.core.annotation.RequireAuthorization;
 import com.baomidou.shaun.core.annotation.RequirePermissions;
 import com.baomidou.shaun.core.annotation.RequireRoles;
 import com.baomidou.shaun.core.authorizer.AuthorizationProfile;
@@ -21,8 +12,16 @@ import com.baomidou.shaun.core.authorizer.role.ShaunRequireAnyRolesAuthorizer;
 import com.baomidou.shaun.core.enums.Logical;
 import com.baomidou.shaun.core.util.JEEContextFactory;
 import com.baomidou.shaun.core.util.ProfileHolder;
-
 import lombok.AllArgsConstructor;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+import org.pac4j.core.authorization.authorizer.IsAuthenticatedAuthorizer;
+import org.pac4j.core.context.JEEContext;
+import org.pac4j.core.exception.http.ForbiddenAction;
+import org.pac4j.core.exception.http.UnauthorizedAction;
+import org.pac4j.core.profile.UserProfile;
+
+import java.util.Collections;
 
 /**
  * @author miemie
@@ -38,20 +37,52 @@ public class AnnotationAspect {
 
     @Before("@annotation(requireRoles)")
     public void beforeRequireAnyRole(final RequireRoles requireRoles) {
+        boolean a;
         if (requireRoles.logical() == Logical.AND) {
-            this.isAuthorized(ShaunRequireAllRolesAuthorizer.requireAllRoles(authorizationProfile, requireRoles.value()));
-            return;
+            a = this.isAuthorized(ShaunRequireAllRolesAuthorizer.requireAllRoles(authorizationProfile, requireRoles.value()));
+        } else {
+            a = this.isAuthorized(ShaunRequireAnyRolesAuthorizer.requireAnyRole(authorizationProfile, requireRoles.value()));
         }
-        this.isAuthorized(ShaunRequireAnyRolesAuthorizer.requireAnyRole(authorizationProfile, requireRoles.value()));
+        if (!a) {
+            throw ForbiddenAction.INSTANCE;
+        }
     }
 
     @Before("@annotation(requirePermissions)")
     public void beforeRequireAllPermission(final RequirePermissions requirePermissions) {
+        boolean a;
         if (requirePermissions.logical() == Logical.AND) {
-            this.isAuthorized(ShaunRequireAllPermissionsAuthorizer.requireAllPermissions(authorizationProfile, requirePermissions.value()));
-            return;
+            a = this.isAuthorized(ShaunRequireAllPermissionsAuthorizer.requireAllPermissions(authorizationProfile, requirePermissions.value()));
+        } else {
+            a = this.isAuthorized(ShaunRequireAnyPermissionAuthorizer.requireAnyPermission(authorizationProfile, requirePermissions.value()));
         }
-        this.isAuthorized(ShaunRequireAnyPermissionAuthorizer.requireAnyPermission(authorizationProfile, requirePermissions.value()));
+        if (!a) {
+            throw ForbiddenAction.INSTANCE;
+        }
+    }
+
+    @Before("@annotation(requireAuthorization)")
+    public void beforeRequireAllPermission(final RequireAuthorization requireAuthorization) {
+        final Logical logical = requireAuthorization.logical();
+        final RequireRoles roles = requireAuthorization.roles();
+        final RequirePermissions permissions = requireAuthorization.permissions();
+        boolean a;
+        if (logical == Logical.AND) {
+            if (roles.logical() == Logical.AND) {
+                a = this.isAuthorized(ShaunRequireAllRolesAuthorizer.requireAllRoles(authorizationProfile, roles.value()));
+            } else {
+                a = this.isAuthorized(ShaunRequireAnyRolesAuthorizer.requireAnyRole(authorizationProfile, roles.value()));
+            }
+        } else {
+            if (permissions.logical() == Logical.AND) {
+                a = this.isAuthorized(ShaunRequireAllPermissionsAuthorizer.requireAllPermissions(authorizationProfile, permissions.value()));
+            } else {
+                a = this.isAuthorized(ShaunRequireAnyPermissionAuthorizer.requireAnyPermission(authorizationProfile, permissions.value()));
+            }
+        }
+        if (!a) {
+            throw ForbiddenAction.INSTANCE;
+        }
     }
 
     private UserProfile isAuthenticated(JEEContext context) {
@@ -62,11 +93,9 @@ public class AnnotationAspect {
         return userProfile;
     }
 
-    private void isAuthorized(final Authorizer<UserProfile> authorizer) {
+    private boolean isAuthorized(final Authorizer<UserProfile> authorizer) {
         JEEContext j2EContext = JEEContextFactory.getJEEContext();
         final UserProfile profiles = this.isAuthenticated(j2EContext);
-        if (!authorizer.isAuthorized(profiles)) {
-            throw ForbiddenAction.INSTANCE;
-        }
+        return authorizer.isAuthorized(profiles);
     }
 }
