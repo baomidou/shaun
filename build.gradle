@@ -58,7 +58,7 @@ ext {
 
 allprojects {
     group = "com.baomidou"
-    version = "0.0.1.9-SNAPSHOT"
+    version = "0.0.1.10-SNAPSHOT"
 }
 
 description = "easy security for web by pac4j"
