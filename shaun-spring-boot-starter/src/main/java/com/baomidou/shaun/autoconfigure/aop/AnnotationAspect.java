@@ -66,22 +66,43 @@ public class AnnotationAspect {
         final Logical logical = requireAuthorization.logical();
         final RequireRoles roles = requireAuthorization.roles();
         final RequirePermissions permissions = requireAuthorization.permissions();
-        boolean a;
         if (logical == Logical.AND) {
+            boolean a;
             if (roles.logical() == Logical.AND) {
                 a = this.isAuthorized(ShaunRequireAllRolesAuthorizer.requireAllRoles(authorizationProfile, roles.value()));
             } else {
                 a = this.isAuthorized(ShaunRequireAnyRolesAuthorizer.requireAnyRole(authorizationProfile, roles.value()));
             }
-        } else {
+            if (!a) {
+                throw ForbiddenAction.INSTANCE;
+            }
             if (permissions.logical() == Logical.AND) {
                 a = this.isAuthorized(ShaunRequireAllPermissionsAuthorizer.requireAllPermissions(authorizationProfile, permissions.value()));
             } else {
                 a = this.isAuthorized(ShaunRequireAnyPermissionAuthorizer.requireAnyPermission(authorizationProfile, permissions.value()));
             }
-        }
-        if (!a) {
-            throw ForbiddenAction.INSTANCE;
+            if (!a) {
+                throw ForbiddenAction.INSTANCE;
+            }
+        } else {
+            boolean a;
+            if (roles.logical() == Logical.AND) {
+                a = this.isAuthorized(ShaunRequireAllRolesAuthorizer.requireAllRoles(authorizationProfile, roles.value()));
+            } else {
+                a = this.isAuthorized(ShaunRequireAnyRolesAuthorizer.requireAnyRole(authorizationProfile, roles.value()));
+            }
+            if (a) {
+                return;
+            }
+            boolean b;
+            if (permissions.logical() == Logical.AND) {
+                b = this.isAuthorized(ShaunRequireAllPermissionsAuthorizer.requireAllPermissions(authorizationProfile, permissions.value()));
+            } else {
+                b = this.isAuthorized(ShaunRequireAnyPermissionAuthorizer.requireAnyPermission(authorizationProfile, permissions.value()));
+            }
+            if (!b) {
+                throw ForbiddenAction.INSTANCE;
+            }
         }
     }
 
