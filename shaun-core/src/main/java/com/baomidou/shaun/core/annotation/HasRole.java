@@ -13,7 +13,7 @@ import com.baomidou.shaun.core.enums.Logical;
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface RequireRoles {
+public @interface HasRole {
 
     String[] value();
 

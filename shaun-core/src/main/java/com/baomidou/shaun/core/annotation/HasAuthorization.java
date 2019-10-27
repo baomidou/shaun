@@ -13,9 +13,11 @@ import com.baomidou.shaun.core.enums.Logical;
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface RequirePermissions {
+public @interface HasAuthorization {
 
-    String[] value();
+    HasRole roles();
+
+    HasPermission permissions();
 
     Logical logical() default Logical.OR;
 }

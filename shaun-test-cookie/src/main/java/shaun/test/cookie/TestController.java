@@ -5,8 +5,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import com.baomidou.shaun.core.annotation.RequirePermissions;
-import com.baomidou.shaun.core.annotation.RequireRoles;
+import com.baomidou.shaun.core.annotation.HasPermission;
+import com.baomidou.shaun.core.annotation.HasRole;
 import com.baomidou.shaun.core.mgt.SecurityManager;
 
 import lombok.AllArgsConstructor;
@@ -48,14 +48,14 @@ public class TestController {
     }
 
     @GetMapping("/a2")
-    @RequireRoles("admin")
+    @HasRole("admin")
     public String a2(Model model) {
         model.addAttribute("a", "a2");
         return "a";
     }
 
     @GetMapping("/a3")
-    @RequirePermissions("add")
+    @HasPermission("add")
     public String a3(Model model) {
         model.addAttribute("a", "a3");
         return "a";

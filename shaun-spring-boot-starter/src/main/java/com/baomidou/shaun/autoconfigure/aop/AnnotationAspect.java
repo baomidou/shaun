@@ -1,8 +1,18 @@
 package com.baomidou.shaun.autoconfigure.aop;
 
-import com.baomidou.shaun.core.annotation.RequireAuthorization;
-import com.baomidou.shaun.core.annotation.RequirePermissions;
-import com.baomidou.shaun.core.annotation.RequireRoles;
+import java.util.Collections;
+
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+import org.pac4j.core.authorization.authorizer.IsAuthenticatedAuthorizer;
+import org.pac4j.core.context.JEEContext;
+import org.pac4j.core.exception.http.ForbiddenAction;
+import org.pac4j.core.exception.http.UnauthorizedAction;
+import org.pac4j.core.profile.UserProfile;
+
+import com.baomidou.shaun.core.annotation.HasAuthorization;
+import com.baomidou.shaun.core.annotation.HasPermission;
+import com.baomidou.shaun.core.annotation.HasRole;
 import com.baomidou.shaun.core.authorizer.AuthorizationProfile;
 import com.baomidou.shaun.core.authorizer.Authorizer;
 import com.baomidou.shaun.core.authorizer.permission.ShaunRequireAllPermissionsAuthorizer;
@@ -12,16 +22,8 @@ import com.baomidou.shaun.core.authorizer.role.ShaunRequireAnyRolesAuthorizer;
 import com.baomidou.shaun.core.enums.Logical;
 import com.baomidou.shaun.core.util.JEEContextFactory;
 import com.baomidou.shaun.core.util.ProfileHolder;
-import lombok.AllArgsConstructor;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
-import org.pac4j.core.authorization.authorizer.IsAuthenticatedAuthorizer;
-import org.pac4j.core.context.JEEContext;
-import org.pac4j.core.exception.http.ForbiddenAction;
-import org.pac4j.core.exception.http.UnauthorizedAction;
-import org.pac4j.core.profile.UserProfile;
 
-import java.util.Collections;
+import lombok.AllArgsConstructor;
 
 /**
  * @author miemie
@@ -35,37 +37,37 @@ public class AnnotationAspect {
 
     private final AuthorizationProfile<UserProfile> authorizationProfile;
 
-    @Before("@annotation(requireRoles)")
-    public void beforeRequireAnyRole(final RequireRoles requireRoles) {
+    @Before("@annotation(hasRole)")
+    public void beforeRequireAnyRole(final HasRole hasRole) {
         boolean a;
-        if (requireRoles.logical() == Logical.AND) {
-            a = this.isAuthorized(ShaunRequireAllRolesAuthorizer.requireAllRoles(authorizationProfile, requireRoles.value()));
+        if (hasRole.logical() == Logical.AND) {
+            a = this.isAuthorized(ShaunRequireAllRolesAuthorizer.requireAllRoles(authorizationProfile, hasRole.value()));
         } else {
-            a = this.isAuthorized(ShaunRequireAnyRolesAuthorizer.requireAnyRole(authorizationProfile, requireRoles.value()));
+            a = this.isAuthorized(ShaunRequireAnyRolesAuthorizer.requireAnyRole(authorizationProfile, hasRole.value()));
         }
         if (!a) {
             throw ForbiddenAction.INSTANCE;
         }
     }
 
-    @Before("@annotation(requirePermissions)")
-    public void beforeRequireAllPermission(final RequirePermissions requirePermissions) {
+    @Before("@annotation(hasPermission)")
+    public void beforeRequireAllPermission(final HasPermission hasPermission) {
         boolean a;
-        if (requirePermissions.logical() == Logical.AND) {
-            a = this.isAuthorized(ShaunRequireAllPermissionsAuthorizer.requireAllPermissions(authorizationProfile, requirePermissions.value()));
+        if (hasPermission.logical() == Logical.AND) {
+            a = this.isAuthorized(ShaunRequireAllPermissionsAuthorizer.requireAllPermissions(authorizationProfile, hasPermission.value()));
         } else {
-            a = this.isAuthorized(ShaunRequireAnyPermissionAuthorizer.requireAnyPermission(authorizationProfile, requirePermissions.value()));
+            a = this.isAuthorized(ShaunRequireAnyPermissionAuthorizer.requireAnyPermission(authorizationProfile, hasPermission.value()));
         }
         if (!a) {
             throw ForbiddenAction.INSTANCE;
         }
     }
 
-    @Before("@annotation(requireAuthorization)")
-    public void beforeRequireAllPermission(final RequireAuthorization requireAuthorization) {
-        final Logical logical = requireAuthorization.logical();
-        final RequireRoles roles = requireAuthorization.roles();
-        final RequirePermissions permissions = requireAuthorization.permissions();
+    @Before("@annotation(hasAuthorization)")
+    public void beforeRequireAllPermission(final HasAuthorization hasAuthorization) {
+        final Logical logical = hasAuthorization.logical();
+        final HasRole roles = hasAuthorization.roles();
+        final HasPermission permissions = hasAuthorization.permissions();
         if (logical == Logical.AND) {
             boolean a;
             if (roles.logical() == Logical.AND) {
