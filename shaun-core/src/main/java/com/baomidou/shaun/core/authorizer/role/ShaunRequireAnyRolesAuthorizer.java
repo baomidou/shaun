@@ -2,6 +2,7 @@ package com.baomidou.shaun.core.authorizer.role;
 
 import com.baomidou.shaun.core.authorizer.AbstranctAuthorizer;
 import com.baomidou.shaun.core.authorizer.AuthorizationProfile;
+import com.baomidou.shaun.core.util.ShaunAdminProfileUtil;
 import org.pac4j.core.profile.UserProfile;
 
 /**
@@ -20,6 +21,9 @@ public class ShaunRequireAnyRolesAuthorizer<U extends UserProfile> extends Abstr
 
     @Override
     public boolean isAuthorized(U profile) {
+        if (ShaunAdminProfileUtil.isAdmin(profile)) {
+            return true;
+        }
         return requireAny(profile.getRoles());
     }
 }

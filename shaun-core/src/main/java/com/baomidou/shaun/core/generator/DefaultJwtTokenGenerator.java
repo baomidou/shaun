@@ -1,6 +1,7 @@
 package com.baomidou.shaun.core.generator;
 
 import com.baomidou.shaun.core.util.ExpireTimeUtil;
+import com.baomidou.shaun.core.util.ShaunAdminProfileUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -39,7 +40,10 @@ public class DefaultJwtTokenGenerator implements TokenGenerator {
     }
 
     @Override
-    public <U extends CommonProfile> String generate(final U profile) {
+    public <U extends CommonProfile> String generate(final U profile, final boolean isAdmin) {
+        if (isAdmin) {
+            ShaunAdminProfileUtil.setAdmin(profile);
+        }
         JwtGenerator<U> jwtGenerator = new JwtGenerator<>(signatureConfiguration, encryptionConfiguration);
         if (expireTime != null) {
             jwtGenerator.setExpirationTime(ExpireTimeUtil.getTargetDate(expireTime));
