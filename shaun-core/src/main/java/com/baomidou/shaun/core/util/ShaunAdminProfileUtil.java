@@ -7,6 +7,8 @@ import org.pac4j.core.util.CommonHelper;
 import java.util.Set;
 
 /**
+ * 超管设置判断工具
+ *
  * @author miemie
  * @since 2019-10-29
  */
