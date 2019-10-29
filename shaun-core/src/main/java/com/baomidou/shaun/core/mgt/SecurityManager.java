@@ -1,13 +1,15 @@
 package com.baomidou.shaun.core.mgt;
 
+import org.pac4j.core.context.JEEContext;
+import org.pac4j.core.profile.CommonProfile;
+
 import com.baomidou.shaun.core.enums.TokenLocation;
 import com.baomidou.shaun.core.generator.TokenGenerator;
 import com.baomidou.shaun.core.properties.Cookie;
 import com.baomidou.shaun.core.util.JEEContextFactory;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.pac4j.core.context.JEEContext;
-import org.pac4j.core.profile.CommonProfile;
 
 /**
  * 安全管理器,封装下,统一的登录登出

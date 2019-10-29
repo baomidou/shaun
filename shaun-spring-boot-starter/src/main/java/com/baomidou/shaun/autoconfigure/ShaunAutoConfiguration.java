@@ -19,6 +19,8 @@ import org.springframework.context.annotation.Configuration;
 import com.baomidou.shaun.autoconfigure.properties.ShaunProperties;
 import com.baomidou.shaun.core.authorizer.AuthorizationProfile;
 import com.baomidou.shaun.core.authorizer.DefaultAuthorizationProfile;
+import com.baomidou.shaun.core.authorizer.admin.AdminAuthorizer;
+import com.baomidou.shaun.core.authorizer.admin.DefaultAdminAuthorizer;
 import com.baomidou.shaun.core.client.TokenClient;
 import com.baomidou.shaun.core.extractor.TokenExtractor;
 import com.baomidou.shaun.core.generator.DefaultJwtTokenGenerator;
@@ -134,6 +136,15 @@ public class ShaunAutoConfiguration {
     @ConditionalOnMissingBean
     public AuthorizationProfile<UserProfile> authorizationContext() {
         return new DefaultAuthorizationProfile<>();
+    }
+
+    /**
+     * 获取用户权限相关
+     */
+    @Bean
+    @ConditionalOnMissingBean
+    public AdminAuthorizer<UserProfile> adminAuthorizer() {
+        return new DefaultAdminAuthorizer<>(properties.getAdminRolePermission());
     }
 
     /**

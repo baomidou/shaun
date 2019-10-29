@@ -1,18 +1,20 @@
 package com.baomidou.shaun.autoconfigure.properties;
 
-import com.baomidou.shaun.core.enums.Model;
-import com.baomidou.shaun.core.enums.TokenLocation;
-import com.baomidou.shaun.core.properties.Cookie;
-import com.baomidou.shaun.core.properties.Header;
-import com.baomidou.shaun.core.properties.Parameter;
-import lombok.Data;
+import java.util.List;
+import java.util.UUID;
+
 import org.pac4j.core.authorization.authorizer.Authorizer;
 import org.pac4j.core.authorization.checker.DefaultAuthorizationChecker;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
-import java.util.List;
-import java.util.UUID;
+import com.baomidou.shaun.core.enums.Model;
+import com.baomidou.shaun.core.enums.TokenLocation;
+import com.baomidou.shaun.core.properties.Cookie;
+import com.baomidou.shaun.core.properties.Header;
+import com.baomidou.shaun.core.properties.Parameter;
+
+import lombok.Data;
 
 /**
  * @author miemie
@@ -31,6 +33,10 @@ public class ShaunProperties {
      * 默认支持的一些参考 {@link DefaultAuthorizationChecker}
      */
     private String authorizers = "";
+    /**
+     * 管理员的 role 和 permission 的表现字符串
+     */
+    private String adminRolePermission = "shaun-admin-role-permission";
     /**
      * 排除的 url
      */
