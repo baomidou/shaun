@@ -29,17 +29,17 @@ public class DefaultJwtTokenGenerator implements TokenGenerator {
     private final SignatureConfiguration signatureConfiguration;
     private final EncryptionConfiguration encryptionConfiguration;
 
+    /**
+     * jwt 超时时间
+     */
+    private String expireTime;
+
     public DefaultJwtTokenGenerator(AdminAuthorizer adminAuthorizer, SignatureConfiguration signatureConfiguration,
                                     EncryptionConfiguration encryptionConfiguration) {
         this.adminAuthorizer = adminAuthorizer;
         this.signatureConfiguration = signatureConfiguration;
         this.encryptionConfiguration = encryptionConfiguration;
     }
-
-    /**
-     * jwt 超时时间
-     */
-    private String expireTime;
 
     @Override
     public <U extends CommonProfile> String generate(final U profile, final boolean isAdmin) {

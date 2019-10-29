@@ -11,17 +11,6 @@ import org.pac4j.core.profile.CommonProfile;
 public interface TokenGenerator {
 
     /**
-     * 默认不是管理员
-     *
-     * @param profile profile
-     * @param <U>     泛型
-     * @return token
-     */
-    default <U extends CommonProfile> String generate(final U profile) {
-        return generate(profile, false);
-    }
-
-    /**
      * @param profile profile
      * @param isAdmin 是否管理员
      * @param <U>     泛型

@@ -9,6 +9,12 @@ import org.pac4j.core.profile.UserProfile;
  */
 public interface AdminAuthorizer {
 
+    /**
+     * 设置用户为管理员
+     *
+     * @param profile 用户
+     * @param <U>     泛型
+     */
     <U extends CommonProfile> void setAdmin(U profile);
 
     /**
