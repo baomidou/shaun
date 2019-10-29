@@ -5,7 +5,6 @@ import org.pac4j.core.credentials.authenticator.Authenticator;
 import org.pac4j.core.credentials.extractor.CredentialsExtractor;
 import org.pac4j.core.http.ajax.AjaxRequestResolver;
 import org.pac4j.core.http.ajax.DefaultAjaxRequestResolver;
-import org.pac4j.core.profile.UserProfile;
 import org.pac4j.jwt.config.encryption.EncryptionConfiguration;
 import org.pac4j.jwt.config.encryption.SecretEncryptionConfiguration;
 import org.pac4j.jwt.config.signature.SecretSignatureConfiguration;
@@ -92,13 +91,22 @@ public class ShaunAutoConfiguration {
     }
 
     /**
+     * 判断以及设置 profile 为管理员
+     */
+    @Bean
+    @ConditionalOnMissingBean
+    public AdminAuthorizer adminAuthorizer() {
+        return new DefaultAdminAuthorizer(properties.getAdminRolePermission());
+    }
+
+    /**
      * token 生成器
      */
     @Bean
     @ConditionalOnMissingBean
-    public TokenGenerator tokenGenerator(SignatureConfiguration signatureConfiguration,
+    public TokenGenerator tokenGenerator(AdminAuthorizer adminAuthorizer, SignatureConfiguration signatureConfiguration,
                                          EncryptionConfiguration encryptionConfiguration) {
-        return new DefaultJwtTokenGenerator(signatureConfiguration, encryptionConfiguration)
+        return new DefaultJwtTokenGenerator(adminAuthorizer, signatureConfiguration, encryptionConfiguration)
                 .setExpireTime(properties.getExpireTime());
     }
 
@@ -130,21 +138,12 @@ public class ShaunAutoConfiguration {
     }
 
     /**
-     * 获取用户权限相关
+     * 获取以及验证用户权限相关
      */
     @Bean
     @ConditionalOnMissingBean
-    public AuthorizationProfile<UserProfile> authorizationContext() {
-        return new DefaultAuthorizationProfile<>();
-    }
-
-    /**
-     * 获取用户权限相关
-     */
-    @Bean
-    @ConditionalOnMissingBean
-    public AdminAuthorizer<UserProfile> adminAuthorizer() {
-        return new DefaultAdminAuthorizer<>(properties.getAdminRolePermission());
+    public AuthorizationProfile authorizationContext() {
+        return new DefaultAuthorizationProfile();
     }
 
     /**

@@ -3,6 +3,7 @@ package com.baomidou.shaun.core.authorizer;
 import java.util.Set;
 
 import org.pac4j.core.profile.UserProfile;
+import org.pac4j.core.util.CommonHelper;
 
 import com.baomidou.shaun.core.enums.Logical;
 
@@ -39,12 +40,43 @@ public interface AuthorizationProfile {
      *
      * @return 是否通过
      */
-    boolean checkRoles(Logical logical, Set<String> elements, Set<String> roles);
+    default boolean checkRoles(Logical logical, Set<String> elements, Set<String> roles) {
+        return match(logical, elements, roles);
+    }
 
     /**
      * 校验 permission
      *
      * @return 是否通过
      */
-    boolean checkPermissions(Logical logical, Set<String> elements, Set<String> permissions);
+    default boolean checkPermissions(Logical logical, Set<String> elements, Set<String> permissions) {
+        return match(logical, elements, permissions);
+    }
+
+    /**
+     * 验证
+     *
+     * @param elements    注解里的值
+     * @param checkValues 根据用户取出来的值
+     * @return 是否通过
+     */
+    default boolean match(Logical logical, Set<String> elements, Set<String> checkValues) {
+        if (CommonHelper.isEmpty(elements) || CommonHelper.isEmpty(checkValues)) {
+            return false;
+        }
+        if (logical == Logical.OR) {
+            for (String element : elements) {
+                if (checkValues.contains(element)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        for (String element : elements) {
+            if (!checkValues.contains(element)) {
+                return false;
+            }
+        }
+        return true;
+    }
 }

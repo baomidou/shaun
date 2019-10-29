@@ -10,7 +10,6 @@ import org.pac4j.jwt.profile.JwtGenerator;
 import com.baomidou.shaun.core.authorizer.admin.AdminAuthorizer;
 import com.baomidou.shaun.core.util.ExpireTimeUtil;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -24,12 +23,18 @@ import lombok.experimental.Accessors;
  */
 @Data
 @Accessors(chain = true)
-@AllArgsConstructor
 public class DefaultJwtTokenGenerator implements TokenGenerator {
 
     private final AdminAuthorizer adminAuthorizer;
     private final SignatureConfiguration signatureConfiguration;
     private final EncryptionConfiguration encryptionConfiguration;
+
+    public DefaultJwtTokenGenerator(AdminAuthorizer adminAuthorizer, SignatureConfiguration signatureConfiguration,
+                                    EncryptionConfiguration encryptionConfiguration) {
+        this.adminAuthorizer = adminAuthorizer;
+        this.signatureConfiguration = signatureConfiguration;
+        this.encryptionConfiguration = encryptionConfiguration;
+    }
 
     /**
      * jwt 超时时间

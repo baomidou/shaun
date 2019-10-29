@@ -13,7 +13,6 @@ import org.pac4j.core.client.IndirectClient;
 import org.pac4j.core.context.Pac4jConstants;
 import org.pac4j.core.http.ajax.AjaxRequestResolver;
 import org.pac4j.core.matching.PathMatcher;
-import org.pac4j.core.profile.UserProfile;
 import org.pac4j.core.util.CommonHelper;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
@@ -26,6 +25,7 @@ import org.springframework.util.StringUtils;
 import com.baomidou.shaun.autoconfigure.aop.AnnotationAspect;
 import com.baomidou.shaun.autoconfigure.properties.ShaunProperties;
 import com.baomidou.shaun.core.authorizer.AuthorizationProfile;
+import com.baomidou.shaun.core.authorizer.admin.AdminAuthorizer;
 import com.baomidou.shaun.core.client.TokenClient;
 import com.baomidou.shaun.core.context.GlobalConfig;
 import com.baomidou.shaun.core.enums.TokenLocation;
@@ -159,7 +159,7 @@ public class ShaunFilterAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public AnnotationAspect annotationAspect(AuthorizationProfile<UserProfile> authorizationProfile) {
-        return new AnnotationAspect(authorizationProfile);
+    public AnnotationAspect annotationAspect(AdminAuthorizer adminAuthorizer, AuthorizationProfile authorizationProfile) {
+        return new AnnotationAspect(adminAuthorizer, authorizationProfile);
     }
 }
