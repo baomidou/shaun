@@ -25,14 +25,27 @@ public class SecurityManager {
     private final Cookie cookie;
 
     /**
-     * 统一登录封装
+     * 统一登录封装,
+     * 默认不是管理员
      *
      * @param profile 登录用户
      * @param <U>     泛型
      * @return token
      */
     public <U extends CommonProfile> String login(U profile) {
-        String token = tokenGenerator.generate(profile);
+        return login(profile, false);
+    }
+
+    /**
+     * 统一登录封装
+     *
+     * @param profile 登录用户
+     * @param isAdmin 是否管理员
+     * @param <U>     泛型
+     * @return token
+     */
+    public <U extends CommonProfile> String login(U profile, boolean isAdmin) {
+        String token = tokenGenerator.generate(profile, isAdmin);
         if (tokenLocation == TokenLocation.COOKIE) {
             JEEContext jeeContext = JEEContextFactory.getJEEContext();
             jeeContext.addResponseCookie(getCookie(token, tokenGenerator.getAge()));
