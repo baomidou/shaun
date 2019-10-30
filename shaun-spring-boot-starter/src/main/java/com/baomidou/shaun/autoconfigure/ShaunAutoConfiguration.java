@@ -16,10 +16,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.baomidou.shaun.autoconfigure.properties.ShaunProperties;
-import com.baomidou.shaun.core.authorizer.AuthorizationInterceptor;
-import com.baomidou.shaun.core.authorizer.DefaultAuthorizationInterceptor;
-import com.baomidou.shaun.core.authorizer.admin.AdminAuthorizer;
-import com.baomidou.shaun.core.authorizer.admin.DefaultAdminAuthorizer;
+import com.baomidou.shaun.core.authority.AuthorityManager;
+import com.baomidou.shaun.core.authority.DefaultAuthorityManager;
+import com.baomidou.shaun.core.authority.admin.AdminAuthorizer;
+import com.baomidou.shaun.core.authority.admin.DefaultAdminAuthorizer;
 import com.baomidou.shaun.core.client.TokenClient;
 import com.baomidou.shaun.core.extractor.TokenExtractor;
 import com.baomidou.shaun.core.generator.DefaultJwtTokenGenerator;
@@ -142,8 +142,8 @@ public class ShaunAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean
-    public AuthorizationInterceptor authorizationContext() {
-        return new DefaultAuthorizationInterceptor();
+    public AuthorityManager authorizationContext() {
+        return new DefaultAuthorityManager();
     }
 
     /**

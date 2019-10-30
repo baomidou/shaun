@@ -1,4 +1,4 @@
-package com.baomidou.shaun.core.authorizer;
+package com.baomidou.shaun.core.authority;
 
 import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.core.profile.UserProfile;
@@ -10,7 +10,7 @@ import lombok.AllArgsConstructor;
  * @since 2019-08-01
  */
 @AllArgsConstructor
-public class DefaultAuthorizationInterceptor implements AuthorizationInterceptor {
+public class DefaultAuthorityManager implements AuthorityManager {
 
     private final String skipAuthenticationRolePermission;
 

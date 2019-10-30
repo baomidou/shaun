@@ -17,7 +17,7 @@ import org.pac4j.core.profile.UserProfile;
 import com.baomidou.shaun.core.annotation.HasAuthorization;
 import com.baomidou.shaun.core.annotation.HasPermission;
 import com.baomidou.shaun.core.annotation.HasRole;
-import com.baomidou.shaun.core.authorizer.AuthorizationInterceptor;
+import com.baomidou.shaun.core.authority.AuthorityManager;
 import com.baomidou.shaun.core.enums.Logical;
 import com.baomidou.shaun.core.util.JEEContextFactory;
 import com.baomidou.shaun.core.util.ProfileHolder;
@@ -34,18 +34,18 @@ public class AnnotationAspect {
 
     private static final IsAuthenticatedAuthorizer<UserProfile> IS_AUTHENTICATED_AUTHORIZER = new IsAuthenticatedAuthorizer<>();
 
-    private final AuthorizationInterceptor authorizationInterceptor;
+    private final AuthorityManager authorityManager;
 
     @Before("@annotation(hasRole)")
     public void beforeHasRole(final HasRole hasRole) {
-        if (!commonAuthorized(true, hasRole.logical(), toSet(hasRole.value()), authorizationInterceptor::roles)) {
+        if (!commonAuthorized(true, hasRole.logical(), toSet(hasRole.value()), authorityManager::roles)) {
             throw ForbiddenAction.INSTANCE;
         }
     }
 
     @Before("@annotation(hasPermission)")
     public void beforeHasPermission(final HasPermission hasPermission) {
-        if (!commonAuthorized(false, hasPermission.logical(), toSet(hasPermission.value()), authorizationInterceptor::permissions)) {
+        if (!commonAuthorized(false, hasPermission.logical(), toSet(hasPermission.value()), authorityManager::permissions)) {
             throw ForbiddenAction.INSTANCE;
         }
     }
@@ -59,15 +59,15 @@ public class AnnotationAspect {
         final Set<String> permissions = toSet(permission.value());
         JEEContext j2EContext = JEEContextFactory.getJEEContext();
         final UserProfile profiles = this.isAuthenticated(j2EContext);
-        if (!authorizationInterceptor.isSkipAuthenticationUser(profiles)) {
+        if (!authorityManager.isSkipAuthenticationUser(profiles)) {
             if (logical == Logical.ANY) {
-                if (toCheck(profiles, true, role.logical(), roles, authorizationInterceptor::roles)
-                        || toCheck(profiles, false, permission.logical(), permissions, authorizationInterceptor::permissions)) {
+                if (toCheck(profiles, true, role.logical(), roles, authorityManager::roles)
+                        || toCheck(profiles, false, permission.logical(), permissions, authorityManager::permissions)) {
                     return;
                 }
             } else {
-                if (toCheck(profiles, true, role.logical(), roles, authorizationInterceptor::roles)
-                        && toCheck(profiles, false, permission.logical(), permissions, authorizationInterceptor::permissions)) {
+                if (toCheck(profiles, true, role.logical(), roles, authorityManager::roles)
+                        && toCheck(profiles, false, permission.logical(), permissions, authorityManager::permissions)) {
                     return;
                 }
             }
@@ -88,7 +88,7 @@ public class AnnotationAspect {
                                      final Function<UserProfile, Set<String>> checkValues) {
         JEEContext j2EContext = JEEContextFactory.getJEEContext();
         final UserProfile profiles = this.isAuthenticated(j2EContext);
-        if (authorizationInterceptor.isSkipAuthenticationUser(profiles)) {
+        if (authorityManager.isSkipAuthenticationUser(profiles)) {
             return true;
         }
         return toCheck(profiles, isRole, logical, elements, checkValues);
@@ -97,9 +97,9 @@ public class AnnotationAspect {
     private boolean toCheck(final UserProfile profiles, final boolean isRole, final Logical logical,
                             final Set<String> elements, final Function<UserProfile, Set<String>> checkValues) {
         if (isRole) {
-            return authorizationInterceptor.checkRoles(logical, elements, checkValues.apply(profiles));
+            return authorityManager.checkRoles(logical, elements, checkValues.apply(profiles));
         }
-        return authorizationInterceptor.checkPermissions(logical, elements, checkValues.apply(profiles));
+        return authorityManager.checkPermissions(logical, elements, checkValues.apply(profiles));
     }
 
     private Set<String> toSet(String[] values) {

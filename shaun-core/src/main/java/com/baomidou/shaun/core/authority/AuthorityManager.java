@@ -1,4 +1,4 @@
-package com.baomidou.shaun.core.authorizer;
+package com.baomidou.shaun.core.authority;
 
 import java.util.Set;
 
@@ -9,12 +9,12 @@ import org.pac4j.core.util.CommonHelper;
 import com.baomidou.shaun.core.enums.Logical;
 
 /**
- * 用户 role 和 permission 获取类
+ * 用户 role 和 permission 授权,鉴权 类
  *
  * @author miemie
  * @since 2019-08-01
  */
-public interface AuthorizationInterceptor {
+public interface AuthorityManager {
 
     /**
      * 设置用户为跳过所以鉴权

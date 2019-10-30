@@ -7,7 +7,7 @@ import org.pac4j.jwt.config.encryption.EncryptionConfiguration;
 import org.pac4j.jwt.config.signature.SignatureConfiguration;
 import org.pac4j.jwt.profile.JwtGenerator;
 
-import com.baomidou.shaun.core.authorizer.AuthorizationInterceptor;
+import com.baomidou.shaun.core.authority.AuthorityManager;
 import com.baomidou.shaun.core.util.ExpireTimeUtil;
 
 import lombok.Data;
@@ -25,7 +25,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class DefaultJwtTokenGenerator implements TokenGenerator {
 
-    private final AuthorizationInterceptor authorizationInterceptor;
+    private final AuthorityManager authorityManager;
     private final SignatureConfiguration signatureConfiguration;
     private final EncryptionConfiguration encryptionConfiguration;
 
@@ -34,10 +34,10 @@ public class DefaultJwtTokenGenerator implements TokenGenerator {
      */
     private String expireTime;
 
-    public DefaultJwtTokenGenerator(AuthorizationInterceptor authorizationInterceptor,
+    public DefaultJwtTokenGenerator(AuthorityManager authorityManager,
                                     SignatureConfiguration signatureConfiguration,
                                     EncryptionConfiguration encryptionConfiguration) {
-        this.authorizationInterceptor = authorizationInterceptor;
+        this.authorityManager = authorityManager;
         this.signatureConfiguration = signatureConfiguration;
         this.encryptionConfiguration = encryptionConfiguration;
     }
@@ -45,7 +45,7 @@ public class DefaultJwtTokenGenerator implements TokenGenerator {
     @Override
     public <U extends CommonProfile> String generate(final U profile, final boolean isSkipAuthenticationUser) {
         if (isSkipAuthenticationUser) {
-            authorizationInterceptor.setUserSkipAuthentication(profile);
+            authorityManager.setUserSkipAuthentication(profile);
         }
         JwtGenerator<U> jwtGenerator = new JwtGenerator<>(signatureConfiguration, encryptionConfiguration);
         if (expireTime != null) {
