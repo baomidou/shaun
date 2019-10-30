@@ -10,7 +10,7 @@ import lombok.AllArgsConstructor;
  * @since 2019-08-01
  */
 @AllArgsConstructor
-public class DefaultAuthorizationProfile implements AuthorizationInterceptor {
+public class DefaultAuthorizationInterceptor implements AuthorizationInterceptor {
 
     private final String skipAuthenticationRolePermission;
 
