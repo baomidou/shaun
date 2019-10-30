@@ -18,8 +18,6 @@ import org.springframework.context.annotation.Configuration;
 import com.baomidou.shaun.autoconfigure.properties.ShaunProperties;
 import com.baomidou.shaun.core.authority.AuthorityManager;
 import com.baomidou.shaun.core.authority.DefaultAuthorityManager;
-import com.baomidou.shaun.core.authority.admin.AdminAuthorizer;
-import com.baomidou.shaun.core.authority.admin.DefaultAdminAuthorizer;
 import com.baomidou.shaun.core.client.TokenClient;
 import com.baomidou.shaun.core.extractor.TokenExtractor;
 import com.baomidou.shaun.core.generator.DefaultJwtTokenGenerator;
@@ -91,12 +89,12 @@ public class ShaunAutoConfiguration {
     }
 
     /**
-     * 判断以及设置 profile 为管理员
+     * 获取以及验证用户权限相关
      */
     @Bean
     @ConditionalOnMissingBean
-    public AdminAuthorizer adminAuthorizer() {
-        return new DefaultAdminAuthorizer(properties.getSkipAuthenticationRolePermission());
+    public AuthorityManager authorityManager() {
+        return new DefaultAuthorityManager(properties.getSkipAuthenticationRolePermission());
     }
 
     /**
@@ -104,9 +102,9 @@ public class ShaunAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean
-    public TokenGenerator tokenGenerator(AdminAuthorizer adminAuthorizer, SignatureConfiguration signatureConfiguration,
+    public TokenGenerator tokenGenerator(AuthorityManager authorityManager, SignatureConfiguration signatureConfiguration,
                                          EncryptionConfiguration encryptionConfiguration) {
-        return new DefaultJwtTokenGenerator(adminAuthorizer, signatureConfiguration, encryptionConfiguration)
+        return new DefaultJwtTokenGenerator(authorityManager, signatureConfiguration, encryptionConfiguration)
                 .setExpireTime(properties.getExpireTime());
     }
 
@@ -135,15 +133,6 @@ public class ShaunAutoConfiguration {
     @ConditionalOnMissingBean
     public AjaxRequestResolver ajaxRequestResolver() {
         return new DefaultAjaxRequestResolver();
-    }
-
-    /**
-     * 获取以及验证用户权限相关
-     */
-    @Bean
-    @ConditionalOnMissingBean
-    public AuthorityManager authorizationContext() {
-        return new DefaultAuthorityManager();
     }
 
     /**

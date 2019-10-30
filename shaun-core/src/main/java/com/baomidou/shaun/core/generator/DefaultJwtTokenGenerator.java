@@ -34,8 +34,7 @@ public class DefaultJwtTokenGenerator implements TokenGenerator {
      */
     private String expireTime;
 
-    public DefaultJwtTokenGenerator(AuthorityManager authorityManager,
-                                    SignatureConfiguration signatureConfiguration,
+    public DefaultJwtTokenGenerator(AuthorityManager authorityManager, SignatureConfiguration signatureConfiguration,
                                     EncryptionConfiguration encryptionConfiguration) {
         this.authorityManager = authorityManager;
         this.signatureConfiguration = signatureConfiguration;
