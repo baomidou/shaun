@@ -1,19 +1,5 @@
 package com.baomidou.shaun.autoconfigure.aop;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.function.Function;
-
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
-import org.pac4j.core.authorization.authorizer.IsAuthenticatedAuthorizer;
-import org.pac4j.core.context.JEEContext;
-import org.pac4j.core.exception.http.ForbiddenAction;
-import org.pac4j.core.exception.http.UnauthorizedAction;
-import org.pac4j.core.profile.UserProfile;
-
 import com.baomidou.shaun.core.annotation.HasAuthorization;
 import com.baomidou.shaun.core.annotation.HasPermission;
 import com.baomidou.shaun.core.annotation.HasRole;
@@ -22,8 +8,20 @@ import com.baomidou.shaun.core.authorizer.admin.AdminAuthorizer;
 import com.baomidou.shaun.core.enums.Logical;
 import com.baomidou.shaun.core.util.JEEContextFactory;
 import com.baomidou.shaun.core.util.ProfileHolder;
-
 import lombok.AllArgsConstructor;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+import org.pac4j.core.authorization.authorizer.IsAuthenticatedAuthorizer;
+import org.pac4j.core.context.JEEContext;
+import org.pac4j.core.exception.http.ForbiddenAction;
+import org.pac4j.core.exception.http.UnauthorizedAction;
+import org.pac4j.core.profile.UserProfile;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.function.Function;
 
 /**
  * @author miemie
@@ -62,17 +60,18 @@ public class AnnotationAspect {
         JEEContext j2EContext = JEEContextFactory.getJEEContext();
         final UserProfile profiles = this.isAuthenticated(j2EContext);
         if (!adminAuthorizer.isAdmin(profiles)) {
-            if (logical == Logical.OR) {
-                if (!toCheck(profiles, true, role.logical(), roles, authorizationProfile::roles)
-                        && !toCheck(profiles, false, permission.logical(), permissions, authorizationProfile::permissions)) {
-                    throw ForbiddenAction.INSTANCE;
+            if (logical == Logical.ANY) {
+                if (toCheck(profiles, true, role.logical(), roles, authorizationProfile::roles)
+                        || toCheck(profiles, false, permission.logical(), permissions, authorizationProfile::permissions)) {
+                    return;
                 }
             } else {
-                if (!toCheck(profiles, true, role.logical(), roles, authorizationProfile::roles)
-                        || !toCheck(profiles, false, permission.logical(), permissions, authorizationProfile::permissions)) {
-                    throw ForbiddenAction.INSTANCE;
+                if (toCheck(profiles, true, role.logical(), roles, authorizationProfile::roles)
+                        && toCheck(profiles, false, permission.logical(), permissions, authorizationProfile::permissions)) {
+                    return;
                 }
             }
+            throw ForbiddenAction.INSTANCE;
         }
     }
 

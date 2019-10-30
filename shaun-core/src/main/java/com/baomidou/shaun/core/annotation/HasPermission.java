@@ -1,11 +1,11 @@
 package com.baomidou.shaun.core.annotation;
 
+import com.baomidou.shaun.core.enums.Logical;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-
-import com.baomidou.shaun.core.enums.Logical;
 
 /**
  * @author miemie
@@ -17,5 +17,5 @@ public @interface HasPermission {
 
     String[] value();
 
-    Logical logical() default Logical.OR;
+    Logical logical() default Logical.ANY;
 }

@@ -5,5 +5,5 @@ package com.baomidou.shaun.core.enums;
  * @since 2019-08-08
  */
 public enum Logical {
-    AND, OR
+    BOTH, ANY
 }

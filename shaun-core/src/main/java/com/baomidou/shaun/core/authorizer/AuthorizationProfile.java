@@ -1,11 +1,10 @@
 package com.baomidou.shaun.core.authorizer;
 
-import java.util.Set;
-
+import com.baomidou.shaun.core.enums.Logical;
 import org.pac4j.core.profile.UserProfile;
 import org.pac4j.core.util.CommonHelper;
 
-import com.baomidou.shaun.core.enums.Logical;
+import java.util.Set;
 
 /**
  * 用户 role 和 permission 获取类
@@ -64,7 +63,7 @@ public interface AuthorizationProfile {
         if (CommonHelper.isEmpty(elements) || CommonHelper.isEmpty(checkValues)) {
             return false;
         }
-        if (logical == Logical.OR) {
+        if (logical == Logical.ANY) {
             for (String element : elements) {
                 if (checkValues.contains(element)) {
                     return true;
