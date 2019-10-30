@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.baomidou.shaun.autoconfigure.properties.ShaunProperties;
-import com.baomidou.shaun.core.authorizer.AuthorizationProfile;
+import com.baomidou.shaun.core.authorizer.AuthorizationInterceptor;
 import com.baomidou.shaun.core.authorizer.DefaultAuthorizationProfile;
 import com.baomidou.shaun.core.authorizer.admin.AdminAuthorizer;
 import com.baomidou.shaun.core.authorizer.admin.DefaultAdminAuthorizer;
@@ -96,7 +96,7 @@ public class ShaunAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public AdminAuthorizer adminAuthorizer() {
-        return new DefaultAdminAuthorizer(properties.getAdminRolePermission());
+        return new DefaultAdminAuthorizer(properties.getSkipAuthenticationRolePermission());
     }
 
     /**
@@ -142,7 +142,7 @@ public class ShaunAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean
-    public AuthorizationProfile authorizationContext() {
+    public AuthorizationInterceptor authorizationContext() {
         return new DefaultAuthorizationProfile();
     }
 

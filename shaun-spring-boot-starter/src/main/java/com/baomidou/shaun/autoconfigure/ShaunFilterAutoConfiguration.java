@@ -24,8 +24,7 @@ import org.springframework.util.StringUtils;
 
 import com.baomidou.shaun.autoconfigure.aop.AnnotationAspect;
 import com.baomidou.shaun.autoconfigure.properties.ShaunProperties;
-import com.baomidou.shaun.core.authorizer.AuthorizationProfile;
-import com.baomidou.shaun.core.authorizer.admin.AdminAuthorizer;
+import com.baomidou.shaun.core.authorizer.AuthorizationInterceptor;
 import com.baomidou.shaun.core.client.TokenClient;
 import com.baomidou.shaun.core.context.GlobalConfig;
 import com.baomidou.shaun.core.enums.TokenLocation;
@@ -159,7 +158,7 @@ public class ShaunFilterAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public AnnotationAspect annotationAspect(AdminAuthorizer adminAuthorizer, AuthorizationProfile authorizationProfile) {
-        return new AnnotationAspect(adminAuthorizer, authorizationProfile);
+    public AnnotationAspect annotationAspect(AuthorizationInterceptor authorizationInterceptor) {
+        return new AnnotationAspect(authorizationInterceptor);
     }
 }

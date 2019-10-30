@@ -11,12 +11,12 @@ import org.pac4j.core.profile.CommonProfile;
 public interface TokenGenerator {
 
     /**
-     * @param profile profile
-     * @param isAdmin 是否管理员
-     * @param <U>     泛型
+     * @param profile                  profile
+     * @param isSkipAuthenticationUser 是否是跳过所以鉴权的用户
+     * @param <U>                      泛型
      * @return token
      */
-    <U extends CommonProfile> String generate(final U profile, final boolean isAdmin);
+    <U extends CommonProfile> String generate(final U profile, final boolean isSkipAuthenticationUser);
 
     /**
      * 获取存活时间

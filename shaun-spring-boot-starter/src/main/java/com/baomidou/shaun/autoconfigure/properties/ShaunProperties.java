@@ -34,9 +34,9 @@ public class ShaunProperties {
      */
     private String authorizers = "";
     /**
-     * 管理员的 role 和 permission 的表现字符串
+     * 跳过鉴权的 role 和 permission 的表现字符串(相当于系统超管)
      */
-    private String adminRolePermission = "shaun-admin-role-permission";
+    private String skipAuthenticationRolePermission = "shaun-admin-role-permission";
     /**
      * 排除的 url
      */
