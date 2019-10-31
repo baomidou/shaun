@@ -15,9 +15,9 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface HasAuthorization {
 
-    HasRole roles();
+    HasRole role();
 
-    HasPermission permissions();
+    HasPermission permission();
 
     Logical logical() default Logical.ANY;
 }

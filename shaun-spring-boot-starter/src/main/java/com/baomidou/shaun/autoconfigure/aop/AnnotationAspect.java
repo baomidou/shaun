@@ -1,11 +1,13 @@
 package com.baomidou.shaun.autoconfigure.aop;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.function.Function;
-
+import com.baomidou.shaun.core.annotation.HasAuthorization;
+import com.baomidou.shaun.core.annotation.HasPermission;
+import com.baomidou.shaun.core.annotation.HasRole;
+import com.baomidou.shaun.core.authority.AuthorityManager;
+import com.baomidou.shaun.core.enums.Logical;
+import com.baomidou.shaun.core.util.JEEContextFactory;
+import com.baomidou.shaun.core.util.ProfileHolder;
+import lombok.AllArgsConstructor;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.pac4j.core.authorization.authorizer.IsAuthenticatedAuthorizer;
@@ -14,15 +16,11 @@ import org.pac4j.core.exception.http.ForbiddenAction;
 import org.pac4j.core.exception.http.UnauthorizedAction;
 import org.pac4j.core.profile.UserProfile;
 
-import com.baomidou.shaun.core.annotation.HasAuthorization;
-import com.baomidou.shaun.core.annotation.HasPermission;
-import com.baomidou.shaun.core.annotation.HasRole;
-import com.baomidou.shaun.core.authority.AuthorityManager;
-import com.baomidou.shaun.core.enums.Logical;
-import com.baomidou.shaun.core.util.JEEContextFactory;
-import com.baomidou.shaun.core.util.ProfileHolder;
-
-import lombok.AllArgsConstructor;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.function.Function;
 
 /**
  * @author miemie
@@ -53,9 +51,9 @@ public class AnnotationAspect {
     @Before("@annotation(hasAuthorization)")
     public void beforeHasAuthorization(final HasAuthorization hasAuthorization) {
         final Logical logical = hasAuthorization.logical();
-        final HasRole role = hasAuthorization.roles();
+        final HasRole role = hasAuthorization.role();
         final Set<String> roles = toSet(role.value());
-        final HasPermission permission = hasAuthorization.permissions();
+        final HasPermission permission = hasAuthorization.permission();
         final Set<String> permissions = toSet(permission.value());
         JEEContext j2EContext = JEEContextFactory.getJEEContext();
         final UserProfile profiles = this.isAuthenticated(j2EContext);
