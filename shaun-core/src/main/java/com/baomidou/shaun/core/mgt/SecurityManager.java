@@ -1,15 +1,13 @@
 package com.baomidou.shaun.core.mgt;
 
-import org.pac4j.core.context.JEEContext;
-import org.pac4j.core.profile.CommonProfile;
-
 import com.baomidou.shaun.core.enums.TokenLocation;
 import com.baomidou.shaun.core.generator.TokenGenerator;
 import com.baomidou.shaun.core.properties.Cookie;
 import com.baomidou.shaun.core.util.JEEContextFactory;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.pac4j.core.context.JEEContext;
+import org.pac4j.core.profile.CommonProfile;
 
 /**
  * 安全管理器,封装下,统一的登录登出
@@ -41,13 +39,13 @@ public class SecurityManager {
     /**
      * 统一登录封装
      *
-     * @param profile 登录用户
-     * @param isAdmin 是否管理员
-     * @param <U>     泛型
+     * @param profile                  登录用户
+     * @param isSkipAuthenticationUser 是否是跳过所有鉴权的用户
+     * @param <U>                      泛型
      * @return token
      */
-    public <U extends CommonProfile> String login(U profile, boolean isAdmin) {
-        String token = tokenGenerator.generate(profile, isAdmin);
+    public <U extends CommonProfile> String login(U profile, boolean isSkipAuthenticationUser) {
+        String token = tokenGenerator.generate(profile, isSkipAuthenticationUser);
         if (tokenLocation == TokenLocation.COOKIE) {
             JEEContext jeeContext = JEEContextFactory.getJEEContext();
             jeeContext.addResponseCookie(getCookie(token, tokenGenerator.getAge()));

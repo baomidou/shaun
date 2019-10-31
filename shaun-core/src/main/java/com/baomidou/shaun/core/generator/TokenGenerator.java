@@ -12,7 +12,7 @@ public interface TokenGenerator {
 
     /**
      * @param profile                  profile
-     * @param isSkipAuthenticationUser 是否是跳过所以鉴权的用户
+     * @param isSkipAuthenticationUser 是否是跳过所有鉴权的用户
      * @param <U>                      泛型
      * @return token
      */
