@@ -60,7 +60,7 @@ public class LoginServiceImpl implements LoginService {
     @Override
     @Transactional
     public String login() {
-        # 登录成功后把用户角色权限信息存储到profile中
+        // 登录成功后把用户角色权限信息存储到profile中
         final JwtProfile profile = new JwtProfile();
         profile.setId(userId.toString());
         if (roles.contains(AdminConst.SUPER_ADMIN)) {
