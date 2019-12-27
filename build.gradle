@@ -23,9 +23,9 @@ ext {
     ]
 
     libraries = [
-            springVersion = "5.2.0.RELEASE",
-            springBootVersion = "2.2.0.RELEASE",
-            pac4jVersion = "4.0.0-RC1",
+            springVersion = "5.2.2.RELEASE",
+            springBootVersion = "2.2.2.RELEASE",
+            pac4jVersion = "4.0.0-RC2",
             shiroVersion = "1.4.1",
             junitVersion = "5.4.0"
     ]
@@ -171,7 +171,7 @@ subprojects {
                 pom {
                     name = 'shaun'
                     packaging 'jar'
-                    description = 'easy security for web by pac4j.'
+                    description = 'easy security for web by pac4j'
                     url = 'https://gitee.com/baomidou/shaun'
 
                     scm {
