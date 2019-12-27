@@ -1,15 +1,14 @@
 package shaun.test.cookie;
 
-import org.pac4j.core.profile.CommonProfile;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-
 import com.baomidou.shaun.core.annotation.HasPermission;
 import com.baomidou.shaun.core.annotation.HasRole;
 import com.baomidou.shaun.core.mgt.SecurityManager;
-
+import com.baomidou.shaun.core.profile.TokenProfile;
+import com.baomidou.shaun.core.util.ProfileHolder;
 import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 
 /**
  * @author miemie
@@ -23,7 +22,7 @@ public class TestController {
 
     @GetMapping("auth/login")
     public String authLogin() {
-        CommonProfile profile = new CommonProfile();
+        TokenProfile profile = new TokenProfile();
         profile.setId("111111111111");
         profile.addRole("admin");
         profile.addPermission("add");
@@ -38,6 +37,11 @@ public class TestController {
 
     @GetMapping("/index")
     public String index() {
+        TokenProfile profile = ProfileHolder.getProfile();
+        System.out.println(profile.getId());
+        System.out.println(profile.getToken());
+        System.out.println(profile.getExpirationDate());
+        System.out.println(profile.getIssuedAt());
         return "index";
     }
 

@@ -46,7 +46,7 @@ public class SfLoginFilter implements ShaunFilter {
             log.debug("foundClient: {}", foundClient);
             assertNotNull("foundClient", foundClient);
 
-            Optional<RedirectionAction> redirect = foundClient.redirect(context);
+            Optional<RedirectionAction> redirect = foundClient.getRedirectionAction(context);
             if (redirect.isPresent()) {
                 RedirectionAction action = redirect.get();
                 if (action instanceof FoundAction) {

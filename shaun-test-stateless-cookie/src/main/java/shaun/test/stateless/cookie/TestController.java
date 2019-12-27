@@ -3,8 +3,8 @@ package shaun.test.stateless.cookie;
 import com.baomidou.shaun.core.annotation.HasPermission;
 import com.baomidou.shaun.core.annotation.HasRole;
 import com.baomidou.shaun.core.mgt.SecurityManager;
+import com.baomidou.shaun.core.profile.TokenProfile;
 import lombok.AllArgsConstructor;
-import org.pac4j.jwt.profile.JwtProfile;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,7 +20,7 @@ public class TestController {
 
     @GetMapping("login")
     public String login() {
-        JwtProfile profile = new JwtProfile();
+        TokenProfile profile = new TokenProfile();
         profile.setId("111111111111");
 //        profile.setLinkedId("222222222222"); 不支持这个属性
         profile.addRole("admin");

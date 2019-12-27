@@ -1,9 +1,12 @@
 package com.baomidou.shaun.core.filter;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.Optional;
-
+import com.baomidou.shaun.core.client.TokenClient;
+import com.baomidou.shaun.core.context.GlobalConfig;
+import com.baomidou.shaun.core.handler.HttpActionHandler;
+import com.baomidou.shaun.core.profile.TokenProfile;
+import com.baomidou.shaun.core.util.ProfileHolder;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.pac4j.core.authorization.authorizer.Authorizer;
 import org.pac4j.core.authorization.checker.AuthorizationChecker;
 import org.pac4j.core.authorization.checker.DefaultAuthorizationChecker;
@@ -14,13 +17,9 @@ import org.pac4j.core.matching.Matcher;
 import org.pac4j.core.profile.UserProfile;
 import org.pac4j.core.util.CommonHelper;
 
-import com.baomidou.shaun.core.client.TokenClient;
-import com.baomidou.shaun.core.context.GlobalConfig;
-import com.baomidou.shaun.core.handler.HttpActionHandler;
-import com.baomidou.shaun.core.util.ProfileHolder;
-
-import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * security filter
@@ -51,9 +50,10 @@ public class SecurityFilter implements ShaunFilter {
                 log.debug("profile: {}", profile);
                 if (profile.isPresent()) {
                     log.debug("authorizers: {}", authorizers);
-                    if (authorizationChecker.isAuthorized(context, Collections.singletonList(profile.get()),
+                    TokenProfile tokenProfile = (TokenProfile) profile.get();
+                    if (authorizationChecker.isAuthorized(context, Collections.singletonList(tokenProfile),
                             authorizers, authorizerMap)) {
-                        ProfileHolder.save(context, credentials.get().getToken(), profile.get());
+                        ProfileHolder.save(context, tokenProfile.setToken(credentials.get().getToken()));
                         log.debug("authenticated and authorized -> grant access");
                         return true;
                     }

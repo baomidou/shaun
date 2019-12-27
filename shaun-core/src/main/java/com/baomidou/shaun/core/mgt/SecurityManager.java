@@ -2,12 +2,13 @@ package com.baomidou.shaun.core.mgt;
 
 import com.baomidou.shaun.core.enums.TokenLocation;
 import com.baomidou.shaun.core.generator.TokenGenerator;
+import com.baomidou.shaun.core.handler.LogoutHandler;
+import com.baomidou.shaun.core.profile.TokenProfile;
 import com.baomidou.shaun.core.properties.Cookie;
 import com.baomidou.shaun.core.util.JEEContextFactory;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.pac4j.core.context.JEEContext;
-import org.pac4j.core.profile.CommonProfile;
 
 /**
  * 安全管理器,封装下,统一的登录登出
@@ -22,6 +23,7 @@ public class SecurityManager {
 
     private final TokenGenerator tokenGenerator;
     private final TokenLocation tokenLocation;
+    private final LogoutHandler logoutHandler;
     private final Cookie cookie;
 
     /**
@@ -29,10 +31,9 @@ public class SecurityManager {
      * 默认不是管理员
      *
      * @param profile 登录用户
-     * @param <U>     泛型
      * @return token
      */
-    public <U extends CommonProfile> String login(U profile) {
+    public String login(TokenProfile profile) {
         return login(profile, false);
     }
 
@@ -41,12 +42,11 @@ public class SecurityManager {
      *
      * @param profile                  登录用户
      * @param isSkipAuthenticationUser 是否是跳过所有鉴权的用户
-     * @param <U>                      泛型
      * @return token
      */
-    public <U extends CommonProfile> String login(U profile, boolean isSkipAuthenticationUser) {
+    public String login(TokenProfile profile, boolean isSkipAuthenticationUser) {
         String token = tokenGenerator.generate(profile, isSkipAuthenticationUser);
-        if (tokenLocation == TokenLocation.COOKIE) {
+        if (tokenLocation.enableCookie()) {
             JEEContext jeeContext = JEEContextFactory.getJEEContext();
             jeeContext.addResponseCookie(cookie.getPac4jCookie(token, tokenGenerator.getAge()));
         }
@@ -54,18 +54,9 @@ public class SecurityManager {
     }
 
     /**
-     * 移除用户
-     * <p>
-     * 只在 cookie 存 token 模式下生效
-     *
-     * @return 是否成功
+     * 用户登出,调用 LogoutHandler 进行登出
      */
-    public boolean dropUser() {
-        if (tokenLocation == TokenLocation.COOKIE) {
-            JEEContext jeeContext = JEEContextFactory.getJEEContext();
-            jeeContext.addResponseCookie(cookie.getPac4jCookie("", 0));
-            return true;
-        }
-        return false;
+    public void logout(TokenProfile profile) {
+        logoutHandler.logout(profile);
     }
 }

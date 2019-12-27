@@ -1,5 +1,6 @@
 shaun:
   token-location: cookie
+  expire-time: 10h
   login-url: /login
   logout-url: /logout
   sf-login-url: /sf

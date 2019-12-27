@@ -1,15 +1,13 @@
 package com.baomidou.shaun.core.filter;
 
-import org.pac4j.core.context.JEEContext;
-import org.pac4j.core.matching.Matcher;
-import org.pac4j.core.profile.UserProfile;
-import org.pac4j.core.util.CommonHelper;
-
 import com.baomidou.shaun.core.context.GlobalConfig;
 import com.baomidou.shaun.core.handler.LogoutHandler;
+import com.baomidou.shaun.core.profile.TokenProfile;
 import com.baomidou.shaun.core.util.ProfileHolder;
-
 import lombok.Data;
+import org.pac4j.core.context.JEEContext;
+import org.pac4j.core.matching.Matcher;
+import org.pac4j.core.util.CommonHelper;
 
 /**
  * logout filter
@@ -17,7 +15,6 @@ import lombok.Data;
  * @author miemie
  * @since 2019-07-24
  */
-@SuppressWarnings("unchecked")
 @Data
 public class LogoutFilter implements ShaunFilter {
 
@@ -27,7 +24,7 @@ public class LogoutFilter implements ShaunFilter {
     @Override
     public boolean goOnChain(JEEContext context) {
         if (pathMatcher.matches(context)) {
-            final UserProfile profile = ProfileHolder.getProfile(context);
+            final TokenProfile profile = ProfileHolder.getProfile(context);
             logoutExecutor.logout(profile);
             if (!GlobalConfig.isStatelessOrAjax(context)) {
                 GlobalConfig.gotoLoginUrl(context);

@@ -1,6 +1,6 @@
 package com.baomidou.shaun.core.handler;
 
-import org.pac4j.core.profile.UserProfile;
+import com.baomidou.shaun.core.profile.TokenProfile;
 
 /**
  * 登出执行器
@@ -9,12 +9,12 @@ import org.pac4j.core.profile.UserProfile;
  * @since 2019-07-22
  */
 @FunctionalInterface
-public interface LogoutHandler<U extends UserProfile> {
+public interface LogoutHandler {
 
     /**
      * 登出操作
      *
-     * @param profile 自己的 profile
+     * @param profile profile
      */
-    void logout(U profile);
+    void logout(TokenProfile profile);
 }

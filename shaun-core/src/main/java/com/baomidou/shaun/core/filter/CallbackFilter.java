@@ -1,11 +1,12 @@
 package com.baomidou.shaun.core.filter;
 
-import static org.pac4j.core.util.CommonHelper.assertNotNull;
-import static org.pac4j.core.util.CommonHelper.assertTrue;
-
-import java.util.List;
-import java.util.Optional;
-
+import com.baomidou.shaun.core.context.GlobalConfig;
+import com.baomidou.shaun.core.handler.CallbackHandler;
+import com.baomidou.shaun.core.handler.HttpActionHandler;
+import com.baomidou.shaun.core.mgt.SecurityManager;
+import com.baomidou.shaun.core.profile.TokenProfile;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.pac4j.core.client.Client;
 import org.pac4j.core.client.Clients;
 import org.pac4j.core.client.finder.ClientFinder;
@@ -14,17 +15,14 @@ import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.credentials.Credentials;
 import org.pac4j.core.exception.http.UnauthorizedAction;
 import org.pac4j.core.matching.Matcher;
-import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.core.profile.UserProfile;
 import org.pac4j.core.util.CommonHelper;
 
-import com.baomidou.shaun.core.context.GlobalConfig;
-import com.baomidou.shaun.core.handler.CallbackHandler;
-import com.baomidou.shaun.core.handler.HttpActionHandler;
-import com.baomidou.shaun.core.mgt.SecurityManager;
+import java.util.List;
+import java.util.Optional;
 
-import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+import static org.pac4j.core.util.CommonHelper.assertNotNull;
+import static org.pac4j.core.util.CommonHelper.assertTrue;
 
 /**
  * callback filter
@@ -62,8 +60,8 @@ public class CallbackFilter implements ShaunFilter {
                 final Optional<UserProfile> profile = foundClient.getUserProfile(credentials.get(), context);
                 log.debug("profile: {}", profile);
                 if (profile.isPresent()) {
-                    CommonProfile commonProfile = callbackHandler.callBack(context, profile.get());
-                    securityManager.login(commonProfile);
+                    TokenProfile tokenProfile = callbackHandler.callBack(context, profile.get());
+                    securityManager.login(tokenProfile);
                     GlobalConfig.gotoUrl(context, indexUrl);
                     return false;
                 }
