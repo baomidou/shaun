@@ -14,12 +14,14 @@ import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.credentials.TokenCredentials;
 import org.pac4j.core.exception.http.UnauthorizedAction;
 import org.pac4j.core.matching.Matcher;
+import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.core.profile.UserProfile;
 import org.pac4j.core.util.CommonHelper;
 
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * security filter
@@ -50,7 +52,21 @@ public class SecurityFilter implements ShaunFilter {
                 log.debug("profile: {}", profile);
                 if (profile.isPresent()) {
                     log.debug("authorizers: {}", authorizers);
-                    TokenProfile tokenProfile = (TokenProfile) profile.get();
+                    // todo 兼容性升级
+                    CommonProfile commonProfile = (CommonProfile) profile.get();
+                    TokenProfile tokenProfile;
+                    if (commonProfile instanceof TokenProfile) {
+                        tokenProfile = (TokenProfile) commonProfile;
+                    } else {
+                        tokenProfile = new TokenProfile();
+                        Set<String> permissions = commonProfile.getPermissions();
+                        tokenProfile.addPermissions(permissions);
+                        Set<String> roles = commonProfile.getRoles();
+                        tokenProfile.addRoles(roles);
+                        tokenProfile.setId(commonProfile.getId());
+                        tokenProfile.addAttributes(commonProfile.getAttributes());
+                    }
+                    // todo 兼容性升级
                     if (authorizationChecker.isAuthorized(context, Collections.singletonList(tokenProfile),
                             authorizers, authorizerMap)) {
                         ProfileHolder.save(context, tokenProfile.setToken(credentials.get().getToken()));
