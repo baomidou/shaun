@@ -17,10 +17,10 @@ import java.util.Date;
  */
 public abstract class ExpireTimeUtil {
 
-    private static final String second = "s";
-    private static final String minute = "m";
-    private static final String hour = "h";
-    private static final String day = "d";
+    private static final String SECOND = "s";
+    private static final String MINUTE = "m";
+    private static final String HOUR = "h";
+    private static final String DAY = "d";
 
     /**
      * 获取超时时间 Date
@@ -32,15 +32,15 @@ public abstract class ExpireTimeUtil {
     public static Date getTargetDate(final String expireTime) {
         try {
             int index = 0;
-            if ((index = expireTime.indexOf(day)) < 1) {
+            if ((index = expireTime.indexOf(DAY)) < 1) {
                 Calendar calendar = Calendar.getInstance();
-                if ((index = expireTime.indexOf(second)) > 0) {
+                if ((index = expireTime.indexOf(SECOND)) > 0) {
                     calendar.add(Calendar.SECOND, Integer.parseInt(expireTime.substring(0, index)));
                     return calendar.getTime();
-                } else if ((index = expireTime.indexOf(minute)) > 0) {
+                } else if ((index = expireTime.indexOf(MINUTE)) > 0) {
                     calendar.add(Calendar.MINUTE, Integer.parseInt(expireTime.substring(0, index)));
                     return calendar.getTime();
-                } else if ((index = expireTime.indexOf(hour)) > 0) {
+                } else if ((index = expireTime.indexOf(HOUR)) > 0) {
                     calendar.add(Calendar.HOUR, Integer.parseInt(expireTime.substring(0, index)));
                     return calendar.getTime();
                 }
@@ -59,11 +59,11 @@ public abstract class ExpireTimeUtil {
                 }
                 final String subEx = expireTime.substring(index + 1);
                 int index2 = 0;
-                if ((index2 = subEx.indexOf(second)) > 0) {
+                if ((index2 = subEx.indexOf(SECOND)) > 0) {
                     now = now.plusSeconds(Integer.parseInt(subEx.substring(0, index2)));
-                } else if ((index2 = subEx.indexOf(minute)) > 0) {
+                } else if ((index2 = subEx.indexOf(MINUTE)) > 0) {
                     now = now.plusMinutes(Integer.parseInt(subEx.substring(0, index2)));
-                } else if ((index2 = subEx.indexOf(hour)) > 0) {
+                } else if ((index2 = subEx.indexOf(HOUR)) > 0) {
                     now = now.plusHours(Integer.parseInt(subEx.substring(0, index2)));
                 }
                 return Date.from(now.atZone(ZoneId.systemDefault()).toInstant());
@@ -83,12 +83,12 @@ public abstract class ExpireTimeUtil {
     public static int getTargetSecond(final String expireTime) {
         try {
             int index = 0;
-            if ((index = expireTime.indexOf(day)) < 1) {
-                if ((index = expireTime.indexOf(second)) > 0) {
+            if ((index = expireTime.indexOf(DAY)) < 1) {
+                if ((index = expireTime.indexOf(SECOND)) > 0) {
                     return Integer.parseInt(expireTime.substring(0, index));
-                } else if ((index = expireTime.indexOf(minute)) > 0) {
+                } else if ((index = expireTime.indexOf(MINUTE)) > 0) {
                     return Integer.parseInt(expireTime.substring(0, index)) * 60;
-                } else if ((index = expireTime.indexOf(hour)) > 0) {
+                } else if ((index = expireTime.indexOf(HOUR)) > 0) {
                     return Integer.parseInt(expireTime.substring(0, index)) * 60 * 60;
                 }
             } else {
@@ -103,11 +103,11 @@ public abstract class ExpireTimeUtil {
                 }
                 final String subEx = expireTime.substring(index + 1);
                 int index2 = 0;
-                if ((index2 = subEx.indexOf(second)) > 0) {
+                if ((index2 = subEx.indexOf(SECOND)) > 0) {
                     now = now.plusSeconds(Integer.parseInt(subEx.substring(0, index2)));
-                } else if ((index2 = subEx.indexOf(minute)) > 0) {
+                } else if ((index2 = subEx.indexOf(MINUTE)) > 0) {
                     now = now.plusMinutes(Integer.parseInt(subEx.substring(0, index2)));
-                } else if ((index2 = subEx.indexOf(hour)) > 0) {
+                } else if ((index2 = subEx.indexOf(HOUR)) > 0) {
                     now = now.plusHours(Integer.parseInt(subEx.substring(0, index2)));
                 }
                 return (int) dateTime.until(now, ChronoUnit.SECONDS);
