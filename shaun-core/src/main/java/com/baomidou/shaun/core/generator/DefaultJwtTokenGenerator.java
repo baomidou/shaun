@@ -1,17 +1,16 @@
 package com.baomidou.shaun.core.generator;
 
+import com.baomidou.shaun.core.authority.AuthorityManager;
+import com.baomidou.shaun.core.util.ExpireTimeUtil;
+import lombok.Data;
+import lombok.experimental.Accessors;
 import org.pac4j.core.credentials.TokenCredentials;
 import org.pac4j.core.credentials.authenticator.Authenticator;
 import org.pac4j.core.profile.CommonProfile;
+import org.pac4j.core.util.CommonHelper;
 import org.pac4j.jwt.config.encryption.EncryptionConfiguration;
 import org.pac4j.jwt.config.signature.SignatureConfiguration;
 import org.pac4j.jwt.profile.JwtGenerator;
-
-import com.baomidou.shaun.core.authority.AuthorityManager;
-import com.baomidou.shaun.core.util.ExpireTimeUtil;
-
-import lombok.Data;
-import lombok.experimental.Accessors;
 
 /**
  * 默认使用 pac4j 的 JwtGenerator 生成 token(jwt)
@@ -30,9 +29,9 @@ public class DefaultJwtTokenGenerator implements TokenGenerator {
     private final EncryptionConfiguration encryptionConfiguration;
 
     /**
-     * jwt 超时时间
+     * 默认超时时间
      */
-    private String expireTime;
+    private String defaultExpireTime;
 
     public DefaultJwtTokenGenerator(AuthorityManager authorityManager, SignatureConfiguration signatureConfiguration,
                                     EncryptionConfiguration encryptionConfiguration) {
@@ -42,13 +41,19 @@ public class DefaultJwtTokenGenerator implements TokenGenerator {
     }
 
     @Override
-    public <U extends CommonProfile> String generate(final U profile, final boolean isSkipAuthenticationUser) {
+    public <U extends CommonProfile> String generate(final U profile, final boolean isSkipAuthenticationUser, String optionExpireTime) {
         if (isSkipAuthenticationUser) {
             authorityManager.setUserSkipAuthentication(profile);
         }
         JwtGenerator<U> jwtGenerator = new JwtGenerator<>(signatureConfiguration, encryptionConfiguration);
-        if (expireTime != null) {
-            jwtGenerator.setExpirationTime(ExpireTimeUtil.getTargetDate(expireTime));
+        boolean defaultExpire = CommonHelper.isNotBlank(defaultExpireTime);
+        boolean optionExpire = CommonHelper.isNotBlank(optionExpireTime);
+        if (defaultExpire || optionExpire) {
+            if (!defaultExpire || optionExpire) {
+                jwtGenerator.setExpirationTime(ExpireTimeUtil.getTargetDate(optionExpireTime));
+            } else {
+                jwtGenerator.setExpirationTime(ExpireTimeUtil.getTargetDate(defaultExpireTime));
+            }
         }
         return jwtGenerator.generate(profile);
     }
@@ -58,8 +63,8 @@ public class DefaultJwtTokenGenerator implements TokenGenerator {
      */
     @Override
     public Integer getAge() {
-        if (expireTime != null) {
-            return ExpireTimeUtil.getTargetSecond(expireTime) - 1;
+        if (defaultExpireTime != null) {
+            return ExpireTimeUtil.getTargetSecond(defaultExpireTime) - 1;
         }
         return null;
     }

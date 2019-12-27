@@ -103,7 +103,7 @@ public class ShaunAutoConfiguration {
     public TokenGenerator tokenGenerator(AuthorityManager authorityManager, SignatureConfiguration signatureConfiguration,
                                          EncryptionConfiguration encryptionConfiguration) {
         return new DefaultJwtTokenGenerator(authorityManager, signatureConfiguration, encryptionConfiguration)
-                .setExpireTime(properties.getExpireTime());
+                .setDefaultExpireTime(properties.getExpireTime());
     }
 
     /**

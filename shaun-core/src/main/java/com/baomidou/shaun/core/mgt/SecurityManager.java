@@ -27,25 +27,29 @@ public class SecurityManager {
     private final Cookie cookie;
 
     /**
-     * 统一登录封装,
-     * 默认不是管理员
-     *
-     * @param profile 登录用户
-     * @return token
+     * ignore
      */
     public String login(TokenProfile profile) {
-        return login(profile, false);
+        return login(profile, false, null);
+    }
+
+    /**
+     * ignore
+     */
+    public String login(TokenProfile profile, boolean isSkipAuthenticationUser) {
+        return login(profile, isSkipAuthenticationUser, null);
     }
 
     /**
      * 统一登录封装
      *
      * @param profile                  登录用户
-     * @param isSkipAuthenticationUser 是否是跳过所有鉴权的用户
+     * @param isSkipAuthenticationUser 是否是跳过所有鉴权的用户(约等于是否是超管)
+     * @param optionExpireTime         选择性的超时时间
      * @return token
      */
-    public String login(TokenProfile profile, boolean isSkipAuthenticationUser) {
-        String token = tokenGenerator.generate(profile, isSkipAuthenticationUser);
+    public String login(TokenProfile profile, boolean isSkipAuthenticationUser, String optionExpireTime) {
+        String token = tokenGenerator.generate(profile, isSkipAuthenticationUser, optionExpireTime);
         if (tokenLocation.enableCookie()) {
             JEEContext jeeContext = JEEContextFactory.getJEEContext();
             jeeContext.addResponseCookie(cookie.getPac4jCookie(token, tokenGenerator.getAge()));

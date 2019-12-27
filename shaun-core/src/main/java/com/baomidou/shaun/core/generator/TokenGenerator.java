@@ -16,7 +16,7 @@ public interface TokenGenerator {
      * @param <U>                      泛型
      * @return token
      */
-    <U extends CommonProfile> String generate(final U profile, final boolean isSkipAuthenticationUser);
+    <U extends CommonProfile> String generate(final U profile, final boolean isSkipAuthenticationUser, String expireTime);
 
     /**
      * 获取存活时间
