@@ -1,12 +1,11 @@
 package com.baomidou.shaun.core.authority;
 
-import java.util.Set;
-
+import com.baomidou.shaun.core.enums.Logical;
 import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.core.profile.UserProfile;
 import org.pac4j.core.util.CommonHelper;
 
-import com.baomidou.shaun.core.enums.Logical;
+import java.util.Set;
 
 /**
  * 用户 role 和 permission 授权,鉴权 类
@@ -17,7 +16,7 @@ import com.baomidou.shaun.core.enums.Logical;
 public interface AuthorityManager {
 
     /**
-     * 设置用户为跳过所以鉴权
+     * 设置用户为跳过所有鉴权
      *
      * @param profile 用户
      * @param <U>     泛型
