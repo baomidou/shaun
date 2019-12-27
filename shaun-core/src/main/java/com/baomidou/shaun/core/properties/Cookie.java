@@ -16,7 +16,7 @@ public class Cookie {
     private String domain = "";
     private String path = Pac4jConstants.DEFAULT_URL_VALUE;
     private boolean secure;
-    private boolean isHttpOnly = false;
+    private boolean isHttpOnly;
 
     /**
      * 获取pac4j的cookie
