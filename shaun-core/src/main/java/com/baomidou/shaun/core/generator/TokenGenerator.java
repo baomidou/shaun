@@ -23,5 +23,5 @@ public interface TokenGenerator {
      *
      * @return 存活时间(单位 : 秒)
      */
-    Integer getAge();
+    Integer getAge(String optionExpireTime);
 }

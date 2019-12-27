@@ -52,7 +52,7 @@ public class SecurityManager {
         String token = tokenGenerator.generate(profile, isSkipAuthenticationUser, optionExpireTime);
         if (tokenLocation.enableCookie()) {
             JEEContext jeeContext = JEEContextFactory.getJEEContext();
-            jeeContext.addResponseCookie(cookie.getPac4jCookie(token, tokenGenerator.getAge()));
+            jeeContext.addResponseCookie(cookie.getPac4jCookie(token, tokenGenerator.getAge(optionExpireTime)));
         }
         return token;
     }

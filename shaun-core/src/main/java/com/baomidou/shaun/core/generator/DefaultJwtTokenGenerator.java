@@ -62,9 +62,17 @@ public class DefaultJwtTokenGenerator implements TokenGenerator {
      * 默认提前1秒到期
      */
     @Override
-    public Integer getAge() {
-        if (defaultExpireTime != null) {
-            return ExpireTimeUtil.getTargetSecond(defaultExpireTime) - 1;
+    public Integer getAge(String optionExpireTime) {
+        boolean defaultExpire = CommonHelper.isNotBlank(defaultExpireTime);
+        boolean optionExpire = CommonHelper.isNotBlank(optionExpireTime);
+        if (defaultExpire || optionExpire) {
+            int expireTime;
+            if (!defaultExpire || optionExpire) {
+                expireTime = ExpireTimeUtil.getTargetSecond(optionExpireTime);
+            } else {
+                expireTime = ExpireTimeUtil.getTargetSecond(defaultExpireTime);
+            }
+            return expireTime - 1;
         }
         return null;
     }
