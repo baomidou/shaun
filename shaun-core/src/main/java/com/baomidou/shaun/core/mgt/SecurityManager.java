@@ -48,7 +48,7 @@ public class SecurityManager {
         String token = tokenGenerator.generate(profile, isSkipAuthenticationUser);
         if (tokenLocation == TokenLocation.COOKIE) {
             JEEContext jeeContext = JEEContextFactory.getJEEContext();
-            jeeContext.addResponseCookie(getCookie(token, tokenGenerator.getAge()));
+            jeeContext.addResponseCookie(cookie.getPac4jCookie(token, tokenGenerator.getAge()));
         }
         return token;
     }
@@ -63,21 +63,9 @@ public class SecurityManager {
     public boolean dropUser() {
         if (tokenLocation == TokenLocation.COOKIE) {
             JEEContext jeeContext = JEEContextFactory.getJEEContext();
-            jeeContext.addResponseCookie(getCookie("", 0));
+            jeeContext.addResponseCookie(cookie.getPac4jCookie("", 0));
             return true;
         }
         return false;
-    }
-
-    private org.pac4j.core.context.Cookie getCookie(final String token, Integer maxAge) {
-        org.pac4j.core.context.Cookie c = new org.pac4j.core.context.Cookie(cookie.getName(), token);
-        c.setVersion(cookie.getVersion());
-        c.setSecure(cookie.isSecure());
-        c.setPath(cookie.getPath());
-        c.setMaxAge(maxAge == null ? -1 : maxAge);
-        c.setHttpOnly(cookie.isHttpOnly());
-        c.setComment(cookie.getComment());
-        c.setDomain(cookie.getDomain());
-        return c;
     }
 }
