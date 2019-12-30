@@ -79,7 +79,7 @@ public class LoginServiceImpl implements LoginService {
 
 ```yaml
 shaun:
-  salt: d614a4fdff6540c1a5b730afc5f9cc8f
+  salt: d614a4fdff6540c1a5b730afc5f9cc8f #非必须
   exclude-path:
     - /v2/api-docs
     - /swagger-resources
@@ -88,3 +88,20 @@ shaun:
     - /wechat-auth
     - /webjars
 ```
+
+4. 注解拦截。
+
+类似于shiro，shaun也默认支持使用注解在controller上拦截。
+
+相关的注解有 `@HasAuthorization`   `@HasPermission`  `@HasRole`  。
+
+```java
+@HasPermission(value = {"add","edit"},logical = Logical.BOTH) //同时存在
+@HasPermission(value = {"add","edit"},logical = Logical.ANY)  //任一存在
+```
+
+5. 前后端交互。
+
+默认配置下  前端登录后需要把后端返回的token存下，后续接口的请求头带上Authorization。
+
+后端可以通过  TokenProfile profile = ProfileHolder.getProfile();  获得用户信息。
