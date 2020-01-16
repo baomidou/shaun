@@ -61,16 +61,11 @@ public class LoginServiceImpl implements LoginService {
     @Transactional
     public String login() {
         // 登录成功后把用户角色权限信息存储到profile中
-        final JwtProfile profile = new JwtProfile();
+        final TokenProfile profile = new TokenProfile();
         profile.setId(userId.toString());
-        if (roles.contains(AdminConst.SUPER_ADMIN)) {
-            isAdmin = true;
-        } else {
-            profile.setPermissions(permissionService.selectPermissionsByUserId(userId).stream()
-                    .filter(x -> Objects.nonNull(x.getCode())).map(SysPermission::getCode).collect(Collectors.toSet()));
-            profile.setRoles(new HashSet<>(roles));
-        }
-        final String token = securityManager.login(profile, isAdmin);
+        //profile.setRoles(roles);
+        //profile.setPermissions(permissions);
+        final String token = securityManager.login(profile);
         return token;
     }
 ```
@@ -79,13 +74,12 @@ public class LoginServiceImpl implements LoginService {
 
 ```yaml
 shaun:
-  salt: d614a4fdff6540c1a5b730afc5f9cc8f #非必须
+  salt: 32位字符串,只是跑一下demo非必须
   exclude-path:
     - /v2/api-docs
     - /swagger-resources
     - /doc.html
   exclude-branch:
-    - /wechat-auth
     - /webjars
 ```
 
