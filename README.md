@@ -29,12 +29,13 @@
 3. 使用凭证(token) 进行身份验证(默认是 jwt)。
 4. 前后端不分离下,能依托pac4j的各种client快速集成三方登录(redirect跳转那种),例如oauth(qq,微信) 和 cas。
 
-模块简介:
-- shaun-core: 核心包
-- shaun-spring-boot-starter: spring boot 快速启动包
-- shaun-test-cookie: 前后端不分离下的测试演示
-- shaun-test-stateless-cookie: 前后端分离下使用cookie存token的测试演示
-- shaun-test-stateless-header: 前后端分离下使用request header携带token的测试演示
+# 模块简介
+
+- shaun-core: 核心包。
+- shaun-spring-boot-starter: spring boot 快速启动包。
+- shaun-test-cookie: 前后端不分离下的测试演示。
+- shaun-test-stateless-cookie: 前后端分离下使用cookie存token的测试演示。
+- shaun-test-stateless-header: 前后端分离下使用request header携带token的测试演示。
 
 # 使用方法
 
@@ -63,8 +64,9 @@ public class LoginServiceImpl implements LoginService {
         // 登录成功后把用户角色权限信息存储到profile中
         final TokenProfile profile = new TokenProfile();
         profile.setId(userId.toString());
-        //profile.setRoles(roles);
+        //profile.setRoles(roles);  
         //profile.setPermissions(permissions);
+        //profile.addAttribute("key","value");
         final String token = securityManager.login(profile);
         return token;
     }
@@ -74,13 +76,21 @@ public class LoginServiceImpl implements LoginService {
 
 ```yaml
 shaun:
-  salt: 32位字符串,只是跑一下demo非必须
-  exclude-path:
-    - /v2/api-docs
+  salt: 32位字符串,非必须字段
+  exclude-path: # 排除具体的路径
+    - /v2/api-docs  
     - /swagger-resources
     - /doc.html
-  exclude-branch:
+  exclude-branch: # 排除以此路径开头
     - /webjars
+  expire-time: '1d' # 不设置默认永久有效
+  
+ # jwt 超时时间 10s : 表示10秒有效
+ #             10m 结尾: 表示10分钟有效
+ #             10h 结尾: 表示10小时有效
+ #             1d : 表示有效时间到第二天 00:00:00
+ #             2d1h : 表示有效时间到第二天 01:00:00 
+ #             d 后面 只支持上面三个(`s`,`m`,`h`)之一
 ```
 
 4. 注解拦截。
@@ -90,12 +100,16 @@ shaun:
 相关的注解有 `@HasAuthorization`   `@HasPermission`  `@HasRole`  。
 
 ```java
-@HasPermission(value = {"add","edit"},logical = Logical.BOTH) //同时存在
-@HasPermission(value = {"add","edit"},logical = Logical.ANY)  //任一存在
+@HasPermission(value = {"add","edit"},logical = Logical.BOTH) //权限必须同时存在
+@HasPermission(value = {"add","edit"},logical = Logical.ANY)  //权限任一存在
 ```
 
 5. 前后端交互。
 
 默认配置下  前端登录后需要把后端返回的token存下，后续接口的请求头带上Authorization。
 
-后端可以通过  TokenProfile profile = ProfileHolder.getProfile();  获得用户信息。
+后端可以通过  TokenProfile profile = ProfileHolder.getProfile();  获得登录设置进去的用户信息。
+
+如获得登录设置进token里的用户ID继续进行业务逻辑处理。
+
+如   `Long id= ProfileHolder.getProfile().getId();`
