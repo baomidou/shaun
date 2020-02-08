@@ -1,16 +1,18 @@
 package com.baomidou.shaun.core.generator;
 
-import com.baomidou.shaun.core.authority.AuthorityManager;
-import com.baomidou.shaun.core.util.ExpireTimeUtil;
-import lombok.Data;
-import lombok.experimental.Accessors;
 import org.pac4j.core.credentials.TokenCredentials;
 import org.pac4j.core.credentials.authenticator.Authenticator;
-import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.core.util.CommonHelper;
 import org.pac4j.jwt.config.encryption.EncryptionConfiguration;
 import org.pac4j.jwt.config.signature.SignatureConfiguration;
 import org.pac4j.jwt.profile.JwtGenerator;
+
+import com.baomidou.shaun.core.authority.AuthorityManager;
+import com.baomidou.shaun.core.profile.TokenProfile;
+import com.baomidou.shaun.core.util.ExpireTimeUtil;
+
+import lombok.Data;
+import lombok.experimental.Accessors;
 
 /**
  * 默认使用 pac4j 的 JwtGenerator 生成 token(jwt)
@@ -41,11 +43,11 @@ public class DefaultJwtTokenGenerator implements TokenGenerator {
     }
 
     @Override
-    public <U extends CommonProfile> String generate(final U profile, final boolean isSkipAuthenticationUser, String optionExpireTime) {
+    public String generate(final TokenProfile profile, final boolean isSkipAuthenticationUser, String optionExpireTime) {
         if (isSkipAuthenticationUser) {
             authorityManager.setUserSkipAuthentication(profile);
         }
-        JwtGenerator<U> jwtGenerator = new JwtGenerator<>(signatureConfiguration, encryptionConfiguration);
+        JwtGenerator<TokenProfile> jwtGenerator = new JwtGenerator<>(signatureConfiguration, encryptionConfiguration);
         boolean defaultExpire = CommonHelper.isNotBlank(defaultExpireTime);
         boolean optionExpire = CommonHelper.isNotBlank(optionExpireTime);
         if (defaultExpire || optionExpire) {
@@ -62,7 +64,7 @@ public class DefaultJwtTokenGenerator implements TokenGenerator {
      * 默认提前1秒到期
      */
     @Override
-    public Integer getAge(String optionExpireTime) {
+    public int getAge(String optionExpireTime) {
         boolean defaultExpire = CommonHelper.isNotBlank(defaultExpireTime);
         boolean optionExpire = CommonHelper.isNotBlank(optionExpireTime);
         if (defaultExpire || optionExpire) {
@@ -74,6 +76,6 @@ public class DefaultJwtTokenGenerator implements TokenGenerator {
             }
             return expireTime - 1;
         }
-        return null;
+        return -1;
     }
 }

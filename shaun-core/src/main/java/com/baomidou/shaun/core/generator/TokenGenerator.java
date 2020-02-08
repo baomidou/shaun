@@ -1,6 +1,6 @@
 package com.baomidou.shaun.core.generator;
 
-import org.pac4j.core.profile.CommonProfile;
+import com.baomidou.shaun.core.profile.TokenProfile;
 
 /**
  * token 生成器
@@ -13,15 +13,14 @@ public interface TokenGenerator {
     /**
      * @param profile                  profile
      * @param isSkipAuthenticationUser 是否是跳过所有鉴权的用户
-     * @param <U>                      泛型
      * @return token
      */
-    <U extends CommonProfile> String generate(final U profile, final boolean isSkipAuthenticationUser, String expireTime);
+    String generate(final TokenProfile profile, final boolean isSkipAuthenticationUser, String expireTime);
 
     /**
      * 获取存活时间
      *
      * @return 存活时间(单位 : 秒)
      */
-    Integer getAge(String optionExpireTime);
+    int getAge(String optionExpireTime);
 }
