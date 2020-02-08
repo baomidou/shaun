@@ -1,14 +1,16 @@
 package shaun.test.cookie;
 
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+
 import com.baomidou.shaun.core.annotation.HasPermission;
 import com.baomidou.shaun.core.annotation.HasRole;
 import com.baomidou.shaun.core.mgt.SecurityManager;
 import com.baomidou.shaun.core.profile.TokenProfile;
 import com.baomidou.shaun.core.util.ProfileHolder;
+
 import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
 
 /**
  * @author miemie
@@ -42,6 +44,7 @@ public class TestController {
         System.out.println(profile.getToken());
         System.out.println(profile.getExpirationDate());
         System.out.println(profile.getIssuedAt());
+        System.out.println(profile.getLinkedId());
         return "index";
     }
 
