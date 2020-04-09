@@ -1,6 +1,6 @@
 package com.baomidou.shaun.core.properties;
 
-import org.pac4j.core.context.Pac4jConstants;
+import org.pac4j.core.util.Pac4jConstants;
 
 import lombok.Data;
 

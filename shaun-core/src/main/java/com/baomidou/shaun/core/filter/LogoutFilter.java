@@ -1,13 +1,15 @@
 package com.baomidou.shaun.core.filter;
 
+import org.pac4j.core.context.JEEContext;
+import org.pac4j.core.matching.matcher.Matcher;
+import org.pac4j.core.util.CommonHelper;
+
 import com.baomidou.shaun.core.context.GlobalConfig;
 import com.baomidou.shaun.core.handler.LogoutHandler;
 import com.baomidou.shaun.core.profile.TokenProfile;
 import com.baomidou.shaun.core.util.ProfileHolder;
+
 import lombok.Data;
-import org.pac4j.core.context.JEEContext;
-import org.pac4j.core.matching.Matcher;
-import org.pac4j.core.util.CommonHelper;
 
 /**
  * logout filter

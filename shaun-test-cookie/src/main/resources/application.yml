@@ -1,4 +1,5 @@
 shaun:
+  model: web_filter
   token-location: cookie
   expire-time: 10h
   login-url: /login

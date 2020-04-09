@@ -1,7 +1,7 @@
 package com.baomidou.shaun.core.matching;
 
 import org.pac4j.core.context.WebContext;
-import org.pac4j.core.matching.Matcher;
+import org.pac4j.core.matching.matcher.Matcher;
 import org.pac4j.core.util.CommonHelper;
 
 /**

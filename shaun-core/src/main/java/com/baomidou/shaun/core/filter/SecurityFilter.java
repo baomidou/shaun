@@ -1,27 +1,29 @@
 package com.baomidou.shaun.core.filter;
 
-import com.baomidou.shaun.core.client.TokenClient;
-import com.baomidou.shaun.core.context.GlobalConfig;
-import com.baomidou.shaun.core.handler.HttpActionHandler;
-import com.baomidou.shaun.core.profile.TokenProfile;
-import com.baomidou.shaun.core.util.ProfileHolder;
-import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+
 import org.pac4j.core.authorization.authorizer.Authorizer;
 import org.pac4j.core.authorization.checker.AuthorizationChecker;
 import org.pac4j.core.authorization.checker.DefaultAuthorizationChecker;
 import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.credentials.TokenCredentials;
 import org.pac4j.core.exception.http.UnauthorizedAction;
-import org.pac4j.core.matching.Matcher;
+import org.pac4j.core.matching.matcher.Matcher;
 import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.core.profile.UserProfile;
 import org.pac4j.core.util.CommonHelper;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import com.baomidou.shaun.core.client.TokenClient;
+import com.baomidou.shaun.core.context.GlobalConfig;
+import com.baomidou.shaun.core.handler.HttpActionHandler;
+import com.baomidou.shaun.core.profile.TokenProfile;
+import com.baomidou.shaun.core.util.ProfileHolder;
+
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * security filter

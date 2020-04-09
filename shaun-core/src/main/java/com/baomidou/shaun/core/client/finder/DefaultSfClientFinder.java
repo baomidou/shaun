@@ -7,8 +7,8 @@ import java.util.Optional;
 import org.pac4j.core.client.Client;
 import org.pac4j.core.client.Clients;
 import org.pac4j.core.client.finder.ClientFinder;
-import org.pac4j.core.context.Pac4jConstants;
 import org.pac4j.core.context.WebContext;
+import org.pac4j.core.util.Pac4jConstants;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;

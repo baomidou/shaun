@@ -1,23 +1,25 @@
 package com.baomidou.shaun.core.filter;
 
-import com.baomidou.shaun.core.client.finder.DefaultSfClientFinder;
-import com.baomidou.shaun.core.context.GlobalConfig;
-import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+import static org.pac4j.core.util.CommonHelper.assertNotNull;
+import static org.pac4j.core.util.CommonHelper.assertTrue;
+
+import java.util.List;
+import java.util.Optional;
+
 import org.pac4j.core.client.Client;
 import org.pac4j.core.client.Clients;
 import org.pac4j.core.client.finder.ClientFinder;
 import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.exception.http.FoundAction;
 import org.pac4j.core.exception.http.RedirectionAction;
-import org.pac4j.core.matching.Matcher;
+import org.pac4j.core.matching.matcher.Matcher;
 import org.pac4j.core.util.CommonHelper;
 
-import java.util.List;
-import java.util.Optional;
+import com.baomidou.shaun.core.client.finder.DefaultSfClientFinder;
+import com.baomidou.shaun.core.context.GlobalConfig;
 
-import static org.pac4j.core.util.CommonHelper.assertNotNull;
-import static org.pac4j.core.util.CommonHelper.assertTrue;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 三方登录 filter

@@ -1,11 +1,13 @@
 package com.baomidou.shaun.core.util;
 
-import com.baomidou.shaun.core.profile.TokenProfile;
-import org.pac4j.core.context.JEEContext;
-import org.pac4j.core.context.Pac4jConstants;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Optional;
+
+import org.pac4j.core.context.JEEContext;
+import org.pac4j.core.util.Pac4jConstants;
+
+import com.baomidou.shaun.core.profile.TokenProfile;
 
 /**
  * 统一的存放登录用户信息

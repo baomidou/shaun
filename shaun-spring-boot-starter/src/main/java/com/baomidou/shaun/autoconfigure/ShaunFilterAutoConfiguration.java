@@ -1,27 +1,19 @@
 package com.baomidou.shaun.autoconfigure;
 
-import com.baomidou.shaun.autoconfigure.aop.AnnotationAspect;
-import com.baomidou.shaun.autoconfigure.properties.ShaunProperties;
-import com.baomidou.shaun.core.authority.AuthorityManager;
-import com.baomidou.shaun.core.client.TokenClient;
-import com.baomidou.shaun.core.context.GlobalConfig;
-import com.baomidou.shaun.core.enums.TokenLocation;
-import com.baomidou.shaun.core.filter.*;
-import com.baomidou.shaun.core.handler.CallbackHandler;
-import com.baomidou.shaun.core.handler.HttpActionHandler;
-import com.baomidou.shaun.core.handler.LogoutHandler;
-import com.baomidou.shaun.core.matching.OnlyPathMatcher;
-import com.baomidou.shaun.core.mgt.SecurityManager;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.pac4j.core.authorization.authorizer.Authorizer;
 import org.pac4j.core.client.Client;
 import org.pac4j.core.client.Clients;
 import org.pac4j.core.client.IndirectClient;
-import org.pac4j.core.context.Pac4jConstants;
 import org.pac4j.core.http.ajax.AjaxRequestResolver;
-import org.pac4j.core.matching.PathMatcher;
+import org.pac4j.core.matching.matcher.PathMatcher;
 import org.pac4j.core.util.CommonHelper;
+import org.pac4j.core.util.Pac4jConstants;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -30,11 +22,25 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import com.baomidou.shaun.autoconfigure.aop.AnnotationAspect;
+import com.baomidou.shaun.autoconfigure.properties.ShaunProperties;
+import com.baomidou.shaun.core.authority.AuthorityManager;
+import com.baomidou.shaun.core.client.TokenClient;
+import com.baomidou.shaun.core.context.GlobalConfig;
+import com.baomidou.shaun.core.enums.TokenLocation;
+import com.baomidou.shaun.core.filter.CallbackFilter;
+import com.baomidou.shaun.core.filter.LogoutFilter;
+import com.baomidou.shaun.core.filter.SecurityFilter;
+import com.baomidou.shaun.core.filter.SfLoginFilter;
+import com.baomidou.shaun.core.filter.ShaunFilter;
+import com.baomidou.shaun.core.handler.CallbackHandler;
+import com.baomidou.shaun.core.handler.HttpActionHandler;
+import com.baomidou.shaun.core.handler.LogoutHandler;
+import com.baomidou.shaun.core.matching.OnlyPathMatcher;
+import com.baomidou.shaun.core.mgt.SecurityManager;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
 /**
  * @author miemie
