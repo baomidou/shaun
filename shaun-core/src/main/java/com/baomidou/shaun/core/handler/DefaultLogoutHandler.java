@@ -1,12 +1,14 @@
 package com.baomidou.shaun.core.handler;
 
+import org.pac4j.core.context.JEEContext;
+
+import com.baomidou.shaun.core.context.Cookie;
 import com.baomidou.shaun.core.enums.TokenLocation;
 import com.baomidou.shaun.core.profile.TokenProfile;
-import com.baomidou.shaun.core.properties.Cookie;
 import com.baomidou.shaun.core.util.JEEContextFactory;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.pac4j.core.context.JEEContext;
 
 /**
  * 默认登出操作

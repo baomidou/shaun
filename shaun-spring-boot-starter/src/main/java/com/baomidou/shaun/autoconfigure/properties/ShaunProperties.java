@@ -8,11 +8,11 @@ import org.pac4j.core.authorization.checker.DefaultAuthorizationChecker;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
+import com.baomidou.shaun.core.context.Cookie;
+import com.baomidou.shaun.core.context.Header;
+import com.baomidou.shaun.core.context.Parameter;
 import com.baomidou.shaun.core.enums.Model;
 import com.baomidou.shaun.core.enums.TokenLocation;
-import com.baomidou.shaun.core.properties.Cookie;
-import com.baomidou.shaun.core.properties.Header;
-import com.baomidou.shaun.core.properties.Parameter;
 
 import lombok.Data;
 

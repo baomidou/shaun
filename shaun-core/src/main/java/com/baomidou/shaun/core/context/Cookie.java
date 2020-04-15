@@ -1,4 +1,4 @@
-package com.baomidou.shaun.core.properties;
+package com.baomidou.shaun.core.context;
 
 import org.pac4j.core.util.Pac4jConstants;
 
