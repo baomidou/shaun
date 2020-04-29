@@ -17,7 +17,7 @@ import org.pac4j.core.matching.matcher.Matcher;
 import org.pac4j.core.profile.UserProfile;
 import org.pac4j.core.util.CommonHelper;
 
-import com.baomidou.shaun.core.context.GlobalConfig;
+import com.baomidou.shaun.core.config.Config;
 import com.baomidou.shaun.core.handler.CallbackHandler;
 import com.baomidou.shaun.core.handler.HttpActionHandler;
 import com.baomidou.shaun.core.mgt.SecurityManager;
@@ -42,8 +42,14 @@ public class CallbackFilter implements ShaunFilter {
     private Clients clients;
     private SecurityManager securityManager;
     private String indexUrl;
+    private Config config;
     private CallbackHandler callbackHandler;
     private HttpActionHandler httpActionHandler;
+
+    public CallbackFilter(Config config, Matcher pathMatcher) {
+        this.config = config;
+        this.pathMatcher = pathMatcher;
+    }
 
     @Override
     public boolean goOnChain(JEEContext context) {
@@ -64,15 +70,15 @@ public class CallbackFilter implements ShaunFilter {
                 if (profile.isPresent()) {
                     TokenProfile tokenProfile = callbackHandler.callBack(context, profile.get());
                     securityManager.login(tokenProfile);
-                    GlobalConfig.gotoUrl(context, indexUrl);
+                    config.redirectUrl(context, indexUrl);
                     return false;
                 }
             }
-            if (GlobalConfig.isAjax(context)) {
+            if (config.isAjax(context)) {
                 httpActionHandler.preHandle(UnauthorizedAction.INSTANCE, context);
                 return false;
             }
-            GlobalConfig.gotoLoginUrl(context);
+            config.redirectLoginUrl(context);
             return false;
         }
         return true;

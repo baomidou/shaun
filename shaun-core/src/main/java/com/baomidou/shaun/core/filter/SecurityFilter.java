@@ -1,23 +1,23 @@
 package com.baomidou.shaun.core.filter;
 
 import java.util.Collections;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import org.pac4j.core.authorization.authorizer.Authorizer;
 import org.pac4j.core.authorization.checker.AuthorizationChecker;
 import org.pac4j.core.authorization.checker.DefaultAuthorizationChecker;
 import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.credentials.TokenCredentials;
 import org.pac4j.core.exception.http.UnauthorizedAction;
+import org.pac4j.core.matching.checker.DefaultMatchingChecker;
+import org.pac4j.core.matching.checker.MatchingChecker;
 import org.pac4j.core.matching.matcher.Matcher;
 import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.core.profile.UserProfile;
 import org.pac4j.core.util.CommonHelper;
 
 import com.baomidou.shaun.core.client.TokenClient;
-import com.baomidou.shaun.core.context.GlobalConfig;
+import com.baomidou.shaun.core.config.Config;
 import com.baomidou.shaun.core.handler.HttpActionHandler;
 import com.baomidou.shaun.core.profile.TokenProfile;
 import com.baomidou.shaun.core.util.ProfileHolder;
@@ -36,11 +36,16 @@ import lombok.extern.slf4j.Slf4j;
 public class SecurityFilter implements ShaunFilter {
 
     private AuthorizationChecker authorizationChecker = new DefaultAuthorizationChecker();
+    private MatchingChecker matchingChecker = new DefaultMatchingChecker();
+    private Config config;
     private Matcher pathMatcher;
     private TokenClient tokenClient;
-    private String authorizers;
-    private Map<String, Authorizer> authorizerMap;
     private HttpActionHandler httpActionHandler;
+
+    public SecurityFilter(Config config, Matcher pathMatcher) {
+        this.config = config;
+        this.pathMatcher = pathMatcher;
+    }
 
     @Override
     public boolean goOnChain(JEEContext context) {
@@ -53,7 +58,6 @@ public class SecurityFilter implements ShaunFilter {
                 final Optional<UserProfile> profile = tokenClient.getUserProfile(credentials.get(), context);
                 log.debug("profile: {}", profile);
                 if (profile.isPresent()) {
-                    log.debug("authorizers: {}", authorizers);
                     // todo 兼容性升级
                     CommonProfile commonProfile = (CommonProfile) profile.get();
                     TokenProfile tokenProfile;
@@ -70,18 +74,18 @@ public class SecurityFilter implements ShaunFilter {
                     }
                     // todo 兼容性升级
                     if (authorizationChecker.isAuthorized(context, Collections.singletonList(tokenProfile),
-                            authorizers, authorizerMap)) {
+                            config.getAuthorizerNames(), config.getAuthorizersMap())) {
                         ProfileHolder.save(context, tokenProfile.setToken(credentials.get().getToken()));
                         log.debug("authenticated and authorized -> grant access");
                         return true;
                     }
                 }
             }
-            if (GlobalConfig.isStatelessOrAjax(context)) {
+            if (config.isStatelessOrAjax(context)) {
                 httpActionHandler.preHandle(UnauthorizedAction.INSTANCE, context);
                 return false;
             } else {
-                GlobalConfig.gotoLoginUrl(context);
+                config.redirectLoginUrl(context);
             }
             return false;
         }

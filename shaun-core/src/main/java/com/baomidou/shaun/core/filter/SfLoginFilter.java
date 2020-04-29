@@ -16,7 +16,7 @@ import org.pac4j.core.matching.matcher.Matcher;
 import org.pac4j.core.util.CommonHelper;
 
 import com.baomidou.shaun.core.client.finder.DefaultSfClientFinder;
-import com.baomidou.shaun.core.context.GlobalConfig;
+import com.baomidou.shaun.core.config.Config;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +35,12 @@ public class SfLoginFilter implements ShaunFilter {
     private ClientFinder clientFinder = new DefaultSfClientFinder();
     private Matcher pathMatcher;
     private Clients clients;
+    private Config config;
+
+    public SfLoginFilter(Config config, Matcher pathMatcher) {
+        this.config = config;
+        this.pathMatcher = pathMatcher;
+    }
 
     @Override
     public boolean goOnChain(JEEContext context) {
@@ -52,7 +58,7 @@ public class SfLoginFilter implements ShaunFilter {
             if (redirect.isPresent()) {
                 RedirectionAction action = redirect.get();
                 if (action instanceof FoundAction) {
-                    GlobalConfig.gotoUrl(context, ((FoundAction) action).getLocation());
+                    config.redirectUrl(context, ((FoundAction) action).getLocation());
                 }
             }
             return false;

@@ -1,9 +1,7 @@
 package com.baomidou.shaun.autoconfigure;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.pac4j.core.authorization.authorizer.Authorizer;
@@ -11,22 +9,21 @@ import org.pac4j.core.client.Client;
 import org.pac4j.core.client.Clients;
 import org.pac4j.core.client.IndirectClient;
 import org.pac4j.core.http.ajax.AjaxRequestResolver;
+import org.pac4j.core.matching.matcher.Matcher;
 import org.pac4j.core.matching.matcher.PathMatcher;
 import org.pac4j.core.util.CommonHelper;
-import org.pac4j.core.util.Pac4jConstants;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 
 import com.baomidou.shaun.autoconfigure.aop.AnnotationAspect;
 import com.baomidou.shaun.autoconfigure.properties.ShaunProperties;
 import com.baomidou.shaun.core.authority.AuthorityManager;
 import com.baomidou.shaun.core.client.TokenClient;
-import com.baomidou.shaun.core.context.GlobalConfig;
+import com.baomidou.shaun.core.config.Config;
 import com.baomidou.shaun.core.enums.TokenLocation;
 import com.baomidou.shaun.core.filter.CallbackFilter;
 import com.baomidou.shaun.core.filter.LogoutFilter;
@@ -60,6 +57,7 @@ public class ShaunFilterAutoConfiguration {
     private final LogoutHandler logoutHandler;
     private final ObjectProvider<CallbackHandler> callbackHandlerProvider;
     private final ObjectProvider<List<Authorizer>> authorizerProvider;
+    private final ObjectProvider<List<Matcher>> matcherProvider;
     private final ObjectProvider<List<IndirectClient>> indirectClientsProvider;
 
     @Bean
@@ -76,37 +74,23 @@ public class ShaunFilterAutoConfiguration {
             properties.getExcludeBranch().forEach(pathMatcher::excludeRegex);
         }
 
-        GlobalConfig.setAjaxRequestResolver(ajaxRequestResolver);
+        Config config = new Config();
         if (CommonHelper.isNotBlank(properties.getLoginUrl())) {
-            GlobalConfig.setStateless(false);
-            GlobalConfig.setLoginUrl(properties.getLoginUrl());
+            config.setStateless(false);
+            config.setLoginUrl(properties.getLoginUrl());
             pathMatcher.excludePath(properties.getLoginUrl());
             CommonHelper.assertTrue(properties.getTokenLocation() == TokenLocation.COOKIE,
                     "非前后端分离的项目请设置 tokenLocation 值为 \"cookie\"");
         }
-
         final List<ShaunFilter> filterList = new ArrayList<>();
 
         /* securityFilter begin */
-        String authorizers = properties.getAuthorizers();
-        final List<Authorizer> authorizerList = authorizerProvider.getIfAvailable();
-        final Map<String, Authorizer> authorizeMap = new HashMap<>();
-        if (!CollectionUtils.isEmpty(authorizerList)) {
-            for (Authorizer authorizer : authorizerList) {
-                authorizeMap.put(authorizer.getClass().getSimpleName(), authorizer);
-            }
-            String s = String.join(Pac4jConstants.ELEMENT_SEPARATOR, authorizeMap.keySet());
-            if (StringUtils.hasText(authorizers)) {
-                authorizers += (Pac4jConstants.ELEMENT_SEPARATOR + s);
-            } else {
-                authorizers = s;
-            }
-        }
+        config.authorizerNamesAppend(properties.getAuthorizerNames());
+        config.addAuthorizers(authorizerProvider.getIfAvailable());
+        config.matcherNamesAppend(properties.getMatcherNames());
+        config.addMatchers(matcherProvider.getIfAvailable());
 
-        final SecurityFilter securityFilter = new SecurityFilter();
-        securityFilter.setPathMatcher(pathMatcher);
-        securityFilter.setAuthorizerMap(authorizeMap);
-        securityFilter.setAuthorizers(authorizers);
+        final SecurityFilter securityFilter = new SecurityFilter(config, pathMatcher);
         securityFilter.setTokenClient(tokenClient);
         securityFilter.setHttpActionHandler(httpActionHandler);
 
@@ -115,17 +99,15 @@ public class ShaunFilterAutoConfiguration {
 
         /* logoutFilter begin */
         if (CommonHelper.isNotBlank(properties.getLogoutUrl())) {
-            final LogoutFilter logoutFilter = new LogoutFilter();
-            logoutFilter.setPathMatcher(new OnlyPathMatcher(properties.getLogoutUrl()));
+            final LogoutFilter logoutFilter = new LogoutFilter(config, new OnlyPathMatcher(properties.getLogoutUrl()));
             logoutFilter.setLogoutExecutor(logoutHandler);
-
             filterList.add(logoutFilter);
         }
         /* logoutFilter end */
 
         List<IndirectClient> indirectClients = indirectClientsProvider.getIfAvailable();
         if (CommonHelper.isNotEmpty(indirectClients)) {
-            CommonHelper.assertTrue(!GlobalConfig.isStateless(), "要用三方登录只支持非前后分离的项目");
+            CommonHelper.assertTrue(!config.isStateless(), "要用三方登录只支持非前后分离的项目");
             final String sfLoginUrl = properties.getSfLoginUrl();
             CommonHelper.assertNotBlank("sfLoginUrl", sfLoginUrl);
             final String callbackUrl = properties.getCallbackUrl();
@@ -139,16 +121,14 @@ public class ShaunFilterAutoConfiguration {
                     .collect(Collectors.toList());
             Clients clients = new Clients(callbackUrl, clientList);
 
-            final SfLoginFilter sfLoginFilter = new SfLoginFilter();
+            final SfLoginFilter sfLoginFilter = new SfLoginFilter(config, new OnlyPathMatcher(sfLoginUrl));
             sfLoginFilter.setClients(clients);
-            sfLoginFilter.setPathMatcher(new OnlyPathMatcher(sfLoginUrl));
             filterList.add(sfLoginFilter);
 
-            final CallbackFilter callbackFilter = new CallbackFilter();
+            final CallbackFilter callbackFilter = new CallbackFilter(config, new OnlyPathMatcher(properties.getCallbackUrl()));
             callbackFilter.setClients(clients);
             callbackFilter.setCallbackHandler(callbackHandlerProvider.getIfAvailable());
             callbackFilter.setIndexUrl(indexUrl);
-            callbackFilter.setPathMatcher(new OnlyPathMatcher(properties.getCallbackUrl()));
             callbackFilter.setSecurityManager(securityManager);
             callbackFilter.setHttpActionHandler(httpActionHandler);
             filterList.add(callbackFilter);

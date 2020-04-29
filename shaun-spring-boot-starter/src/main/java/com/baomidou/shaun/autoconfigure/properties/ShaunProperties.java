@@ -5,6 +5,8 @@ import java.util.UUID;
 
 import org.pac4j.core.authorization.authorizer.Authorizer;
 import org.pac4j.core.authorization.checker.DefaultAuthorizationChecker;
+import org.pac4j.core.matching.checker.DefaultMatchingChecker;
+import org.pac4j.core.matching.matcher.Matcher;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
@@ -29,10 +31,15 @@ public class ShaunProperties {
      */
     private Model model = Model.INTERCEPTOR;
     /**
-     * authorizers,多个以逗号分隔(不包含自己注入的 {@link Authorizer})
+     * authorizerNames,多个以逗号分隔(不包含自己注入的 {@link Authorizer})
      * 默认支持的一些参考 {@link DefaultAuthorizationChecker}
      */
-    private String authorizers = "";
+    private String authorizerNames;
+    /**
+     * matcherNames,多个以逗号分隔(不包含自己注入的 {@link Matcher})
+     * 默认支持的一些参考 {@link DefaultMatchingChecker}
+     */
+    private String matcherNames;
     /**
      * 跳过鉴权的 role 和 permission 的表现字符串(相当于系统超管)
      */
