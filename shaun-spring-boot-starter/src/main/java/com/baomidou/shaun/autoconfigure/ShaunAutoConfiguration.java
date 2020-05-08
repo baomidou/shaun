@@ -7,17 +7,13 @@ import com.baomidou.shaun.core.client.TokenClient;
 import com.baomidou.shaun.core.extractor.TokenExtractor;
 import com.baomidou.shaun.core.generator.DefaultJwtTokenGenerator;
 import com.baomidou.shaun.core.generator.TokenGenerator;
-import com.baomidou.shaun.core.handler.DefaultHttpActionHandler;
 import com.baomidou.shaun.core.handler.DefaultLogoutHandler;
-import com.baomidou.shaun.core.handler.HttpActionHandler;
 import com.baomidou.shaun.core.handler.LogoutHandler;
 import com.baomidou.shaun.core.mgt.SecurityManager;
 import lombok.AllArgsConstructor;
 import org.pac4j.core.credentials.TokenCredentials;
 import org.pac4j.core.credentials.authenticator.Authenticator;
 import org.pac4j.core.credentials.extractor.CredentialsExtractor;
-import org.pac4j.core.http.ajax.AjaxRequestResolver;
-import org.pac4j.core.http.ajax.DefaultAjaxRequestResolver;
 import org.pac4j.jwt.config.encryption.EncryptionConfiguration;
 import org.pac4j.jwt.config.encryption.SecretEncryptionConfiguration;
 import org.pac4j.jwt.config.signature.SecretSignatureConfiguration;
@@ -122,23 +118,5 @@ public class ShaunAutoConfiguration {
     @ConditionalOnMissingBean
     public LogoutHandler logoutHandler() {
         return new DefaultLogoutHandler(properties.getTokenLocation(), properties.getCookie());
-    }
-
-    /**
-     * ajax 判定器
-     */
-    @Bean
-    @ConditionalOnMissingBean
-    public AjaxRequestResolver ajaxRequestResolver() {
-        return new DefaultAjaxRequestResolver();
-    }
-
-    /**
-     * 异常处理类
-     */
-    @Bean
-    @ConditionalOnMissingBean
-    public HttpActionHandler httpActionHandler() {
-        return new DefaultHttpActionHandler();
     }
 }

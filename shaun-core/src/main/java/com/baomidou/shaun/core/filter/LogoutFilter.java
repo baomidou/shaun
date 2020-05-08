@@ -1,15 +1,13 @@
 package com.baomidou.shaun.core.filter;
 
-import org.pac4j.core.context.JEEContext;
-import org.pac4j.core.matching.matcher.Matcher;
-import org.pac4j.core.util.CommonHelper;
-
 import com.baomidou.shaun.core.config.Config;
 import com.baomidou.shaun.core.handler.LogoutHandler;
 import com.baomidou.shaun.core.profile.TokenProfile;
 import com.baomidou.shaun.core.util.ProfileHolder;
-
 import lombok.Data;
+import org.pac4j.core.context.JEEContext;
+import org.pac4j.core.matching.matcher.Matcher;
+import org.pac4j.core.util.CommonHelper;
 
 /**
  * logout filter
@@ -21,16 +19,14 @@ import lombok.Data;
 public class LogoutFilter implements ShaunFilter {
 
     private Matcher pathMatcher;
-    private Config config;
     private LogoutHandler logoutExecutor;
 
-    public LogoutFilter(Config config, Matcher pathMatcher) {
-        this.config = config;
+    public LogoutFilter(Matcher pathMatcher) {
         this.pathMatcher = pathMatcher;
     }
 
     @Override
-    public boolean goOnChain(JEEContext context) {
+    public boolean goOnChain(Config config, JEEContext context) {
         if (pathMatcher.matches(context)) {
             final TokenProfile profile = ProfileHolder.getProfile(context);
             logoutExecutor.logout(profile);

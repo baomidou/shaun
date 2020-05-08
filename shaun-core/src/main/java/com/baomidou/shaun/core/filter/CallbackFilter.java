@@ -1,11 +1,11 @@
 package com.baomidou.shaun.core.filter;
 
-import static org.pac4j.core.util.CommonHelper.assertNotNull;
-import static org.pac4j.core.util.CommonHelper.assertTrue;
-
-import java.util.List;
-import java.util.Optional;
-
+import com.baomidou.shaun.core.config.Config;
+import com.baomidou.shaun.core.handler.CallbackHandler;
+import com.baomidou.shaun.core.mgt.SecurityManager;
+import com.baomidou.shaun.core.profile.TokenProfile;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.pac4j.core.client.Client;
 import org.pac4j.core.client.Clients;
 import org.pac4j.core.client.finder.ClientFinder;
@@ -17,14 +17,11 @@ import org.pac4j.core.matching.matcher.Matcher;
 import org.pac4j.core.profile.UserProfile;
 import org.pac4j.core.util.CommonHelper;
 
-import com.baomidou.shaun.core.config.Config;
-import com.baomidou.shaun.core.handler.CallbackHandler;
-import com.baomidou.shaun.core.handler.HttpActionHandler;
-import com.baomidou.shaun.core.mgt.SecurityManager;
-import com.baomidou.shaun.core.profile.TokenProfile;
+import java.util.List;
+import java.util.Optional;
 
-import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+import static org.pac4j.core.util.CommonHelper.assertNotNull;
+import static org.pac4j.core.util.CommonHelper.assertTrue;
 
 /**
  * callback filter
@@ -42,17 +39,14 @@ public class CallbackFilter implements ShaunFilter {
     private Clients clients;
     private SecurityManager securityManager;
     private String indexUrl;
-    private Config config;
     private CallbackHandler callbackHandler;
-    private HttpActionHandler httpActionHandler;
 
-    public CallbackFilter(Config config, Matcher pathMatcher) {
-        this.config = config;
+    public CallbackFilter(Matcher pathMatcher) {
         this.pathMatcher = pathMatcher;
     }
 
     @Override
-    public boolean goOnChain(JEEContext context) {
+    public boolean goOnChain(Config config, JEEContext context) {
         if (pathMatcher.matches(context)) {
             log.debug("=== CALLBACK ===");
 
@@ -75,7 +69,7 @@ public class CallbackFilter implements ShaunFilter {
                 }
             }
             if (config.isAjax(context)) {
-                httpActionHandler.preHandle(UnauthorizedAction.INSTANCE, context);
+                config.getHttpActionHandler().preHandle(UnauthorizedAction.INSTANCE, context);
                 return false;
             }
             config.redirectLoginUrl(context);
@@ -96,6 +90,5 @@ public class CallbackFilter implements ShaunFilter {
         CommonHelper.assertNotNull("securityManager", securityManager);
         CommonHelper.assertNotNull("pathMatcher", pathMatcher);
         CommonHelper.assertNotNull("callbackHandler", callbackHandler);
-        CommonHelper.assertNotNull("httpActionHandler", httpActionHandler);
     }
 }

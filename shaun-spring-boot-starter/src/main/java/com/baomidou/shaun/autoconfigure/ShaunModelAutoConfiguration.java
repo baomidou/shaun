@@ -1,5 +1,6 @@
 package com.baomidou.shaun.autoconfigure;
 
+import com.baomidou.shaun.core.config.Config;
 import com.baomidou.shaun.core.filter.ShaunFilter;
 import com.baomidou.shaun.core.models.ShaunInterceptor;
 import com.baomidou.shaun.core.models.ShaunRequestFilter;
@@ -35,19 +36,18 @@ public class ShaunModelAutoConfiguration {
     @ConditionalOnMissingBean
     @ConditionalOnClass(HandlerInterceptor.class)
     @ConditionalOnProperty(prefix = "shaun", name = "model", havingValue = "interceptor", matchIfMissing = true)
-    public ShaunInterceptor shaunInterceptor() {
+    public ShaunInterceptor shaunInterceptor(Config config) {
         ShaunInterceptor interceptor = new ShaunInterceptor();
-        return interceptor.setFilterList(filters);
+        return interceptor.setFilterList(filters).setConfig(config);
     }
 
     @Bean
     @ConditionalOnMissingBean
     @ConditionalOnClass(OncePerRequestFilter.class)
     @ConditionalOnProperty(prefix = "shaun", name = "model", havingValue = "web_filter")
-    public ShaunRequestFilter shaunOncePerRequestFilter() {
+    public ShaunRequestFilter shaunOncePerRequestFilter(Config config) {
         ShaunRequestFilter oncePerRequestFilter = new ShaunRequestFilter();
-        oncePerRequestFilter.setFilterList(filters);
-        return oncePerRequestFilter;
+        return oncePerRequestFilter.setFilterList(filters).setConfig(config);
     }
 
     @Configuration

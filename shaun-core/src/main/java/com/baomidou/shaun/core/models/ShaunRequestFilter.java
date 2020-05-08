@@ -1,9 +1,11 @@
 package com.baomidou.shaun.core.models;
 
+import com.baomidou.shaun.core.config.Config;
 import com.baomidou.shaun.core.filter.ShaunFilter;
 import com.baomidou.shaun.core.util.JEEContextFactory;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
 import org.pac4j.core.context.JEEContext;
 import org.springframework.lang.NonNull;
 import org.springframework.web.cors.CorsUtils;
@@ -24,10 +26,12 @@ import java.util.stream.Collectors;
  * @since 2019-08-08
  */
 @Data
+@Accessors(chain = true)
 @EqualsAndHashCode(callSuper = true)
 public class ShaunRequestFilter extends OncePerRequestFilter {
 
     private List<ShaunFilter> filterList = Collections.emptyList();
+    private Config config;
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
@@ -35,7 +39,7 @@ public class ShaunRequestFilter extends OncePerRequestFilter {
         if (!CorsUtils.isPreFlightRequest(request)) {
             final JEEContext context = JEEContextFactory.getJEEContext(request, response);
             for (ShaunFilter filter : filterList) {
-                if (!filter.goOnChain(context)) {
+                if (!filter.goOnChain(config, context)) {
                     return;
                 }
             }
