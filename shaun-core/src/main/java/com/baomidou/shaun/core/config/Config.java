@@ -1,5 +1,6 @@
 package com.baomidou.shaun.core.config;
 
+import com.baomidou.shaun.core.client.TokenClient;
 import com.baomidou.shaun.core.handler.DefaultHttpActionHandler;
 import com.baomidou.shaun.core.handler.HttpActionHandler;
 import lombok.Getter;
@@ -29,6 +30,12 @@ import java.util.Map;
 @SuppressWarnings("all")
 public class Config {
 
+    /**
+     * client
+     */
+    @Setter
+    @Getter
+    private TokenClient tokenClient;
     /**
      * 是否是前后端分离的
      */

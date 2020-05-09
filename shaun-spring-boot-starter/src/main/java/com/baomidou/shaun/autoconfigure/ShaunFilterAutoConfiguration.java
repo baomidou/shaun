@@ -58,6 +58,7 @@ public class ShaunFilterAutoConfiguration {
     @ConditionalOnMissingBean
     public Config config() {
         Config config = new Config();
+        config.setTokenClient(tokenClient);
         if (CommonHelper.isNotBlank(properties.getLoginUrl())) {
             config.setStateless(false);
             config.setLoginUrl(properties.getLoginUrl());
@@ -95,7 +96,6 @@ public class ShaunFilterAutoConfiguration {
         /* securityFilter begin */
 
         final SecurityFilter securityFilter = new SecurityFilter(pathMatcher);
-        securityFilter.setTokenClient(tokenClient);
 
         filterList.add(securityFilter);
         /* securityFilter end */

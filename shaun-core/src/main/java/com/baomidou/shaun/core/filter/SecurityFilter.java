@@ -1,6 +1,5 @@
 package com.baomidou.shaun.core.filter;
 
-import com.baomidou.shaun.core.client.TokenClient;
 import com.baomidou.shaun.core.config.Config;
 import com.baomidou.shaun.core.profile.TokenProfile;
 import com.baomidou.shaun.core.util.ProfileHolder;
@@ -35,7 +34,6 @@ public class SecurityFilter implements ShaunFilter {
     private AuthorizationChecker authorizationChecker = new DefaultAuthorizationChecker();
     private MatchingChecker matchingChecker = new DefaultMatchingChecker();
     private Matcher pathMatcher;
-    private TokenClient tokenClient;
 
     public SecurityFilter(Matcher pathMatcher) {
         this.pathMatcher = pathMatcher;
@@ -46,10 +44,10 @@ public class SecurityFilter implements ShaunFilter {
         if (pathMatcher.matches(context)) {
             log.debug("=== SECURITY ===");
 
-            final Optional<TokenCredentials> credentials = tokenClient.getCredentials(context);
+            final Optional<TokenCredentials> credentials = config.getTokenClient().getCredentials(context);
             log.debug("credentials: {}", credentials);
             if (credentials.isPresent()) {
-                final Optional<UserProfile> profile = tokenClient.getUserProfile(credentials.get(), context);
+                final Optional<UserProfile> profile = config.getTokenClient().getUserProfile(credentials.get(), context);
                 log.debug("profile: {}", profile);
                 if (profile.isPresent()) {
                     // todo 兼容性升级
@@ -93,7 +91,6 @@ public class SecurityFilter implements ShaunFilter {
 
     @Override
     public void initCheck() {
-        CommonHelper.assertNotNull("tokenClient", tokenClient);
         CommonHelper.assertNotNull("pathMatcher", pathMatcher);
     }
 }
