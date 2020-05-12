@@ -20,7 +20,7 @@ public interface AuthorityManager {
      *
      * @param profile 用户
      */
-    void setUserSkipAuthentication(TokenProfile profile);
+    void skipAuthentication(TokenProfile profile);
 
     /**
      * 判断是否要跳过所有鉴权

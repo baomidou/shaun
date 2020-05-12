@@ -45,7 +45,7 @@ public class DefaultJwtTokenGenerator implements TokenGenerator {
     @Override
     public String generate(final TokenProfile profile, final boolean isSkipAuthenticationUser, String optionExpireTime) {
         if (isSkipAuthenticationUser) {
-            authorityManager.setUserSkipAuthentication(profile);
+            authorityManager.skipAuthentication(profile);
         }
         JwtGenerator<TokenProfile> jwtGenerator = new JwtGenerator<>(signatureConfiguration, encryptionConfiguration);
         boolean defaultExpire = CommonHelper.isNotBlank(defaultExpireTime);

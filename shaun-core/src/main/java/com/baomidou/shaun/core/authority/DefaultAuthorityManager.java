@@ -14,7 +14,7 @@ public class DefaultAuthorityManager implements AuthorityManager {
     private final String skipAuthenticationRolePermission;
 
     @Override
-    public void setUserSkipAuthentication(TokenProfile profile) {
+    public void skipAuthentication(TokenProfile profile) {
         profile.addRole(skipAuthenticationRolePermission);
         profile.addPermission(skipAuthenticationRolePermission);
     }
