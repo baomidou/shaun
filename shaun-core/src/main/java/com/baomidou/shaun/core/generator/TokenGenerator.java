@@ -13,6 +13,7 @@ public interface TokenGenerator {
     /**
      * @param profile                  profile
      * @param isSkipAuthenticationUser 是否是跳过所有鉴权的用户
+     * @param expireTime               超时时间表达式(可 null)
      * @return token
      */
     String generate(final TokenProfile profile, final boolean isSkipAuthenticationUser, String expireTime);

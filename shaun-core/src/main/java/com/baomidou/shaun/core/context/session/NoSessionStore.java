@@ -36,7 +36,7 @@ public class NoSessionStore implements SessionStore<JEEContext> {
     }
 
     @Override
-    public Optional getTrackableSession(JEEContext context) {
+    public Optional<?> getTrackableSession(JEEContext context) {
         return Optional.empty();
     }
 

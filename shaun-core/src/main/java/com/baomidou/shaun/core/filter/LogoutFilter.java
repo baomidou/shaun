@@ -10,6 +10,7 @@ import com.baomidou.shaun.core.profile.TokenProfile;
 import com.baomidou.shaun.core.util.ProfileHolder;
 
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 /**
  * logout filter
@@ -18,14 +19,11 @@ import lombok.Data;
  * @since 2019-07-24
  */
 @Data
+@RequiredArgsConstructor
 public class LogoutFilter implements ShaunFilter {
 
-    private Matcher pathMatcher;
+    private final Matcher pathMatcher;
     private SecurityManager securityManager;
-
-    public LogoutFilter(Matcher pathMatcher) {
-        this.pathMatcher = pathMatcher;
-    }
 
     @Override
     public boolean goOnChain(Config config, JEEContext context) {

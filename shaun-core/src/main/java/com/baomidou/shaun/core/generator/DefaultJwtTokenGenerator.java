@@ -12,6 +12,7 @@ import com.baomidou.shaun.core.profile.TokenProfile;
 import com.baomidou.shaun.core.util.ExpireTimeUtil;
 
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
 
 /**
@@ -24,6 +25,7 @@ import lombok.experimental.Accessors;
  */
 @Data
 @Accessors(chain = true)
+@RequiredArgsConstructor
 public class DefaultJwtTokenGenerator implements TokenGenerator {
 
     private final AuthorityManager authorityManager;
@@ -35,24 +37,17 @@ public class DefaultJwtTokenGenerator implements TokenGenerator {
      */
     private String defaultExpireTime;
 
-    public DefaultJwtTokenGenerator(AuthorityManager authorityManager, SignatureConfiguration signatureConfiguration,
-                                    EncryptionConfiguration encryptionConfiguration) {
-        this.authorityManager = authorityManager;
-        this.signatureConfiguration = signatureConfiguration;
-        this.encryptionConfiguration = encryptionConfiguration;
-    }
-
     @Override
-    public String generate(final TokenProfile profile, final boolean isSkipAuthenticationUser, String optionExpireTime) {
+    public String generate(final TokenProfile profile, final boolean isSkipAuthenticationUser, String expireTime) {
         if (isSkipAuthenticationUser) {
             authorityManager.skipAuthentication(profile);
         }
         JwtGenerator<TokenProfile> jwtGenerator = new JwtGenerator<>(signatureConfiguration, encryptionConfiguration);
         boolean defaultExpire = CommonHelper.isNotBlank(defaultExpireTime);
-        boolean optionExpire = CommonHelper.isNotBlank(optionExpireTime);
+        boolean optionExpire = CommonHelper.isNotBlank(expireTime);
         if (defaultExpire || optionExpire) {
             if (!defaultExpire || optionExpire) {
-                jwtGenerator.setExpirationTime(ExpireTimeUtil.getTargetDate(optionExpireTime));
+                jwtGenerator.setExpirationTime(ExpireTimeUtil.getTargetDate(expireTime));
             } else {
                 jwtGenerator.setExpirationTime(ExpireTimeUtil.getTargetDate(defaultExpireTime));
             }
@@ -77,5 +72,10 @@ public class DefaultJwtTokenGenerator implements TokenGenerator {
             return expireTime - 1;
         }
         return -1;
+    }
+
+    public void setDefaultExpireTime(String defaultExpireTime) {
+        this.defaultExpireTime = defaultExpireTime;
+        ExpireTimeUtil.getTargetSecond(defaultExpireTime); // check 一下表达式是否正确
     }
 }

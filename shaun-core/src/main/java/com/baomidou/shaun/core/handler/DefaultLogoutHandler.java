@@ -7,8 +7,8 @@ import com.baomidou.shaun.core.enums.TokenLocation;
 import com.baomidou.shaun.core.profile.TokenProfile;
 import com.baomidou.shaun.core.util.JEEContextFactory;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 默认登出操作
@@ -17,7 +17,7 @@ import lombok.Data;
  * @since 2019-07-31
  */
 @Data
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class DefaultLogoutHandler implements LogoutHandler {
 
     private final TokenLocation tokenLocation;

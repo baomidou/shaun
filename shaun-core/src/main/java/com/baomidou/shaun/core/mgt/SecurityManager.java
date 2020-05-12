@@ -9,8 +9,8 @@ import com.baomidou.shaun.core.handler.LogoutHandler;
 import com.baomidou.shaun.core.profile.TokenProfile;
 import com.baomidou.shaun.core.util.JEEContextFactory;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 安全管理器,封装下,统一的登录登出
@@ -20,7 +20,7 @@ import lombok.Data;
  * @since 2019-08-02
  */
 @Data
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class SecurityManager {
 
     private final TokenGenerator tokenGenerator;

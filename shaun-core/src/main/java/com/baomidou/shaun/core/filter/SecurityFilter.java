@@ -1,10 +1,9 @@
 package com.baomidou.shaun.core.filter;
 
-import com.baomidou.shaun.core.config.Config;
-import com.baomidou.shaun.core.profile.TokenProfile;
-import com.baomidou.shaun.core.util.ProfileHolder;
-import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+import java.util.Collections;
+import java.util.Optional;
+import java.util.Set;
+
 import org.pac4j.core.authorization.checker.AuthorizationChecker;
 import org.pac4j.core.authorization.checker.DefaultAuthorizationChecker;
 import org.pac4j.core.context.JEEContext;
@@ -17,9 +16,13 @@ import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.core.profile.UserProfile;
 import org.pac4j.core.util.CommonHelper;
 
-import java.util.Collections;
-import java.util.Optional;
-import java.util.Set;
+import com.baomidou.shaun.core.config.Config;
+import com.baomidou.shaun.core.profile.TokenProfile;
+import com.baomidou.shaun.core.util.ProfileHolder;
+
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * security filter
@@ -29,15 +32,12 @@ import java.util.Set;
  */
 @Slf4j
 @Data
+@RequiredArgsConstructor
 public class SecurityFilter implements ShaunFilter {
 
+    private final Matcher pathMatcher;
     private AuthorizationChecker authorizationChecker = new DefaultAuthorizationChecker();
     private MatchingChecker matchingChecker = new DefaultMatchingChecker();
-    private Matcher pathMatcher;
-
-    public SecurityFilter(Matcher pathMatcher) {
-        this.pathMatcher = pathMatcher;
-    }
 
     @Override
     public boolean goOnChain(Config config, JEEContext context) {

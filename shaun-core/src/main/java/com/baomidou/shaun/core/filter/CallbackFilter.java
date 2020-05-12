@@ -1,11 +1,11 @@
 package com.baomidou.shaun.core.filter;
 
-import com.baomidou.shaun.core.config.Config;
-import com.baomidou.shaun.core.handler.CallbackHandler;
-import com.baomidou.shaun.core.mgt.SecurityManager;
-import com.baomidou.shaun.core.profile.TokenProfile;
-import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+import static org.pac4j.core.util.CommonHelper.assertNotNull;
+import static org.pac4j.core.util.CommonHelper.assertTrue;
+
+import java.util.List;
+import java.util.Optional;
+
 import org.pac4j.core.client.Client;
 import org.pac4j.core.client.Clients;
 import org.pac4j.core.client.finder.ClientFinder;
@@ -17,11 +17,14 @@ import org.pac4j.core.matching.matcher.Matcher;
 import org.pac4j.core.profile.UserProfile;
 import org.pac4j.core.util.CommonHelper;
 
-import java.util.List;
-import java.util.Optional;
+import com.baomidou.shaun.core.config.Config;
+import com.baomidou.shaun.core.handler.CallbackHandler;
+import com.baomidou.shaun.core.mgt.SecurityManager;
+import com.baomidou.shaun.core.profile.TokenProfile;
 
-import static org.pac4j.core.util.CommonHelper.assertNotNull;
-import static org.pac4j.core.util.CommonHelper.assertTrue;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * callback filter
@@ -32,18 +35,15 @@ import static org.pac4j.core.util.CommonHelper.assertTrue;
 @SuppressWarnings("unchecked")
 @Slf4j
 @Data
+@RequiredArgsConstructor
 public class CallbackFilter implements ShaunFilter {
 
+    private final Matcher pathMatcher;
     private ClientFinder clientFinder = new DefaultCallbackClientFinder();
-    private Matcher pathMatcher;
     private Clients clients;
     private SecurityManager securityManager;
     private String indexUrl;
     private CallbackHandler callbackHandler;
-
-    public CallbackFilter(Matcher pathMatcher) {
-        this.pathMatcher = pathMatcher;
-    }
 
     @Override
     public boolean goOnChain(Config config, JEEContext context) {

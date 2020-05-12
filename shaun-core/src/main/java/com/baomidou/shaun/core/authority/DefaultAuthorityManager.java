@@ -2,13 +2,13 @@ package com.baomidou.shaun.core.authority;
 
 import com.baomidou.shaun.core.profile.TokenProfile;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 /**
  * @author miemie
  * @since 2019-08-01
  */
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class DefaultAuthorityManager implements AuthorityManager {
 
     private final String skipAuthenticationRolePermission;
