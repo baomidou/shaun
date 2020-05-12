@@ -25,8 +25,8 @@ public class SecurityManager {
 
     private final TokenGenerator tokenGenerator;
     private final TokenLocation tokenLocation;
-    private final LogoutHandler logoutHandler;
     private final Cookie cookie;
+    private final LogoutHandler logoutHandler;
 
     /**
      * ignore

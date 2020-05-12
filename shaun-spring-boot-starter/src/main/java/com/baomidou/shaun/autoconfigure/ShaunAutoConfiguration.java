@@ -1,16 +1,5 @@
 package com.baomidou.shaun.autoconfigure;
 
-import com.baomidou.shaun.autoconfigure.properties.ShaunProperties;
-import com.baomidou.shaun.core.authority.AuthorityManager;
-import com.baomidou.shaun.core.authority.DefaultAuthorityManager;
-import com.baomidou.shaun.core.client.TokenClient;
-import com.baomidou.shaun.core.extractor.TokenExtractor;
-import com.baomidou.shaun.core.generator.DefaultJwtTokenGenerator;
-import com.baomidou.shaun.core.generator.TokenGenerator;
-import com.baomidou.shaun.core.handler.DefaultLogoutHandler;
-import com.baomidou.shaun.core.handler.LogoutHandler;
-import com.baomidou.shaun.core.mgt.SecurityManager;
-import lombok.AllArgsConstructor;
 import org.pac4j.core.credentials.TokenCredentials;
 import org.pac4j.core.credentials.authenticator.Authenticator;
 import org.pac4j.core.credentials.extractor.CredentialsExtractor;
@@ -23,6 +12,19 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import com.baomidou.shaun.autoconfigure.properties.ShaunProperties;
+import com.baomidou.shaun.core.authority.AuthorityManager;
+import com.baomidou.shaun.core.authority.DefaultAuthorityManager;
+import com.baomidou.shaun.core.client.TokenClient;
+import com.baomidou.shaun.core.extractor.TokenExtractor;
+import com.baomidou.shaun.core.generator.DefaultJwtTokenGenerator;
+import com.baomidou.shaun.core.generator.TokenGenerator;
+import com.baomidou.shaun.core.handler.DefaultLogoutHandler;
+import com.baomidou.shaun.core.handler.LogoutHandler;
+import com.baomidou.shaun.core.mgt.SecurityManager;
+
+import lombok.AllArgsConstructor;
 
 /**
  * @author miemie
@@ -108,7 +110,7 @@ public class ShaunAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public SecurityManager cookieContext(TokenGenerator tokenGenerator, LogoutHandler logoutHandler) {
-        return new SecurityManager(tokenGenerator, properties.getTokenLocation(), logoutHandler, properties.getCookie());
+        return new SecurityManager(tokenGenerator, properties.getTokenLocation(), properties.getCookie(), logoutHandler);
     }
 
     /**

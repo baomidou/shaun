@@ -1,10 +1,10 @@
 package com.baomidou.shaun.core.profile;
 
+import java.util.Date;
+
 import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.core.profile.jwt.JwtClaims;
 import org.pac4j.core.util.CommonHelper;
-
-import java.util.Date;
 
 /**
  * @author miemie
@@ -19,8 +19,8 @@ public class TokenProfile extends CommonProfile {
     }
 
     public TokenProfile setToken(final String token) {
-        CommonHelper.assertNull("TokenProfile.token", this.token);
-        CommonHelper.assertNotBlank("TokenProfile.token", token);
+        CommonHelper.assertNull("token", this.token);
+        CommonHelper.assertNotBlank("token", token);
         this.token = token;
         return this;
     }

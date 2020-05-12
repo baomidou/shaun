@@ -1,7 +1,6 @@
 package com.baomidou.shaun.core.authority;
 
-import org.pac4j.core.profile.CommonProfile;
-import org.pac4j.core.profile.UserProfile;
+import com.baomidou.shaun.core.profile.TokenProfile;
 
 import lombok.AllArgsConstructor;
 
@@ -15,13 +14,13 @@ public class DefaultAuthorityManager implements AuthorityManager {
     private final String skipAuthenticationRolePermission;
 
     @Override
-    public <U extends CommonProfile> void setUserSkipAuthentication(U profile) {
+    public void setUserSkipAuthentication(TokenProfile profile) {
         profile.addRole(skipAuthenticationRolePermission);
         profile.addPermission(skipAuthenticationRolePermission);
     }
 
     @Override
-    public <U extends UserProfile> boolean isSkipAuthenticationUser(U profile) {
+    public boolean isSkipAuthenticationUser(TokenProfile profile) {
         return profile.getRoles().contains(skipAuthenticationRolePermission) ||
                 profile.getPermissions().contains(skipAuthenticationRolePermission);
     }

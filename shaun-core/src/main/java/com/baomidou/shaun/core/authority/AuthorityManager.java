@@ -1,11 +1,11 @@
 package com.baomidou.shaun.core.authority;
 
-import com.baomidou.shaun.core.enums.Logical;
-import org.pac4j.core.profile.CommonProfile;
-import org.pac4j.core.profile.UserProfile;
+import java.util.Set;
+
 import org.pac4j.core.util.CommonHelper;
 
-import java.util.Set;
+import com.baomidou.shaun.core.enums.Logical;
+import com.baomidou.shaun.core.profile.TokenProfile;
 
 /**
  * 用户 role 和 permission 授权,鉴权 类
@@ -19,9 +19,8 @@ public interface AuthorityManager {
      * 设置用户为跳过所有鉴权
      *
      * @param profile 用户
-     * @param <U>     泛型
      */
-    <U extends CommonProfile> void setUserSkipAuthentication(U profile);
+    void setUserSkipAuthentication(TokenProfile profile);
 
     /**
      * 判断是否要跳过所有鉴权
@@ -29,7 +28,7 @@ public interface AuthorityManager {
      * @param profile 用户
      * @return 是否
      */
-    <U extends UserProfile> boolean isSkipAuthenticationUser(U profile);
+    boolean isSkipAuthenticationUser(TokenProfile profile);
 
     /**
      * 获取这个用户有的 roles
@@ -37,7 +36,7 @@ public interface AuthorityManager {
      * @param profile 用户
      * @return roles
      */
-    default <U extends UserProfile> Set<String> roles(U profile) {
+    default Set<String> roles(TokenProfile profile) {
         return profile.getRoles();
     }
 
@@ -47,7 +46,7 @@ public interface AuthorityManager {
      * @param profile 用户
      * @return permissions
      */
-    default <U extends UserProfile> Set<String> permissions(U profile) {
+    default Set<String> permissions(TokenProfile profile) {
         return profile.getPermissions();
     }
 

@@ -1,13 +1,15 @@
 package com.baomidou.shaun.core.filter;
 
-import com.baomidou.shaun.core.config.Config;
-import com.baomidou.shaun.core.handler.LogoutHandler;
-import com.baomidou.shaun.core.profile.TokenProfile;
-import com.baomidou.shaun.core.util.ProfileHolder;
-import lombok.Data;
 import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.matching.matcher.Matcher;
 import org.pac4j.core.util.CommonHelper;
+
+import com.baomidou.shaun.core.config.Config;
+import com.baomidou.shaun.core.mgt.SecurityManager;
+import com.baomidou.shaun.core.profile.TokenProfile;
+import com.baomidou.shaun.core.util.ProfileHolder;
+
+import lombok.Data;
 
 /**
  * logout filter
@@ -19,7 +21,7 @@ import org.pac4j.core.util.CommonHelper;
 public class LogoutFilter implements ShaunFilter {
 
     private Matcher pathMatcher;
-    private LogoutHandler logoutExecutor;
+    private SecurityManager securityManager;
 
     public LogoutFilter(Matcher pathMatcher) {
         this.pathMatcher = pathMatcher;
@@ -29,7 +31,7 @@ public class LogoutFilter implements ShaunFilter {
     public boolean goOnChain(Config config, JEEContext context) {
         if (pathMatcher.matches(context)) {
             final TokenProfile profile = ProfileHolder.getProfile(context);
-            logoutExecutor.logout(profile);
+            securityManager.logout(profile);
             if (!config.isStatelessOrAjax(context)) {
                 config.redirectLoginUrl(context);
             }
@@ -46,6 +48,6 @@ public class LogoutFilter implements ShaunFilter {
     @Override
     public void initCheck() {
         CommonHelper.assertNotNull("pathMatcher", pathMatcher);
-        CommonHelper.assertNotNull("logoutExecutor", logoutExecutor);
+        CommonHelper.assertNotNull("securityManager", securityManager);
     }
 }
