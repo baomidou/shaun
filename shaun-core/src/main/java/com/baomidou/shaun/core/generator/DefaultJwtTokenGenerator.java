@@ -13,7 +13,6 @@ import com.baomidou.shaun.core.util.ExpireTimeUtil;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.Accessors;
 
 /**
  * 默认使用 pac4j 的 JwtGenerator 生成 token(jwt)
@@ -24,7 +23,6 @@ import lombok.experimental.Accessors;
  * @since 2019-07-18
  */
 @Data
-@Accessors(chain = true)
 @RequiredArgsConstructor
 public class DefaultJwtTokenGenerator implements TokenGenerator {
 
@@ -76,6 +74,5 @@ public class DefaultJwtTokenGenerator implements TokenGenerator {
 
     public void setDefaultExpireTime(String defaultExpireTime) {
         this.defaultExpireTime = defaultExpireTime;
-        ExpireTimeUtil.getTargetSecond(defaultExpireTime); // check 一下表达式是否正确
     }
 }

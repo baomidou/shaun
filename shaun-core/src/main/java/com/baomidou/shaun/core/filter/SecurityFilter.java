@@ -9,8 +9,6 @@ import org.pac4j.core.authorization.checker.DefaultAuthorizationChecker;
 import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.credentials.TokenCredentials;
 import org.pac4j.core.exception.http.UnauthorizedAction;
-import org.pac4j.core.matching.checker.DefaultMatchingChecker;
-import org.pac4j.core.matching.checker.MatchingChecker;
 import org.pac4j.core.matching.matcher.Matcher;
 import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.core.profile.UserProfile;
@@ -37,7 +35,6 @@ public class SecurityFilter implements ShaunFilter {
 
     private final Matcher pathMatcher;
     private AuthorizationChecker authorizationChecker = new DefaultAuthorizationChecker();
-    private MatchingChecker matchingChecker = new DefaultMatchingChecker();
 
     @Override
     public boolean goOnChain(Config config, JEEContext context) {

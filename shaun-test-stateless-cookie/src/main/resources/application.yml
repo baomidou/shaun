@@ -1,5 +1,6 @@
 shaun:
   logout-url: /logout
+  matcher-names: xssprotection,allowAjaxRequests
   exclude-path:
     - /login
     - /favicon.ico

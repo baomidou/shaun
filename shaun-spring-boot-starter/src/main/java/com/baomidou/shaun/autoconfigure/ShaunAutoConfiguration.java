@@ -100,8 +100,11 @@ public class ShaunAutoConfiguration {
     @ConditionalOnMissingBean
     public TokenGenerator tokenGenerator(AuthorityManager authorityManager, SignatureConfiguration signatureConfiguration,
                                          EncryptionConfiguration encryptionConfiguration) {
-        return new DefaultJwtTokenGenerator(authorityManager, signatureConfiguration, encryptionConfiguration)
-                .setDefaultExpireTime(properties.getExpireTime());
+        DefaultJwtTokenGenerator generator = new DefaultJwtTokenGenerator(authorityManager, signatureConfiguration,
+                encryptionConfiguration);
+        generator.setDefaultExpireTime(properties.getExpireTime());
+        return generator;
+
     }
 
     /**
