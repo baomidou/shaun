@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.pac4j.core.context.JEEContext;
+import org.pac4j.core.exception.http.BadRequestAction;
 import org.pac4j.core.matching.checker.DefaultMatchingChecker;
 import org.pac4j.core.matching.checker.MatchingChecker;
 import org.springframework.beans.factory.InitializingBean;
@@ -45,6 +46,8 @@ public class ShaunInterceptor implements HandlerInterceptor, InitializingBean {
                     }
                 }
             }
+        } else {
+            config.getHttpActionHandler().preHandle(BadRequestAction.INSTANCE, context);
         }
         return true;
     }

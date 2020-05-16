@@ -1,7 +1,7 @@
 package com.baomidou.shaun.core.handler;
 
 import org.pac4j.core.context.JEEContext;
-import org.pac4j.core.exception.http.ForbiddenAction;
+import org.pac4j.core.exception.http.BadRequestAction;
 import org.pac4j.core.exception.http.HttpAction;
 import org.pac4j.core.exception.http.UnauthorizedAction;
 
@@ -15,7 +15,7 @@ import org.pac4j.core.exception.http.UnauthorizedAction;
 public interface HttpActionHandler {
 
     /**
-     * 处理抛出的异常 {@link UnauthorizedAction} 和 {@link ForbiddenAction}
+     * 处理抛出的异常 {@link UnauthorizedAction} 和 {@link BadRequestAction}
      *
      * @param action  异常
      * @param context 上下文
