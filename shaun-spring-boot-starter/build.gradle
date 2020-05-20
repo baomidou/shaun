@@ -1,7 +1,5 @@
 dependencies {
     api project(":shaun-core")
-    api "${lib.'spring-aop'}"
-    api "org.aspectj:aspectjweaver:1.9.4"
     api "${lib.'spring-boot-autoconfigure'}"
     implementation "${lib.'spring-boot-starter-web'}"
     annotationProcessor "${lib.'spring-boot-autoconfigure-processor'}"

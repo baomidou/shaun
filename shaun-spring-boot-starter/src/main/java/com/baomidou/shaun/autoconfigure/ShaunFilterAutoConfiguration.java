@@ -19,7 +19,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.CollectionUtils;
 
-import com.baomidou.shaun.autoconfigure.aop.AnnotationAspect;
+import com.baomidou.shaun.autoconfigure.intercept.MethodSecurityAdvisor;
+import com.baomidou.shaun.autoconfigure.intercept.MethodSecurityInterceptor;
 import com.baomidou.shaun.autoconfigure.properties.ShaunProperties;
 import com.baomidou.shaun.core.authority.AuthorityManager;
 import com.baomidou.shaun.core.client.TokenClient;
@@ -60,9 +61,10 @@ public class ShaunFilterAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public Config config() {
+    public Config config(AuthorityManager authorityManager) {
         Config config = new Config();
         config.setTokenClient(tokenClient);
+        config.setAuthorityManager(authorityManager);
         if (CommonHelper.isNotBlank(properties.getLoginUrl())) {
             config.setStateless(false);
             config.setLoginUrl(properties.getLoginUrl());
@@ -143,8 +145,10 @@ public class ShaunFilterAutoConfiguration {
     }
 
     @Bean
-    @ConditionalOnMissingBean
-    public AnnotationAspect annotationAspect(AuthorityManager authorityManager) {
-        return new AnnotationAspect(authorityManager);
+    public MethodSecurityAdvisor shaunMethodSecurityAdvisor(Config config) {
+        MethodSecurityAdvisor advisor = new MethodSecurityAdvisor();
+        MethodSecurityInterceptor interceptor = new MethodSecurityInterceptor(config);
+        advisor.setAdvice(interceptor);
+        return advisor;
     }
 }

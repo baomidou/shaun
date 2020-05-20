@@ -1,10 +1,9 @@
 package com.baomidou.shaun.core.config;
 
-import com.baomidou.shaun.core.client.TokenClient;
-import com.baomidou.shaun.core.handler.DefaultHttpActionHandler;
-import com.baomidou.shaun.core.handler.HttpActionHandler;
-import lombok.Getter;
-import lombok.Setter;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.pac4j.core.authorization.authorizer.Authorizer;
 import org.pac4j.core.authorization.checker.DefaultAuthorizationChecker;
 import org.pac4j.core.client.finder.ClientFinder;
@@ -19,67 +18,66 @@ import org.pac4j.core.util.CommonHelper;
 import org.pac4j.core.util.Pac4jConstants;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import com.baomidou.shaun.core.authority.AuthorityManager;
+import com.baomidou.shaun.core.client.TokenClient;
+import com.baomidou.shaun.core.handler.DefaultHttpActionHandler;
+import com.baomidou.shaun.core.handler.HttpActionHandler;
+
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.Setter;
 
 /**
  * @author miemie
  * @since 2020-04-29
  */
+@Data
 @SuppressWarnings("all")
 public class Config {
 
     /**
      * client
      */
-    @Setter
-    @Getter
     private TokenClient tokenClient;
+    /**
+     * authorityManager
+     */
+    private AuthorityManager authorityManager;
     /**
      * 是否是前后端分离的
      */
-    @Setter
-    @Getter
     private boolean stateless = true;
     /**
      * 处理抛出的异常
      */
-    @Setter
-    @Getter
     private HttpActionHandler httpActionHandler = new DefaultHttpActionHandler();
     /**
      * 回调处理器用来发现client
      */
-    @Setter
-    @Getter
     private ClientFinder clientFinder = new DefaultCallbackClientFinder();
     /**
      * 登录页面
      */
-    @Setter
     private String loginUrl;
     /**
      * ajax 判断器
      */
-    @Setter
-    @Getter
     private AjaxRequestResolver ajaxRequestResolver = new DefaultAjaxRequestResolver();
     /**
      * 默认支持的一些参考 {@link DefaultAuthorizationChecker}
      */
-    @Getter
+    @Setter(AccessLevel.NONE)
     private String authorizerNames;
     /**
      * 默认支持的一些参考 {@link DefaultMatchingChecker}
      */
-    @Getter
+    @Setter(AccessLevel.NONE)
     private String matcherNames;
 
-    @Getter
+    @Setter(AccessLevel.NONE)
     private Map<String, Authorizer> authorizersMap = new HashMap<>();
 
-    @Getter
+    @Setter(AccessLevel.NONE)
     private Map<String, Matcher> matchersMap = new HashMap<>();
 
     public void addAuthorizers(Collection<Authorizer> authorizers) {
