@@ -16,3 +16,7 @@ shaun:
 spring:
   thymeleaf:
     cache: false
+logging:
+  level:
+    com.baomidou.shaun: debug
+
