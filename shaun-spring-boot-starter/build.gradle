@@ -1,12 +1,12 @@
 dependencies {
     api project(":shaun-core")
-    api "${lib.'spring-boot-autoconfigure'}"
-    implementation "${lib.'spring-boot-starter-web'}"
-    annotationProcessor "${lib.'spring-boot-autoconfigure-processor'}"
-    annotationProcessor "${lib.'spring-boot-configuration-processor'}"
-    implementation "${lib.'spring-boot-autoconfigure-processor'}"
-    implementation "${lib.'spring-boot-configuration-processor'}"
-    testImplementation "${lib.'spring-boot-starter-test'}"
+    api "org.springframework.boot:spring-boot-autoconfigure"
+    implementation "org.springframework.boot:spring-boot-starter-web"
+    annotationProcessor "org.springframework.boot:spring-boot-autoconfigure-processor"
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+    implementation "org.springframework.boot:spring-boot-autoconfigure-processor"
+    implementation "org.springframework.boot:spring-boot-configuration-processor"
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
 }
 
 compileJava.dependsOn(processResources)

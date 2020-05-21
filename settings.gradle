@@ -1,4 +1,18 @@
 rootProject.name = "shaun"
+
+buildscript {
+    repositories {
+        maven { url "https://maven.aliyun.com/nexus/content/groups/public" }
+        maven { url "https://maven.aliyun.com/nexus/content/repositories/gradle-plugin" }
+        mavenCentral()
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+
+    dependencies {
+        classpath("gradle.plugin.com.hierynomus.gradle.plugins:license-gradle-plugin:0.15.0")
+    }
+}
+
 include "shaun-core"
 include 'shaun-spring-boot-starter'
 include 'shaun-test-stateless-header'

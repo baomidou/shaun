@@ -1,69 +1,46 @@
 import java.text.SimpleDateFormat
 
-buildscript {
-
-    repositories {
-        maven { url "https://maven.aliyun.com/nexus/content/groups/public" }
-        mavenCentral()
-        maven { url "https://plugins.gradle.org/m2/" }
-    }
-
-    dependencies {
-        classpath("gradle.plugin.com.hierynomus.gradle.plugins:license-gradle-plugin:0.15.0")
-    }
-}
-
 plugins {
     id 'java'
 }
 
 ext {
-    configuration = [
-            javaVersion = JavaVersion.VERSION_1_8
-    ]
-
-    libraries = [
-            springVersion = "5.2.6.RELEASE",
-            springBootVersion = "2.2.7.RELEASE",
-            pac4jVersion = "4.0.0",
-            shiroVersion = "1.4.1",
-            junitVersion = "5.4.0"
-    ]
-
-    lib = [
-            "pac4j-core"                         : "org.pac4j:pac4j-core:${pac4jVersion}",
-            "pac4j-jwt"                          : "org.pac4j:pac4j-jwt:${pac4jVersion}",
-            "pac4j-http"                         : "org.pac4j:pac4j-http:${pac4jVersion}",
-            "pac4j-oauth"                        : "org.pac4j:pac4j-oauth:${pac4jVersion}",
-            "pac4j-cas"                          : "org.pac4j:pac4j-cas:${pac4jVersion}",
-            "spring-web"                         : "org.springframework:spring-web:${springVersion}",
-            "spring-webmvc"                      : "org.springframework:spring-webmvc:${springVersion}",
-            "servlet-api"                        : "javax.servlet:javax.servlet-api:4.0.1",
-            "spring-context"                     : "org.springframework:spring-context:${springVersion}",
-            "spring-boot-autoconfigure"          : "org.springframework.boot:spring-boot-autoconfigure:${springBootVersion}",
-            "spring-boot-configuration-processor": "org.springframework.boot:spring-boot-configuration-processor:${springBootVersion}",
-            "spring-boot-autoconfigure-processor": "org.springframework.boot:spring-boot-autoconfigure-processor:${springBootVersion}",
-            "spring-boot-starter-web"            : "org.springframework.boot:spring-boot-starter-web:${springBootVersion}",
-            "spring-boot-starter-thymeleaf"      : "org.springframework.boot:spring-boot-starter-thymeleaf:${springBootVersion}",
-            "spring-boot-starter-security"       : "org.springframework.boot:spring-boot-starter-security:${springBootVersion}",
-            "spring-boot-starter-test"           : "org.springframework.boot:spring-boot-starter-test:${springBootVersion}",
-            "shiro-spring-boot-web-starter"      : "org.apache.shiro:shiro-spring-boot-web-starter:${shiroVersion}",
-            "lombok"                             : "org.projectlombok:lombok:1.18.4",
-            "assertj-core"                       : "org.assertj:assertj-core:3.12.2",
-            "junit-jupiter-api"                  : "org.junit.jupiter:junit-jupiter-api:${junitVersion}",
-            "junit-jupiter-engine"               : "org.junit.jupiter:junit-jupiter-engine:${junitVersion}",
-            "mockito-all"                        : "org.mockito:mockito-all:1.10.19"
-    ]
+    pac4jVersion = "4.0.0"
+    springBootVersion = "2.2.7.RELEASE"
+    javaVersion = JavaVersion.VERSION_1_8
 }
 
 allprojects {
     group = "com.baomidou"
     version = "0.0.1.13-SNAPSHOT"
+
+    repositories {
+        mavenLocal()
+        maven { url "https://maven.aliyun.com/nexus/content/groups/public/" }
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+        jcenter()
+    }
+
+    configurations {
+        bom
+        api.extendsFrom(bom)
+        implementation.extendsFrom(bom)
+        compileOnly.extendsFrom(bom)
+        annotationProcessor.extendsFrom(bom)
+        testCompileOnly.extendsFrom(bom)
+        testAnnotationProcessor.extendsFrom(bom)
+    }
+
+    dependencies {
+        bom(platform("org.pac4j:pac4j:${pac4jVersion}"))
+        bom(platform("org.springframework.boot:spring-boot-dependencies:${springBootVersion}"))
+    }
 }
 
 description = "easy security for web by pac4j"
 
 subprojects {
+    apply plugin: 'java'
     apply plugin: 'java-library'
     apply plugin: 'signing'
     apply plugin: 'maven-publish'
@@ -80,7 +57,7 @@ subprojects {
     jar {
         afterEvaluate {
             manifest {
-                attributes 'Implementation-Version': version
+                attributes 'Implementation-Version': archiveVersion
                 attributes 'Built-Gradle': gradle.gradleVersion
                 attributes 'Bundle-DocURL': 'https://mybatis.plus/'
                 attributes 'Build-OS': System.getProperty("os.name")
@@ -91,34 +68,22 @@ subprojects {
         }
     }
 
-    repositories {
-        mavenLocal()
-        maven { url "https://maven.aliyun.com/repository/public" }
-        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-        jcenter()
-    }
-
     dependencies {
-        annotationProcessor "${lib.lombok}"
-        compileOnly "${lib.lombok}"
+        annotationProcessor("org.projectlombok:lombok")
+        compileOnly("org.projectlombok:lombok")
+        testAnnotationProcessor("org.projectlombok:lombok")
+        testCompileOnly("org.projectlombok:lombok")
 
-        testAnnotationProcessor "${lib.lombok}"
-        testCompileOnly "${lib.lombok}"
-        testImplementation("${lib["assertj-core"]}")
-        testImplementation("${lib["junit-jupiter-api"]}")
-        testRuntimeOnly("${lib["junit-jupiter-engine"]}")
-        testCompileOnly("${lib["mockito-all"]}")
-        testImplementation("org.mockito:mockito-junit-jupiter:2.24.0")
+        testImplementation("org.assertj:assertj-core")
+        testImplementation("org.junit.jupiter:junit-jupiter-api")
+        testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+        testImplementation("org.mockito:mockito-junit-jupiter")
     }
 
     //noinspection GroovyAssignabilityCheck
     task sourcesJar(type: Jar) {
-        archiveClassifier = 'sources'
         from sourceSets.main.allJava
-    }
-
-    test {
-        useJUnitPlatform()
+        archiveClassifier = "sources"
     }
 
     javadoc {
@@ -135,8 +100,12 @@ subprojects {
     }
 
     task javadocJar(type: Jar) {
-        archiveClassifier = 'javadoc'
         from javadoc
+        archiveClassifier = "javadoc"
+    }
+
+    test {
+        useJUnitPlatform()
     }
 
     tasks.whenTaskAdded { task ->

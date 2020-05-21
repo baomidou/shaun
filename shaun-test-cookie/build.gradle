@@ -1,6 +1,5 @@
 dependencies {
     api project(":shaun-spring-boot-starter")
-    api "${lib.'spring-boot-starter-web'}"
-    api "${lib.'spring-boot-starter-thymeleaf'}"
-    testImplementation "${lib.'shiro-spring-boot-web-starter'}"
+    api "org.springframework.boot:spring-boot-starter-web"
+    api "org.springframework.boot:spring-boot-starter-thymeleaf"
 }
