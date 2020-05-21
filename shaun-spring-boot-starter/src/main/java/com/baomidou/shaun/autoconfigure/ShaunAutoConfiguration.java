@@ -1,5 +1,16 @@
 package com.baomidou.shaun.autoconfigure;
 
+import com.baomidou.shaun.autoconfigure.properties.ShaunProperties;
+import com.baomidou.shaun.core.authority.AuthorityManager;
+import com.baomidou.shaun.core.authority.DefaultAuthorityManager;
+import com.baomidou.shaun.core.client.TokenClient;
+import com.baomidou.shaun.core.extractor.TokenExtractor;
+import com.baomidou.shaun.core.generator.DefaultJwtTokenGenerator;
+import com.baomidou.shaun.core.generator.TokenGenerator;
+import com.baomidou.shaun.core.handler.DefaultLogoutHandler;
+import com.baomidou.shaun.core.handler.LogoutHandler;
+import com.baomidou.shaun.core.mgt.SecurityManager;
+import lombok.AllArgsConstructor;
 import org.pac4j.core.credentials.TokenCredentials;
 import org.pac4j.core.credentials.authenticator.Authenticator;
 import org.pac4j.core.credentials.extractor.CredentialsExtractor;
@@ -13,25 +24,12 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.baomidou.shaun.autoconfigure.properties.ShaunProperties;
-import com.baomidou.shaun.core.authority.AuthorityManager;
-import com.baomidou.shaun.core.authority.DefaultAuthorityManager;
-import com.baomidou.shaun.core.client.TokenClient;
-import com.baomidou.shaun.core.extractor.TokenExtractor;
-import com.baomidou.shaun.core.generator.DefaultJwtTokenGenerator;
-import com.baomidou.shaun.core.generator.TokenGenerator;
-import com.baomidou.shaun.core.handler.DefaultLogoutHandler;
-import com.baomidou.shaun.core.handler.LogoutHandler;
-import com.baomidou.shaun.core.mgt.SecurityManager;
-
-import lombok.AllArgsConstructor;
-
 /**
  * @author miemie
  * @since 2019-07-18
  */
 @AllArgsConstructor
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @EnableConfigurationProperties(ShaunProperties.class)
 public class ShaunAutoConfiguration {
 

@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
  */
 @Data
 @AllArgsConstructor
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @AutoConfigureAfter(ShaunAutoConfiguration.class)
 public class ShaunFilterAutoConfiguration {
 

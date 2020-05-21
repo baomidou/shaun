@@ -26,7 +26,7 @@ import java.util.List;
  */
 @Data
 @AllArgsConstructor
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @AutoConfigureAfter(ShaunFilterAutoConfiguration.class)
 public class ShaunModelAutoConfiguration {
 
