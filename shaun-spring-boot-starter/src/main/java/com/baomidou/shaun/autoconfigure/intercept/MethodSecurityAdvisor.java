@@ -1,17 +1,15 @@
 package com.baomidou.shaun.autoconfigure.intercept;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-
-import org.springframework.aop.support.StaticMethodMatcherPointcutAdvisor;
-import org.springframework.core.annotation.AnnotationUtils;
-
 import com.baomidou.shaun.core.annotation.HasAuthorization;
 import com.baomidou.shaun.core.annotation.HasPermission;
 import com.baomidou.shaun.core.annotation.HasRole;
-
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.aop.support.StaticMethodMatcherPointcutAdvisor;
+import org.springframework.core.annotation.AnnotationUtils;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 
 /**
  * 注解优先级:
@@ -30,10 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 public class MethodSecurityAdvisor extends StaticMethodMatcherPointcutAdvisor {
 
     private static final Class<? extends Annotation>[] AUTHZ_ANNOTATION_CLASSES =
-            new Class[]{
-                    HasRole.class, HasPermission.class,
-                    HasAuthorization.class
-            };
+            new Class[]{HasRole.class, HasPermission.class, HasAuthorization.class};
 
 
     @Override
