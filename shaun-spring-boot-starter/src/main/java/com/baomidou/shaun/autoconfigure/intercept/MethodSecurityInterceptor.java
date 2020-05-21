@@ -1,12 +1,15 @@
 package com.baomidou.shaun.autoconfigure.intercept;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.function.Function;
-
+import com.baomidou.shaun.core.annotation.HasAuthorization;
+import com.baomidou.shaun.core.annotation.HasPermission;
+import com.baomidou.shaun.core.annotation.HasRole;
+import com.baomidou.shaun.core.authority.AuthorityManager;
+import com.baomidou.shaun.core.enums.Logical;
+import com.baomidou.shaun.core.profile.TokenProfile;
+import com.baomidou.shaun.core.util.JEEContextFactory;
+import com.baomidou.shaun.core.util.ProfileHolder;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.pac4j.core.context.JEEContext;
@@ -15,17 +18,12 @@ import org.springframework.aop.framework.AopProxyUtils;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.util.ClassUtils;
 
-import com.baomidou.shaun.core.annotation.HasAuthorization;
-import com.baomidou.shaun.core.annotation.HasPermission;
-import com.baomidou.shaun.core.annotation.HasRole;
-import com.baomidou.shaun.core.config.Config;
-import com.baomidou.shaun.core.enums.Logical;
-import com.baomidou.shaun.core.profile.TokenProfile;
-import com.baomidou.shaun.core.util.JEEContextFactory;
-import com.baomidou.shaun.core.util.ProfileHolder;
-
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.function.Function;
 
 /**
  * 注解优先级:
@@ -41,7 +39,7 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor
 public class MethodSecurityInterceptor implements MethodInterceptor {
 
-    private final Config config;
+    private final AuthorityManager authorityManager;
 
     @Override
     public Object invoke(MethodInvocation mi) throws Throwable {
@@ -62,12 +60,12 @@ public class MethodSecurityInterceptor implements MethodInterceptor {
 
         HasRole hasRole = findAnnotation(mi.getMethod(), targetClass, HasRole.class);
         if (hasRole != null) {
-            return commonAuthorized(true, hasRole.logical(), toSet(hasRole.value()), config.getAuthorityManager()::roles);
+            return commonAuthorized(true, hasRole.logical(), toSet(hasRole.value()), authorityManager::roles);
         }
 
         HasPermission hasPermission = findAnnotation(mi.getMethod(), targetClass, HasPermission.class);
         if (hasPermission != null) {
-            return commonAuthorized(false, hasPermission.logical(), toSet(hasPermission.value()), config.getAuthorityManager()::permissions);
+            return commonAuthorized(false, hasPermission.logical(), toSet(hasPermission.value()), authorityManager::permissions);
         }
 
         HasAuthorization hasAuthorization = findAnnotation(mi.getMethod(), targetClass, HasAuthorization.class);
@@ -83,13 +81,13 @@ public class MethodSecurityInterceptor implements MethodInterceptor {
                 log.debug("not found TokenProfile, so authorization not success!");
                 return false;
             }
-            if (!config.getAuthorityManager().isSkipAuthenticationUser(profiles)) {
+            if (!authorityManager.isSkipAuthenticationUser(profiles)) {
                 if (logical == Logical.ANY) {
-                    return toCheck(profiles, true, role.logical(), roles, config.getAuthorityManager()::roles)
-                            || toCheck(profiles, false, permission.logical(), permissions, config.getAuthorityManager()::permissions);
+                    return toCheck(profiles, true, role.logical(), roles, authorityManager::roles)
+                            || toCheck(profiles, false, permission.logical(), permissions, authorityManager::permissions);
                 } else {
-                    return toCheck(profiles, true, role.logical(), roles, config.getAuthorityManager()::roles)
-                            && toCheck(profiles, false, permission.logical(), permissions, config.getAuthorityManager()::permissions);
+                    return toCheck(profiles, true, role.logical(), roles, authorityManager::roles)
+                            && toCheck(profiles, false, permission.logical(), permissions, authorityManager::permissions);
                 }
             }
         }
@@ -105,7 +103,7 @@ public class MethodSecurityInterceptor implements MethodInterceptor {
             log.debug("not found TokenProfile, so authorization not success!");
             return false;
         }
-        if (config.getAuthorityManager().isSkipAuthenticationUser(profiles)) {
+        if (authorityManager.isSkipAuthenticationUser(profiles)) {
             return true;
         }
         return toCheck(profiles, isRole, logical, elements, checkValues);
@@ -114,9 +112,9 @@ public class MethodSecurityInterceptor implements MethodInterceptor {
     private boolean toCheck(final TokenProfile profiles, final boolean isRole, final Logical logical,
                             final Set<String> elements, final Function<TokenProfile, Set<String>> checkValues) {
         if (isRole) {
-            return config.getAuthorityManager().checkRoles(logical, elements, checkValues.apply(profiles));
+            return authorityManager.checkRoles(logical, elements, checkValues.apply(profiles));
         }
-        return config.getAuthorityManager().checkPermissions(logical, elements, checkValues.apply(profiles));
+        return authorityManager.checkPermissions(logical, elements, checkValues.apply(profiles));
     }
 
     /**

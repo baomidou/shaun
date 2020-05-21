@@ -1,9 +1,19 @@
 package com.baomidou.shaun.autoconfigure;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
+import com.baomidou.shaun.autoconfigure.intercept.MethodSecurityAdvisor;
+import com.baomidou.shaun.autoconfigure.intercept.MethodSecurityInterceptor;
+import com.baomidou.shaun.autoconfigure.properties.ShaunProperties;
+import com.baomidou.shaun.core.authority.AuthorityManager;
+import com.baomidou.shaun.core.client.TokenClient;
+import com.baomidou.shaun.core.config.Config;
+import com.baomidou.shaun.core.enums.TokenLocation;
+import com.baomidou.shaun.core.filter.*;
+import com.baomidou.shaun.core.handler.CallbackHandler;
+import com.baomidou.shaun.core.handler.HttpActionHandler;
+import com.baomidou.shaun.core.matching.OnlyPathMatcher;
+import com.baomidou.shaun.core.mgt.SecurityManager;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import org.pac4j.core.authorization.authorizer.Authorizer;
 import org.pac4j.core.client.Client;
 import org.pac4j.core.client.Clients;
@@ -19,25 +29,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.CollectionUtils;
 
-import com.baomidou.shaun.autoconfigure.intercept.MethodSecurityAdvisor;
-import com.baomidou.shaun.autoconfigure.intercept.MethodSecurityInterceptor;
-import com.baomidou.shaun.autoconfigure.properties.ShaunProperties;
-import com.baomidou.shaun.core.authority.AuthorityManager;
-import com.baomidou.shaun.core.client.TokenClient;
-import com.baomidou.shaun.core.config.Config;
-import com.baomidou.shaun.core.enums.TokenLocation;
-import com.baomidou.shaun.core.filter.CallbackFilter;
-import com.baomidou.shaun.core.filter.LogoutFilter;
-import com.baomidou.shaun.core.filter.SecurityFilter;
-import com.baomidou.shaun.core.filter.SfLoginFilter;
-import com.baomidou.shaun.core.filter.ShaunFilter;
-import com.baomidou.shaun.core.handler.CallbackHandler;
-import com.baomidou.shaun.core.handler.HttpActionHandler;
-import com.baomidou.shaun.core.matching.OnlyPathMatcher;
-import com.baomidou.shaun.core.mgt.SecurityManager;
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author miemie
@@ -145,9 +139,9 @@ public class ShaunFilterAutoConfiguration {
     }
 
     @Bean
-    public MethodSecurityAdvisor shaunMethodSecurityAdvisor(Config config) {
+    public MethodSecurityAdvisor shaunMethodSecurityAdvisor(AuthorityManager authorityManager) {
         MethodSecurityAdvisor advisor = new MethodSecurityAdvisor();
-        MethodSecurityInterceptor interceptor = new MethodSecurityInterceptor(config);
+        MethodSecurityInterceptor interceptor = new MethodSecurityInterceptor(authorityManager);
         advisor.setAdvice(interceptor);
         return advisor;
     }
