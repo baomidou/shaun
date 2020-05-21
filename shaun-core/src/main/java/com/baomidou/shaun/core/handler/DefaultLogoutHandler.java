@@ -2,7 +2,6 @@ package com.baomidou.shaun.core.handler;
 
 import com.baomidou.shaun.core.context.Cookie;
 import com.baomidou.shaun.core.enums.TokenLocation;
-import com.baomidou.shaun.core.extractor.TokenExtractor;
 import com.baomidou.shaun.core.profile.TokenProfile;
 import com.baomidou.shaun.core.util.JEEContextFactory;
 import lombok.Data;
@@ -28,14 +27,8 @@ public class DefaultLogoutHandler implements LogoutHandler {
     public void logout(TokenProfile profile) {
         if (tokenLocation.enableCookie()) {
             JEEContext jeeContext = JEEContextFactory.getJEEContext();
-            if (tokenLocation == TokenLocation.COOKIE || jeeContext.getRequestAttribute(TokenExtractor.COOKIE_MARK).isPresent()) {
-                this.cleanCookie(jeeContext);
-            }
+            jeeContext.addResponseCookie(cookie.getPac4jCookie("", 0));
+            log.debug("logoutHandler clean cookie success!");
         }
-    }
-
-    private void cleanCookie(JEEContext jeeContext) {
-        jeeContext.addResponseCookie(cookie.getPac4jCookie("", 0));
-        log.debug("logoutHandler clean cookie success!");
     }
 }

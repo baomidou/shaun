@@ -23,7 +23,6 @@ import java.util.Optional;
 @Data
 public class TokenExtractor implements CredentialsExtractor<TokenCredentials> {
 
-    public static final String COOKIE_MARK = "shaun-enable-cookie-mark";
     private final TokenLocation tokenLocation;
     private final HeaderExtractor headerExtractor;
     private final CookieExtractor cookieExtractor;
@@ -55,9 +54,6 @@ public class TokenExtractor implements CredentialsExtractor<TokenCredentials> {
                 credentials = headerExtractor.extract(context);
                 if (!credentials.isPresent()) {
                     credentials = cookieExtractor.extract(context);
-                    if (credentials.isPresent()) {
-                        this.markCookie(context);
-                    }
                 }
                 break;
             case HEADER_OR_PARAMETER:
@@ -70,9 +66,6 @@ public class TokenExtractor implements CredentialsExtractor<TokenCredentials> {
                 credentials = headerExtractor.extract(context);
                 if (!credentials.isPresent()) {
                     credentials = cookieExtractor.extract(context);
-                    if (credentials.isPresent()) {
-                        this.markCookie(context);
-                    }
                 }
                 if (!credentials.isPresent()) {
                     credentials = parameterExtractor.extract(context);
@@ -80,14 +73,5 @@ public class TokenExtractor implements CredentialsExtractor<TokenCredentials> {
                 break;
         }
         return credentials;
-    }
-
-    /**
-     * 标记是从cookie里获取的token
-     *
-     * @param context 上下文
-     */
-    private void markCookie(WebContext context) {
-        context.setRequestAttribute(COOKIE_MARK, COOKIE_MARK);
     }
 }
