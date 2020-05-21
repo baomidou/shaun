@@ -1,13 +1,13 @@
 package com.baomidou.shaun.core.util;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.baomidou.shaun.core.context.session.NoSessionStore;
 import org.pac4j.core.context.JEEContext;
+import org.pac4j.core.context.session.JEESessionStore;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import com.baomidou.shaun.core.context.session.NoSessionStore;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author miemie
@@ -15,12 +15,14 @@ import com.baomidou.shaun.core.context.session.NoSessionStore;
  */
 public abstract class JEEContextFactory {
 
+    private static boolean enableSession = false;
+
     public static JEEContext getJEEContext() {
         return getJEEContext(request(), response());
     }
 
     public static JEEContext getJEEContext(final HttpServletRequest request, final HttpServletResponse response) {
-        return new JEEContext(request, response, NoSessionStore.INSTANCE);
+        return new JEEContext(request, response, enableSession ? JEESessionStore.INSTANCE : NoSessionStore.INSTANCE);
     }
 
     public static HttpServletRequest request() {
@@ -29,5 +31,9 @@ public abstract class JEEContextFactory {
 
     public static HttpServletResponse response() {
         return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
+    }
+
+    public static void setEnableSession(boolean enableSession) {
+        JEEContextFactory.enableSession = enableSession;
     }
 }

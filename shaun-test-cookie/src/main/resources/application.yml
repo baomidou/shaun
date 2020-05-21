@@ -1,6 +1,7 @@
 shaun:
   model: web_filter
   token-location: cookie
+  enable-session: true
   expire-time: 10h
   login-url: /login
   logout-url: /logout
@@ -9,6 +10,8 @@ shaun:
   exclude-path:
     - /auth/login
     - /favicon.ico
+  matcher-names: csrfToken
+  authorizer-names: csrfCheck
 
 spring:
   thymeleaf:

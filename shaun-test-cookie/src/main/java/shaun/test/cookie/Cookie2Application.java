@@ -1,11 +1,9 @@
 package shaun.test.cookie;
 
+import com.baomidou.shaun.core.profile.TokenProfile;
 import org.pac4j.core.authorization.authorizer.Authorizer;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
-
-import com.baomidou.shaun.core.profile.TokenProfile;
 
 /**
  * @author miemie
@@ -18,7 +16,7 @@ public class Cookie2Application {
         SpringApplication.run(Cookie2Application.class, args);
     }
 
-    @Bean
+    //    @Bean
     public Authorizer<TokenProfile> authorizer1() {
         return (context, profiles) -> {
             final TokenProfile profile = profiles.get(0);

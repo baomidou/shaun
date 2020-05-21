@@ -1,16 +1,16 @@
 package shaun.test.cookie;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-
 import com.baomidou.shaun.core.annotation.HasPermission;
 import com.baomidou.shaun.core.annotation.HasRole;
 import com.baomidou.shaun.core.mgt.SecurityManager;
 import com.baomidou.shaun.core.profile.TokenProfile;
 import com.baomidou.shaun.core.util.ProfileHolder;
-
 import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * @author miemie
@@ -28,6 +28,7 @@ public class TestController {
         profile.setId("111111111111");
         profile.addRole("admin");
         profile.addPermission("add");
+        profile.addPermission("xx");
         securityManager.login(profile);
         return "redirect:/index";
     }
@@ -66,5 +67,12 @@ public class TestController {
     public String a3(Model model) {
         model.addAttribute("a", "a3");
         return "a";
+    }
+
+    @ResponseBody
+    @PostMapping("/a4")
+    @HasPermission("xx")
+    public String a4() {
+        return "a4";
     }
 }

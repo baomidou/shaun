@@ -7,6 +7,7 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
 import org.pac4j.core.authorization.authorizer.Authorizer;
+import org.pac4j.core.authorization.authorizer.DefaultAuthorizers;
 import org.pac4j.core.authorization.checker.DefaultAuthorizationChecker;
 import org.pac4j.core.client.finder.ClientFinder;
 import org.pac4j.core.client.finder.DefaultCallbackClientFinder;
@@ -15,6 +16,7 @@ import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.http.ajax.AjaxRequestResolver;
 import org.pac4j.core.http.ajax.DefaultAjaxRequestResolver;
 import org.pac4j.core.matching.checker.DefaultMatchingChecker;
+import org.pac4j.core.matching.matcher.DefaultMatchers;
 import org.pac4j.core.matching.matcher.Matcher;
 import org.pac4j.core.util.CommonHelper;
 import org.pac4j.core.util.Pac4jConstants;
@@ -88,7 +90,13 @@ public class Config {
             if (authorizerNames == null) {
                 authorizerNames = value;
             } else {
-                authorizerNames = authorizerNames.concat(Pac4jConstants.ELEMENT_SEPARATOR).concat(value);
+                if (DefaultAuthorizers.NONE.equals(authorizerNames)) {
+                    authorizerNames = value;
+                } else {
+                    if (!DefaultAuthorizers.NONE.equals(value)) {
+                        authorizerNames = authorizerNames.concat(Pac4jConstants.ELEMENT_SEPARATOR).concat(value);
+                    }
+                }
             }
         }
     }
@@ -108,7 +116,13 @@ public class Config {
             if (matcherNames == null) {
                 matcherNames = value;
             } else {
-                matcherNames = matcherNames.concat(Pac4jConstants.ELEMENT_SEPARATOR).concat(value);
+                if (DefaultMatchers.NONE.equals(matcherNames)) {
+                    matcherNames = value;
+                } else {
+                    if (!DefaultMatchers.NONE.equals(value)) {
+                        matcherNames = matcherNames.concat(Pac4jConstants.ELEMENT_SEPARATOR).concat(value);
+                    }
+                }
             }
         }
     }

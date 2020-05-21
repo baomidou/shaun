@@ -31,6 +31,10 @@ public class ShaunProperties {
      */
     private Model model = Model.INTERCEPTOR;
     /**
+     * 是否启用 session
+     */
+    private boolean enableSession = false;
+    /**
      * authorizerNames,多个以逗号分隔(不包含自己注入的 {@link Authorizer}),
      * !!! 以下 {@link #excludePath} 和 {@link #excludeBranch} 和 {@link #excludeRegex} 排除掉的之外的地址都生效 !!!,
      * 默认支持的一些参考 {@link DefaultAuthorizationChecker} :
@@ -42,7 +46,7 @@ public class ShaunProperties {
      * isRemembered : {@link IsRememberedAuthorizer}
      * </p>
      */
-    private String authorizerNames;
+    private String authorizerNames = DefaultAuthorizers.NONE;
     /**
      * matcherNames,多个以逗号分隔(不包含自己注入的 {@link Matcher}),
      * !!! 全部地址都生效 !!! ,
@@ -58,7 +62,7 @@ public class ShaunProperties {
      * securityheaders : 等于上面的 nocache + nosniff + hsts + noframe + xssprotection
      * </p>
      */
-    private String matcherNames;
+    private String matcherNames = DefaultMatchers.NONE;
     /**
      * 跳过鉴权的 role 和 permission 的表现字符串(相当于系统超管)
      */
