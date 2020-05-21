@@ -23,8 +23,8 @@ ext {
     ]
 
     libraries = [
-            springVersion = "5.2.4.RELEASE",
-            springBootVersion = "2.2.5.RELEASE",
+            springVersion = "5.2.6.RELEASE",
+            springBootVersion = "2.2.7.RELEASE",
             pac4jVersion = "4.0.0",
             shiroVersion = "1.4.1",
             junitVersion = "5.4.0"

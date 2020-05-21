@@ -92,6 +92,10 @@ public class ShaunProperties {
      * <li> 1d : 表示有效时间到第二天 00:00:00  </li>
      * <li> 2d1h : 表示有效时间到第二天 01:00:00 </li>
      * <b> `d` 后面 只支持上面三个(`s`,`m`,`h`)之一 </b>
+     *
+     * <p>
+     * 纯 cookie 模式下可以不设置,则cookie过期时间为会话时间但是token永不过期
+     * </p>
      */
     private String expireTime;
     /**

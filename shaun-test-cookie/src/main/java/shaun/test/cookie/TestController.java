@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.UUID;
+
 /**
  * @author miemie
  * @since 2019-08-04
@@ -73,6 +75,6 @@ public class TestController {
     @PostMapping("/a4")
     @HasPermission("xx")
     public String a4() {
-        return "a4";
+        return "a4_" + UUID.randomUUID();
     }
 }
