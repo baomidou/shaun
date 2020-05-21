@@ -1,7 +1,10 @@
 package com.baomidou.shaun.core.extractor;
 
-import java.util.Optional;
-
+import com.baomidou.shaun.core.context.Cookie;
+import com.baomidou.shaun.core.context.Header;
+import com.baomidou.shaun.core.context.Parameter;
+import com.baomidou.shaun.core.enums.TokenLocation;
+import lombok.Data;
 import org.pac4j.core.context.WebContext;
 import org.pac4j.core.credentials.TokenCredentials;
 import org.pac4j.core.credentials.extractor.CredentialsExtractor;
@@ -9,12 +12,7 @@ import org.pac4j.core.credentials.extractor.HeaderExtractor;
 import org.pac4j.core.credentials.extractor.ParameterExtractor;
 import org.pac4j.http.credentials.extractor.CookieExtractor;
 
-import com.baomidou.shaun.core.context.Cookie;
-import com.baomidou.shaun.core.context.Header;
-import com.baomidou.shaun.core.context.Parameter;
-import com.baomidou.shaun.core.enums.TokenLocation;
-
-import lombok.Data;
+import java.util.Optional;
 
 /**
  * 定义了从 WebContext 取 token 的方式
@@ -25,6 +23,7 @@ import lombok.Data;
 @Data
 public class TokenExtractor implements CredentialsExtractor<TokenCredentials> {
 
+    public static final String COOKIE_MARK = "shaun-enable-cookie-mark";
     private final TokenLocation tokenLocation;
     private final HeaderExtractor headerExtractor;
     private final CookieExtractor cookieExtractor;
@@ -56,6 +55,9 @@ public class TokenExtractor implements CredentialsExtractor<TokenCredentials> {
                 credentials = headerExtractor.extract(context);
                 if (!credentials.isPresent()) {
                     credentials = cookieExtractor.extract(context);
+                    if (credentials.isPresent()) {
+                        this.markCookie(context);
+                    }
                 }
                 break;
             case HEADER_OR_PARAMETER:
@@ -68,6 +70,9 @@ public class TokenExtractor implements CredentialsExtractor<TokenCredentials> {
                 credentials = headerExtractor.extract(context);
                 if (!credentials.isPresent()) {
                     credentials = cookieExtractor.extract(context);
+                    if (credentials.isPresent()) {
+                        this.markCookie(context);
+                    }
                 }
                 if (!credentials.isPresent()) {
                     credentials = parameterExtractor.extract(context);
@@ -75,5 +80,14 @@ public class TokenExtractor implements CredentialsExtractor<TokenCredentials> {
                 break;
         }
         return credentials;
+    }
+
+    /**
+     * 标记是从cookie里获取的token
+     *
+     * @param context 上下文
+     */
+    private void markCookie(WebContext context) {
+        context.setRequestAttribute(COOKIE_MARK, COOKIE_MARK);
     }
 }
