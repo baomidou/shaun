@@ -55,10 +55,9 @@ public class ShaunFilterAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public Config config(AuthorityManager authorityManager) {
+    public Config config() {
         Config config = new Config();
         config.setTokenClient(tokenClient);
-        config.setAuthorityManager(authorityManager);
         if (CommonHelper.isNotBlank(properties.getLoginUrl())) {
             config.setStateless(false);
             config.setLoginUrl(properties.getLoginUrl());

@@ -1,9 +1,11 @@
 package com.baomidou.shaun.core.config;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-
+import com.baomidou.shaun.core.client.TokenClient;
+import com.baomidou.shaun.core.handler.DefaultHttpActionHandler;
+import com.baomidou.shaun.core.handler.HttpActionHandler;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.Setter;
 import org.pac4j.core.authorization.authorizer.Authorizer;
 import org.pac4j.core.authorization.checker.DefaultAuthorizationChecker;
 import org.pac4j.core.client.finder.ClientFinder;
@@ -18,14 +20,9 @@ import org.pac4j.core.util.CommonHelper;
 import org.pac4j.core.util.Pac4jConstants;
 import org.springframework.util.CollectionUtils;
 
-import com.baomidou.shaun.core.authority.AuthorityManager;
-import com.baomidou.shaun.core.client.TokenClient;
-import com.baomidou.shaun.core.handler.DefaultHttpActionHandler;
-import com.baomidou.shaun.core.handler.HttpActionHandler;
-
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.Setter;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author miemie
@@ -39,10 +36,6 @@ public class Config {
      * client
      */
     private TokenClient tokenClient;
-    /**
-     * authorityManager
-     */
-    private AuthorityManager authorityManager;
     /**
      * 是否是前后端分离的
      */
