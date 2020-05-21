@@ -1,22 +1,22 @@
 package com.baomidou.shaun.autoconfigure.properties;
 
-import java.util.List;
-import java.util.UUID;
-
-import org.pac4j.core.authorization.authorizer.Authorizer;
-import org.pac4j.core.authorization.checker.DefaultAuthorizationChecker;
-import org.pac4j.core.matching.checker.DefaultMatchingChecker;
-import org.pac4j.core.matching.matcher.Matcher;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.NestedConfigurationProperty;
-
 import com.baomidou.shaun.core.context.Cookie;
 import com.baomidou.shaun.core.context.Header;
 import com.baomidou.shaun.core.context.Parameter;
 import com.baomidou.shaun.core.enums.Model;
 import com.baomidou.shaun.core.enums.TokenLocation;
-
+import com.baomidou.shaun.core.handler.CallbackHandler;
 import lombok.Data;
+import org.pac4j.core.authorization.authorizer.*;
+import org.pac4j.core.authorization.checker.DefaultAuthorizationChecker;
+import org.pac4j.core.matching.checker.DefaultMatchingChecker;
+import org.pac4j.core.matching.matcher.*;
+import org.pac4j.core.matching.matcher.csrf.CsrfTokenGeneratorMatcher;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
+
+import java.util.List;
+import java.util.UUID;
 
 /**
  * @author miemie
@@ -31,13 +31,32 @@ public class ShaunProperties {
      */
     private Model model = Model.INTERCEPTOR;
     /**
-     * authorizerNames,多个以逗号分隔(不包含自己注入的 {@link Authorizer})
-     * 默认支持的一些参考 {@link DefaultAuthorizationChecker}
+     * authorizerNames,多个以逗号分隔(不包含自己注入的 {@link Authorizer}),
+     * !!! 以下 {@link #excludePath} 和 {@link #excludeBranch} 和 {@link #excludeRegex} 排除掉的之外的地址都生效 !!!,
+     * 默认支持的一些参考 {@link DefaultAuthorizationChecker} :
+     * <p>
+     * csrfCheck : {@link CsrfAuthorizer} ,
+     * isAnonymous : {@link IsAnonymousAuthorizer} ,
+     * isAuthenticated : {@link IsAuthenticatedAuthorizer} ,
+     * isFullyAuthenticated : {@link IsFullyAuthenticatedAuthorizer} ,
+     * isRemembered : {@link IsRememberedAuthorizer}
+     * </p>
      */
     private String authorizerNames;
     /**
-     * matcherNames,多个以逗号分隔(不包含自己注入的 {@link Matcher})
-     * 默认支持的一些参考 {@link DefaultMatchingChecker}
+     * matcherNames,多个以逗号分隔(不包含自己注入的 {@link Matcher}),
+     * !!! 全部地址都生效 !!! ,
+     * 默认支持的一些参考 {@link DefaultMatchingChecker} :
+     * <p>
+     * hsts : {@link StrictTransportSecurityMatcher} ,
+     * nosniff : {@link XContentTypeOptionsMatcher} ,
+     * noframe : {@link XFrameOptionsMatcher} ,
+     * xssprotection : {@link XSSProtectionMatcher} ,
+     * nocache : {@link CacheControlMatcher} ,
+     * csrfToken : {@link CsrfTokenGeneratorMatcher} ,
+     * allowAjaxRequests : {@link CorsMatcher} ,
+     * securityheaders : 等于上面的 nocache + nosniff + hsts + noframe + xssprotection
+     * </p>
      */
     private String matcherNames;
     /**
@@ -93,25 +112,42 @@ public class ShaunProperties {
     private final Parameter parameter = new Parameter();
     /**
      * 登出 url
+     * <p>
+     * 不管是否前后端分离都可配置 ,
+     * 配置此地址会进行自动拦截 ,
+     * ajax请求不做处理,页面跳转(非前后端分离项目)的会在登出后重定向到 {@link #loginUrl}
+     * </p>
      */
     private String logoutUrl;
-
     /**
-     * 登录页面 url,非分离模式下进行 redirect
+     * 登录页面 url
+     * <p>
+     * 前后端分离项目勿配,配置即代表非前后分离项目,访问授权保护的页面未通过鉴权会被重定向到登录页
+     * </p>
      */
     private String loginUrl;
     /**
      * 触发三方登录的url
+     * <p>
+     * 非前后分离项目配置 ,
+     * 配置后此url会被拦截进行重定向到相应的网址进行三方登陆
+     * </p>
      */
     private String sfLoginUrl;
     /**
      * callback url
-     * 三分登录的回调地址
+     * <p>
+     * 非前后分离项目配置 ,
+     * 三方登录的回调地址,回调后触发 {@link CallbackHandler} 并重定向到 {@link #indexUrl}
+     * </p>
      */
     private String callbackUrl;
     /**
      * index url
-     * 三分登录的回调成功后 redirect 的主页
+     * <p>
+     * 非前后分离项目配置 ,
+     * 三方登录的成功后会被重定向到的主页
+     * </p>
      */
     private String indexUrl;
 }

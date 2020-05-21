@@ -6,7 +6,6 @@ import com.baomidou.shaun.autoconfigure.properties.ShaunProperties;
 import com.baomidou.shaun.core.authority.AuthorityManager;
 import com.baomidou.shaun.core.client.TokenClient;
 import com.baomidou.shaun.core.config.Config;
-import com.baomidou.shaun.core.enums.TokenLocation;
 import com.baomidou.shaun.core.filter.*;
 import com.baomidou.shaun.core.handler.CallbackHandler;
 import com.baomidou.shaun.core.handler.HttpActionHandler;
@@ -87,8 +86,7 @@ public class ShaunFilterAutoConfiguration {
 
         if (CommonHelper.isNotBlank(properties.getLoginUrl())) {
             pathMatcher.excludePath(properties.getLoginUrl());
-            CommonHelper.assertTrue(properties.getTokenLocation() == TokenLocation.COOKIE,
-                    "非前后端分离的项目请设置 tokenLocation 值为 \"cookie\"");
+            CommonHelper.assertTrue(properties.getTokenLocation().enableCookie(), "非前后端分离的项目请设置 tokenLocation 值为 \"cookie\"");
         }
         final List<ShaunFilter> filterList = new ArrayList<>();
 
