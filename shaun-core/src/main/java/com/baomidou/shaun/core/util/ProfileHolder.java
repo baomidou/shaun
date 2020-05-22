@@ -1,13 +1,11 @@
 package com.baomidou.shaun.core.util;
 
-import java.util.Optional;
-
-import javax.servlet.http.HttpServletRequest;
-
+import com.baomidou.shaun.core.profile.TokenProfile;
 import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.util.Pac4jConstants;
 
-import com.baomidou.shaun.core.profile.TokenProfile;
+import javax.servlet.http.HttpServletRequest;
+import java.util.Optional;
 
 /**
  * 统一的存放登录用户信息
@@ -21,7 +19,7 @@ public abstract class ProfileHolder {
     private static final String key_profile = Pac4jConstants.USER_PROFILES;
 
     public static void save(TokenProfile profile) {
-        save(JEEContextFactory.request(), profile);
+        save(JEEContextUtil.request(), profile);
     }
 
     public static void save(JEEContext context, TokenProfile profile) {
@@ -33,7 +31,7 @@ public abstract class ProfileHolder {
     }
 
     public static TokenProfile getProfile() {
-        return getProfile(JEEContextFactory.request());
+        return getProfile(JEEContextUtil.request());
     }
 
     public static TokenProfile getProfile(JEEContext context) {
@@ -50,7 +48,7 @@ public abstract class ProfileHolder {
     }
 
     public static String getToken() {
-        return getToken(JEEContextFactory.request());
+        return getToken(JEEContextUtil.request());
     }
 
     public static String getToken(JEEContext context) {

@@ -11,7 +11,7 @@ import com.baomidou.shaun.core.handler.CallbackHandler;
 import com.baomidou.shaun.core.handler.HttpActionHandler;
 import com.baomidou.shaun.core.matching.OnlyPathMatcher;
 import com.baomidou.shaun.core.mgt.SecurityManager;
-import com.baomidou.shaun.core.util.JEEContextFactory;
+import com.baomidou.shaun.core.util.JEEContextUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.pac4j.core.authorization.authorizer.Authorizer;
@@ -68,7 +68,7 @@ public class ShaunFilterAutoConfiguration {
         matcherProvider.ifAvailable(config::addMatchers);
         httpActionHandlerProvider.ifUnique(config::setHttpActionHandler);
         ajaxRequestResolverProvider.ifUnique(config::setAjaxRequestResolver);
-        JEEContextFactory.setEnableSession(properties.isEnableSession());
+        JEEContextUtil.setEnableSession(properties.isEnableSession());
         return config;
     }
 

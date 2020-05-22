@@ -5,6 +5,7 @@ import com.baomidou.shaun.core.client.TokenClient;
 import com.baomidou.shaun.core.handler.DefaultHttpActionHandler;
 import com.baomidou.shaun.core.handler.HttpActionHandler;
 import com.baomidou.shaun.core.matching.checker.DefaultMatchingChecker;
+import com.baomidou.shaun.core.util.JEEContextUtil;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
@@ -13,7 +14,6 @@ import org.pac4j.core.authorization.authorizer.DefaultAuthorizers;
 import org.pac4j.core.authorization.checker.AuthorizationChecker;
 import org.pac4j.core.client.finder.ClientFinder;
 import org.pac4j.core.client.finder.DefaultCallbackClientFinder;
-import org.pac4j.core.context.HttpConstants;
 import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.http.ajax.AjaxRequestResolver;
 import org.pac4j.core.http.ajax.DefaultAjaxRequestResolver;
@@ -159,17 +159,6 @@ public class Config {
      * @param context 上下文
      */
     public void redirectLoginUrl(JEEContext context) {
-        redirectUrl(context, loginUrl);
-    }
-
-    /**
-     * 重定向到指定页面
-     *
-     * @param context 上下文
-     * @param url     地址
-     */
-    public void redirectUrl(JEEContext context, String url) {
-        context.setResponseHeader(HttpConstants.LOCATION_HEADER, url);
-        context.getNativeResponse().setStatus(HttpConstants.FOUND);
+        JEEContextUtil.redirectUrl(context, loginUrl);
     }
 }

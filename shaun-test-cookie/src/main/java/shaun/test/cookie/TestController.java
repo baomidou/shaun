@@ -4,7 +4,7 @@ import com.baomidou.shaun.core.annotation.HasPermission;
 import com.baomidou.shaun.core.annotation.HasRole;
 import com.baomidou.shaun.core.mgt.SecurityManager;
 import com.baomidou.shaun.core.profile.TokenProfile;
-import com.baomidou.shaun.core.util.JEEContextFactory;
+import com.baomidou.shaun.core.util.JEEContextUtil;
 import com.baomidou.shaun.core.util.ProfileHolder;
 import lombok.AllArgsConstructor;
 import org.pac4j.core.util.Pac4jConstants;
@@ -56,7 +56,7 @@ public class TestController {
     @GetMapping("/a1")
     public String a1(Model model) {
         model.addAttribute("a", "a1");
-        model.addAttribute("csrf", JEEContextFactory.getJEEContext().getRequestAttribute(Pac4jConstants.CSRF_TOKEN).orElse(null));
+        model.addAttribute("csrf", JEEContextUtil.getJEEContext().getRequestAttribute(Pac4jConstants.CSRF_TOKEN).orElse(null));
         return "a";
     }
 
@@ -64,7 +64,7 @@ public class TestController {
     @HasRole("admin")
     public String a2(Model model) {
         model.addAttribute("a", "a2");
-        model.addAttribute("csrf", JEEContextFactory.getJEEContext().getRequestAttribute(Pac4jConstants.CSRF_TOKEN).orElse(null));
+        model.addAttribute("csrf", JEEContextUtil.getJEEContext().getRequestAttribute(Pac4jConstants.CSRF_TOKEN).orElse(null));
         return "a";
     }
 
@@ -72,7 +72,7 @@ public class TestController {
     @HasPermission("add")
     public String a3(Model model) {
         model.addAttribute("a", "a3");
-        model.addAttribute("csrf", JEEContextFactory.getJEEContext().getRequestAttribute(Pac4jConstants.CSRF_TOKEN).orElse(null));
+        model.addAttribute("csrf", JEEContextUtil.getJEEContext().getRequestAttribute(Pac4jConstants.CSRF_TOKEN).orElse(null));
         return "a";
     }
 

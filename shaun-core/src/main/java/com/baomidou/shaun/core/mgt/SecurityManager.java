@@ -5,7 +5,7 @@ import com.baomidou.shaun.core.enums.TokenLocation;
 import com.baomidou.shaun.core.generator.TokenGenerator;
 import com.baomidou.shaun.core.handler.LogoutHandler;
 import com.baomidou.shaun.core.profile.TokenProfile;
-import com.baomidou.shaun.core.util.JEEContextFactory;
+import com.baomidou.shaun.core.util.JEEContextUtil;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.pac4j.core.context.JEEContext;
@@ -51,7 +51,7 @@ public class SecurityManager {
     public String login(TokenProfile profile, boolean isSkipAuthenticationUser, String optionExpireTime) {
         String token = tokenGenerator.generate(profile, isSkipAuthenticationUser, optionExpireTime);
         if (tokenLocation.enableCookie()) {
-            JEEContext jeeContext = JEEContextFactory.getJEEContext();
+            JEEContext jeeContext = JEEContextUtil.getJEEContext();
             jeeContext.addResponseCookie(cookie.getPac4jCookie(token, tokenGenerator.getAge(optionExpireTime)));
         }
         return token;

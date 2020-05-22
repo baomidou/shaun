@@ -2,8 +2,6 @@ package com.baomidou.shaun.core.filter;
 
 import com.baomidou.shaun.core.config.Config;
 import com.baomidou.shaun.core.handler.CallbackHandler;
-import com.baomidou.shaun.core.mgt.SecurityManager;
-import com.baomidou.shaun.core.profile.TokenProfile;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,8 +37,6 @@ public class CallbackFilter implements ShaunFilter {
     private final Matcher pathMatcher;
     private ClientFinder clientFinder = new DefaultCallbackClientFinder();
     private Clients clients;
-    private SecurityManager securityManager;
-    private String indexUrl;
     private CallbackHandler callbackHandler;
 
     @Override
@@ -60,9 +56,7 @@ public class CallbackFilter implements ShaunFilter {
                 final Optional<UserProfile> profile = foundClient.getUserProfile(credentials.get(), context);
                 log.debug("profile: {}", profile);
                 if (profile.isPresent()) {
-                    TokenProfile tokenProfile = callbackHandler.callBack(context, profile.get());
-                    securityManager.login(tokenProfile);
-                    config.redirectUrl(context, indexUrl);
+                    callbackHandler.callBack(context, profile.get());
                     return false;
                 }
             }
@@ -83,9 +77,7 @@ public class CallbackFilter implements ShaunFilter {
 
     @Override
     public void initCheck() {
-        CommonHelper.assertNotBlank("indexUrl", indexUrl);
         CommonHelper.assertNotNull("clients", clients);
-        CommonHelper.assertNotNull("securityManager", securityManager);
         CommonHelper.assertNotNull("pathMatcher", pathMatcher);
         CommonHelper.assertNotNull("callbackHandler", callbackHandler);
     }

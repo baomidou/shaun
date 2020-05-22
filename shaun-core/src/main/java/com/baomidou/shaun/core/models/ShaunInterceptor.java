@@ -2,7 +2,7 @@ package com.baomidou.shaun.core.models;
 
 import com.baomidou.shaun.core.config.Config;
 import com.baomidou.shaun.core.filter.ShaunFilter;
-import com.baomidou.shaun.core.util.JEEContextFactory;
+import com.baomidou.shaun.core.util.JEEContextUtil;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.pac4j.core.context.JEEContext;
@@ -31,7 +31,7 @@ public class ShaunInterceptor implements HandlerInterceptor, InitializingBean {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        final JEEContext context = JEEContextFactory.getJEEContext(request, response);
+        final JEEContext context = JEEContextUtil.getJEEContext(request, response);
         if (config.getMatchingChecker().matches(context, config.getMatcherNames(), config.getMatchersMap())) {
             if (!CorsUtils.isPreFlightRequest(request)) {
                 for (ShaunFilter filter : filterList) {

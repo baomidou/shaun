@@ -145,16 +145,8 @@ public class ShaunProperties {
      * callback url
      * <p>
      * 非前后分离项目配置 ,
-     * 三方登录的回调地址,回调后触发 {@link CallbackHandler} 并重定向到 {@link #indexUrl}
+     * 三方登录的回调地址,回调后触发 {@link CallbackHandler}
      * </p>
      */
     private String callbackUrl;
-    /**
-     * index url
-     * <p>
-     * 非前后分离项目配置 ,
-     * 三方登录的成功后会被重定向到的主页
-     * </p>
-     */
-    private String indexUrl;
 }

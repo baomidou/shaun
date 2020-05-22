@@ -6,7 +6,7 @@ import com.baomidou.shaun.core.annotation.HasRole;
 import com.baomidou.shaun.core.authority.AuthorityManager;
 import com.baomidou.shaun.core.enums.Logical;
 import com.baomidou.shaun.core.profile.TokenProfile;
-import com.baomidou.shaun.core.util.JEEContextFactory;
+import com.baomidou.shaun.core.util.JEEContextUtil;
 import com.baomidou.shaun.core.util.ProfileHolder;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -75,7 +75,7 @@ public class MethodSecurityInterceptor implements MethodInterceptor {
             final Set<String> roles = toSet(role.value());
             final HasPermission permission = hasAuthorization.permission();
             final Set<String> permissions = toSet(permission.value());
-            JEEContext j2EContext = JEEContextFactory.getJEEContext();
+            JEEContext j2EContext = JEEContextUtil.getJEEContext();
             final TokenProfile profiles = ProfileHolder.getProfile(j2EContext);
             if (profiles == null) {
                 log.debug("not found TokenProfile, so authorization not success!");
@@ -97,7 +97,7 @@ public class MethodSecurityInterceptor implements MethodInterceptor {
     private boolean commonAuthorized(final boolean isRole, final Logical logical,
                                      final Set<String> elements,
                                      final Function<TokenProfile, Set<String>> checkValues) {
-        JEEContext j2EContext = JEEContextFactory.getJEEContext();
+        JEEContext j2EContext = JEEContextUtil.getJEEContext();
         final TokenProfile profiles = ProfileHolder.getProfile(j2EContext);
         if (profiles == null) {
             log.debug("not found TokenProfile, so authorization not success!");

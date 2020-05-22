@@ -1,6 +1,7 @@
 package com.baomidou.shaun.core.util;
 
 import com.baomidou.shaun.core.context.session.NoSessionStore;
+import org.pac4j.core.context.HttpConstants;
 import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.context.session.JEESessionStore;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -13,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author miemie
  * @since 2019-07-20
  */
-public abstract class JEEContextFactory {
+public abstract class JEEContextUtil {
 
     private static boolean enableSession = false;
 
@@ -34,6 +35,26 @@ public abstract class JEEContextFactory {
     }
 
     public static void setEnableSession(boolean enableSession) {
-        JEEContextFactory.enableSession = enableSession;
+        JEEContextUtil.enableSession = enableSession;
+    }
+
+    /**
+     * 重定向到指定页面
+     *
+     * @param url 地址
+     */
+    public static void redirectUrl(String url) {
+        redirectUrl(getJEEContext(), url);
+    }
+
+    /**
+     * 重定向到指定页面
+     *
+     * @param context 上下文
+     * @param url     地址
+     */
+    public static void redirectUrl(JEEContext context, String url) {
+        context.setResponseHeader(HttpConstants.LOCATION_HEADER, url);
+        context.getNativeResponse().setStatus(HttpConstants.FOUND);
     }
 }

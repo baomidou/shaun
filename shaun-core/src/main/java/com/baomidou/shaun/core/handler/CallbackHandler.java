@@ -1,6 +1,5 @@
 package com.baomidou.shaun.core.handler;
 
-import com.baomidou.shaun.core.profile.TokenProfile;
 import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.profile.UserProfile;
 
@@ -13,11 +12,12 @@ import org.pac4j.core.profile.UserProfile;
 public interface CallbackHandler {
 
     /**
-     * callback 之后对返回获取到的 profile 转换成自己的 profile
+     * callback 之后对返回获取到的 profile 转换成 TokenProfile ,
+     * 再调用 SecurityManager.login 进行登陆,
+     * 一般再 JEEContextUtil.redirectUrl(context, yourUrl);
      *
      * @param context 上下文
      * @param profile callback 获取到的 profile
-     * @return profile
      */
-    TokenProfile callBack(JEEContext context, UserProfile profile);
+    void callBack(JEEContext context, UserProfile profile);
 }
