@@ -56,7 +56,6 @@ public class ShaunProperties {
      * xssprotection : {@link XSSProtectionMatcher} ,
      * nocache : {@link CacheControlMatcher} ,
      * csrfToken : {@link CsrfTokenGeneratorMatcher} ,
-     * allowAjaxRequests : {@link CorsMatcher} ,
      * noGet : 不接受get请求(post,delete,put) ,
      * onlyPost : 只接受post请求 ,
      * securityheaders : 等于上面的 nocache + nosniff + hsts + noframe + xssprotection

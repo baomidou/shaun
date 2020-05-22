@@ -9,7 +9,10 @@ import org.pac4j.core.matching.matcher.csrf.DefaultCsrfTokenGenerator;
 import org.pac4j.core.util.CommonHelper;
 import org.pac4j.core.util.Pac4jConstants;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author miemie
@@ -17,29 +20,18 @@ import java.util.*;
  */
 public class DefaultMatchingChecker implements MatchingChecker {
 
+    static final String NO_GET_KEY = "noGet";
+    static final Matcher NO_GET = new HttpMethodMatcher(HttpConstants.HTTP_METHOD.POST, HttpConstants.HTTP_METHOD.PUT, HttpConstants.HTTP_METHOD.DELETE);
+
+    static final String ONLY_POST_KEY = "onlyPost";
+    static final Matcher ONLY_POST = new HttpMethodMatcher(HttpConstants.HTTP_METHOD.POST);
+
     static final StrictTransportSecurityMatcher STRICT_TRANSPORT_MATCHER = new StrictTransportSecurityMatcher();
     static final XContentTypeOptionsMatcher X_CONTENT_TYPE_OPTIONS_MATCHER = new XContentTypeOptionsMatcher();
     static final XFrameOptionsMatcher X_FRAME_OPTIONS_MATCHER = new XFrameOptionsMatcher();
     static final XSSProtectionMatcher XSS_PROTECTION_MATCHER = new XSSProtectionMatcher();
     static final CacheControlMatcher CACHE_CONTROL_MATCHER = new CacheControlMatcher();
     static final CsrfTokenGeneratorMatcher CSRF_TOKEN_MATCHER = new CsrfTokenGeneratorMatcher(new DefaultCsrfTokenGenerator());
-    static final CorsMatcher CORS_MATCHER = new CorsMatcher();
-    private static final String NO_GET_KEY = "noGet";
-    private static final Matcher NO_GET = new HttpMethodMatcher(HttpConstants.HTTP_METHOD.POST, HttpConstants.HTTP_METHOD.PUT, HttpConstants.HTTP_METHOD.DELETE);
-    private static final String ONLY_POST_KEY = "onlyPost";
-    private static final Matcher ONLY_POST = new HttpMethodMatcher(HttpConstants.HTTP_METHOD.POST);
-
-    static {
-        CORS_MATCHER.setAllowOrigin("*");
-        CORS_MATCHER.setAllowCredentials(true);
-        final Set<HttpConstants.HTTP_METHOD> methods = new HashSet<>();
-        methods.add(HttpConstants.HTTP_METHOD.GET);
-        methods.add(HttpConstants.HTTP_METHOD.PUT);
-        methods.add(HttpConstants.HTTP_METHOD.POST);
-        methods.add(HttpConstants.HTTP_METHOD.DELETE);
-        methods.add(HttpConstants.HTTP_METHOD.OPTIONS);
-        CORS_MATCHER.setAllowMethods(methods);
-    }
 
     @Override
     public boolean matches(final WebContext context, final String matchersValue, final Map<String, Matcher> matchersMap) {
@@ -78,9 +70,6 @@ public class DefaultMatchingChecker implements MatchingChecker {
                 matchers.add(XSS_PROTECTION_MATCHER);
             } else if (DefaultMatchers.CSRF_TOKEN.equalsIgnoreCase(name)) {
                 matchers.add(CSRF_TOKEN_MATCHER);
-            } else if (DefaultMatchers.ALLOW_AJAX_REQUESTS.equalsIgnoreCase(name)) {
-                matchers.add(CORS_MATCHER);
-                // we don't add any matcher for none
             } else if (!DefaultMatchers.NONE.equalsIgnoreCase(name)) {
                 Matcher result = null;
                 for (final Map.Entry<String, Matcher> entry : allMatchers.entrySet()) {
