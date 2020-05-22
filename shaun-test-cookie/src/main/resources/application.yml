@@ -1,8 +1,9 @@
 shaun:
-  model: web_filter
+  model: interceptor
+  salt: ded4a7dc78674c6bb8ad15ffb1d4f974
   token-location: cookie
   enable-session: true
-  expire-time: 10h
+  expire-time: 10m
   login-url: /login
   logout-url: /logout
   sf-login-url: /sf

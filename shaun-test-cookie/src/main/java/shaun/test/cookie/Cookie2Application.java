@@ -37,8 +37,9 @@ public class Cookie2Application {
             HttpServletResponse response = context.getNativeResponse();
             try {
                 response.setStatus(action.getCode());
-                try (ServletOutputStream outputStream = response.getOutputStream();) {
-                    outputStream.write("异常".getBytes());
+                try (ServletOutputStream os = response.getOutputStream()) {
+                    os.write("异常".getBytes());
+                    os.flush();
                 }
             } catch (IOException e) {
                 e.printStackTrace();
