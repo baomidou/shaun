@@ -1,11 +1,12 @@
 package com.baomidou.shaun.core.filter;
 
-import static org.pac4j.core.util.CommonHelper.assertNotNull;
-import static org.pac4j.core.util.CommonHelper.assertTrue;
-
-import java.util.List;
-import java.util.Optional;
-
+import com.baomidou.shaun.core.config.Config;
+import com.baomidou.shaun.core.handler.CallbackHandler;
+import com.baomidou.shaun.core.mgt.SecurityManager;
+import com.baomidou.shaun.core.profile.TokenProfile;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.pac4j.core.client.Client;
 import org.pac4j.core.client.Clients;
 import org.pac4j.core.client.finder.ClientFinder;
@@ -17,14 +18,11 @@ import org.pac4j.core.matching.matcher.Matcher;
 import org.pac4j.core.profile.UserProfile;
 import org.pac4j.core.util.CommonHelper;
 
-import com.baomidou.shaun.core.config.Config;
-import com.baomidou.shaun.core.handler.CallbackHandler;
-import com.baomidou.shaun.core.mgt.SecurityManager;
-import com.baomidou.shaun.core.profile.TokenProfile;
+import java.util.List;
+import java.util.Optional;
 
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import static org.pac4j.core.util.CommonHelper.assertNotNull;
+import static org.pac4j.core.util.CommonHelper.assertTrue;
 
 /**
  * callback filter
@@ -50,7 +48,7 @@ public class CallbackFilter implements ShaunFilter {
         if (pathMatcher.matches(context)) {
             log.debug("=== CALLBACK ===");
 
-            List<Client> foundClients = clientFinder.find(this.clients, context, null);
+            final List<Client<?>> foundClients = clientFinder.find(this.clients, context, null);
             assertTrue(foundClients != null && foundClients.size() == 1,
                     "unable to find one indirect client for the callback: check the callback URL for a client name parameter");
             final Client foundClient = foundClients.get(0);

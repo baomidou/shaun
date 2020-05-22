@@ -5,7 +5,7 @@ plugins {
 }
 
 ext {
-    pac4jVersion = "4.0.0"
+    pac4jVersion = "4.0.1"
     springBootVersion = "2.2.7.RELEASE"
     javaVersion = JavaVersion.VERSION_1_8
 }

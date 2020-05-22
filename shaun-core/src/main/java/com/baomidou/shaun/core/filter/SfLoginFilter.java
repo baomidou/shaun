@@ -1,11 +1,10 @@
 package com.baomidou.shaun.core.filter;
 
-import static org.pac4j.core.util.CommonHelper.assertNotNull;
-import static org.pac4j.core.util.CommonHelper.assertTrue;
-
-import java.util.List;
-import java.util.Optional;
-
+import com.baomidou.shaun.core.client.finder.DefaultSfClientFinder;
+import com.baomidou.shaun.core.config.Config;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.pac4j.core.client.Client;
 import org.pac4j.core.client.Clients;
 import org.pac4j.core.client.finder.ClientFinder;
@@ -15,12 +14,11 @@ import org.pac4j.core.exception.http.RedirectionAction;
 import org.pac4j.core.matching.matcher.Matcher;
 import org.pac4j.core.util.CommonHelper;
 
-import com.baomidou.shaun.core.client.finder.DefaultSfClientFinder;
-import com.baomidou.shaun.core.config.Config;
+import java.util.List;
+import java.util.Optional;
 
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import static org.pac4j.core.util.CommonHelper.assertNotNull;
+import static org.pac4j.core.util.CommonHelper.assertTrue;
 
 /**
  * 三方登录 filter
@@ -43,7 +41,7 @@ public class SfLoginFilter implements ShaunFilter {
         if (pathMatcher.matches(context)) {
             log.debug("=== SF LOGIN ===");
 
-            List<Client> foundClients = clientFinder.find(this.clients, context, null);
+            final List<Client<?>> foundClients = clientFinder.find(this.clients, context, null);
             assertTrue(foundClients != null && foundClients.size() == 1,
                     "unable to find one indirect client for the sfLogin: check the sfLogin URL for a client name parameter");
             final Client foundClient = foundClients.get(0);

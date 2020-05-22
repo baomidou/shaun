@@ -13,8 +13,8 @@ shaun:
     - /favicon.ico
   cookie:
     domain: 127.0.0.1
-  matcher-names: csrfToken
-  authorizer-names: csrfCheck
+#  matcher-names: csrfToken
+#  authorizer-names: csrfCheck
 
 spring:
   thymeleaf:
