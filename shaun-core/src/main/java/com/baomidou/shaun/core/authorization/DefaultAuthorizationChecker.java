@@ -1,4 +1,4 @@
-package com.baomidou.shaun.core.authorization.checker;
+package com.baomidou.shaun.core.authorization;
 
 import lombok.extern.slf4j.Slf4j;
 import org.pac4j.core.authorization.authorizer.Authorizer;

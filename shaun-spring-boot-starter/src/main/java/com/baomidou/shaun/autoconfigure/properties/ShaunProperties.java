@@ -1,6 +1,6 @@
 package com.baomidou.shaun.autoconfigure.properties;
 
-import com.baomidou.shaun.core.authorization.checker.DefaultAuthorizationChecker;
+import com.baomidou.shaun.core.authorization.DefaultAuthorizationChecker;
 import com.baomidou.shaun.core.context.Cookie;
 import com.baomidou.shaun.core.context.Header;
 import com.baomidou.shaun.core.context.Parameter;
@@ -57,6 +57,8 @@ public class ShaunProperties {
      * nocache : {@link CacheControlMatcher} ,
      * csrfToken : {@link CsrfTokenGeneratorMatcher} ,
      * allowAjaxRequests : {@link CorsMatcher} ,
+     * noGet : 不接受get请求(post,delete,put) ,
+     * onlyPost : 只接受post请求 ,
      * securityheaders : 等于上面的 nocache + nosniff + hsts + noframe + xssprotection
      * </p>
      */

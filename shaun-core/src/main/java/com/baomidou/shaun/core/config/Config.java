@@ -1,9 +1,10 @@
 package com.baomidou.shaun.core.config;
 
-import com.baomidou.shaun.core.authorization.checker.DefaultAuthorizationChecker;
+import com.baomidou.shaun.core.authorization.DefaultAuthorizationChecker;
 import com.baomidou.shaun.core.client.TokenClient;
 import com.baomidou.shaun.core.handler.DefaultHttpActionHandler;
 import com.baomidou.shaun.core.handler.HttpActionHandler;
+import com.baomidou.shaun.core.matching.checker.DefaultMatchingChecker;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
@@ -16,7 +17,6 @@ import org.pac4j.core.context.HttpConstants;
 import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.http.ajax.AjaxRequestResolver;
 import org.pac4j.core.http.ajax.DefaultAjaxRequestResolver;
-import org.pac4j.core.matching.checker.DefaultMatchingChecker;
 import org.pac4j.core.matching.checker.MatchingChecker;
 import org.pac4j.core.matching.matcher.DefaultMatchers;
 import org.pac4j.core.matching.matcher.Matcher;
