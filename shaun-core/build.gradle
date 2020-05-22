@@ -4,6 +4,7 @@ dependencies {
     implementation "org.pac4j:pac4j-oauth"
     implementation "org.pac4j:pac4j-cas"
     implementation "org.springframework:spring-webmvc"
+    implementation "org.springframework.session:spring-session-core"
     implementation "javax.servlet:javax.servlet-api"
     testCompile "org.assertj:assertj-core"
 }

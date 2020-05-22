@@ -1,9 +1,9 @@
 package com.baomidou.shaun.core.context.session;
 
-import java.util.Optional;
-
 import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.context.session.SessionStore;
+
+import java.util.Optional;
 
 /**
  * 不用 session(替换掉 pac4j 提供的)
@@ -32,7 +32,7 @@ public class NoSessionStore implements SessionStore<JEEContext> {
 
     @Override
     public boolean destroySession(JEEContext context) {
-        return false;
+        return true;
     }
 
     @Override

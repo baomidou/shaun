@@ -6,15 +6,23 @@
     <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
+<h1><span id="sp" th:text="${csrf}"/></h1>
 <h1><span th:text="${a}"/></h1>
 <h2 id="h2">请求值</h2>
 <button id='bt' type="button" value="post请求">post请求</button>
 
 <script type="text/javascript">
     $('#bt').click(function () {
-        $.post("a4", function (data) {
-            $('#h2').html(data)
-        })
+        $.ajax({
+            type: "POST",
+            headers: {
+                "pac4jCsrfToken": $('#sp').text()
+            },
+            url: "/a4",
+            success: function (data) {
+                $('#h2').html(data)
+            }
+        });
     })
 </script>
 </body>

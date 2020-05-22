@@ -3,7 +3,7 @@ shaun:
   salt: ded4a7dc78674c6bb8ad15ffb1d4f974
   token-location: cookie
   enable-session: true
-  expire-time: 10m
+  expire-time: 10h
   login-url: /login
   logout-url: /logout
   sf-login-url: /sf
@@ -11,8 +11,10 @@ shaun:
   exclude-path:
     - /auth/login
     - /favicon.ico
-#  matcher-names: csrfToken
-#  authorizer-names: csrfCheck
+  cookie:
+    domain: 127.0.0.1
+  matcher-names: csrfToken
+  authorizer-names: csrfCheck
 
 spring:
   thymeleaf:

@@ -4,8 +4,10 @@ import com.baomidou.shaun.core.annotation.HasPermission;
 import com.baomidou.shaun.core.annotation.HasRole;
 import com.baomidou.shaun.core.mgt.SecurityManager;
 import com.baomidou.shaun.core.profile.TokenProfile;
+import com.baomidou.shaun.core.util.JEEContextFactory;
 import com.baomidou.shaun.core.util.ProfileHolder;
 import lombok.AllArgsConstructor;
+import org.pac4j.core.util.Pac4jConstants;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -54,6 +56,7 @@ public class TestController {
     @GetMapping("/a1")
     public String a1(Model model) {
         model.addAttribute("a", "a1");
+        model.addAttribute("csrf", JEEContextFactory.getJEEContext().getRequestAttribute(Pac4jConstants.CSRF_TOKEN).orElseGet(null));
         return "a";
     }
 
@@ -61,6 +64,7 @@ public class TestController {
     @HasRole("admin")
     public String a2(Model model) {
         model.addAttribute("a", "a2");
+        model.addAttribute("csrf", JEEContextFactory.getJEEContext().getRequestAttribute(Pac4jConstants.CSRF_TOKEN).orElseGet(null));
         return "a";
     }
 
@@ -68,12 +72,12 @@ public class TestController {
     @HasPermission("add")
     public String a3(Model model) {
         model.addAttribute("a", "a3");
+        model.addAttribute("csrf", JEEContextFactory.getJEEContext().getRequestAttribute(Pac4jConstants.CSRF_TOKEN).orElseGet(null));
         return "a";
     }
 
     @ResponseBody
     @PostMapping("/a4")
-    @HasPermission("xx")
     public String a4() {
         return "a4_" + UUID.randomUUID();
     }
