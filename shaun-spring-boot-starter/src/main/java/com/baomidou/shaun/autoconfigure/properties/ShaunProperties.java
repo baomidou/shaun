@@ -1,5 +1,6 @@
 package com.baomidou.shaun.autoconfigure.properties;
 
+import com.baomidou.shaun.core.authorization.checker.DefaultAuthorizationChecker;
 import com.baomidou.shaun.core.context.Cookie;
 import com.baomidou.shaun.core.context.Header;
 import com.baomidou.shaun.core.context.Parameter;
@@ -7,8 +8,9 @@ import com.baomidou.shaun.core.enums.Model;
 import com.baomidou.shaun.core.enums.TokenLocation;
 import com.baomidou.shaun.core.handler.CallbackHandler;
 import lombok.Data;
-import org.pac4j.core.authorization.authorizer.*;
-import org.pac4j.core.authorization.checker.DefaultAuthorizationChecker;
+import org.pac4j.core.authorization.authorizer.Authorizer;
+import org.pac4j.core.authorization.authorizer.CsrfAuthorizer;
+import org.pac4j.core.authorization.authorizer.DefaultAuthorizers;
 import org.pac4j.core.matching.checker.DefaultMatchingChecker;
 import org.pac4j.core.matching.matcher.*;
 import org.pac4j.core.matching.matcher.csrf.CsrfTokenGeneratorMatcher;
@@ -40,10 +42,6 @@ public class ShaunProperties {
      * 默认支持的一些参考 {@link DefaultAuthorizationChecker} :
      * <p>
      * csrfCheck : {@link CsrfAuthorizer} ,
-     * isAnonymous : {@link IsAnonymousAuthorizer} ,
-     * isAuthenticated : {@link IsAuthenticatedAuthorizer} ,
-     * isFullyAuthenticated : {@link IsFullyAuthenticatedAuthorizer} ,
-     * isRemembered : {@link IsRememberedAuthorizer}
      * </p>
      */
     private String authorizerNames = DefaultAuthorizers.NONE;

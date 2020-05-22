@@ -1,5 +1,6 @@
 package com.baomidou.shaun.core.config;
 
+import com.baomidou.shaun.core.authorization.checker.DefaultAuthorizationChecker;
 import com.baomidou.shaun.core.client.TokenClient;
 import com.baomidou.shaun.core.handler.DefaultHttpActionHandler;
 import com.baomidou.shaun.core.handler.HttpActionHandler;
@@ -8,7 +9,7 @@ import lombok.Data;
 import lombok.Setter;
 import org.pac4j.core.authorization.authorizer.Authorizer;
 import org.pac4j.core.authorization.authorizer.DefaultAuthorizers;
-import org.pac4j.core.authorization.checker.DefaultAuthorizationChecker;
+import org.pac4j.core.authorization.checker.AuthorizationChecker;
 import org.pac4j.core.client.finder.ClientFinder;
 import org.pac4j.core.client.finder.DefaultCallbackClientFinder;
 import org.pac4j.core.context.HttpConstants;
@@ -16,6 +17,7 @@ import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.http.ajax.AjaxRequestResolver;
 import org.pac4j.core.http.ajax.DefaultAjaxRequestResolver;
 import org.pac4j.core.matching.checker.DefaultMatchingChecker;
+import org.pac4j.core.matching.checker.MatchingChecker;
 import org.pac4j.core.matching.matcher.DefaultMatchers;
 import org.pac4j.core.matching.matcher.Matcher;
 import org.pac4j.core.util.CommonHelper;
@@ -51,13 +53,17 @@ public class Config {
      */
     private ClientFinder clientFinder = new DefaultCallbackClientFinder();
     /**
-     * 登录页面
-     */
-    private String loginUrl;
-    /**
      * ajax 判断器
      */
     private AjaxRequestResolver ajaxRequestResolver = new DefaultAjaxRequestResolver();
+    /**
+     * AuthorizationChecker
+     */
+    private AuthorizationChecker authorizationChecker = new DefaultAuthorizationChecker();
+    /**
+     * MatchingChecker
+     */
+    private MatchingChecker matchingChecker = new DefaultMatchingChecker();
     /**
      * 默认支持的一些参考 {@link DefaultAuthorizationChecker}
      */
@@ -74,6 +80,12 @@ public class Config {
 
     @Setter(AccessLevel.NONE)
     private Map<String, Matcher> matchersMap = new HashMap<>();
+
+
+    /**
+     * 登录页面
+     */
+    private String loginUrl;
 
     public void addAuthorizers(Collection<Authorizer> authorizers) {
         if (!CollectionUtils.isEmpty(authorizers)) {
