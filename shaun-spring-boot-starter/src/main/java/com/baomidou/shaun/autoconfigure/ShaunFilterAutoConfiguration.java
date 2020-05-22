@@ -114,8 +114,6 @@ public class ShaunFilterAutoConfiguration {
             CommonHelper.assertNotBlank("sfLoginUrl", sfLoginUrl);
             final String callbackUrl = properties.getCallbackUrl();
             CommonHelper.assertNotBlank("callbackUrl", callbackUrl);
-            final String indexUrl = properties.getIndexUrl();
-            CommonHelper.assertNotBlank("indexUrl", indexUrl);
 
             final CallbackHandler callbackHandler = callbackHandlerProvider.getIfAvailable();
             CommonHelper.assertNotNull("callbackHandler", callbackHandler);
@@ -130,8 +128,6 @@ public class ShaunFilterAutoConfiguration {
             final CallbackFilter callbackFilter = new CallbackFilter(new OnlyPathMatcher(properties.getCallbackUrl()));
             callbackFilter.setClients(clients);
             callbackFilter.setCallbackHandler(callbackHandlerProvider.getIfAvailable());
-            callbackFilter.setIndexUrl(indexUrl);
-            callbackFilter.setSecurityManager(securityManager);
             filterList.add(callbackFilter);
         }
         return filterList;

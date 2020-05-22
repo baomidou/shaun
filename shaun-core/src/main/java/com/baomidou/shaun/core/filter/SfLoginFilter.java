@@ -2,6 +2,7 @@ package com.baomidou.shaun.core.filter;
 
 import com.baomidou.shaun.core.client.finder.DefaultSfClientFinder;
 import com.baomidou.shaun.core.config.Config;
+import com.baomidou.shaun.core.util.JEEContextUtil;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -52,7 +53,7 @@ public class SfLoginFilter implements ShaunFilter {
             if (redirect.isPresent()) {
                 RedirectionAction action = redirect.get();
                 if (action instanceof FoundAction) {
-                    config.redirectUrl(context, ((FoundAction) action).getLocation());
+                    JEEContextUtil.redirectUrl(context, ((FoundAction) action).getLocation());
                 }
             }
             return false;
