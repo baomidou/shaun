@@ -1,5 +1,5 @@
 shaun:
-  model: interceptor
+  model: web_filter
   salt: ded4a7dc78674c6bb8ad15ffb1d4f974
   token-location: cookie
   enable-session: true

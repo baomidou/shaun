@@ -1,11 +1,16 @@
 package com.baomidou.shaun.core.models;
 
-import com.baomidou.shaun.core.config.Config;
-import com.baomidou.shaun.core.filter.ShaunFilter;
-import com.baomidou.shaun.core.util.JEEContextUtil;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.experimental.Accessors;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.exception.http.BadRequestAction;
 import org.pac4j.core.matching.checker.DefaultMatchingChecker;
@@ -14,15 +19,14 @@ import org.springframework.lang.NonNull;
 import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
+import com.baomidou.shaun.core.config.Config;
+import com.baomidou.shaun.core.context.ProfileHolder;
+import com.baomidou.shaun.core.filter.ShaunFilter;
+import com.baomidou.shaun.core.util.JEEContextUtil;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
 
 /**
  * @author miemie
@@ -44,8 +48,13 @@ public class ShaunRequestFilter extends OncePerRequestFilter {
         if (matchingChecker.matches(context, config.getMatcherNames(), config.getMatchersMap())) {
             if (!CorsUtils.isPreFlightRequest(request)) {
                 for (ShaunFilter filter : filterList) {
-                    if (!filter.goOnChain(config, context)) {
-                        return;
+                    try {
+                        if (!filter.goOnChain(config, context)) {
+                            return;
+                        }
+                    } catch (Exception e) {
+                        ProfileHolder.clearProfile();
+                        throw e;
                     }
                 }
             }

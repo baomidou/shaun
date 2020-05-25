@@ -5,9 +5,9 @@ import org.pac4j.core.matching.matcher.Matcher;
 import org.pac4j.core.util.CommonHelper;
 
 import com.baomidou.shaun.core.config.Config;
+import com.baomidou.shaun.core.context.ProfileHolder;
 import com.baomidou.shaun.core.mgt.SecurityManager;
 import com.baomidou.shaun.core.profile.TokenProfile;
-import com.baomidou.shaun.core.util.ProfileHolder;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +28,7 @@ public class LogoutFilter implements ShaunFilter {
     @Override
     public boolean goOnChain(Config config, JEEContext context) {
         if (pathMatcher.matches(context)) {
-            final TokenProfile profile = ProfileHolder.getProfile(context);
+            final TokenProfile profile = ProfileHolder.getProfile();
             securityManager.logout(profile);
             if (!config.isStatelessOrAjax(context)) {
                 config.redirectLoginUrl(context);

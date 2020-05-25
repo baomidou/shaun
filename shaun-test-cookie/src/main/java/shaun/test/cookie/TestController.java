@@ -1,12 +1,7 @@
 package shaun.test.cookie;
 
-import com.baomidou.shaun.core.annotation.HasPermission;
-import com.baomidou.shaun.core.annotation.HasRole;
-import com.baomidou.shaun.core.mgt.SecurityManager;
-import com.baomidou.shaun.core.profile.TokenProfile;
-import com.baomidou.shaun.core.util.JEEContextUtil;
-import com.baomidou.shaun.core.util.ProfileHolder;
-import lombok.AllArgsConstructor;
+import java.util.UUID;
+
 import org.pac4j.core.util.Pac4jConstants;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,7 +9,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.UUID;
+import com.baomidou.shaun.core.annotation.HasPermission;
+import com.baomidou.shaun.core.annotation.HasRole;
+import com.baomidou.shaun.core.context.ProfileHolder;
+import com.baomidou.shaun.core.mgt.SecurityManager;
+import com.baomidou.shaun.core.profile.TokenProfile;
+import com.baomidou.shaun.core.util.JEEContextUtil;
+
+import lombok.AllArgsConstructor;
 
 /**
  * @author miemie

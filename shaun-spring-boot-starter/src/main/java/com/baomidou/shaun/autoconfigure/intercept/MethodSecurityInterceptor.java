@@ -1,29 +1,29 @@
 package com.baomidou.shaun.autoconfigure.intercept;
 
-import com.baomidou.shaun.core.annotation.HasAuthorization;
-import com.baomidou.shaun.core.annotation.HasPermission;
-import com.baomidou.shaun.core.annotation.HasRole;
-import com.baomidou.shaun.core.authority.AuthorityManager;
-import com.baomidou.shaun.core.enums.Logical;
-import com.baomidou.shaun.core.profile.TokenProfile;
-import com.baomidou.shaun.core.util.JEEContextUtil;
-import com.baomidou.shaun.core.util.ProfileHolder;
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.aopalliance.intercept.MethodInterceptor;
-import org.aopalliance.intercept.MethodInvocation;
-import org.pac4j.core.context.JEEContext;
-import org.pac4j.core.exception.http.UnauthorizedAction;
-import org.springframework.aop.framework.AopProxyUtils;
-import org.springframework.core.annotation.AnnotationUtils;
-import org.springframework.util.ClassUtils;
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Function;
+
+import org.aopalliance.intercept.MethodInterceptor;
+import org.aopalliance.intercept.MethodInvocation;
+import org.pac4j.core.exception.http.UnauthorizedAction;
+import org.springframework.aop.framework.AopProxyUtils;
+import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.util.ClassUtils;
+
+import com.baomidou.shaun.core.annotation.HasAuthorization;
+import com.baomidou.shaun.core.annotation.HasPermission;
+import com.baomidou.shaun.core.annotation.HasRole;
+import com.baomidou.shaun.core.authority.AuthorityManager;
+import com.baomidou.shaun.core.context.ProfileHolder;
+import com.baomidou.shaun.core.enums.Logical;
+import com.baomidou.shaun.core.profile.TokenProfile;
+
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 注解优先级:
@@ -75,8 +75,7 @@ public class MethodSecurityInterceptor implements MethodInterceptor {
             final Set<String> roles = toSet(role.value());
             final HasPermission permission = hasAuthorization.permission();
             final Set<String> permissions = toSet(permission.value());
-            JEEContext j2EContext = JEEContextUtil.getJEEContext();
-            final TokenProfile profiles = ProfileHolder.getProfile(j2EContext);
+            final TokenProfile profiles = ProfileHolder.getProfile();
             if (profiles == null) {
                 log.debug("not found TokenProfile, so authorization not success!");
                 return false;
@@ -97,8 +96,7 @@ public class MethodSecurityInterceptor implements MethodInterceptor {
     private boolean commonAuthorized(final boolean isRole, final Logical logical,
                                      final Set<String> elements,
                                      final Function<TokenProfile, Set<String>> checkValues) {
-        JEEContext j2EContext = JEEContextUtil.getJEEContext();
-        final TokenProfile profiles = ProfileHolder.getProfile(j2EContext);
+        final TokenProfile profiles = ProfileHolder.getProfile();
         if (profiles == null) {
             log.debug("not found TokenProfile, so authorization not success!");
             return false;

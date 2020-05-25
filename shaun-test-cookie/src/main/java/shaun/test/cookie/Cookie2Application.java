@@ -1,22 +1,25 @@
 package shaun.test.cookie;
 
-import com.baomidou.shaun.core.handler.HttpActionHandler;
-import com.baomidou.shaun.core.profile.TokenProfile;
+import java.io.IOException;
+
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+
 import org.pac4j.core.authorization.authorizer.Authorizer;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import com.baomidou.shaun.core.handler.HttpActionHandler;
+import com.baomidou.shaun.core.profile.TokenProfile;
 
 /**
  * @author miemie
  * @since 2019-08-04
  */
 @SpringBootApplication
-public class Cookie2Application {
+public class Cookie2Application implements CommandLineRunner {
 
     public static void main(String[] args) {
         SpringApplication.run(Cookie2Application.class, args);
@@ -45,5 +48,10 @@ public class Cookie2Application {
                 e.printStackTrace();
             }
         };
+    }
+
+    @Override
+    public void run(String... args) throws Exception {
+        System.out.println(System.getProperty("shaun.model"));
     }
 }

@@ -1,11 +1,9 @@
 package com.baomidou.shaun.core.filter;
 
-import com.baomidou.shaun.core.config.Config;
-import com.baomidou.shaun.core.profile.TokenProfile;
-import com.baomidou.shaun.core.util.ProfileHolder;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.util.Collections;
+import java.util.Optional;
+import java.util.Set;
+
 import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.credentials.TokenCredentials;
 import org.pac4j.core.exception.http.UnauthorizedAction;
@@ -14,9 +12,13 @@ import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.core.profile.UserProfile;
 import org.pac4j.core.util.CommonHelper;
 
-import java.util.Collections;
-import java.util.Optional;
-import java.util.Set;
+import com.baomidou.shaun.core.config.Config;
+import com.baomidou.shaun.core.context.ProfileHolder;
+import com.baomidou.shaun.core.profile.TokenProfile;
+
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * security filter
@@ -59,7 +61,7 @@ public class SecurityFilter implements ShaunFilter {
                     // todo 兼容性升级
                     if (config.getAuthorizationChecker().isAuthorized(context, Collections.singletonList(tokenProfile),
                             config.getAuthorizerNames(), config.getAuthorizersMap())) {
-                        ProfileHolder.save(context, tokenProfile.setToken(credentials.get().getToken()));
+                        ProfileHolder.setProfile(tokenProfile.setToken(credentials.get().getToken()));
                         log.debug("authenticated and authorized -> grant access");
                         return true;
                     }
