@@ -6,11 +6,11 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
 import org.pac4j.core.authorization.authorizer.Authorizer;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import com.baomidou.shaun.core.context.ProfileHolder;
 import com.baomidou.shaun.core.handler.HttpActionHandler;
 import com.baomidou.shaun.core.profile.TokenProfile;
 
@@ -19,9 +19,10 @@ import com.baomidou.shaun.core.profile.TokenProfile;
  * @since 2019-08-04
  */
 @SpringBootApplication
-public class Cookie2Application implements CommandLineRunner {
+public class Cookie2Application {
 
     public static void main(String[] args) {
+        System.setProperty(ProfileHolder.SYSTEM_PROPERTY, ProfileHolder.MODE_THREADLOCAL); // 设置存储Profile的模式
         SpringApplication.run(Cookie2Application.class, args);
     }
 
@@ -48,10 +49,5 @@ public class Cookie2Application implements CommandLineRunner {
                 e.printStackTrace();
             }
         };
-    }
-
-    @Override
-    public void run(String... args) throws Exception {
-        System.out.println(System.getProperty("shaun.model"));
     }
 }
