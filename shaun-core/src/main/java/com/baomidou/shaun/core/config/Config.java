@@ -1,14 +1,9 @@
 package com.baomidou.shaun.core.config;
 
-import com.baomidou.shaun.core.authorization.DefaultAuthorizationChecker;
-import com.baomidou.shaun.core.client.TokenClient;
-import com.baomidou.shaun.core.handler.DefaultHttpActionHandler;
-import com.baomidou.shaun.core.handler.HttpActionHandler;
-import com.baomidou.shaun.core.matching.checker.DefaultMatchingChecker;
-import com.baomidou.shaun.core.util.JEEContextUtil;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.Setter;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.pac4j.core.authorization.authorizer.Authorizer;
 import org.pac4j.core.authorization.authorizer.DefaultAuthorizers;
 import org.pac4j.core.authorization.checker.AuthorizationChecker;
@@ -24,9 +19,16 @@ import org.pac4j.core.util.CommonHelper;
 import org.pac4j.core.util.Pac4jConstants;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import com.baomidou.shaun.core.authorization.DefaultAuthorizationChecker;
+import com.baomidou.shaun.core.client.TokenClient;
+import com.baomidou.shaun.core.handler.DefaultHttpActionHandler;
+import com.baomidou.shaun.core.handler.HttpActionHandler;
+import com.baomidou.shaun.core.matching.checker.DefaultMatchingChecker;
+import com.baomidou.shaun.core.util.WebUtil;
+
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.Setter;
 
 /**
  * @author miemie
@@ -159,6 +161,6 @@ public class Config {
      * @param context 上下文
      */
     public void redirectLoginUrl(JEEContext context) {
-        JEEContextUtil.redirectUrl(context, loginUrl);
+        WebUtil.redirectUrl(context, loginUrl);
     }
 }

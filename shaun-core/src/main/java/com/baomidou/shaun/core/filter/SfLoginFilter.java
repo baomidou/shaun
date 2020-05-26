@@ -1,11 +1,11 @@
 package com.baomidou.shaun.core.filter;
 
-import com.baomidou.shaun.core.client.finder.DefaultSfClientFinder;
-import com.baomidou.shaun.core.config.Config;
-import com.baomidou.shaun.core.util.JEEContextUtil;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import static org.pac4j.core.util.CommonHelper.assertNotNull;
+import static org.pac4j.core.util.CommonHelper.assertTrue;
+
+import java.util.List;
+import java.util.Optional;
+
 import org.pac4j.core.client.Client;
 import org.pac4j.core.client.Clients;
 import org.pac4j.core.client.finder.ClientFinder;
@@ -15,11 +15,13 @@ import org.pac4j.core.exception.http.RedirectionAction;
 import org.pac4j.core.matching.matcher.Matcher;
 import org.pac4j.core.util.CommonHelper;
 
-import java.util.List;
-import java.util.Optional;
+import com.baomidou.shaun.core.client.finder.DefaultSfClientFinder;
+import com.baomidou.shaun.core.config.Config;
+import com.baomidou.shaun.core.util.WebUtil;
 
-import static org.pac4j.core.util.CommonHelper.assertNotNull;
-import static org.pac4j.core.util.CommonHelper.assertTrue;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 三方登录 filter
@@ -53,7 +55,7 @@ public class SfLoginFilter implements ShaunFilter {
             if (redirect.isPresent()) {
                 RedirectionAction action = redirect.get();
                 if (action instanceof FoundAction) {
-                    JEEContextUtil.redirectUrl(context, ((FoundAction) action).getLocation());
+                    WebUtil.redirectUrl(context, ((FoundAction) action).getLocation());
                 }
             }
             return false;
