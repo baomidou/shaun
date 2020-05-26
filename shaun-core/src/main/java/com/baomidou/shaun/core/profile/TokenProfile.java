@@ -4,7 +4,7 @@ import java.util.Date;
 
 import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.core.profile.jwt.JwtClaims;
-import org.pac4j.core.util.CommonHelper;
+import org.springframework.util.Assert;
 
 /**
  * @author miemie
@@ -19,8 +19,8 @@ public class TokenProfile extends CommonProfile {
     }
 
     public TokenProfile setToken(final String token) {
-        CommonHelper.assertNull("token", this.token);
-        CommonHelper.assertNotBlank("token", token);
+        Assert.isNull(this.token, "token just can set once");
+        Assert.hasText(token, "token cannot be black");
         this.token = token;
         return this;
     }

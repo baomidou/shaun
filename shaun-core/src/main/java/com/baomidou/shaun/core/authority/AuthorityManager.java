@@ -2,7 +2,7 @@ package com.baomidou.shaun.core.authority;
 
 import java.util.Set;
 
-import org.pac4j.core.util.CommonHelper;
+import org.springframework.util.CollectionUtils;
 
 import com.baomidou.shaun.core.enums.Logical;
 import com.baomidou.shaun.core.profile.TokenProfile;
@@ -76,7 +76,7 @@ public interface AuthorityManager {
      * @return 是否通过
      */
     default boolean match(Logical logical, Set<String> elements, Set<String> checkValues) {
-        if (CommonHelper.isEmpty(elements) || CommonHelper.isEmpty(checkValues)) {
+        if (CollectionUtils.isEmpty(elements) || CollectionUtils.isEmpty(checkValues)) {
             return false;
         }
         if (logical == Logical.ANY) {
