@@ -1,10 +1,11 @@
 package com.baomidou.shaun.core.profile;
 
-import java.util.Date;
-
+import com.baomidou.shaun.core.config.ProfileConstants;
 import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.core.profile.jwt.JwtClaims;
 import org.springframework.util.Assert;
+
+import java.util.Date;
 
 /**
  * @author miemie
@@ -31,5 +32,23 @@ public class TokenProfile extends CommonProfile {
 
     public Date getExpirationDate() {
         return (Date) getAttribute(JwtClaims.EXPIRATION_TIME);
+    }
+
+    /**
+     * 获取租户ID
+     *
+     * @return 租户ID
+     */
+    public String getTenantId() {
+        return (String) getAttribute(ProfileConstants.tenantId);
+    }
+
+    /**
+     * 设置租户ID
+     *
+     * @param tenantId 租户ID
+     */
+    public void setTenantId(String tenantId) {
+        addAttribute(ProfileConstants.tenantId, tenantId);
     }
 }
