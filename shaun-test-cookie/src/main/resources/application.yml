@@ -1,5 +1,5 @@
 shaun:
-  model: web_filter
+  model: interceptor
   salt: ded4a7dc78674c6bb8ad15ffb1d4f974
   token-location: cookie
   enable-session: true
@@ -11,8 +11,8 @@ shaun:
   exclude-path:
     - /auth/login
     - /favicon.ico
-  cookie:
-    domain: 127.0.0.1
+#  cookie:
+#    domain: local
 #  matcher-names: csrfToken
 #  authorizer-names: csrfCheck
 
@@ -21,5 +21,6 @@ spring:
     cache: false
 logging:
   level:
+    root: info
     com.baomidou.shaun: debug
 

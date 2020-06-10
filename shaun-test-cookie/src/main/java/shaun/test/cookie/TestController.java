@@ -1,7 +1,11 @@
 package shaun.test.cookie;
 
-import java.util.UUID;
-
+import com.baomidou.shaun.core.annotation.HasPermission;
+import com.baomidou.shaun.core.annotation.HasRole;
+import com.baomidou.shaun.core.context.ProfileHolder;
+import com.baomidou.shaun.core.profile.TokenProfile;
+import com.baomidou.shaun.core.util.JEEContextUtil;
+import lombok.AllArgsConstructor;
 import org.pac4j.core.util.Pac4jConstants;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,14 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.baomidou.shaun.core.annotation.HasPermission;
-import com.baomidou.shaun.core.annotation.HasRole;
-import com.baomidou.shaun.core.context.ProfileHolder;
-import com.baomidou.shaun.core.mgt.SecurityManager;
-import com.baomidou.shaun.core.profile.TokenProfile;
-import com.baomidou.shaun.core.util.JEEContextUtil;
-
-import lombok.AllArgsConstructor;
+import java.util.UUID;
 
 /**
  * @author miemie
@@ -26,16 +23,11 @@ import lombok.AllArgsConstructor;
 @Controller
 public class TestController {
 
-    private final SecurityManager securityManager;
+    private final Service service;
 
     @GetMapping("auth/login")
     public String authLogin() {
-        TokenProfile profile = new TokenProfile();
-        profile.setId("111111111111");
-        profile.addRole("admin");
-        profile.addPermission("add");
-        profile.addPermission("xx");
-        securityManager.login(profile);
+        service.login();
         return "redirect:/index";
     }
 
@@ -44,6 +36,7 @@ public class TestController {
         return "login";
     }
 
+    @IAno
     @GetMapping("/index")
     public String index() {
         TokenProfile profile = ProfileHolder.getProfile();

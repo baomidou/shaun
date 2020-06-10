@@ -1,19 +1,5 @@
 package com.baomidou.shaun.autoconfigure.intercept;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.function.Function;
-
-import org.aopalliance.intercept.MethodInterceptor;
-import org.aopalliance.intercept.MethodInvocation;
-import org.pac4j.core.exception.http.UnauthorizedAction;
-import org.springframework.aop.framework.AopProxyUtils;
-import org.springframework.core.annotation.AnnotationUtils;
-import org.springframework.util.ClassUtils;
-
 import com.baomidou.shaun.core.annotation.HasAuthorization;
 import com.baomidou.shaun.core.annotation.HasPermission;
 import com.baomidou.shaun.core.annotation.HasRole;
@@ -21,14 +7,28 @@ import com.baomidou.shaun.core.authority.AuthorityManager;
 import com.baomidou.shaun.core.context.ProfileHolder;
 import com.baomidou.shaun.core.enums.Logical;
 import com.baomidou.shaun.core.profile.TokenProfile;
-
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.aopalliance.intercept.MethodInterceptor;
+import org.aopalliance.intercept.MethodInvocation;
+import org.pac4j.core.exception.http.UnauthorizedAction;
+import org.springframework.aop.framework.AopProxyUtils;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.util.ClassUtils;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.function.Function;
 
 /**
  * 注解优先级:
- * <p> method > type </p>
- * <p> HasRole > HasPermission > HasAuthorization </p>
+ * <p> method &gt; type </p>
+ * <p> HasRole &gt; HasPermission &gt; HasAuthorization </p>
  *
  * <p> 注意: 只会命中一个注解! </p>
  *
@@ -36,13 +36,20 @@ import lombok.extern.slf4j.Slf4j;
  * @since 2020-05-19
  */
 @Slf4j
-@AllArgsConstructor
-public class MethodSecurityInterceptor implements MethodInterceptor {
+public class MethodSecurityInterceptor implements MethodInterceptor, ApplicationContextAware {
 
-    private final AuthorityManager authorityManager;
+    private AuthorityManager authorityManager;
+    private ApplicationContext context;
+
+    private void initAuthorityManager() {
+        if (authorityManager == null) {
+            authorityManager = context.getBean(AuthorityManager.class);
+        }
+    }
 
     @Override
     public Object invoke(MethodInvocation mi) throws Throwable {
+        this.initAuthorityManager();
         boolean decide = decide(mi);
         if (!decide) {
             throw UnauthorizedAction.INSTANCE;
@@ -50,7 +57,7 @@ public class MethodSecurityInterceptor implements MethodInterceptor {
         return mi.proceed();
     }
 
-    public boolean decide(MethodInvocation mi) {
+    private boolean decide(MethodInvocation mi) {
         Object target = mi.getThis();
         Class<?> targetClass = null;
 
@@ -155,5 +162,10 @@ public class MethodSecurityInterceptor implements MethodInterceptor {
 
     private Set<String> toSet(String[] values) {
         return new HashSet<>(Arrays.asList(values));
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.context = applicationContext;
     }
 }
