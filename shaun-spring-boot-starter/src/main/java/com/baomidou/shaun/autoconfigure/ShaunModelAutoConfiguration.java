@@ -50,14 +50,14 @@ public class ShaunModelAutoConfiguration {
         return oncePerRequestFilter.setFilterList(filters).setConfig(config);
     }
 
-    @Configuration
+    @Configuration(proxyBeanMethods = false)
     @AutoConfigureAfter(ShaunModelAutoConfiguration.class)
     @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
     @ConditionalOnClass({HandlerInterceptor.class, WebMvcConfigurer.class})
     @ConditionalOnProperty(prefix = "shaun", name = "model", havingValue = "interceptor", matchIfMissing = true)
     public static class ShaunWebConfiguration {
 
-        @Configuration
+        @Configuration(proxyBeanMethods = false)
         @AllArgsConstructor
         public static class ShaunWebMvcConfiguration implements WebMvcConfigurer {
 
