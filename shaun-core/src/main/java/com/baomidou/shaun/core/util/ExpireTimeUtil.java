@@ -1,8 +1,5 @@
 package com.baomidou.shaun.core.util;
 
-import com.baomidou.shaun.core.exception.ShaunException;
-import org.springframework.lang.NonNull;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -10,6 +7,10 @@ import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.Date;
+
+import org.springframework.lang.NonNull;
+
+import com.baomidou.shaun.core.exception.ShaunException;
 
 /**
  * @author miemie
@@ -30,10 +31,32 @@ public abstract class ExpireTimeUtil {
      */
     @NonNull
     public static Date getTargetDate(final String expireTime) {
+        return getTargetDate(new Date(), expireTime);
+    }
+
+    /**
+     * 获取超时时间 Date
+     * <p>
+     * jwt 超时时间
+     * <li> 10s : 表示10秒有效 </li>
+     * <li> 10m 结尾: 表示10分钟有效 </li>
+     * <li> 10h 结尾: 表示10小时有效 </li>
+     * <p>
+     * <li> 1d : 表示有效时间到第二天 00:00:00  </li>
+     * <li> 2d1h : 表示有效时间到第二天 01:00:00 </li>
+     * <b> `d` 后面 只支持上面三个(`s`,`m`,`h`)之一 </b>
+     *
+     * @param expireTime 表达式
+     * @return 到期时间
+     */
+    @NonNull
+    public static Date getTargetDate(Date beginTime, final String expireTime) {
         try {
             int index = 0;
             if ((index = expireTime.indexOf(DAY)) < 1) {
+                /* 不包含 d */
                 Calendar calendar = Calendar.getInstance();
+                calendar.setTime(beginTime);
                 if ((index = expireTime.indexOf(SECOND)) > 0) {
                     calendar.add(Calendar.SECOND, Integer.parseInt(expireTime.substring(0, index)));
                     return calendar.getTime();
@@ -45,15 +68,15 @@ public abstract class ExpireTimeUtil {
                     return calendar.getTime();
                 }
             } else {
+                /* 包含 d */
                 int d = Integer.parseInt(expireTime.substring(0, index));
+                LocalDateTime now = beginTime.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().atTime(LocalTime.MIN);
                 if (index == (expireTime.length() - 1)) {
-                    LocalDateTime now = LocalDate.now().atTime(LocalTime.MIN);
                     if (d > 0) {
                         now = now.plusDays(d);
                     }
                     return Date.from(now.atZone(ZoneId.systemDefault()).toInstant());
                 }
-                LocalDateTime now = LocalDate.now().atTime(LocalTime.MIN);
                 if (d > 0) {
                     now = now.plusDays(d);
                 }
@@ -84,6 +107,7 @@ public abstract class ExpireTimeUtil {
         try {
             int index = 0;
             if ((index = expireTime.indexOf(DAY)) < 1) {
+                /* 不包含 d */
                 if ((index = expireTime.indexOf(SECOND)) > 0) {
                     return Integer.parseInt(expireTime.substring(0, index));
                 } else if ((index = expireTime.indexOf(MINUTE)) > 0) {
@@ -92,6 +116,7 @@ public abstract class ExpireTimeUtil {
                     return Integer.parseInt(expireTime.substring(0, index)) * 60 * 60;
                 }
             } else {
+                /* 包含 d */
                 final LocalDateTime dateTime = LocalDateTime.now();
                 int d = Integer.parseInt(expireTime.substring(0, index));
                 LocalDateTime now = LocalDate.now().atTime(LocalTime.MIN);
