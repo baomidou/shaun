@@ -1,6 +1,6 @@
 shaun:
   logout-url: /logout
-  matcher-names: xssprotection,allowAjaxRequests
+  matcher-names: xssprotection
   exclude-path:
     - /login
     - /favicon.ico
@@ -8,4 +8,4 @@ shaun:
 
 logging:
   level:
-    com.baomidou.mipac4j.core.context.http: debug
+    com.baomidou.shaun: debug

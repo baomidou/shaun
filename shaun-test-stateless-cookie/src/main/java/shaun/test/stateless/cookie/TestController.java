@@ -25,7 +25,7 @@ public class TestController {
 //        profile.setLinkedId("222222222222"); 不支持这个属性
         profile.addRole("admin");
 //        profile.addPermission("add");
-        return securityManager.login(profile, true);
+        return securityManager.login(profile, false);
     }
 
     @GetMapping("a1")

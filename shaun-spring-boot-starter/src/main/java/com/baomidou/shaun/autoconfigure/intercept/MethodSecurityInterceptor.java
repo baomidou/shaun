@@ -10,12 +10,15 @@ import com.baomidou.shaun.core.profile.TokenProfile;
 import lombok.extern.slf4j.Slf4j;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
+import org.pac4j.core.exception.http.ForbiddenAction;
+import org.pac4j.core.exception.http.HttpAction;
 import org.pac4j.core.exception.http.UnauthorizedAction;
 import org.springframework.aop.framework.AopProxyUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.lang.NonNull;
 import org.springframework.util.ClassUtils;
 
 import java.lang.annotation.Annotation;
@@ -50,14 +53,14 @@ public class MethodSecurityInterceptor implements MethodInterceptor, Application
     @Override
     public Object invoke(MethodInvocation mi) throws Throwable {
         this.initAuthorityManager();
-        boolean decide = decide(mi);
-        if (!decide) {
-            throw UnauthorizedAction.INSTANCE;
+        HttpAction action = decide(mi);
+        if (action != null) {
+            throw action;
         }
         return mi.proceed();
     }
 
-    private boolean decide(MethodInvocation mi) {
+    private HttpAction decide(MethodInvocation mi) {
         Object target = mi.getThis();
         Class<?> targetClass = null;
 
@@ -85,41 +88,50 @@ public class MethodSecurityInterceptor implements MethodInterceptor, Application
             final TokenProfile profiles = ProfileHolder.getProfile();
             if (profiles == null) {
                 log.debug("not found TokenProfile, so authorization not success!");
-                return false;
+                return UnauthorizedAction.INSTANCE;
             }
             if (!authorityManager.isSkipAuthenticationUser(profiles)) {
+                HttpAction action = toCheck(profiles, true, role.logical(), roles, authorityManager::roles);
                 if (logical == Logical.ANY) {
-                    return toCheck(profiles, true, role.logical(), roles, authorityManager::roles)
-                            || toCheck(profiles, false, permission.logical(), permissions, authorityManager::permissions);
+                    if (action == null) {
+                        return null;
+                    }
                 } else {
-                    return toCheck(profiles, true, role.logical(), roles, authorityManager::roles)
-                            && toCheck(profiles, false, permission.logical(), permissions, authorityManager::permissions);
+                    if (action != null) {
+                        return action;
+                    }
                 }
+                return toCheck(profiles, false, permission.logical(), permissions, authorityManager::permissions);
             }
         }
-        return true;
+        return null;
     }
 
-    private boolean commonAuthorized(final boolean isRole, final Logical logical,
-                                     final Set<String> elements,
-                                     final Function<TokenProfile, Set<String>> checkValues) {
+    private HttpAction commonAuthorized(final boolean isRole, final Logical logical,
+                                        final Set<String> elements,
+                                        final Function<TokenProfile, Set<String>> checkValues) {
         final TokenProfile profiles = ProfileHolder.getProfile();
         if (profiles == null) {
             log.debug("not found TokenProfile, so authorization not success!");
-            return false;
+            return UnauthorizedAction.INSTANCE;
         }
         if (authorityManager.isSkipAuthenticationUser(profiles)) {
-            return true;
+            return null;
         }
         return toCheck(profiles, isRole, logical, elements, checkValues);
     }
 
-    private boolean toCheck(final TokenProfile profiles, final boolean isRole, final Logical logical,
-                            final Set<String> elements, final Function<TokenProfile, Set<String>> checkValues) {
+    private HttpAction toCheck(final TokenProfile profiles, final boolean isRole, final Logical logical,
+                               final Set<String> elements, final Function<TokenProfile, Set<String>> checkValues) {
         if (isRole) {
-            return authorityManager.checkRoles(logical, elements, checkValues.apply(profiles));
+            if (!authorityManager.checkRoles(logical, elements, checkValues.apply(profiles))) {
+                return ForbiddenAction.INSTANCE;
+            }
         }
-        return authorityManager.checkPermissions(logical, elements, checkValues.apply(profiles));
+        if (!authorityManager.checkPermissions(logical, elements, checkValues.apply(profiles))) {
+            return ForbiddenAction.INSTANCE;
+        }
+        return null;
     }
 
     /**
@@ -165,7 +177,7 @@ public class MethodSecurityInterceptor implements MethodInterceptor, Application
     }
 
     @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+    public void setApplicationContext(@NonNull ApplicationContext applicationContext) throws BeansException {
         this.context = applicationContext;
     }
 }

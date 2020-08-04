@@ -9,7 +9,7 @@ shaun:
   sf-login-url: /sf
   callback-url: /callback
   exclude-path:
-    - /auth/login
+    - /error
     - /favicon.ico
 #  cookie:
 #    domain: local

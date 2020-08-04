@@ -6,6 +6,8 @@ import com.baomidou.shaun.core.annotation.HasRole;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.aop.support.StaticMethodMatcherPointcutAdvisor;
 import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -30,10 +32,11 @@ public class MethodSecurityAdvisor extends StaticMethodMatcherPointcutAdvisor {
 
 
     @Override
-    public boolean matches(Method method, Class<?> targetClass) {
+    public boolean matches(@NonNull Method method, @Nullable Class<?> targetClass) {
         Method m = method;
 
         if (isAuthzAnnotationPresent(m)) {
+            log.debug("enable security annotation for: \"{}.{}\"", targetClass.getName(), method.getName());
             return true;
         }
 

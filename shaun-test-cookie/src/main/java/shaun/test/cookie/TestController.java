@@ -25,15 +25,10 @@ public class TestController {
 
     private final Service service;
 
-    @GetMapping("auth/login")
-    public String authLogin() {
-        service.login();
-        return "redirect:/index";
-    }
-
     @GetMapping("/login")
     public String login() {
-        return "login";
+        service.login();
+        return "redirect:/index";
     }
 
     @IAno
@@ -48,6 +43,7 @@ public class TestController {
         return "index";
     }
 
+    @IAno
     @GetMapping("/a1")
     public String a1(Model model) {
         model.addAttribute("a", "a1");
@@ -55,6 +51,7 @@ public class TestController {
         return "a";
     }
 
+    @IAno
     @GetMapping("/a2")
     @HasRole("admin")
     public String a2(Model model) {
@@ -63,6 +60,7 @@ public class TestController {
         return "a";
     }
 
+    @IAno
     @GetMapping("/a3")
     @HasPermission("add")
     public String a3(Model model) {

@@ -65,7 +65,9 @@ public class DefaultAuthorizationChecker implements AuthorizationChecker {
             // check authorizations using authorizers: all must be satisfied
             for (Authorizer authorizer : authorizers) {
                 final boolean isAuthorized = authorizer.isAuthorized(context, profiles);
-                log.debug("Checking authorizer: {} -> {}", authorizer, isAuthorized);
+                if (log.isDebugEnabled()) {
+                    log.debug("Checking authorizer: {} -> {}", authorizer, isAuthorized);
+                }
                 if (!isAuthorized) {
                     return false;
                 }
