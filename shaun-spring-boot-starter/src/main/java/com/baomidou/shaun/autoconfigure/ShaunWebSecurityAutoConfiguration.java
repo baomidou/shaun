@@ -29,7 +29,7 @@ public class ShaunWebSecurityAutoConfiguration {
     @ConditionalOnMissingBean
     @ConditionalOnClass(HandlerInterceptor.class)
     @ConditionalOnProperty(prefix = "shaun", name = "model", havingValue = "interceptor", matchIfMissing = true)
-    ShaunInterceptor shaunInterceptor(Config config, List<ShaunFilter> filters) {
+    public ShaunInterceptor shaunInterceptor(Config config, List<ShaunFilter> filters) {
         ShaunInterceptor interceptor = new ShaunInterceptor();
         return interceptor.setFilterList(filters).setConfig(config);
     }
@@ -38,7 +38,7 @@ public class ShaunWebSecurityAutoConfiguration {
     @ConditionalOnMissingBean
     @ConditionalOnClass(OncePerRequestFilter.class)
     @ConditionalOnProperty(prefix = "shaun", name = "model", havingValue = "web_filter")
-    ShaunRequestFilter shaunOncePerRequestFilter(Config config, List<ShaunFilter> filters) {
+    public ShaunRequestFilter shaunOncePerRequestFilter(Config config, List<ShaunFilter> filters) {
         ShaunRequestFilter oncePerRequestFilter = new ShaunRequestFilter();
         return oncePerRequestFilter.setFilterList(filters).setConfig(config);
     }

@@ -2,7 +2,6 @@ package com.baomidou.shaun.autoconfigure;
 
 import com.baomidou.shaun.autoconfigure.intercept.MethodSecurityAdvisor;
 import com.baomidou.shaun.autoconfigure.intercept.MethodSecurityInterceptor;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,13 +15,11 @@ import org.springframework.context.annotation.Configuration;
 public class ShaunAnnotationAutoConfiguration {
 
     @Bean
-    @ConditionalOnMissingBean
     public MethodSecurityInterceptor shaunMethodSecurityInterceptor() {
         return new MethodSecurityInterceptor();
     }
 
     @Bean
-    @ConditionalOnMissingBean
     public MethodSecurityAdvisor shaunMethodSecurityAdvisor(MethodSecurityInterceptor interceptor) {
         MethodSecurityAdvisor advisor = new MethodSecurityAdvisor();
         advisor.setAdvice(interceptor);
