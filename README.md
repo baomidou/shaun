@@ -51,7 +51,7 @@
 
 2. 登录后设置相关信息到SecurityManager。
 
-```java
+``` java
 @Service
 @AllArgsConstructor
 public class LoginServiceImpl implements LoginService {
@@ -64,8 +64,10 @@ public class LoginServiceImpl implements LoginService {
         // 登录成功后把用户角色权限信息存储到profile中
         final TokenProfile profile = new TokenProfile();
         profile.setId(userId.toString());
-        //profile.setRoles(roles);  
-        //profile.setPermissions(permissions);
+        //profile.addRole(role:String);  
+        //profile.setRoles(roles:Set);  
+        //profile.addPermission(permission:String);
+        //profile.setPermissions(permissions:Set);
         //profile.addAttribute("key","value");
         final String token = securityManager.login(profile);
         return token;
@@ -74,7 +76,7 @@ public class LoginServiceImpl implements LoginService {
 
 3. 设置yml启动信息。
 
-```yaml
+``` yaml
 shaun:
   salt: 32位字符串,非必须字段
   exclude-path: # 排除具体的路径
@@ -99,16 +101,16 @@ shaun:
 
 相关的注解有 `@HasAuthorization`   `@HasPermission`  `@HasRole`  。
 
-```java
+``` java
 @HasPermission(value = {"add","edit"},logical = Logical.BOTH) //权限必须同时存在
-@HasPermission(value = {"add","edit"},logical = Logical.ANY)  //权限任一存在
+@HasPermission(value = {"add","edit"},logical = Logical.ANY)  //权限任一存在(默认)
 ```
 
 5. 前后端交互。
 
 默认配置下  前端登录后需要把后端返回的token存下，后续接口的请求头带上Authorization。
 
-后端可以通过  TokenProfile profile = ProfileHolder.getProfile();  获得登录设置进去的用户信息。
+后端可以通过  TokenProfile profile = ProfileHolder.getProfile();  获得登录的用户信息。
 
 如获得登录设置进token里的用户ID继续进行业务逻辑处理。
 
