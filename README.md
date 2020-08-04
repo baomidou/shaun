@@ -78,7 +78,7 @@ public class LoginServiceImpl implements LoginService {
 
 ``` yaml
 shaun:
-  salt: 32位字符串,非必须字段
+  salt: 32位字符串,不配置则每次启动不一样导致重启前登录的用户token失效
   exclude-path: # 排除具体的路径
     - /v2/api-docs  
     - /swagger-resources
