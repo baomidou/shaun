@@ -1,9 +1,17 @@
 package com.baomidou.shaun.core.config;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-
+import com.baomidou.shaun.core.authorization.DefaultAuthorizationChecker;
+import com.baomidou.shaun.core.client.TokenClient;
+import com.baomidou.shaun.core.handler.DefaultHttpActionHandler;
+import com.baomidou.shaun.core.handler.HttpActionHandler;
+import com.baomidou.shaun.core.handler.LogoutHandler;
+import com.baomidou.shaun.core.matching.checker.DefaultMatchingChecker;
+import com.baomidou.shaun.core.mgt.DefaultProfileManager;
+import com.baomidou.shaun.core.mgt.ProfileManager;
+import com.baomidou.shaun.core.util.WebUtil;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.Setter;
 import org.pac4j.core.authorization.authorizer.Authorizer;
 import org.pac4j.core.authorization.authorizer.DefaultAuthorizers;
 import org.pac4j.core.authorization.checker.AuthorizationChecker;
@@ -19,16 +27,9 @@ import org.pac4j.core.util.CommonHelper;
 import org.pac4j.core.util.Pac4jConstants;
 import org.springframework.util.CollectionUtils;
 
-import com.baomidou.shaun.core.authorization.DefaultAuthorizationChecker;
-import com.baomidou.shaun.core.client.TokenClient;
-import com.baomidou.shaun.core.handler.DefaultHttpActionHandler;
-import com.baomidou.shaun.core.handler.HttpActionHandler;
-import com.baomidou.shaun.core.matching.checker.DefaultMatchingChecker;
-import com.baomidou.shaun.core.util.WebUtil;
-
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.Setter;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author miemie
@@ -42,6 +43,14 @@ public class Config {
      * client
      */
     private TokenClient tokenClient;
+    /**
+     * profile 管理器
+     */
+    private ProfileManager profileManager = new DefaultProfileManager();
+    /**
+     * 登出执行器
+     */
+    private LogoutHandler logoutHandler;
     /**
      * 是否是前后端分离的
      */

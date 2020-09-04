@@ -1,5 +1,7 @@
 package shaun.test.stateless.cookie;
 
+import com.baomidou.shaun.core.mgt.ProfileManager;
+import com.baomidou.shaun.core.profile.TokenProfile;
 import com.nimbusds.jose.EncryptionMethod;
 import com.nimbusds.jose.JWEAlgorithm;
 import org.pac4j.jwt.config.encryption.EncryptionConfiguration;
@@ -11,6 +13,8 @@ import org.springframework.context.annotation.Configuration;
 
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author miemie
@@ -18,6 +22,11 @@ import java.security.KeyPairGenerator;
  */
 @Configuration
 public class ShaunConfig {
+
+    /**
+     * 模拟缓存
+     */
+    public static Map<String, String> tokenMap = new HashMap<>();
 
     @Bean
     public KeyPair keyPair() throws Exception {
@@ -40,5 +49,26 @@ public class ShaunConfig {
     @Bean
     public EncryptionConfiguration encryptionConfiguration(KeyPair keyPair) {
         return new RSAEncryptionConfiguration(keyPair, JWEAlgorithm.RSA_OAEP_256, EncryptionMethod.A128GCM);
+    }
+
+    @Bean
+    public ProfileManager profileManager() {
+        return new ProfileManager() {
+            @Override
+            public void afterLogin(TokenProfile profile) {
+                tokenMap.put(profile.getId(), profile.getToken());
+            }
+
+            @Override
+            public boolean isAuthorized(TokenProfile profile) {
+                String token = tokenMap.get(profile.getId());
+                return token != null && profile.getToken().equals(token);
+            }
+
+            @Override
+            public void afterLogout(TokenProfile profile) {
+                tokenMap.remove(profile.getId());
+            }
+        };
     }
 }

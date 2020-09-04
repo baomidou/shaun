@@ -14,6 +14,7 @@ import com.baomidou.shaun.core.handler.DefaultLogoutHandler;
 import com.baomidou.shaun.core.handler.HttpActionHandler;
 import com.baomidou.shaun.core.handler.LogoutHandler;
 import com.baomidou.shaun.core.matching.OnlyPathMatcher;
+import com.baomidou.shaun.core.mgt.ProfileManager;
 import com.baomidou.shaun.core.mgt.SecurityManager;
 import com.baomidou.shaun.core.util.JEEContextUtil;
 import lombok.RequiredArgsConstructor;
@@ -135,29 +136,23 @@ public class ShaunBeanAutoConfiguration {
         return new TokenClient(credentialsExtractor, authenticator);
     }
 
-    /**
-     * 全局安全管理器
-     */
     @Bean
     @ConditionalOnMissingBean
-    public SecurityManager cookieContext(ShaunProperties properties, TokenGenerator tokenGenerator, LogoutHandler logoutHandler) {
-        return new SecurityManager(tokenGenerator, properties.getTokenLocation(), properties.getCookie(), logoutHandler);
-    }
-
-    @Bean
-    @ConditionalOnMissingBean
-    public Config config(ShaunProperties properties, TokenClient tokenClient,
+    public Config config(ShaunProperties properties, TokenClient tokenClient, LogoutHandler logoutHandler,
+                         ObjectProvider<ProfileManager> profileManagerProvider,
                          ObjectProvider<AjaxRequestResolver> ajaxRequestResolverProvider,
                          ObjectProvider<List<Authorizer>> authorizerProvider,
                          ObjectProvider<List<Matcher>> matcherProvider,
                          ObjectProvider<HttpActionHandler> httpActionHandlerProvider) {
         Config config = new Config();
         config.setTokenClient(tokenClient);
+        config.setLogoutHandler(logoutHandler);
         if (StringUtils.hasText(properties.getLoginUrl())) {
             config.setStateless(false);
             config.setLoginUrl(properties.getLoginUrl());
         }
         config.authorizerNamesAppend(properties.getAuthorizerNames());
+        profileManagerProvider.ifAvailable(config::setProfileManager);
         authorizerProvider.ifAvailable(config::addAuthorizers);
         config.matcherNamesAppend(properties.getMatcherNames());
         matcherProvider.ifAvailable(config::addMatchers);
@@ -165,6 +160,15 @@ public class ShaunBeanAutoConfiguration {
         ajaxRequestResolverProvider.ifUnique(config::setAjaxRequestResolver);
         JEEContextUtil.setEnableSession(properties.isEnableSession());
         return config;
+    }
+
+    /**
+     * 全局安全管理器
+     */
+    @Bean
+    @ConditionalOnMissingBean
+    public SecurityManager cookieContext(ShaunProperties properties, TokenGenerator tokenGenerator, Config config) {
+        return new SecurityManager(config, tokenGenerator, properties.getTokenLocation(), properties.getCookie());
     }
 
     @RequiredArgsConstructor

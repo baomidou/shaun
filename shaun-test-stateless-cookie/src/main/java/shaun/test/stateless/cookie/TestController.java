@@ -2,6 +2,7 @@ package shaun.test.stateless.cookie;
 
 import com.baomidou.shaun.core.annotation.HasPermission;
 import com.baomidou.shaun.core.annotation.HasRole;
+import com.baomidou.shaun.core.context.ProfileHolder;
 import com.baomidou.shaun.core.mgt.SecurityManager;
 import com.baomidou.shaun.core.profile.TokenProfile;
 import lombok.AllArgsConstructor;
@@ -43,5 +44,11 @@ public class TestController {
     @HasPermission("add")
     public String a3() {
         return "a3";
+    }
+
+    @GetMapping("xx")
+    public String xx() {
+        ShaunConfig.tokenMap.remove(ProfileHolder.getProfile().getId());
+        return "xx";
     }
 }

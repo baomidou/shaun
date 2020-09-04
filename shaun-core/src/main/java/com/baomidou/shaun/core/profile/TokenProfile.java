@@ -19,11 +19,10 @@ public class TokenProfile extends CommonProfile {
         return token;
     }
 
-    public TokenProfile setToken(final String token) {
+    public void setToken(final String token) {
         Assert.isNull(this.token, "token just can set once");
         Assert.hasText(token, "token cannot be black");
         this.token = token;
-        return this;
     }
 
     public Date getIssuedAt() {

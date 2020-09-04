@@ -43,7 +43,8 @@ public class SecurityFilter implements ShaunFilter {
                 log.debug("credentials: {}", credentials);
             }
             if (credentials.isPresent()) {
-                final Optional<UserProfile> profile = config.getTokenClient().getUserProfile(credentials.get(), context);
+                TokenCredentials tokenCredentials = credentials.get();
+                final Optional<UserProfile> profile = config.getTokenClient().getUserProfile(tokenCredentials, context);
                 if (log.isDebugEnabled()) {
                     log.debug("profile: {}", profile);
                 }
@@ -63,9 +64,10 @@ public class SecurityFilter implements ShaunFilter {
                         tokenProfile.addAttributes(commonProfile.getAttributes());
                     }
                     // todo 兼容性升级
-                    if (config.getAuthorizationChecker().isAuthorized(context, Collections.singletonList(tokenProfile),
-                            config.getAuthorizerNames(), config.getAuthorizersMap())) {
-                        ProfileHolder.setProfile(tokenProfile.setToken(credentials.get().getToken()));
+                    tokenProfile.setToken(tokenCredentials.getToken());
+                    if (config.getProfileManager().isAuthorized(tokenProfile) &&
+                            config.getAuthorizationChecker().isAuthorized(context, Collections.singletonList(tokenProfile), config.getAuthorizerNames(), config.getAuthorizersMap())) {
+                        ProfileHolder.setProfile(tokenProfile);
                         if (log.isDebugEnabled()) {
                             log.debug("authenticated and authorized -> grant access");
                         }
