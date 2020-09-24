@@ -1,5 +1,5 @@
 # Auto Configure
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   com.baomidou.shaun.autoconfigure.ShaunBeanAutoConfiguration,\
-  com.baomidou.shaun.autoconfigure.ShaunWebSecurityAutoConfiguration,\
+  com.baomidou.shaun.autoconfigure.ShaunWebAutoConfiguration,\
   com.baomidou.shaun.autoconfigure.ShaunAnnotationAutoConfiguration

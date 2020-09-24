@@ -23,7 +23,7 @@ import java.util.List;
  * @since 2020-08-04
  */
 @Configuration(proxyBeanMethods = false)
-public class ShaunWebSecurityAutoConfiguration {
+public class ShaunWebAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
