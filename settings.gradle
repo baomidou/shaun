@@ -15,6 +15,6 @@ buildscript {
 
 include "shaun-core"
 include 'shaun-spring-boot-starter'
-include 'shaun-test-stateless-header'
-include 'shaun-test-stateless-cookie'
-include 'shaun-test-cookie'
+include 'shaun-stateful-spring-boot-starter'
+
+file("${rootDir}/tests").eachDir { include "tests:${it.name}" }
