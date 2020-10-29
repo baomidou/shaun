@@ -9,7 +9,6 @@ import org.pac4j.core.client.Client;
 import org.pac4j.core.client.Clients;
 import org.pac4j.core.client.IndirectClient;
 import org.pac4j.core.credentials.TokenCredentials;
-import org.pac4j.core.credentials.authenticator.Authenticator;
 import org.pac4j.core.credentials.extractor.CredentialsExtractor;
 import org.pac4j.core.http.ajax.AjaxRequestResolver;
 import org.pac4j.core.matching.matcher.Matcher;
@@ -18,7 +17,6 @@ import org.pac4j.jwt.config.encryption.EncryptionConfiguration;
 import org.pac4j.jwt.config.encryption.SecretEncryptionConfiguration;
 import org.pac4j.jwt.config.signature.SecretSignatureConfiguration;
 import org.pac4j.jwt.config.signature.SignatureConfiguration;
-import org.pac4j.jwt.credentials.authenticator.JwtAuthenticator;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -31,7 +29,6 @@ import org.springframework.util.StringUtils;
 import com.baomidou.shaun.autoconfigure.properties.ShaunProperties;
 import com.baomidou.shaun.core.authority.AuthorityManager;
 import com.baomidou.shaun.core.authority.DefaultAuthorityManager;
-import com.baomidou.shaun.core.client.TokenClient;
 import com.baomidou.shaun.core.config.Config;
 import com.baomidou.shaun.core.extractor.TokenExtractor;
 import com.baomidou.shaun.core.filter.CallbackFilter;
@@ -39,13 +36,12 @@ import com.baomidou.shaun.core.filter.LogoutFilter;
 import com.baomidou.shaun.core.filter.SecurityFilter;
 import com.baomidou.shaun.core.filter.SfLoginFilter;
 import com.baomidou.shaun.core.filter.ShaunFilter;
-import com.baomidou.shaun.core.generator.DefaultJwtTokenGenerator;
-import com.baomidou.shaun.core.generator.TokenGenerator;
 import com.baomidou.shaun.core.handler.CallbackHandler;
 import com.baomidou.shaun.core.handler.DefaultLogoutHandler;
 import com.baomidou.shaun.core.handler.HttpActionHandler;
 import com.baomidou.shaun.core.handler.LogoutHandler;
 import com.baomidou.shaun.core.matching.OnlyPathMatcher;
+import com.baomidou.shaun.core.mgt.DefaultProfileManager;
 import com.baomidou.shaun.core.mgt.ProfileManager;
 import com.baomidou.shaun.core.mgt.SecurityManager;
 import com.baomidou.shaun.core.util.WebUtil;
@@ -92,13 +88,14 @@ public class ShaunBeanAutoConfiguration {
     }
 
     /**
-     * token 检验器
+     * profile 管理器
      */
     @Bean
     @ConditionalOnMissingBean
-    public Authenticator<TokenCredentials> authenticator(SignatureConfiguration signatureConfiguration,
-                                                         EncryptionConfiguration encryptionConfiguration) {
-        return new JwtAuthenticator(signatureConfiguration, encryptionConfiguration);
+    public ProfileManager profileManager(SignatureConfiguration signatureConfiguration,
+                                         EncryptionConfiguration encryptionConfiguration,
+                                         CredentialsExtractor<TokenCredentials> credentialsExtractor) {
+        return new DefaultProfileManager(signatureConfiguration, encryptionConfiguration, credentialsExtractor);
     }
 
     /**
@@ -111,19 +108,6 @@ public class ShaunBeanAutoConfiguration {
     }
 
     /**
-     * token 生成器
-     */
-    @Bean
-    @ConditionalOnMissingBean
-    public TokenGenerator tokenGenerator(AuthorityManager authorityManager, SignatureConfiguration signatureConfiguration,
-                                         EncryptionConfiguration encryptionConfiguration) {
-        DefaultJwtTokenGenerator generator = new DefaultJwtTokenGenerator(authorityManager, signatureConfiguration,
-                encryptionConfiguration);
-        generator.setDefaultExpireTime(properties.getExpireTime());
-        return generator;
-    }
-
-    /**
      * 登出操作类
      */
     @Bean
@@ -132,26 +116,18 @@ public class ShaunBeanAutoConfiguration {
         return new DefaultLogoutHandler(properties.getTokenLocation(), properties.getCookie());
     }
 
-    /**
-     * client
-     */
     @Bean
     @ConditionalOnMissingBean
-    public TokenClient tokenClient(CredentialsExtractor<TokenCredentials> credentialsExtractor,
-                                   Authenticator<TokenCredentials> authenticator) {
-        return new TokenClient(credentialsExtractor, authenticator);
-    }
-
-    @Bean
-    @ConditionalOnMissingBean
-    public Config config(ShaunProperties properties, TokenClient tokenClient, LogoutHandler logoutHandler,
+    public Config config(ShaunProperties properties, AuthorityManager authorityManager, LogoutHandler logoutHandler,
                          ObjectProvider<ProfileManager> profileManagerProvider,
                          ObjectProvider<AjaxRequestResolver> ajaxRequestResolverProvider,
                          ObjectProvider<List<Authorizer>> authorizerProvider,
                          ObjectProvider<List<Matcher>> matcherProvider,
                          ObjectProvider<HttpActionHandler> httpActionHandlerProvider) {
         Config config = new Config();
-        config.setTokenClient(tokenClient);
+        config.setCookie(properties.getCookie());
+        config.setExpireTime(properties.getExpireTime());
+        config.setAuthorityManager(authorityManager);
         config.setLogoutHandler(logoutHandler);
         if (StringUtils.hasText(properties.getLoginUrl())) {
             config.setStateless(false);
@@ -173,8 +149,8 @@ public class ShaunBeanAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean
-    public SecurityManager cookieContext(ShaunProperties properties, TokenGenerator tokenGenerator, Config config) {
-        return new SecurityManager(config, tokenGenerator, properties.getTokenLocation(), properties.getCookie());
+    public SecurityManager cookieContext(ShaunProperties properties, Config config) {
+        return new SecurityManager(config, properties.getTokenLocation());
     }
 
     @RequiredArgsConstructor

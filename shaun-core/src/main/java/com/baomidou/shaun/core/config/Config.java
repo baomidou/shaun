@@ -1,17 +1,9 @@
 package com.baomidou.shaun.core.config;
 
-import com.baomidou.shaun.core.authorization.DefaultAuthorizationChecker;
-import com.baomidou.shaun.core.client.TokenClient;
-import com.baomidou.shaun.core.handler.DefaultHttpActionHandler;
-import com.baomidou.shaun.core.handler.HttpActionHandler;
-import com.baomidou.shaun.core.handler.LogoutHandler;
-import com.baomidou.shaun.core.matching.checker.DefaultMatchingChecker;
-import com.baomidou.shaun.core.mgt.DefaultProfileManager;
-import com.baomidou.shaun.core.mgt.ProfileManager;
-import com.baomidou.shaun.core.util.WebUtil;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.Setter;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.pac4j.core.authorization.authorizer.Authorizer;
 import org.pac4j.core.authorization.authorizer.DefaultAuthorizers;
 import org.pac4j.core.authorization.checker.AuthorizationChecker;
@@ -27,9 +19,19 @@ import org.pac4j.core.util.CommonHelper;
 import org.pac4j.core.util.Pac4jConstants;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import com.baomidou.shaun.core.authority.AuthorityManager;
+import com.baomidou.shaun.core.authorization.DefaultAuthorizationChecker;
+import com.baomidou.shaun.core.context.Cookie;
+import com.baomidou.shaun.core.handler.DefaultHttpActionHandler;
+import com.baomidou.shaun.core.handler.HttpActionHandler;
+import com.baomidou.shaun.core.handler.LogoutHandler;
+import com.baomidou.shaun.core.matching.checker.DefaultMatchingChecker;
+import com.baomidou.shaun.core.mgt.ProfileManager;
+import com.baomidou.shaun.core.util.WebUtil;
+
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.Setter;
 
 /**
  * @author miemie
@@ -40,17 +42,25 @@ import java.util.Map;
 public class Config {
 
     /**
-     * client
+     * 超时时间
      */
-    private TokenClient tokenClient;
+    private String expireTime;
     /**
      * profile 管理器
      */
-    private ProfileManager profileManager = new DefaultProfileManager();
+    private ProfileManager profileManager;
+    /**
+     * profile 管理器
+     */
+    private AuthorityManager authorityManager;
     /**
      * 登出执行器
      */
     private LogoutHandler logoutHandler;
+    /**
+     * cookie 配置
+     */
+    private Cookie cookie;
     /**
      * 是否是前后端分离的
      */

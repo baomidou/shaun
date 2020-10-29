@@ -12,8 +12,6 @@ import org.pac4j.jwt.config.signature.SignatureConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.baomidou.shaun.core.mgt.ProfileManager;
-import com.baomidou.shaun.core.profile.TokenProfile;
 import com.nimbusds.jose.EncryptionMethod;
 import com.nimbusds.jose.JWEAlgorithm;
 
@@ -52,24 +50,24 @@ public class ShaunConfig {
         return new RSAEncryptionConfiguration(keyPair, JWEAlgorithm.RSA_OAEP_256, EncryptionMethod.A128GCM);
     }
 
-    @Bean
-    public ProfileManager profileManager() {
-        return new ProfileManager() {
-            @Override
-            public void afterLogin(TokenProfile profile) {
-                tokenMap.put(profile.getId(), profile.getToken());
-            }
-
-            @Override
-            public boolean isAuthorized(TokenProfile profile) {
-                String token = tokenMap.get(profile.getId());
-                return token != null && profile.getToken().equals(token);
-            }
-
-            @Override
-            public void afterLogout(TokenProfile profile) {
-                tokenMap.remove(profile.getId());
-            }
-        };
-    }
+//    @Bean
+//    public ProfileManager profileManager() {
+//        return new ProfileManager() {
+//            @Override
+//            public void afterLogin(TokenProfile profile) {
+//                tokenMap.put(profile.getId(), profile.getToken());
+//            }
+//
+//            @Override
+//            public boolean isAuthorized(TokenProfile profile) {
+//                String token = tokenMap.get(profile.getId());
+//                return token != null && profile.getToken().equals(token);
+//            }
+//
+//            @Override
+//            public void afterLogout(TokenProfile profile) {
+//                tokenMap.remove(profile.getId());
+//            }
+//        };
+//    }
 }

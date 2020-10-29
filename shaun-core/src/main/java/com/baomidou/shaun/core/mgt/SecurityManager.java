@@ -1,13 +1,13 @@
 package com.baomidou.shaun.core.mgt;
 
 import org.pac4j.core.context.JEEContext;
+import org.pac4j.core.util.CommonHelper;
 
 import com.baomidou.shaun.core.config.Config;
-import com.baomidou.shaun.core.context.Cookie;
 import com.baomidou.shaun.core.context.ProfileHolder;
 import com.baomidou.shaun.core.enums.TokenLocation;
-import com.baomidou.shaun.core.generator.TokenGenerator;
 import com.baomidou.shaun.core.profile.TokenProfile;
+import com.baomidou.shaun.core.util.ExpireTimeUtil;
 import com.baomidou.shaun.core.util.WebUtil;
 
 import lombok.Data;
@@ -25,9 +25,7 @@ import lombok.RequiredArgsConstructor;
 public class SecurityManager {
 
     private final Config config;
-    private final TokenGenerator tokenGenerator;
     private final TokenLocation tokenLocation;
-    private final Cookie cookie;
 
     /**
      * ignore
@@ -52,11 +50,15 @@ public class SecurityManager {
      * @return token
      */
     public String login(TokenProfile profile, boolean isSkipAuthenticationUser, String optionExpireTime) {
-        String token = tokenGenerator.generate(profile, isSkipAuthenticationUser, optionExpireTime);
+        if (isSkipAuthenticationUser) {
+            config.getAuthorityManager().skipAuthentication(profile);
+        }
+        String expireTime = chooseExpireTime(optionExpireTime);
+        String token = config.getProfileManager().generateJwt(profile, expireTime);
         profile.setToken(token);
         if (tokenLocation.enableCookie()) {
             JEEContext jeeContext = WebUtil.getJEEContext();
-            jeeContext.addResponseCookie(cookie.getPac4jCookie(token, tokenGenerator.getAge(optionExpireTime)));
+            jeeContext.addResponseCookie(config.getCookie().getPac4jCookie(token, getCookieAge(expireTime)));
         }
         config.getProfileManager().afterLogin(profile);
         return token;
@@ -69,5 +71,22 @@ public class SecurityManager {
         ProfileHolder.clearProfile();
         config.getLogoutHandler().logout(profile);
         config.getProfileManager().afterLogout(profile);
+    }
+
+    private String chooseExpireTime(String optionExpireTime) {
+        if (CommonHelper.isNotBlank(optionExpireTime)) {
+            return optionExpireTime;
+        }
+        return config.getExpireTime();
+    }
+
+    /**
+     * 默认提前1秒到期
+     */
+    private int getCookieAge(String expireTime) {
+        if (CommonHelper.isNotBlank(expireTime)) {
+            return ExpireTimeUtil.getTargetSecond(expireTime) - 1;
+        }
+        return -1;
     }
 }
