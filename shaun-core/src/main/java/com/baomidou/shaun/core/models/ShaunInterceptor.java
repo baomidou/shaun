@@ -17,7 +17,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import com.baomidou.shaun.core.config.Config;
 import com.baomidou.shaun.core.context.ProfileHolder;
 import com.baomidou.shaun.core.filter.ShaunFilter;
-import com.baomidou.shaun.core.util.JEEContextUtil;
+import com.baomidou.shaun.core.util.WebUtil;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -35,7 +35,7 @@ public class ShaunInterceptor implements HandlerInterceptor, InitializingBean {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        final JEEContext context = JEEContextUtil.getJEEContext(request, response);
+        final JEEContext context = WebUtil.getJEEContext(request, response);
         if (config.getMatchingChecker().matches(context, config.getMatcherNames(), config.getMatchersMap())) {
             if (!CorsUtils.isPreFlightRequest(request)) {
                 for (ShaunFilter filter : filterList) {

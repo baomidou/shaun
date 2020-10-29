@@ -1,15 +1,17 @@
 package com.baomidou.shaun.core.mgt;
 
+import org.pac4j.core.context.JEEContext;
+
 import com.baomidou.shaun.core.config.Config;
 import com.baomidou.shaun.core.context.Cookie;
 import com.baomidou.shaun.core.context.ProfileHolder;
 import com.baomidou.shaun.core.enums.TokenLocation;
 import com.baomidou.shaun.core.generator.TokenGenerator;
 import com.baomidou.shaun.core.profile.TokenProfile;
-import com.baomidou.shaun.core.util.JEEContextUtil;
+import com.baomidou.shaun.core.util.WebUtil;
+
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.pac4j.core.context.JEEContext;
 
 /**
  * 安全管理器,封装下,统一的登录登出
@@ -53,7 +55,7 @@ public class SecurityManager {
         String token = tokenGenerator.generate(profile, isSkipAuthenticationUser, optionExpireTime);
         profile.setToken(token);
         if (tokenLocation.enableCookie()) {
-            JEEContext jeeContext = JEEContextUtil.getJEEContext();
+            JEEContext jeeContext = WebUtil.getJEEContext();
             jeeContext.addResponseCookie(cookie.getPac4jCookie(token, tokenGenerator.getAge(optionExpireTime)));
         }
         config.getProfileManager().afterLogin(profile);

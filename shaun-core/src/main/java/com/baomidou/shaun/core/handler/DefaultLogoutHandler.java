@@ -1,13 +1,15 @@
 package com.baomidou.shaun.core.handler;
 
+import org.pac4j.core.context.JEEContext;
+
 import com.baomidou.shaun.core.context.Cookie;
 import com.baomidou.shaun.core.enums.TokenLocation;
 import com.baomidou.shaun.core.profile.TokenProfile;
-import com.baomidou.shaun.core.util.JEEContextUtil;
+import com.baomidou.shaun.core.util.WebUtil;
+
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.pac4j.core.context.JEEContext;
 
 /**
  * 默认登出操作
@@ -26,7 +28,7 @@ public class DefaultLogoutHandler implements LogoutHandler {
 
     @Override
     public void logout(TokenProfile profile) {
-        JEEContext jeeContext = JEEContextUtil.getJEEContext();
+        JEEContext jeeContext = WebUtil.getJEEContext();
         if (tokenLocation.enableCookie()) {
             jeeContext.addResponseCookie(cookie.getPac4jCookie("", 0));
             log.debug("logoutHandler clean cookie success!");

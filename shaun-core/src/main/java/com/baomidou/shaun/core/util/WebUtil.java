@@ -5,8 +5,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.pac4j.core.context.HttpConstants;
 import org.pac4j.core.context.JEEContext;
+import org.pac4j.core.context.session.JEESessionStore;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+
+import com.baomidou.shaun.core.context.session.NoSessionStore;
+
+import lombok.Setter;
 
 /**
  * @author miemie
@@ -14,14 +19,25 @@ import org.springframework.web.context.request.ServletRequestAttributes;
  */
 public abstract class WebUtil {
 
+    @Setter
+    private static boolean enableSession = false;
+
+    /**
+     * 获取 ServletRequestAttributes
+     *
+     * @return ServletRequestAttributes
+     */
+    public static ServletRequestAttributes getServletRequestAttributes() {
+        return (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+    }
+
     /**
      * 获取 request
      *
      * @return request
      */
-    @SuppressWarnings("all")
     public static HttpServletRequest getRequestBySpringWebHolder() {
-        return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        return getServletRequestAttributes().getRequest();
     }
 
     /**
@@ -29,9 +45,8 @@ public abstract class WebUtil {
      *
      * @return response
      */
-    @SuppressWarnings("all")
     public static HttpServletResponse getResponseBySpringWebHolder() {
-        return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
+        return getServletRequestAttributes().getResponse();
     }
 
     /**
@@ -53,5 +68,14 @@ public abstract class WebUtil {
     public static void redirectUrl(HttpServletResponse response, String url) {
         response.setHeader(HttpConstants.LOCATION_HEADER, url);
         response.setStatus(HttpConstants.FOUND);
+    }
+
+    public static JEEContext getJEEContext() {
+        ServletRequestAttributes sra = getServletRequestAttributes();
+        return getJEEContext(sra.getRequest(), sra.getResponse());
+    }
+
+    public static JEEContext getJEEContext(final HttpServletRequest request, final HttpServletResponse response) {
+        return new JEEContext(request, response, enableSession ? JEESessionStore.INSTANCE : NoSessionStore.INSTANCE);
     }
 }

@@ -1,23 +1,9 @@
 package com.baomidou.shaun.autoconfigure;
 
-import com.baomidou.shaun.autoconfigure.properties.ShaunProperties;
-import com.baomidou.shaun.core.authority.AuthorityManager;
-import com.baomidou.shaun.core.authority.DefaultAuthorityManager;
-import com.baomidou.shaun.core.client.TokenClient;
-import com.baomidou.shaun.core.config.Config;
-import com.baomidou.shaun.core.extractor.TokenExtractor;
-import com.baomidou.shaun.core.filter.*;
-import com.baomidou.shaun.core.generator.DefaultJwtTokenGenerator;
-import com.baomidou.shaun.core.generator.TokenGenerator;
-import com.baomidou.shaun.core.handler.CallbackHandler;
-import com.baomidou.shaun.core.handler.DefaultLogoutHandler;
-import com.baomidou.shaun.core.handler.HttpActionHandler;
-import com.baomidou.shaun.core.handler.LogoutHandler;
-import com.baomidou.shaun.core.matching.OnlyPathMatcher;
-import com.baomidou.shaun.core.mgt.ProfileManager;
-import com.baomidou.shaun.core.mgt.SecurityManager;
-import com.baomidou.shaun.core.util.JEEContextUtil;
-import lombok.RequiredArgsConstructor;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.pac4j.core.authorization.authorizer.Authorizer;
 import org.pac4j.core.client.Client;
 import org.pac4j.core.client.Clients;
@@ -42,9 +28,29 @@ import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import com.baomidou.shaun.autoconfigure.properties.ShaunProperties;
+import com.baomidou.shaun.core.authority.AuthorityManager;
+import com.baomidou.shaun.core.authority.DefaultAuthorityManager;
+import com.baomidou.shaun.core.client.TokenClient;
+import com.baomidou.shaun.core.config.Config;
+import com.baomidou.shaun.core.extractor.TokenExtractor;
+import com.baomidou.shaun.core.filter.CallbackFilter;
+import com.baomidou.shaun.core.filter.LogoutFilter;
+import com.baomidou.shaun.core.filter.SecurityFilter;
+import com.baomidou.shaun.core.filter.SfLoginFilter;
+import com.baomidou.shaun.core.filter.ShaunFilter;
+import com.baomidou.shaun.core.generator.DefaultJwtTokenGenerator;
+import com.baomidou.shaun.core.generator.TokenGenerator;
+import com.baomidou.shaun.core.handler.CallbackHandler;
+import com.baomidou.shaun.core.handler.DefaultLogoutHandler;
+import com.baomidou.shaun.core.handler.HttpActionHandler;
+import com.baomidou.shaun.core.handler.LogoutHandler;
+import com.baomidou.shaun.core.matching.OnlyPathMatcher;
+import com.baomidou.shaun.core.mgt.ProfileManager;
+import com.baomidou.shaun.core.mgt.SecurityManager;
+import com.baomidou.shaun.core.util.WebUtil;
+
+import lombok.RequiredArgsConstructor;
 
 /**
  * @author miemie
@@ -158,7 +164,7 @@ public class ShaunBeanAutoConfiguration {
         matcherProvider.ifAvailable(config::addMatchers);
         httpActionHandlerProvider.ifUnique(config::setHttpActionHandler);
         ajaxRequestResolverProvider.ifUnique(config::setAjaxRequestResolver);
-        JEEContextUtil.setEnableSession(properties.isEnableSession());
+        WebUtil.setEnableSession(properties.isEnableSession());
         return config;
     }
 
