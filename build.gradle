@@ -7,12 +7,13 @@ plugins {
 ext {
     pac4jVersion = "4.0.3"
     springBootVersion = "2.3.2.RELEASE"
+    shiroVersion = "1.6.0"
     javaVersion = JavaVersion.VERSION_1_8
 }
 
 allprojects {
     group = "com.baomidou"
-    version = "0.0.1.17-SNAPSHOT"
+    version = "0.0.1.18-SNAPSHOT"
 
     repositories {
         mavenLocal()

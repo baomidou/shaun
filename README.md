@@ -19,7 +19,7 @@
         <img src="https://img.shields.io/badge/JDK-1.8.0_211+-green.svg" >
     </a>
     <a>
-        <img src="https://img.shields.io/badge/springBoot-1.5+_2.0+-green.svg" >
+        <img src="https://img.shields.io/badge/springBoot-2.0+-green.svg" >
     </a>
 </p>
 

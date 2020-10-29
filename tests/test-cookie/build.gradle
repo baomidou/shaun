@@ -1,6 +1,6 @@
 dependencies {
     api project(":shaun-spring-boot-starter")
     api "org.springframework.boot:spring-boot-starter-web"
-    testImplementation "org.apache.shiro:shiro-spring-boot-web-starter:1.5.3"
+    testImplementation "org.apache.shiro:shiro-spring-boot-web-starter:${shiroVersion}"
     testImplementation "org.springframework.boot:spring-boot-starter-security"
 }

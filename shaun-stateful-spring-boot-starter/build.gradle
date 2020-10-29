@@ -2,10 +2,10 @@ dependencies {
     api project(":shaun-core")
     api "org.springframework.boot:spring-boot-autoconfigure"
     api "org.springframework.boot:spring-boot-starter-aop"
-    api "org.springframework.session:spring-session-core:2.3.1.RELEASE"
-    implementation "org.springframework.boot:spring-boot-starter-web"
     annotationProcessor "org.springframework.boot:spring-boot-autoconfigure-processor"
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+    implementation "org.springframework.session:spring-session-core"
+    implementation "org.springframework.boot:spring-boot-starter-web"
     implementation "org.springframework.boot:spring-boot-autoconfigure-processor"
     implementation "org.springframework.boot:spring-boot-configuration-processor"
     testImplementation "org.springframework.boot:spring-boot-starter-test"
