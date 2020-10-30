@@ -2,4 +2,5 @@ dependencies {
     api project(":shaun-stateful-spring-boot-starter")
     api "org.springframework.boot:spring-boot-starter-web"
     api "org.springframework.boot:spring-boot-starter-thymeleaf"
+    api "org.springframework.session:spring-session-core"
 }

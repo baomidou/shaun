@@ -1,6 +1,7 @@
 package shaun.test.cookie;
 
 import java.io.IOException;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
@@ -10,6 +11,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.session.MapSessionRepository;
+import org.springframework.session.config.annotation.web.http.EnableSpringHttpSession;
 
 import com.baomidou.shaun.core.context.ProfileHolder;
 import com.baomidou.shaun.core.handler.HttpActionHandler;
@@ -19,12 +22,18 @@ import com.baomidou.shaun.core.profile.TokenProfile;
  * @author miemie
  * @since 2019-08-04
  */
+@EnableSpringHttpSession
 @SpringBootApplication
 public class Cookie2Application {
 
     public static void main(String[] args) {
         System.setProperty(ProfileHolder.SYSTEM_PROPERTY, ProfileHolder.MODE_THREADLOCAL); // 设置存储Profile的模式
         SpringApplication.run(Cookie2Application.class, args);
+    }
+
+    @Bean
+    public MapSessionRepository sessionRepository() {
+        return new MapSessionRepository(new ConcurrentHashMap<>());
     }
 
     @Bean
