@@ -36,7 +36,7 @@ public class SecurityFilter implements ShaunFilter {
             if (profile != null) {
                 if (config.getProfileManager().isAuthorized(profile) &&
                         config.getAuthorizationChecker().isAuthorized(context, Collections.singletonList(profile),
-                                config.getAuthorizerNames(), config.getAuthorizersMap())) {
+                                config.getAuthorizerNames(), config.getAuthorizersMap(), Collections.emptyList())) {
                     ProfileHolder.setProfile(profile);
                     if (log.isDebugEnabled()) {
                         log.debug("authenticated and authorized -> grant access");

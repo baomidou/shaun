@@ -1,12 +1,10 @@
 package com.baomidou.shaun.core.config;
 
 import com.baomidou.shaun.core.authority.AuthorityManager;
-import com.baomidou.shaun.core.authorization.DefaultAuthorizationChecker;
 import com.baomidou.shaun.core.context.Cookie;
 import com.baomidou.shaun.core.handler.DefaultHttpActionHandler;
 import com.baomidou.shaun.core.handler.HttpActionHandler;
 import com.baomidou.shaun.core.handler.LogoutHandler;
-import com.baomidou.shaun.core.matching.checker.DefaultMatchingChecker;
 import com.baomidou.shaun.core.mgt.ProfileManager;
 import com.baomidou.shaun.core.util.WebUtil;
 import lombok.AccessLevel;
@@ -15,11 +13,13 @@ import lombok.Setter;
 import org.pac4j.core.authorization.authorizer.Authorizer;
 import org.pac4j.core.authorization.authorizer.DefaultAuthorizers;
 import org.pac4j.core.authorization.checker.AuthorizationChecker;
+import org.pac4j.core.authorization.checker.DefaultAuthorizationChecker;
 import org.pac4j.core.client.finder.ClientFinder;
 import org.pac4j.core.client.finder.DefaultCallbackClientFinder;
 import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.http.ajax.AjaxRequestResolver;
 import org.pac4j.core.http.ajax.DefaultAjaxRequestResolver;
+import org.pac4j.core.matching.checker.DefaultMatchingChecker;
 import org.pac4j.core.matching.checker.MatchingChecker;
 import org.pac4j.core.matching.matcher.DefaultMatchers;
 import org.pac4j.core.matching.matcher.Matcher;
