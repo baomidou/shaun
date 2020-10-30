@@ -1,16 +1,13 @@
 package com.baomidou.shaun.core.models;
 
-import java.io.IOException;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.baomidou.shaun.core.config.Config;
+import com.baomidou.shaun.core.context.ProfileHolder;
+import com.baomidou.shaun.core.filter.ShaunFilter;
+import com.baomidou.shaun.core.filter.chain.ShaunFilterChain;
+import com.baomidou.shaun.core.util.WebUtil;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
 import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.exception.http.BadRequestAction;
 import org.pac4j.core.matching.checker.DefaultMatchingChecker;
@@ -19,14 +16,12 @@ import org.springframework.lang.NonNull;
 import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.baomidou.shaun.core.config.Config;
-import com.baomidou.shaun.core.context.ProfileHolder;
-import com.baomidou.shaun.core.filter.ShaunFilter;
-import com.baomidou.shaun.core.util.WebUtil;
-
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.experimental.Accessors;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * @author miemie
@@ -37,9 +32,14 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode(callSuper = true)
 public class ShaunRequestFilter extends OncePerRequestFilter {
 
-    private List<ShaunFilter> filterList = Collections.emptyList();
+    private final Config config;
+    private final List<ShaunFilter> filterList;
     private MatchingChecker matchingChecker = new DefaultMatchingChecker();
-    private Config config;
+
+    public ShaunRequestFilter(Config config, ShaunFilterChain filterChain) {
+        this.config = config;
+        this.filterList = filterChain.getOrderFilter();
+    }
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
@@ -62,11 +62,5 @@ public class ShaunRequestFilter extends OncePerRequestFilter {
             config.getHttpActionHandler().preHandle(BadRequestAction.INSTANCE, context);
         }
         chain.doFilter(request, response);
-    }
-
-    @Override
-    protected void initFilterBean() {
-        filterList = filterList.stream().peek(ShaunFilter::initCheck)
-                .sorted(Comparator.comparingInt(ShaunFilter::order)).collect(Collectors.toList());
     }
 }

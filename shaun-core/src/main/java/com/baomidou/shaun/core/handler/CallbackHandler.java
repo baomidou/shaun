@@ -14,7 +14,7 @@ public interface CallbackHandler {
     /**
      * callback 之后对返回获取到的 profile 转换成 TokenProfile ,
      * 再调用 SecurityManager.login 进行登陆,
-     * 一般再 JEEContextUtil.redirectUrl(context, yourUrl);
+     * 一般再 WebUtil.redirectUrl(context, yourUrl);
      *
      * @param context 上下文
      * @param profile callback 获取到的 profile

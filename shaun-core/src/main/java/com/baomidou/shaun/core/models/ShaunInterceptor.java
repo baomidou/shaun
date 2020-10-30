@@ -1,26 +1,20 @@
 package com.baomidou.shaun.core.models;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.pac4j.core.context.JEEContext;
-import org.pac4j.core.exception.http.BadRequestAction;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.web.cors.CorsUtils;
-import org.springframework.web.servlet.HandlerInterceptor;
-
 import com.baomidou.shaun.core.config.Config;
 import com.baomidou.shaun.core.context.ProfileHolder;
 import com.baomidou.shaun.core.filter.ShaunFilter;
+import com.baomidou.shaun.core.filter.chain.ShaunFilterChain;
 import com.baomidou.shaun.core.util.WebUtil;
-
 import lombok.Data;
 import lombok.experimental.Accessors;
+import org.pac4j.core.context.JEEContext;
+import org.pac4j.core.exception.http.BadRequestAction;
+import org.springframework.web.cors.CorsUtils;
+import org.springframework.web.servlet.HandlerInterceptor;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * @author miemie
@@ -28,10 +22,15 @@ import lombok.experimental.Accessors;
  */
 @Data
 @Accessors(chain = true)
-public class ShaunInterceptor implements HandlerInterceptor, InitializingBean {
+public class ShaunInterceptor implements HandlerInterceptor {
 
-    private List<ShaunFilter> filterList = Collections.emptyList();
-    private Config config;
+    private final List<ShaunFilter> filterList;
+    private final Config config;
+
+    public ShaunInterceptor(Config config, ShaunFilterChain filterChain) {
+        this.config = config;
+        this.filterList = filterChain.getOrderFilter();
+    }
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -53,11 +52,5 @@ public class ShaunInterceptor implements HandlerInterceptor, InitializingBean {
             config.getHttpActionHandler().preHandle(BadRequestAction.INSTANCE, context);
         }
         return true;
-    }
-
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        filterList = filterList.stream().peek(ShaunFilter::initCheck)
-                .sorted(Comparator.comparingInt(ShaunFilter::order)).collect(Collectors.toList());
     }
 }

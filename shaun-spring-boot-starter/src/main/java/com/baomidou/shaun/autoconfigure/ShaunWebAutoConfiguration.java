@@ -1,7 +1,7 @@
 package com.baomidou.shaun.autoconfigure;
 
 import com.baomidou.shaun.core.config.Config;
-import com.baomidou.shaun.core.filter.ShaunFilter;
+import com.baomidou.shaun.core.filter.chain.ShaunFilterChain;
 import com.baomidou.shaun.core.models.ShaunInterceptor;
 import com.baomidou.shaun.core.models.ShaunRequestFilter;
 import lombok.RequiredArgsConstructor;
@@ -16,8 +16,6 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import java.util.List;
-
 /**
  * @author miemie
  * @since 2020-08-04
@@ -29,18 +27,16 @@ public class ShaunWebAutoConfiguration {
     @ConditionalOnMissingBean
     @ConditionalOnClass(HandlerInterceptor.class)
     @ConditionalOnProperty(prefix = "shaun", name = "model", havingValue = "interceptor", matchIfMissing = true)
-    public ShaunInterceptor shaunInterceptor(Config config, List<ShaunFilter> filters) {
-        ShaunInterceptor interceptor = new ShaunInterceptor();
-        return interceptor.setFilterList(filters).setConfig(config);
+    public ShaunInterceptor shaunInterceptor(Config config, ShaunFilterChain chain) {
+        return new ShaunInterceptor(config, chain);
     }
 
     @Bean
     @ConditionalOnMissingBean
     @ConditionalOnClass(OncePerRequestFilter.class)
     @ConditionalOnProperty(prefix = "shaun", name = "model", havingValue = "web_filter")
-    public ShaunRequestFilter shaunOncePerRequestFilter(Config config, List<ShaunFilter> filters) {
-        ShaunRequestFilter oncePerRequestFilter = new ShaunRequestFilter();
-        return oncePerRequestFilter.setFilterList(filters).setConfig(config);
+    public ShaunRequestFilter shaunOncePerRequestFilter(Config config, ShaunFilterChain chain) {
+        return new ShaunRequestFilter(config, chain);
     }
 
     @Configuration(proxyBeanMethods = false)

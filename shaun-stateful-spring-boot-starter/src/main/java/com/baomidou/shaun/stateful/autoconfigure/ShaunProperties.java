@@ -1,11 +1,8 @@
-package com.baomidou.shaun.autoconfigure.properties;
+package com.baomidou.shaun.stateful.autoconfigure;
 
 import com.baomidou.shaun.core.authorization.DefaultAuthorizationChecker;
 import com.baomidou.shaun.core.context.Cookie;
-import com.baomidou.shaun.core.context.Header;
-import com.baomidou.shaun.core.context.Parameter;
 import com.baomidou.shaun.core.enums.Model;
-import com.baomidou.shaun.core.enums.TokenLocation;
 import com.baomidou.shaun.core.handler.CallbackHandler;
 import com.baomidou.shaun.core.matching.checker.DefaultMatchingChecker;
 import lombok.Data;
@@ -32,10 +29,6 @@ public class ShaunProperties {
      * 模式
      */
     private Model model = Model.INTERCEPTOR;
-    /**
-     * 是否启用 session
-     */
-    private boolean enableSession = false;
     /**
      * authorizerNames,多个以逗号分隔(不包含自己注入的 {@link Authorizer}),
      * !!! 以下 {@link #excludePath} 和 {@link #excludeBranch} 和 {@link #excludeRegex} 排除掉的之外的地址都生效 !!!,
@@ -98,55 +91,32 @@ public class ShaunProperties {
      */
     private String expireTime;
     /**
-     * token 的存放位置
-     * 前后不分离下,只支持 cookie ,且必须手动设置为 cookie
-     */
-    private TokenLocation tokenLocation = TokenLocation.HEADER;
-    /**
-     * 取 token 的方式之 header
-     */
-    @NestedConfigurationProperty
-    private final Header header = new Header();
-    /**
-     * 取 token 的方式之 cookie
+     * token 存在 cookie 里
      */
     @NestedConfigurationProperty
     private final Cookie cookie = new Cookie();
     /**
-     * 取 token 的方式之 parameter
-     */
-    @NestedConfigurationProperty
-    private final Parameter parameter = new Parameter();
-    /**
-     * 登出 url
+     * 登录页面的 url
      * <p>
-     * 不管是否前后端分离都可配置 ,
-     * 配置此地址会进行自动拦截 ,
-     * ajax请求不做处理,页面跳转(非前后端分离项目)的会在登出后重定向到 {@link #loginUrl}
-     * </p>
-     */
-    private String logoutUrl;
-    /**
-     * 登录页面 url
-     * <p>
-     * 前后端分离项目勿配,配置即代表非前后分离项目,访问授权保护的页面未通过鉴权会被重定向到登录页
-     * </p>
+     * 访问授权保护的页面未通过鉴权会被重定向到登录页
      */
     private String loginUrl;
     /**
+     * 登出请求的 url
+     * <p>
+     * ajax请求不做处理,打开该地址会清理 cookie 和 session 后重定向到 {@link #loginUrl}
+     */
+    private String logoutUrl;
+    /**
      * 触发三方登录的url
      * <p>
-     * 非前后分离项目配置 ,
      * 配置后此url会被拦截进行重定向到相应的网址进行三方登陆
-     * </p>
      */
     private String sfLoginUrl;
     /**
      * callback url
      * <p>
-     * 非前后分离项目配置 ,
      * 三方登录的回调地址,回调后触发 {@link CallbackHandler}
-     * </p>
      */
     private String callbackUrl;
 }

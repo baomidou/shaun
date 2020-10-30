@@ -1,51 +1,61 @@
-package com.baomidou.shaun.core.spring.boot.properties;
-
-import java.util.List;
-import java.util.UUID;
-
-import org.pac4j.core.authorization.authorizer.Authorizer;
-import org.pac4j.core.authorization.authorizer.CsrfAuthorizer;
-import org.pac4j.core.authorization.authorizer.DefaultAuthorizers;
-import org.pac4j.core.matching.matcher.CacheControlMatcher;
-import org.pac4j.core.matching.matcher.DefaultMatchers;
-import org.pac4j.core.matching.matcher.Matcher;
-import org.pac4j.core.matching.matcher.StrictTransportSecurityMatcher;
-import org.pac4j.core.matching.matcher.XContentTypeOptionsMatcher;
-import org.pac4j.core.matching.matcher.XFrameOptionsMatcher;
-import org.pac4j.core.matching.matcher.XSSProtectionMatcher;
-import org.pac4j.core.matching.matcher.csrf.CsrfTokenGeneratorMatcher;
-import org.springframework.boot.context.properties.NestedConfigurationProperty;
+package com.baomidou.shaun.stateless.autoconfigure;
 
 import com.baomidou.shaun.core.authorization.DefaultAuthorizationChecker;
 import com.baomidou.shaun.core.context.Cookie;
+import com.baomidou.shaun.core.context.Header;
+import com.baomidou.shaun.core.context.Parameter;
 import com.baomidou.shaun.core.enums.Model;
+import com.baomidou.shaun.core.enums.TokenLocation;
 import com.baomidou.shaun.core.matching.checker.DefaultMatchingChecker;
-
 import lombok.Data;
+import org.pac4j.core.authorization.authorizer.Authorizer;
+import org.pac4j.core.authorization.authorizer.CsrfAuthorizer;
+import org.pac4j.core.authorization.authorizer.DefaultAuthorizers;
+import org.pac4j.core.matching.matcher.*;
+import org.pac4j.core.matching.matcher.csrf.CsrfTokenGeneratorMatcher;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
+
+import java.util.List;
+import java.util.UUID;
 
 /**
  * @author miemie
  * @since 2019-07-01
  */
 @Data
+@ConfigurationProperties("shaun")
 public class ShaunProperties {
 
+    /**
+     * 模式
+     */
+    private Model model = Model.INTERCEPTOR;
+    /**
+     * 取 token 的方式之 header
+     */
+    @NestedConfigurationProperty
+    private final Header header = new Header();
     /**
      * 取 token 的方式之 cookie
      */
     @NestedConfigurationProperty
     private final Cookie cookie = new Cookie();
     /**
-     * 拦截url的模式
+     * 取 token 的方式之 parameter
      */
-    private Model model = Model.INTERCEPTOR;
+    @NestedConfigurationProperty
+    private final Parameter parameter = new Parameter();
+    /**
+     * token 的存放位置
+     */
+    private TokenLocation tokenLocation = TokenLocation.HEADER;
     /**
      * authorizerNames,多个以逗号分隔(不包含自己注入的 {@link Authorizer}),
      * !!! 以下 {@link #excludePath} 和 {@link #excludeBranch} 和 {@link #excludeRegex} 排除掉的之外的地址都生效 !!!,
      * 默认支持的一些参考 {@link DefaultAuthorizationChecker} :
      * <p>
      * csrfCheck : {@link CsrfAuthorizer} ,
-     * </p>
      */
     private String authorizerNames = DefaultAuthorizers.NONE;
     /**
@@ -62,7 +72,6 @@ public class ShaunProperties {
      * noGet : 不接受get请求(post,delete,put) ,
      * onlyPost : 只接受post请求 ,
      * securityheaders : 等于上面的 nocache + nosniff + hsts + noframe + xssprotection
-     * </p>
      */
     private String matcherNames = DefaultMatchers.NONE;
     /**
@@ -97,15 +106,18 @@ public class ShaunProperties {
      *
      * <p>
      * 纯 cookie 模式下可以不设置,则cookie过期时间为会话时间但是token永不过期
-     * </p>
      */
     private String expireTime;
     /**
-     * 登出 url
+     * 登录请求的 url
      * <p>
+     * 配了的话鉴权拦截会自动忽略该url的请求
+     */
+    private String loginUrl;
+    /**
+     * 登出请求的 url
      * <p>
-     * 如果是ajax请求则不做处理,否者会在登出后重定向到登录页
-     * </p>
+     * 如果启用了 cookie 会清理该 cookie 信息
      */
     private String logoutUrl;
 }

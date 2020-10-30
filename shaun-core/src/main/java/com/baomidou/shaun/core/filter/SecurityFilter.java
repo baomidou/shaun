@@ -1,19 +1,17 @@
 package com.baomidou.shaun.core.filter;
 
-import java.util.Collections;
-
+import com.baomidou.shaun.core.config.Config;
+import com.baomidou.shaun.core.context.ProfileHolder;
+import com.baomidou.shaun.core.profile.TokenProfile;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.exception.http.UnauthorizedAction;
 import org.pac4j.core.matching.matcher.Matcher;
 import org.pac4j.core.util.CommonHelper;
 
-import com.baomidou.shaun.core.config.Config;
-import com.baomidou.shaun.core.context.ProfileHolder;
-import com.baomidou.shaun.core.profile.TokenProfile;
-
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.util.Collections;
 
 /**
  * security filter
@@ -46,15 +44,14 @@ public class SecurityFilter implements ShaunFilter {
                     return true;
                 }
             }
-            if (config.isStatelessOrAjax(context)) {
-                config.getHttpActionHandler().preHandle(UnauthorizedAction.INSTANCE, context);
-                return false;
-            } else {
-                config.redirectLoginUrl(context);
-            }
+            this.fail(config, context);
             return false;
         }
         return true;
+    }
+
+    protected void fail(Config config, JEEContext context) {
+        config.getHttpActionHandler().preHandle(UnauthorizedAction.INSTANCE, context);
     }
 
     @Override

@@ -1,9 +1,17 @@
 package com.baomidou.shaun.core.config;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-
+import com.baomidou.shaun.core.authority.AuthorityManager;
+import com.baomidou.shaun.core.authorization.DefaultAuthorizationChecker;
+import com.baomidou.shaun.core.context.Cookie;
+import com.baomidou.shaun.core.handler.DefaultHttpActionHandler;
+import com.baomidou.shaun.core.handler.HttpActionHandler;
+import com.baomidou.shaun.core.handler.LogoutHandler;
+import com.baomidou.shaun.core.matching.checker.DefaultMatchingChecker;
+import com.baomidou.shaun.core.mgt.ProfileManager;
+import com.baomidou.shaun.core.util.WebUtil;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.Setter;
 import org.pac4j.core.authorization.authorizer.Authorizer;
 import org.pac4j.core.authorization.authorizer.DefaultAuthorizers;
 import org.pac4j.core.authorization.checker.AuthorizationChecker;
@@ -19,19 +27,9 @@ import org.pac4j.core.util.CommonHelper;
 import org.pac4j.core.util.Pac4jConstants;
 import org.springframework.util.CollectionUtils;
 
-import com.baomidou.shaun.core.authority.AuthorityManager;
-import com.baomidou.shaun.core.authorization.DefaultAuthorizationChecker;
-import com.baomidou.shaun.core.context.Cookie;
-import com.baomidou.shaun.core.handler.DefaultHttpActionHandler;
-import com.baomidou.shaun.core.handler.HttpActionHandler;
-import com.baomidou.shaun.core.handler.LogoutHandler;
-import com.baomidou.shaun.core.matching.checker.DefaultMatchingChecker;
-import com.baomidou.shaun.core.mgt.ProfileManager;
-import com.baomidou.shaun.core.util.WebUtil;
-
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.Setter;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author miemie
@@ -61,10 +59,6 @@ public class Config {
      * cookie 配置
      */
     private Cookie cookie;
-    /**
-     * 是否是前后端分离的
-     */
-    private boolean stateless = true;
     /**
      * 处理抛出的异常
      */
@@ -101,10 +95,10 @@ public class Config {
 
     @Setter(AccessLevel.NONE)
     private Map<String, Matcher> matchersMap = new HashMap<>();
-
-
     /**
-     * 登录页面
+     * 登录页地址
+     * <p>
+     * 前后分离下配置该属性,会自动加入地址过滤链,避免请求该地址被拦截
      */
     private String loginUrl;
 
@@ -158,20 +152,6 @@ public class Config {
                 }
             }
         }
-    }
-
-    /**
-     * 判断请求是否是 ajax 的
-     */
-    public boolean isAjax(JEEContext context) {
-        return ajaxRequestResolver.isAjax(context);
-    }
-
-    /**
-     * 判断请求是否是前后分离下的 或者是 ajax 的
-     */
-    public boolean isStatelessOrAjax(JEEContext context) {
-        return stateless || ajaxRequestResolver.isAjax(context);
     }
 
     /**
