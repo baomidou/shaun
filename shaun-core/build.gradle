@@ -3,8 +3,6 @@ dependencies {
     api "org.pac4j:pac4j-http"
     api "org.springframework:spring-webmvc"
     implementation "org.pac4j:pac4j-oauth"
-    implementation "org.springframework.boot:spring-boot"
-    implementation "org.springframework:spring-aop"
     implementation "org.pac4j:pac4j-cas"
     implementation "javax.servlet:javax.servlet-api"
     testCompile "org.assertj:assertj-core"
