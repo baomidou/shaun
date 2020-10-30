@@ -9,10 +9,8 @@ shaun:
   exclude-path:
     - /error
     - /favicon.ico
-#  cookie:
-#    domain: local
-#  matcher-names: csrfToken
-#  authorizer-names: csrfCheck
+  matcher-names: csrfToken
+  authorizer-names: csrfCheck
 
 spring:
   thymeleaf:
