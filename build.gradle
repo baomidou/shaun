@@ -6,7 +6,7 @@ plugins {
 
 ext {
     pac4jVersion = "4.1.0"
-    springBootVersion = "2.3.2.RELEASE"
+    springBootVersion = "2.3.5.RELEASE"
     shiroVersion = "1.6.0"
     javaVersion = JavaVersion.VERSION_1_8
 }
@@ -21,21 +21,6 @@ allprojects {
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         jcenter()
     }
-
-    configurations {
-        bom
-        api.extendsFrom(bom)
-        implementation.extendsFrom(bom)
-        compileOnly.extendsFrom(bom)
-        annotationProcessor.extendsFrom(bom)
-        testCompileOnly.extendsFrom(bom)
-        testAnnotationProcessor.extendsFrom(bom)
-    }
-
-    dependencies {
-        bom(platform("org.pac4j:pac4j:${pac4jVersion}"))
-        bom(platform("org.springframework.boot:spring-boot-dependencies:${springBootVersion}"))
-    }
 }
 
 description = "easy security for web by pac4j"
@@ -45,6 +30,7 @@ subprojects {
     apply plugin: 'java-library'
     apply plugin: 'signing'
     apply plugin: 'maven-publish'
+    apply plugin: "io.freefair.lombok"
 
     sourceCompatibility = "${javaVersion}"
     targetCompatibility = "${javaVersion}"
@@ -74,14 +60,12 @@ subprojects {
     }
 
     dependencies {
-        annotationProcessor("org.projectlombok:lombok")
-        compileOnly("org.projectlombok:lombok")
-        testAnnotationProcessor("org.projectlombok:lombok")
-        testCompileOnly("org.projectlombok:lombok")
+        implementation(platform("org.pac4j:pac4j:${pac4jVersion}"))
+        implementation(platform("org.springframework.boot:spring-boot-dependencies:${springBootVersion}"))
+        annotationProcessor(platform("org.springframework.boot:spring-boot-dependencies:${springBootVersion}"))
 
         testImplementation("org.assertj:assertj-core")
-        testImplementation("org.junit.jupiter:junit-jupiter-api")
-        testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+        testImplementation("org.junit.jupiter:junit-jupiter-engine")
         testImplementation("org.mockito:mockito-junit-jupiter")
     }
 
