@@ -1,17 +1,15 @@
 package com.baomidou.shaun.core.util;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.baomidou.shaun.core.context.session.NoSessionStore;
+import lombok.Setter;
 import org.pac4j.core.context.HttpConstants;
 import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.context.session.JEESessionStore;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import com.baomidou.shaun.core.context.session.NoSessionStore;
-
-import lombok.Setter;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author miemie
@@ -70,12 +68,12 @@ public abstract class WebUtil {
         response.setStatus(HttpConstants.FOUND);
     }
 
-    public static JEEContext getJEEContext() {
+    public static JEEContext getJEEContext(boolean session) {
         ServletRequestAttributes sra = getServletRequestAttributes();
-        return getJEEContext(sra.getRequest(), sra.getResponse());
+        return getJEEContext(sra.getRequest(), sra.getResponse(), session);
     }
 
-    public static JEEContext getJEEContext(final HttpServletRequest request, final HttpServletResponse response) {
-        return new JEEContext(request, response, enableSession ? JEESessionStore.INSTANCE : NoSessionStore.INSTANCE);
+    public static JEEContext getJEEContext(HttpServletRequest request, HttpServletResponse response, boolean session) {
+        return new JEEContext(request, response, session ? JEESessionStore.INSTANCE : NoSessionStore.INSTANCE);
     }
 }

@@ -2,6 +2,7 @@ package com.baomidou.shaun.core.config;
 
 import com.baomidou.shaun.core.authority.AuthorityManager;
 import com.baomidou.shaun.core.context.Cookie;
+import com.baomidou.shaun.core.enums.TokenLocation;
 import com.baomidou.shaun.core.handler.DefaultHttpActionHandler;
 import com.baomidou.shaun.core.handler.HttpActionHandler;
 import com.baomidou.shaun.core.handler.LogoutHandler;
@@ -39,6 +40,14 @@ import java.util.Map;
 @SuppressWarnings("all")
 public class Config {
 
+    /**
+     * 是否启用session
+     */
+    private boolean sessionOn;
+    /**
+     * token 位置
+     */
+    private TokenLocation tokenLocation;
     /**
      * 超时时间
      */

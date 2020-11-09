@@ -1,7 +1,7 @@
 package com.baomidou.shaun.core.handler;
 
+import com.baomidou.shaun.core.config.Config;
 import com.baomidou.shaun.core.context.Cookie;
-import com.baomidou.shaun.core.enums.TokenLocation;
 import com.baomidou.shaun.core.profile.TokenProfile;
 import com.baomidou.shaun.core.util.WebUtil;
 import lombok.Data;
@@ -17,18 +17,26 @@ import org.pac4j.core.context.JEEContext;
  */
 @Slf4j
 @Data
+@SuppressWarnings("unchecked")
 @RequiredArgsConstructor
 public class DefaultLogoutHandler implements LogoutHandler {
 
-    private final TokenLocation tokenLocation;
-    private final Cookie cookie;
-
     @Override
-    public void logout(TokenProfile profile) {
-        JEEContext jeeContext = WebUtil.getJEEContext();
-        if (tokenLocation.enableCookie()) {
+    public void logout(Config config, TokenProfile profile) {
+        boolean sessionOn = config.isSessionOn();
+        Cookie cookie = config.getCookie();
+        JEEContext jeeContext = WebUtil.getJEEContext(sessionOn);
+        if (config.getTokenLocation().enableCookie()) {
             jeeContext.addResponseCookie(cookie.getPac4jCookie("", 0));
             log.debug("logoutHandler clean cookie success!");
+        }
+        if (sessionOn) {
+            jeeContext.addResponseCookie(cookie.getPac4jCookie("", 0));
+            log.debug("logoutHandler clean cookie success!");
+            boolean b = jeeContext.getSessionStore().destroySession(jeeContext);
+            if (!b) {
+                log.warn("LogoutHandler destroySession fail");
+            }
         }
     }
 }

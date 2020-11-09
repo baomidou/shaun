@@ -1,7 +1,10 @@
-package com.baomidou.shaun.stateful.autoconfigure;
+package com.baomidou.shaun.autoconfigure.properties;
 
 import com.baomidou.shaun.core.context.Cookie;
+import com.baomidou.shaun.core.context.Header;
+import com.baomidou.shaun.core.context.Parameter;
 import com.baomidou.shaun.core.enums.Model;
+import com.baomidou.shaun.core.enums.TokenLocation;
 import com.baomidou.shaun.core.handler.CallbackHandler;
 import lombok.Data;
 import org.pac4j.core.authorization.authorizer.Authorizer;
@@ -19,14 +22,33 @@ import java.util.UUID;
 
 /**
  * @author miemie
- * @since 2019-07-01
+ * @since 2020-11-09
  */
 @Data
 @ConfigurationProperties("shaun")
 public class ShaunProperties {
 
     /**
-     * 模式
+     * 取 token 的方式之 header
+     */
+    @NestedConfigurationProperty
+    private final Header header = new Header();
+    /**
+     * token 存在 cookie 里
+     */
+    @NestedConfigurationProperty
+    private final Cookie cookie = new Cookie();
+    /**
+     * 取 token 的方式之 parameter
+     */
+    @NestedConfigurationProperty
+    private final Parameter parameter = new Parameter();
+    /**
+     * 是否-启用session
+     */
+    private boolean sessionOn = false;
+    /**
+     * 拦截模式
      */
     private Model model = Model.INTERCEPTOR;
     /**
@@ -89,10 +111,9 @@ public class ShaunProperties {
      */
     private String expireTime;
     /**
-     * token 存在 cookie 里
+     * token 的存放位置
      */
-    @NestedConfigurationProperty
-    private final Cookie cookie = new Cookie();
+    private TokenLocation tokenLocation = TokenLocation.HEADER;
     /**
      * 登录页面的 url
      * <p>

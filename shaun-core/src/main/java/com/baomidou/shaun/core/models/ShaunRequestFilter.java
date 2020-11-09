@@ -45,7 +45,7 @@ public class ShaunRequestFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
                                     @NonNull FilterChain chain) throws ServletException, IOException {
-        final JEEContext context = WebUtil.getJEEContext(request, response);
+        final JEEContext context = WebUtil.getJEEContext(request, response, config.isSessionOn());
         if (matchingChecker.matches(context, config.getMatcherNames(), config.getMatchersMap(), Collections.emptyList())) {
             if (!CorsUtils.isPreFlightRequest(request)) {
                 for (ShaunFilter filter : filterList) {

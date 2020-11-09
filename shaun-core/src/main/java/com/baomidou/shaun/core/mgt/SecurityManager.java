@@ -1,17 +1,14 @@
 package com.baomidou.shaun.core.mgt;
 
-import org.pac4j.core.context.JEEContext;
-import org.pac4j.core.util.CommonHelper;
-
 import com.baomidou.shaun.core.config.Config;
 import com.baomidou.shaun.core.context.ProfileHolder;
-import com.baomidou.shaun.core.enums.TokenLocation;
 import com.baomidou.shaun.core.profile.TokenProfile;
 import com.baomidou.shaun.core.util.ExpireTimeUtil;
 import com.baomidou.shaun.core.util.WebUtil;
-
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.pac4j.core.context.JEEContext;
+import org.pac4j.core.util.CommonHelper;
 
 /**
  * 安全管理器,封装下,统一的登录登出
@@ -25,7 +22,6 @@ import lombok.RequiredArgsConstructor;
 public class SecurityManager {
 
     private final Config config;
-    private final TokenLocation tokenLocation;
 
     /**
      * ignore
@@ -56,8 +52,8 @@ public class SecurityManager {
         String expireTime = chooseExpireTime(optionExpireTime);
         String token = config.getProfileManager().generateJwt(profile, expireTime);
         profile.setToken(token);
-        if (tokenLocation.enableCookie()) {
-            JEEContext jeeContext = WebUtil.getJEEContext();
+        if (config.getTokenLocation().enableCookie()) {
+            JEEContext jeeContext = WebUtil.getJEEContext(config.isSessionOn());
             jeeContext.addResponseCookie(config.getCookie().getPac4jCookie(token, getCookieAge(expireTime)));
         }
         config.getProfileManager().afterLogin(profile);
@@ -69,7 +65,7 @@ public class SecurityManager {
      */
     public void logout(TokenProfile profile) {
         ProfileHolder.clearProfile();
-        config.getLogoutHandler().logout(profile);
+        config.getLogoutHandler().logout(config, profile);
         config.getProfileManager().afterLogout(profile);
     }
 

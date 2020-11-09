@@ -1,4 +1,4 @@
 dependencies {
-    api project(":shaun-stateless-spring-boot-starter")
+    api project(":shaun-spring-boot-starter")
     api "org.springframework.boot:spring-boot-starter-web"
 }

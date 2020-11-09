@@ -35,7 +35,7 @@ public class ShaunInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        final JEEContext context = WebUtil.getJEEContext(request, response);
+        final JEEContext context = WebUtil.getJEEContext(request, response, config.isSessionOn());
         if (config.getMatchingChecker().matches(context, config.getMatcherNames(), config.getMatchersMap(), Collections.emptyList())) {
             if (!CorsUtils.isPreFlightRequest(request)) {
                 for (ShaunFilter filter : filterList) {

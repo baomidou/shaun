@@ -51,7 +51,11 @@ public class SecurityFilter implements ShaunFilter {
     }
 
     protected void fail(Config config, JEEContext context) {
-        config.getHttpActionHandler().preHandle(UnauthorizedAction.INSTANCE, context);
+        if (config.getAjaxRequestResolver().isAjax(context)) {
+            config.getHttpActionHandler().preHandle(UnauthorizedAction.INSTANCE, context);
+        } else {
+            config.redirectLoginUrl(context);
+        }
     }
 
     @Override

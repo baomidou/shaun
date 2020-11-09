@@ -1,8 +1,7 @@
-package com.baomidou.shaun.core.filter.stateful;
+package com.baomidou.shaun.core.filter;
 
 import com.baomidou.shaun.core.client.finder.DefaultSfClientFinder;
 import com.baomidou.shaun.core.config.Config;
-import com.baomidou.shaun.core.filter.ShaunFilter;
 import com.baomidou.shaun.core.util.WebUtil;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
