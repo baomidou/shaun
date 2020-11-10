@@ -1,7 +1,6 @@
 package com.baomidou.shaun.core.util;
 
 import com.baomidou.shaun.core.context.session.NoSessionStore;
-import lombok.Setter;
 import org.pac4j.core.context.HttpConstants;
 import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.context.session.JEESessionStore;
@@ -16,9 +15,6 @@ import javax.servlet.http.HttpServletResponse;
  * @since 2020-05-26
  */
 public abstract class WebUtil {
-
-    @Setter
-    private static boolean enableSession = false;
 
     /**
      * 获取 ServletRequestAttributes
