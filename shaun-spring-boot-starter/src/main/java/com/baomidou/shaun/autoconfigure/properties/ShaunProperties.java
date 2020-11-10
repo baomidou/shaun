@@ -6,11 +6,14 @@ import com.baomidou.shaun.core.context.Parameter;
 import com.baomidou.shaun.core.enums.Model;
 import com.baomidou.shaun.core.enums.TokenLocation;
 import com.baomidou.shaun.core.handler.CallbackHandler;
+import com.baomidou.shaun.core.mgt.SecurityManager;
+import com.baomidou.shaun.core.profile.TokenProfile;
 import lombok.Data;
 import org.pac4j.core.authorization.authorizer.Authorizer;
 import org.pac4j.core.authorization.authorizer.CsrfAuthorizer;
 import org.pac4j.core.authorization.authorizer.DefaultAuthorizers;
 import org.pac4j.core.authorization.checker.DefaultAuthorizationChecker;
+import org.pac4j.core.client.IndirectClient;
 import org.pac4j.core.matching.checker.DefaultMatchingChecker;
 import org.pac4j.core.matching.matcher.*;
 import org.pac4j.core.matching.matcher.csrf.CsrfTokenGeneratorMatcher;
@@ -43,6 +46,10 @@ public class ShaunProperties {
      */
     @NestedConfigurationProperty
     private final Parameter parameter = new Parameter();
+    /**
+     * 是否-前后端分离
+     */
+    private boolean stateless = true;
     /**
      * 是否-启用session
      */
@@ -117,25 +124,29 @@ public class ShaunProperties {
     /**
      * 登录页面的 url
      * <p>
-     * 访问授权保护的页面未通过鉴权会被重定向到登录页
+     * 配置后会自动加入地址过滤链,避免请求该地址被拦截,
+     * 并且前后端不分离下访问授权保护的页面未通过鉴权会被重定向到登录页
      */
     private String loginUrl;
     /**
      * 登出请求的 url
      * <p>
-     * ajax请求不做处理,打开该地址会清理 cookie 和 session 后重定向到 {@link #loginUrl}
+     * 请求该地址会自动调用 {@link SecurityManager#logout(TokenProfile)},
+     * 前后端不分离下会重定向到 {@link #loginUrl}
      */
     private String logoutUrl;
     /**
      * 触发三方登录的url
      * <p>
-     * 配置后此url会被拦截进行重定向到相应的网址进行三方登陆
+     * 配置后此url会被拦截进行重定向到相应的网址进行三方登陆,
+     * 前后端不分离下注入 {@link IndirectClient} 后才有效
      */
     private String sfLoginUrl;
     /**
      * callback url
      * <p>
-     * 三方登录的回调地址,回调后触发 {@link CallbackHandler}
+     * 三方登录的回调地址,回调后触发 {@link CallbackHandler},
+     * 前后端不分离下注入 {@link IndirectClient} 后才有效
      */
     private String callbackUrl;
 }

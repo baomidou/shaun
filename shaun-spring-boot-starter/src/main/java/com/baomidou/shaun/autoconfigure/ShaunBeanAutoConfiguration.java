@@ -114,14 +114,17 @@ public class ShaunBeanAutoConfiguration {
                          ObjectProvider<List<Matcher>> matcherProvider,
                          ObjectProvider<HttpActionHandler> httpActionHandlerProvider) {
         Config config = new Config();
-        config.setTokenLocation(properties.getTokenLocation());
+        config.setStateless(properties.isStateless());
         config.setSessionOn(properties.isSessionOn());
+        config.setTokenLocation(properties.getTokenLocation());
         config.setCookie(properties.getCookie());
         config.setExpireTime(properties.getExpireTime());
         config.setAuthorityManager(authorityManager);
         logoutHandlerProvider.ifAvailable(config::setLogoutHandler);
         String loginUrl = properties.getLoginUrl();
-        Assert.hasText(loginUrl, "loginUrl must not black");
+        if (!config.isStateless()) {
+            Assert.hasText(loginUrl, "loginUrl must not black");
+        }
         config.setLoginUrl(loginUrl);
         config.authorizerNamesAppend(properties.getAuthorizerNames());
         config.setProfileManager(profileManager);

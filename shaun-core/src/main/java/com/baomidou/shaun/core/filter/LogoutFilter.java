@@ -35,6 +35,9 @@ public class LogoutFilter implements ShaunFilter {
     }
 
     protected void logoutThen(Config config, JEEContext context) {
+        if (config.isStateless()) {
+            return;
+        }
         if (!config.getAjaxRequestResolver().isAjax(context)) {
             config.redirectLoginUrl(context);
         }

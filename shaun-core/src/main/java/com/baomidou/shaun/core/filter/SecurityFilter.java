@@ -51,6 +51,10 @@ public class SecurityFilter implements ShaunFilter {
     }
 
     protected void fail(Config config, JEEContext context) {
+        if (config.isStateless()) {
+            config.getHttpActionHandler().preHandle(UnauthorizedAction.INSTANCE, context);
+            return;
+        }
         if (config.getAjaxRequestResolver().isAjax(context)) {
             config.getHttpActionHandler().preHandle(UnauthorizedAction.INSTANCE, context);
         } else {

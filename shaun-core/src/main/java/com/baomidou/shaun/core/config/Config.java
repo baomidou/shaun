@@ -42,9 +42,13 @@ import java.util.Map;
 public class Config {
 
     /**
-     * 是否启用session
+     * 是否-前后端分离
      */
-    private boolean sessionOn;
+    private boolean stateless = true;
+    /**
+     * 是否-启用session
+     */
+    private boolean sessionOn = false;
     /**
      * token 位置
      */
@@ -108,7 +112,7 @@ public class Config {
     /**
      * 登录页地址
      * <p>
-     * 前后分离下配置该属性,会自动加入地址过滤链,避免请求该地址被拦截
+     * 会自动加入地址过滤链,避免请求该地址被拦截
      */
     private String loginUrl;
 
