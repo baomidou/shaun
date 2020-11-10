@@ -1,6 +1,7 @@
 shaun:
   model: interceptor
   token-location: cookie
+  stateless: false
   session-on: true
   salt: ded4a7dc78674c6bb8ad15ffb1d4f973
   expire-time: 10h

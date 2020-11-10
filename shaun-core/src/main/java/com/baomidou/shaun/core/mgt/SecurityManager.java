@@ -50,13 +50,13 @@ public class SecurityManager {
             config.getAuthorityManager().skipAuthentication(profile);
         }
         String expireTime = chooseExpireTime(optionExpireTime);
-        String token = config.getProfileManager().generateJwt(profile, expireTime);
+        String token = config.getProfileJwtManager().generateJwt(profile, expireTime);
         profile.setToken(token);
         if (config.getTokenLocation().enableCookie()) {
             JEEContext jeeContext = WebUtil.getJEEContext(config.isSessionOn());
             jeeContext.addResponseCookie(config.getCookie().getPac4jCookie(token, getCookieAge(expireTime)));
         }
-        config.getProfileManager().afterLogin(profile);
+        config.getProfileStateManager().online(profile);
         return token;
     }
 
@@ -66,7 +66,7 @@ public class SecurityManager {
     public void logout(TokenProfile profile) {
         ProfileHolder.clearProfile();
         config.getLogoutHandler().logout(config, profile);
-        config.getProfileManager().afterLogout(profile);
+        config.getProfileStateManager().offline(profile);
     }
 
     private String chooseExpireTime(String optionExpireTime) {

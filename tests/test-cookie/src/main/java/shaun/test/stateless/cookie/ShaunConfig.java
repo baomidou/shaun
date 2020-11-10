@@ -1,10 +1,9 @@
 package shaun.test.stateless.cookie;
 
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.util.HashMap;
-import java.util.Map;
-
+import com.baomidou.shaun.core.mgt.ProfileStateManager;
+import com.baomidou.shaun.core.profile.TokenProfile;
+import com.nimbusds.jose.EncryptionMethod;
+import com.nimbusds.jose.JWEAlgorithm;
 import org.pac4j.jwt.config.encryption.EncryptionConfiguration;
 import org.pac4j.jwt.config.encryption.RSAEncryptionConfiguration;
 import org.pac4j.jwt.config.signature.RSASignatureConfiguration;
@@ -12,8 +11,10 @@ import org.pac4j.jwt.config.signature.SignatureConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.nimbusds.jose.EncryptionMethod;
-import com.nimbusds.jose.JWEAlgorithm;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author miemie
@@ -50,24 +51,24 @@ public class ShaunConfig {
         return new RSAEncryptionConfiguration(keyPair, JWEAlgorithm.RSA_OAEP_256, EncryptionMethod.A128GCM);
     }
 
-//    @Bean
-//    public ProfileManager profileManager() {
-//        return new ProfileManager() {
-//            @Override
-//            public void afterLogin(TokenProfile profile) {
-//                tokenMap.put(profile.getId(), profile.getToken());
-//            }
-//
-//            @Override
-//            public boolean isAuthorized(TokenProfile profile) {
-//                String token = tokenMap.get(profile.getId());
-//                return token != null && profile.getToken().equals(token);
-//            }
-//
-//            @Override
-//            public void afterLogout(TokenProfile profile) {
-//                tokenMap.remove(profile.getId());
-//            }
-//        };
-//    }
+    @Bean
+    public ProfileStateManager profileStateManager() {
+        return new ProfileStateManager() {
+            @Override
+            public void online(TokenProfile profile) {
+                tokenMap.put(profile.getId(), profile.getToken());
+            }
+
+            @Override
+            public boolean isOnline(TokenProfile profile) {
+                String token = tokenMap.get(profile.getId());
+                return profile.getToken().equals(token);
+            }
+
+            @Override
+            public void offline(TokenProfile profile) {
+                tokenMap.remove(profile.getId());
+            }
+        };
+    }
 }

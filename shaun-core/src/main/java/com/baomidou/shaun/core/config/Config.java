@@ -7,7 +7,8 @@ import com.baomidou.shaun.core.handler.DefaultHttpActionHandler;
 import com.baomidou.shaun.core.handler.DefaultLogoutHandler;
 import com.baomidou.shaun.core.handler.HttpActionHandler;
 import com.baomidou.shaun.core.handler.LogoutHandler;
-import com.baomidou.shaun.core.mgt.ProfileManager;
+import com.baomidou.shaun.core.mgt.ProfileJwtManager;
+import com.baomidou.shaun.core.mgt.ProfileStateManager;
 import com.baomidou.shaun.core.util.WebUtil;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -60,9 +61,13 @@ public class Config {
     /**
      * profile 管理器
      */
-    private ProfileManager profileManager;
+    private ProfileJwtManager profileJwtManager;
     /**
-     * profile 管理器
+     * profile 状态管理器
+     */
+    private ProfileStateManager profileStateManager = ProfileStateManager.DEFAULT;
+    /**
+     * 用户 role 和 permission 授权,鉴权 类
      */
     private AuthorityManager authorityManager;
     /**

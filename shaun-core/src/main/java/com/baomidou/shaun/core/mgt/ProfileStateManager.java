@@ -1,33 +1,17 @@
 package com.baomidou.shaun.core.mgt;
 
-import org.pac4j.core.context.JEEContext;
-
 import com.baomidou.shaun.core.profile.TokenProfile;
 
 /**
- * profile 管理器
+ * profile 状态管理器
  *
  * @author miemie
  * @since 2020-09-04
  */
-public interface ProfileManager {
+public interface ProfileStateManager {
 
-    /**
-     * 从上下文中获取到 TokenProfile
-     *
-     * @param context JEEContext
-     * @return TokenProfile
-     */
-    TokenProfile getProfile(JEEContext context);
-
-    /**
-     * 把 TokenProfile 构建为 jwt
-     *
-     * @param profile          TokenProfile
-     * @param optionExpireTime 超时时间
-     * @return jwt
-     */
-    String generateJwt(TokenProfile profile, String optionExpireTime);
+    ProfileStateManager DEFAULT = new ProfileStateManager() {
+    };
 
     /**
      * login 后置操作
@@ -36,7 +20,7 @@ public interface ProfileManager {
      *
      * @param profile 登陆用户
      */
-    default void afterLogin(TokenProfile profile) {
+    default void online(TokenProfile profile) {
         // do nothing
     }
 
@@ -49,7 +33,7 @@ public interface ProfileManager {
      * @param profile 登陆用户
      * @return 是否允许访问
      */
-    default boolean isAuthorized(TokenProfile profile) {
+    default boolean isOnline(TokenProfile profile) {
         return true;
     }
 
@@ -60,7 +44,7 @@ public interface ProfileManager {
      *
      * @param profile 登陆用户
      */
-    default void afterLogout(TokenProfile profile) {
+    default void offline(TokenProfile profile) {
         // do nothing
     }
 }

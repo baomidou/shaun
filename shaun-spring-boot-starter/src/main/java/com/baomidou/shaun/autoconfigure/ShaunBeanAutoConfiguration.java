@@ -15,8 +15,9 @@ import com.baomidou.shaun.core.handler.CallbackHandler;
 import com.baomidou.shaun.core.handler.HttpActionHandler;
 import com.baomidou.shaun.core.handler.LogoutHandler;
 import com.baomidou.shaun.core.matching.OnlyPathMatcher;
-import com.baomidou.shaun.core.mgt.DefaultProfileManager;
-import com.baomidou.shaun.core.mgt.ProfileManager;
+import com.baomidou.shaun.core.mgt.DefaultProfileJwtManager;
+import com.baomidou.shaun.core.mgt.ProfileJwtManager;
+import com.baomidou.shaun.core.mgt.ProfileStateManager;
 import com.baomidou.shaun.core.mgt.SecurityManager;
 import lombok.RequiredArgsConstructor;
 import org.pac4j.core.authorization.authorizer.Authorizer;
@@ -90,10 +91,10 @@ public class ShaunBeanAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean
-    public ProfileManager profileManager(SignatureConfiguration signatureConfiguration,
-                                         EncryptionConfiguration encryptionConfiguration,
-                                         CredentialsExtractor<TokenCredentials> credentialsExtractor) {
-        return new DefaultProfileManager(signatureConfiguration, encryptionConfiguration, credentialsExtractor);
+    public ProfileJwtManager profileJwtManager(SignatureConfiguration signatureConfiguration,
+                                               EncryptionConfiguration encryptionConfiguration,
+                                               CredentialsExtractor<TokenCredentials> credentialsExtractor) {
+        return new DefaultProfileJwtManager(signatureConfiguration, encryptionConfiguration, credentialsExtractor);
     }
 
     /**
@@ -107,7 +108,8 @@ public class ShaunBeanAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public Config config(AuthorityManager authorityManager, ProfileManager profileManager,
+    public Config config(AuthorityManager authorityManager, ProfileJwtManager profileJwtManager,
+                         ObjectProvider<ProfileStateManager> profileStateManagerProvider,
                          ObjectProvider<LogoutHandler> logoutHandlerProvider,
                          ObjectProvider<AjaxRequestResolver> ajaxRequestResolverProvider,
                          ObjectProvider<List<Authorizer>> authorizerProvider,
@@ -120,6 +122,7 @@ public class ShaunBeanAutoConfiguration {
         config.setCookie(properties.getCookie());
         config.setExpireTime(properties.getExpireTime());
         config.setAuthorityManager(authorityManager);
+        profileStateManagerProvider.ifAvailable(config::setProfileStateManager);
         logoutHandlerProvider.ifAvailable(config::setLogoutHandler);
         String loginUrl = properties.getLoginUrl();
         if (!config.isStateless()) {
@@ -127,7 +130,7 @@ public class ShaunBeanAutoConfiguration {
         }
         config.setLoginUrl(loginUrl);
         config.authorizerNamesAppend(properties.getAuthorizerNames());
-        config.setProfileManager(profileManager);
+        config.setProfileJwtManager(profileJwtManager);
         authorizerProvider.ifAvailable(config::addAuthorizers);
         config.matcherNamesAppend(properties.getMatcherNames());
         matcherProvider.ifAvailable(config::addMatchers);

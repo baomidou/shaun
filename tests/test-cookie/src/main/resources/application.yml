@@ -1,8 +1,8 @@
 shaun:
+  login-url: /login
   logout-url: /logout
   matcher-names: xssprotection
   exclude-path:
-    - /login
     - /favicon.ico
   token-location: cookie
 

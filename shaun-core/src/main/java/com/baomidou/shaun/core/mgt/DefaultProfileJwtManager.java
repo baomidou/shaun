@@ -1,8 +1,9 @@
 package com.baomidou.shaun.core.mgt;
 
-import java.util.Optional;
-import java.util.Set;
-
+import com.baomidou.shaun.core.client.TokenClient;
+import com.baomidou.shaun.core.profile.TokenProfile;
+import com.baomidou.shaun.core.util.ExpireTimeUtil;
+import lombok.Data;
 import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.credentials.TokenCredentials;
 import org.pac4j.core.credentials.extractor.CredentialsExtractor;
@@ -14,26 +15,23 @@ import org.pac4j.jwt.config.signature.SignatureConfiguration;
 import org.pac4j.jwt.credentials.authenticator.JwtAuthenticator;
 import org.pac4j.jwt.profile.JwtGenerator;
 
-import com.baomidou.shaun.core.client.TokenClient;
-import com.baomidou.shaun.core.profile.TokenProfile;
-import com.baomidou.shaun.core.util.ExpireTimeUtil;
-
-import lombok.Data;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * @author miemie
  * @since 2020-10-29
  */
 @Data
-public class DefaultProfileManager implements ProfileManager {
+public class DefaultProfileJwtManager implements ProfileJwtManager {
 
     private final TokenClient tokenClient;
     private final SignatureConfiguration signatureConfiguration;
     private final EncryptionConfiguration encryptionConfiguration;
 
-    public DefaultProfileManager(SignatureConfiguration signatureConfiguration,
-                                 EncryptionConfiguration encryptionConfiguration,
-                                 CredentialsExtractor<TokenCredentials> credentialsExtractor) {
+    public DefaultProfileJwtManager(SignatureConfiguration signatureConfiguration,
+                                    EncryptionConfiguration encryptionConfiguration,
+                                    CredentialsExtractor<TokenCredentials> credentialsExtractor) {
         this.signatureConfiguration = signatureConfiguration;
         this.encryptionConfiguration = encryptionConfiguration;
         this.tokenClient = new TokenClient(credentialsExtractor, new JwtAuthenticator(signatureConfiguration, encryptionConfiguration));
