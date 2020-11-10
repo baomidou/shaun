@@ -12,7 +12,6 @@ import com.baomidou.shaun.core.filter.SfLoginFilter;
 import com.baomidou.shaun.core.filter.chain.DefaultShaunFilterChain;
 import com.baomidou.shaun.core.filter.chain.ShaunFilterChain;
 import com.baomidou.shaun.core.handler.CallbackHandler;
-import com.baomidou.shaun.core.handler.DefaultLogoutHandler;
 import com.baomidou.shaun.core.handler.HttpActionHandler;
 import com.baomidou.shaun.core.handler.LogoutHandler;
 import com.baomidou.shaun.core.matching.OnlyPathMatcher;
@@ -106,19 +105,10 @@ public class ShaunBeanAutoConfiguration {
         return new DefaultAuthorityManager(properties.getSkipAuthenticationRolePermission());
     }
 
-    /**
-     * 登出操作类
-     */
     @Bean
     @ConditionalOnMissingBean
-    public LogoutHandler logoutHandler() {
-        return new DefaultLogoutHandler();
-    }
-
-    @Bean
-    @ConditionalOnMissingBean
-    public Config config(AuthorityManager authorityManager, LogoutHandler logoutHandler,
-                         ProfileManager profileManager,
+    public Config config(AuthorityManager authorityManager, ProfileManager profileManager,
+                         ObjectProvider<LogoutHandler> logoutHandlerProvider,
                          ObjectProvider<AjaxRequestResolver> ajaxRequestResolverProvider,
                          ObjectProvider<List<Authorizer>> authorizerProvider,
                          ObjectProvider<List<Matcher>> matcherProvider,
@@ -129,7 +119,7 @@ public class ShaunBeanAutoConfiguration {
         config.setCookie(properties.getCookie());
         config.setExpireTime(properties.getExpireTime());
         config.setAuthorityManager(authorityManager);
-        config.setLogoutHandler(logoutHandler);
+        logoutHandlerProvider.ifAvailable(config::setLogoutHandler);
         String loginUrl = properties.getLoginUrl();
         Assert.hasText(loginUrl, "loginUrl must not black");
         config.setLoginUrl(loginUrl);

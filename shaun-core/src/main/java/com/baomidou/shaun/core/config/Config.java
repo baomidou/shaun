@@ -4,6 +4,7 @@ import com.baomidou.shaun.core.authority.AuthorityManager;
 import com.baomidou.shaun.core.context.Cookie;
 import com.baomidou.shaun.core.enums.TokenLocation;
 import com.baomidou.shaun.core.handler.DefaultHttpActionHandler;
+import com.baomidou.shaun.core.handler.DefaultLogoutHandler;
 import com.baomidou.shaun.core.handler.HttpActionHandler;
 import com.baomidou.shaun.core.handler.LogoutHandler;
 import com.baomidou.shaun.core.mgt.ProfileManager;
@@ -63,7 +64,7 @@ public class Config {
     /**
      * 登出执行器
      */
-    private LogoutHandler logoutHandler;
+    private LogoutHandler logoutHandler = new DefaultLogoutHandler();
     /**
      * cookie 配置
      */
