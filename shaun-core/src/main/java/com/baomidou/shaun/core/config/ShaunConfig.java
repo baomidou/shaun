@@ -65,7 +65,8 @@ public class ShaunConfig {
     /**
      * profile 状态管理器
      */
-    private ProfileStateManager profileStateManager = ProfileStateManager.DEFAULT;
+    private ProfileStateManager profileStateManager = new ProfileStateManager() {
+    };
     /**
      * 用户 role 和 permission 授权,鉴权 类
      */

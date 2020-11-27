@@ -10,9 +10,6 @@ import com.baomidou.shaun.core.profile.TokenProfile;
  */
 public interface ProfileStateManager {
 
-    ProfileStateManager DEFAULT = new ProfileStateManager() {
-    };
-
     /**
      * login 后置操作
      * <p>
