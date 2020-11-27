@@ -42,8 +42,8 @@ import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author miemie
@@ -153,7 +153,7 @@ public class ShaunBeanAutoConfiguration {
     @ConditionalOnMissingBean
     public ShaunFilterChain shaunFilterChain(ShaunConfig shaunConfig, SecurityManager securityManager,
                                              ObjectProvider<CallbackHandler> callbackHandlerProvider,
-                                             ObjectProvider<List<IndirectClient>> indirectClientsProvider) {
+                                             ObjectProvider<IndirectClient> indirectClientsProvider) {
         DefaultShaunFilterChain chain = new DefaultShaunFilterChain();
 
         /* securityFilter begin */
@@ -183,7 +183,7 @@ public class ShaunBeanAutoConfiguration {
         }
         /* logoutFilter end */
 
-        List<IndirectClient> indirectClients = indirectClientsProvider.getIfAvailable();
+        List<Client> indirectClients = indirectClientsProvider.stream().collect(Collectors.toList());
         if (!CollectionUtils.isEmpty(indirectClients)) {
             Assert.isTrue(shaunConfig.isStateless(), "stateless model not support any IndirectClient");
 
@@ -195,8 +195,8 @@ public class ShaunBeanAutoConfiguration {
 
             final CallbackHandler callbackHandler = callbackHandlerProvider.getIfAvailable();
             Assert.notNull(callbackHandler, "callbackHandler must not null");
-            List<Client> clientList = new ArrayList<>(indirectClients);
-            Clients clients = new Clients(callbackUrl, clientList);
+
+            Clients clients = new Clients(callbackUrl, indirectClients);
             clients.setAjaxRequestResolver(shaunConfig.getAjaxRequestResolver());
 
             final SfLoginFilter sfLoginFilter = new SfLoginFilter(new OnlyPathMatcher(sfLoginUrl));
@@ -205,7 +205,7 @@ public class ShaunBeanAutoConfiguration {
 
             final CallbackFilter callbackFilter = new CallbackFilter(new OnlyPathMatcher(callbackUrl));
             callbackFilter.setClients(clients);
-            callbackFilter.setCallbackHandler(callbackHandlerProvider.getIfAvailable());
+            callbackFilter.setCallbackHandler(callbackHandler);
             chain.addShaunFilter(callbackFilter);
         }
         return chain;
