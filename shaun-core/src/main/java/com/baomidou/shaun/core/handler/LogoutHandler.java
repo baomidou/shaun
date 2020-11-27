@@ -1,6 +1,6 @@
 package com.baomidou.shaun.core.handler;
 
-import com.baomidou.shaun.core.config.Config;
+import com.baomidou.shaun.core.config.ShaunConfig;
 import com.baomidou.shaun.core.profile.TokenProfile;
 
 /**
@@ -17,5 +17,5 @@ public interface LogoutHandler {
      *
      * @param profile profile
      */
-    void logout(Config config, TokenProfile profile);
+    void logout(ShaunConfig config, TokenProfile profile);
 }

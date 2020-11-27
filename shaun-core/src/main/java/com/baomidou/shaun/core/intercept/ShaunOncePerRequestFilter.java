@@ -1,6 +1,6 @@
 package com.baomidou.shaun.core.intercept;
 
-import com.baomidou.shaun.core.config.Config;
+import com.baomidou.shaun.core.config.ShaunConfig;
 import com.baomidou.shaun.core.context.ProfileHolder;
 import com.baomidou.shaun.core.filter.ShaunFilter;
 import com.baomidou.shaun.core.intercept.support.ShaunFilterChain;
@@ -33,11 +33,11 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 public class ShaunOncePerRequestFilter extends OncePerRequestFilter {
 
-    private final Config config;
+    private final ShaunConfig config;
     private final List<ShaunFilter> filterList;
     private MatchingChecker matchingChecker = new DefaultMatchingChecker();
 
-    public ShaunOncePerRequestFilter(Config config, ShaunFilterChain filterChain) {
+    public ShaunOncePerRequestFilter(ShaunConfig config, ShaunFilterChain filterChain) {
         this.config = config;
         this.filterList = filterChain.getOrderFilter();
     }

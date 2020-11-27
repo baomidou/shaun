@@ -40,7 +40,7 @@ import java.util.Map;
  */
 @Data
 @SuppressWarnings("all")
-public class Config {
+public class ShaunConfig {
 
     /**
      * 是否-前后端分离

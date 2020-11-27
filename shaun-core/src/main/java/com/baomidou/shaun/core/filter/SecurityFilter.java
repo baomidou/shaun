@@ -1,6 +1,6 @@
 package com.baomidou.shaun.core.filter;
 
-import com.baomidou.shaun.core.config.Config;
+import com.baomidou.shaun.core.config.ShaunConfig;
 import com.baomidou.shaun.core.context.ProfileHolder;
 import com.baomidou.shaun.core.profile.TokenProfile;
 import lombok.Data;
@@ -27,7 +27,7 @@ public class SecurityFilter implements ShaunFilter {
     private final Matcher pathMatcher;
 
     @Override
-    public boolean goOnChain(Config config, JEEContext context) {
+    public boolean goOnChain(ShaunConfig config, JEEContext context) {
         if (pathMatcher.matches(context)) {
             if (log.isDebugEnabled()) {
                 log.debug("access security for path : \"{}\" -> \"{}\"", context.getPath(), context.getRequestMethod());
@@ -50,7 +50,7 @@ public class SecurityFilter implements ShaunFilter {
         return true;
     }
 
-    protected void fail(Config config, JEEContext context) {
+    protected void fail(ShaunConfig config, JEEContext context) {
         if (config.isStateless()) {
             config.getHttpActionHandler().preHandle(UnauthorizedAction.INSTANCE, context);
             return;

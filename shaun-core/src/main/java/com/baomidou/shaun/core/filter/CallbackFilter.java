@@ -1,6 +1,6 @@
 package com.baomidou.shaun.core.filter;
 
-import com.baomidou.shaun.core.config.Config;
+import com.baomidou.shaun.core.config.ShaunConfig;
 import com.baomidou.shaun.core.handler.CallbackHandler;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +37,7 @@ public class CallbackFilter implements ShaunFilter {
     private CallbackHandler callbackHandler;
 
     @Override
-    public boolean goOnChain(Config config, JEEContext context) {
+    public boolean goOnChain(ShaunConfig config, JEEContext context) {
         if (pathMatcher.matches(context)) {
             log.debug("=== CALLBACK ===");
 

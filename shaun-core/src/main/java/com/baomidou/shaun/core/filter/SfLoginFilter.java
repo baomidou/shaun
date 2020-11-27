@@ -1,7 +1,7 @@
 package com.baomidou.shaun.core.filter;
 
 import com.baomidou.shaun.core.client.finder.DefaultSfClientFinder;
-import com.baomidou.shaun.core.config.Config;
+import com.baomidou.shaun.core.config.ShaunConfig;
 import com.baomidou.shaun.core.util.WebUtil;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +38,7 @@ public class SfLoginFilter implements ShaunFilter {
     private Clients clients;
 
     @Override
-    public boolean goOnChain(Config config, JEEContext context) {
+    public boolean goOnChain(ShaunConfig config, JEEContext context) {
         if (pathMatcher.matches(context)) {
             log.debug("=== SF LOGIN ===");
 

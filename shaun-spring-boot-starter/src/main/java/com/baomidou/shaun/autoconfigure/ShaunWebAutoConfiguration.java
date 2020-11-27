@@ -1,6 +1,6 @@
 package com.baomidou.shaun.autoconfigure;
 
-import com.baomidou.shaun.core.config.Config;
+import com.baomidou.shaun.core.config.ShaunConfig;
 import com.baomidou.shaun.core.intercept.ShaunHandlerInterceptor;
 import com.baomidou.shaun.core.intercept.ShaunOncePerRequestFilter;
 import com.baomidou.shaun.core.intercept.support.ShaunFilterChain;
@@ -27,7 +27,7 @@ public class ShaunWebAutoConfiguration {
     @ConditionalOnMissingBean
     @ConditionalOnClass(HandlerInterceptor.class)
     @ConditionalOnProperty(prefix = "shaun", name = "model", havingValue = "interceptor", matchIfMissing = true)
-    public ShaunHandlerInterceptor shaunHandlerInterceptor(Config config, ShaunFilterChain chain) {
+    public ShaunHandlerInterceptor shaunHandlerInterceptor(ShaunConfig config, ShaunFilterChain chain) {
         return new ShaunHandlerInterceptor(config, chain);
     }
 
@@ -35,7 +35,7 @@ public class ShaunWebAutoConfiguration {
     @ConditionalOnMissingBean
     @ConditionalOnClass(OncePerRequestFilter.class)
     @ConditionalOnProperty(prefix = "shaun", name = "model", havingValue = "web_filter")
-    public ShaunOncePerRequestFilter shaunOncePerRequestFilter(Config config, ShaunFilterChain chain) {
+    public ShaunOncePerRequestFilter shaunOncePerRequestFilter(ShaunConfig config, ShaunFilterChain chain) {
         return new ShaunOncePerRequestFilter(config, chain);
     }
 
