@@ -15,7 +15,7 @@ import com.baomidou.shaun.core.handler.HttpActionHandler;
 import com.baomidou.shaun.core.handler.LogoutHandler;
 import com.baomidou.shaun.core.intercept.support.DefaultShaunFilterChain;
 import com.baomidou.shaun.core.intercept.support.ShaunFilterChain;
-import com.baomidou.shaun.core.matching.OnlyPathMatcher;
+import com.baomidou.shaun.core.matching.matcher.OnlyPathMatcher;
 import com.baomidou.shaun.core.mgt.DefaultProfileJwtManager;
 import com.baomidou.shaun.core.mgt.ProfileJwtManager;
 import com.baomidou.shaun.core.mgt.ProfileStateManager;

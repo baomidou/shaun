@@ -1,4 +1,4 @@
-package com.baomidou.shaun.core.matching;
+package com.baomidou.shaun.core.matching.matcher;
 
 import org.pac4j.core.context.WebContext;
 import org.pac4j.core.matching.matcher.Matcher;
