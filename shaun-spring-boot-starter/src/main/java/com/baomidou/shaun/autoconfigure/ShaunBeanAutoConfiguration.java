@@ -16,9 +16,9 @@ import com.baomidou.shaun.core.handler.LogoutHandler;
 import com.baomidou.shaun.core.intercept.support.DefaultShaunFilterChain;
 import com.baomidou.shaun.core.intercept.support.ShaunFilterChain;
 import com.baomidou.shaun.core.matching.matcher.OnlyPathMatcher;
-import com.baomidou.shaun.core.mgt.DefaultProfileJwtManager;
-import com.baomidou.shaun.core.mgt.ProfileJwtManager;
+import com.baomidou.shaun.core.mgt.DefaultProfileTokenManager;
 import com.baomidou.shaun.core.mgt.ProfileStateManager;
+import com.baomidou.shaun.core.mgt.ProfileTokenManager;
 import com.baomidou.shaun.core.mgt.SecurityManager;
 import lombok.RequiredArgsConstructor;
 import org.pac4j.core.authorization.authorizer.Authorizer;
@@ -90,10 +90,10 @@ public class ShaunBeanAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean
-    public ProfileJwtManager profileJwtManager(SignatureConfiguration signatureConfiguration,
-                                               EncryptionConfiguration encryptionConfiguration,
-                                               ShaunCredentialsExtractor credentialsExtractor) {
-        return new DefaultProfileJwtManager(signatureConfiguration, encryptionConfiguration, credentialsExtractor);
+    public ProfileTokenManager profileTokenManager(SignatureConfiguration signatureConfiguration,
+                                                   EncryptionConfiguration encryptionConfiguration,
+                                                   ShaunCredentialsExtractor credentialsExtractor) {
+        return new DefaultProfileTokenManager(signatureConfiguration, encryptionConfiguration, credentialsExtractor);
     }
 
     /**
@@ -107,7 +107,7 @@ public class ShaunBeanAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public ShaunConfig shaunConfig(AuthorityManager authorityManager, ProfileJwtManager profileJwtManager,
+    public ShaunConfig shaunConfig(AuthorityManager authorityManager, ProfileTokenManager profileTokenManager,
                                    ObjectProvider<ProfileStateManager> profileStateManagerProvider,
                                    ObjectProvider<LogoutHandler> logoutHandlerProvider,
                                    ObjectProvider<AjaxRequestResolver> ajaxRequestResolverProvider,
@@ -128,7 +128,7 @@ public class ShaunBeanAutoConfiguration {
             Assert.hasText(loginUrl, "loginUrl must not black");
         }
         shaunConfig.setLoginUrl(loginUrl);
-        shaunConfig.setProfileJwtManager(profileJwtManager);
+        shaunConfig.setProfileTokenManager(profileTokenManager);
 
         shaunConfig.authorizerNamesAppend(properties.getAuthorizerNames());
         authorizerProvider.stream().forEach(shaunConfig::addAuthorizer);

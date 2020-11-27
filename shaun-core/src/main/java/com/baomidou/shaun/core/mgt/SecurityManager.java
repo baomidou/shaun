@@ -50,7 +50,7 @@ public class SecurityManager {
             config.getAuthorityManager().skipAuthentication(profile);
         }
         String expireTime = chooseExpireTime(optionExpireTime);
-        String token = config.getProfileJwtManager().generateJwt(profile, expireTime);
+        String token = config.getProfileTokenManager().generateJwt(profile, expireTime);
         profile.setToken(token);
         if (config.getTokenLocation().enableCookie()) {
             JEEContext jeeContext = WebUtil.getJEEContext(config.isSessionOn());

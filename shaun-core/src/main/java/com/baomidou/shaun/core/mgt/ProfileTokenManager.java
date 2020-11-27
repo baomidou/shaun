@@ -9,7 +9,7 @@ import org.pac4j.core.context.JEEContext;
  * @author miemie
  * @since 2020-09-04
  */
-public interface ProfileJwtManager {
+public interface ProfileTokenManager {
 
     /**
      * 从上下文中获取到 TokenProfile

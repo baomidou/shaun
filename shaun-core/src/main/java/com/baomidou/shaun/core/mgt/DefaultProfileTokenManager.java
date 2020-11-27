@@ -23,15 +23,15 @@ import java.util.Set;
  * @since 2020-10-29
  */
 @Data
-public class DefaultProfileJwtManager implements ProfileJwtManager {
+public class DefaultProfileTokenManager implements ProfileTokenManager {
 
     private final TokenClient tokenClient;
     private final SignatureConfiguration signatureConfiguration;
     private final EncryptionConfiguration encryptionConfiguration;
 
-    public DefaultProfileJwtManager(SignatureConfiguration signatureConfiguration,
-                                    EncryptionConfiguration encryptionConfiguration,
-                                    ShaunCredentialsExtractor credentialsExtractor) {
+    public DefaultProfileTokenManager(SignatureConfiguration signatureConfiguration,
+                                      EncryptionConfiguration encryptionConfiguration,
+                                      ShaunCredentialsExtractor credentialsExtractor) {
         this.signatureConfiguration = signatureConfiguration;
         this.encryptionConfiguration = encryptionConfiguration;
         this.tokenClient = new TokenClient(credentialsExtractor, new JwtAuthenticator(signatureConfiguration, encryptionConfiguration));

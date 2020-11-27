@@ -32,7 +32,7 @@ public class SecurityFilter implements ShaunFilter {
             if (log.isDebugEnabled()) {
                 log.debug("access security for path : \"{}\" -> \"{}\"", context.getPath(), context.getRequestMethod());
             }
-            TokenProfile profile = config.getProfileJwtManager().getProfile(context);
+            TokenProfile profile = config.getProfileTokenManager().getProfile(context);
             if (profile != null) {
                 if (config.getProfileStateManager().isOnline(profile) &&
                         config.getAuthorizationChecker().isAuthorized(context, Collections.singletonList(profile),
