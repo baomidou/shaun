@@ -10,13 +10,12 @@ import com.baomidou.shaun.core.mgt.SecurityManager;
 import com.baomidou.shaun.core.profile.TokenProfile;
 import lombok.Data;
 import org.pac4j.core.authorization.authorizer.Authorizer;
-import org.pac4j.core.authorization.authorizer.CsrfAuthorizer;
 import org.pac4j.core.authorization.authorizer.DefaultAuthorizers;
 import org.pac4j.core.authorization.checker.DefaultAuthorizationChecker;
 import org.pac4j.core.client.IndirectClient;
 import org.pac4j.core.matching.checker.DefaultMatchingChecker;
-import org.pac4j.core.matching.matcher.*;
-import org.pac4j.core.matching.matcher.csrf.CsrfTokenGeneratorMatcher;
+import org.pac4j.core.matching.matcher.DefaultMatchers;
+import org.pac4j.core.matching.matcher.Matcher;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
@@ -59,27 +58,17 @@ public class ShaunProperties {
      */
     private final Annotations annotations = new Annotations();
     /**
-     * authorizerNames,多个以逗号分隔(不包含自己注入的 {@link Authorizer}),
-     * !!! 以下 {@link #excludePath} 和 {@link #excludeBranch} 和 {@link #excludeRegex} 排除掉的之外的地址都生效 !!!,
-     * 默认支持的一些参考 {@link DefaultAuthorizationChecker} :
+     * authorizerNames,多个以逗号分隔(不包含自己注入的 {@link Authorizer})
      * <p>
-     * csrfCheck : {@link CsrfAuthorizer} ,
-     * </p>
+     * !!! 以下 {@link #excludePath} 和 {@link #excludeBranch} 和 {@link #excludeRegex} 排除掉的之外的地址都生效 !!! <p>
+     * 参考 {@link DefaultAuthorizationChecker}
      */
     private String authorizerNames = DefaultAuthorizers.NONE;
     /**
-     * matcherNames,多个以逗号分隔(不包含自己注入的 {@link Matcher}),
-     * !!! 全部地址都生效 !!! ,
-     * 默认支持的一些参考 {@link DefaultMatchingChecker} :
+     * matcherNames,多个以逗号分隔(不包含自己注入的 {@link Matcher})
      * <p>
-     * hsts : {@link StrictTransportSecurityMatcher} ,
-     * nosniff : {@link XContentTypeOptionsMatcher} ,
-     * noframe : {@link XFrameOptionsMatcher} ,
-     * xssprotection : {@link XSSProtectionMatcher} ,
-     * nocache : {@link CacheControlMatcher} ,
-     * csrfToken : {@link CsrfTokenGeneratorMatcher} ,
-     * securityheaders : 等于上面的 nocache + nosniff + hsts + noframe + xssprotection
-     * </p>
+     * !!! 全部地址都生效 !!! <p>
+     * 参考 {@link DefaultMatchingChecker}
      */
     private String matcherNames = DefaultMatchers.NONE;
     /**
