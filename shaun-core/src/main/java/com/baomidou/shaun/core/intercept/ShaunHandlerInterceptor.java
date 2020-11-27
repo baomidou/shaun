@@ -1,14 +1,15 @@
-package com.baomidou.shaun.core.models;
+package com.baomidou.shaun.core.intercept;
 
 import com.baomidou.shaun.core.config.Config;
 import com.baomidou.shaun.core.context.ProfileHolder;
 import com.baomidou.shaun.core.filter.ShaunFilter;
-import com.baomidou.shaun.core.filter.chain.ShaunFilterChain;
+import com.baomidou.shaun.core.intercept.support.ShaunFilterChain;
 import com.baomidou.shaun.core.util.WebUtil;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.exception.http.BadRequestAction;
+import org.springframework.lang.NonNull;
 import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -23,18 +24,18 @@ import java.util.List;
  */
 @Data
 @Accessors(chain = true)
-public class ShaunInterceptor implements HandlerInterceptor {
+public class ShaunHandlerInterceptor implements HandlerInterceptor {
 
     private final List<ShaunFilter> filterList;
     private final Config config;
 
-    public ShaunInterceptor(Config config, ShaunFilterChain filterChain) {
+    public ShaunHandlerInterceptor(Config config, ShaunFilterChain filterChain) {
         this.config = config;
         this.filterList = filterChain.getOrderFilter();
     }
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public boolean preHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler) throws Exception {
         final JEEContext context = WebUtil.getJEEContext(request, response, config.isSessionOn());
         if (config.getMatchingChecker().matches(context, config.getMatcherNames(), config.getMatchersMap(), Collections.emptyList())) {
             if (!CorsUtils.isPreFlightRequest(request)) {

@@ -1,9 +1,9 @@
-package com.baomidou.shaun.core.extractor;
+package com.baomidou.shaun.core.credentials.extractor;
 
-import com.baomidou.shaun.core.context.Cookie;
-import com.baomidou.shaun.core.context.Header;
-import com.baomidou.shaun.core.context.Parameter;
-import com.baomidou.shaun.core.enums.TokenLocation;
+import com.baomidou.shaun.core.credentials.TokenLocation;
+import com.baomidou.shaun.core.credentials.location.Cookie;
+import com.baomidou.shaun.core.credentials.location.Header;
+import com.baomidou.shaun.core.credentials.location.Parameter;
 import lombok.Data;
 import org.pac4j.core.context.WebContext;
 import org.pac4j.core.credentials.TokenCredentials;
@@ -21,14 +21,14 @@ import java.util.Optional;
  * @since 2019-07-20
  */
 @Data
-public class TokenExtractor implements CredentialsExtractor<TokenCredentials> {
+public class TokenCredentialsExtractor implements CredentialsExtractor<TokenCredentials> {
 
     private final TokenLocation tokenLocation;
     private final HeaderExtractor headerExtractor;
     private final CookieExtractor cookieExtractor;
     private final ParameterExtractor parameterExtractor;
 
-    public TokenExtractor(TokenLocation tokenLocation, Header header, Cookie cookie, Parameter parameter) {
+    public TokenCredentialsExtractor(TokenLocation tokenLocation, Header header, Cookie cookie, Parameter parameter) {
         this.tokenLocation = tokenLocation;
         this.headerExtractor = new HeaderExtractor(header.getName(), header.getPrefix());
         this.headerExtractor.setTrimValue(header.isTrimValue());

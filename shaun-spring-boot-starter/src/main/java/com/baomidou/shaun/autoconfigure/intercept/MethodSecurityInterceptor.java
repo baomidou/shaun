@@ -3,9 +3,9 @@ package com.baomidou.shaun.autoconfigure.intercept;
 import com.baomidou.shaun.core.annotation.HasAuthorization;
 import com.baomidou.shaun.core.annotation.HasPermission;
 import com.baomidou.shaun.core.annotation.HasRole;
+import com.baomidou.shaun.core.annotation.Logical;
 import com.baomidou.shaun.core.authority.AuthorityManager;
 import com.baomidou.shaun.core.context.ProfileHolder;
-import com.baomidou.shaun.core.enums.Logical;
 import com.baomidou.shaun.core.profile.TokenProfile;
 import lombok.extern.slf4j.Slf4j;
 import org.aopalliance.intercept.MethodInterceptor;
@@ -90,7 +90,7 @@ public class MethodSecurityInterceptor implements MethodInterceptor, Application
                 log.debug("not found TokenProfile, so authorization not success!");
                 return UnauthorizedAction.INSTANCE;
             }
-            if (!authorityManager.isSkipAuthenticationUser(profiles)) {
+            if (!authorityManager.isSkipAuthentication(profiles)) {
                 HttpAction action = toCheck(profiles, true, role.logical(), roles, authorityManager::roles);
                 if (logical == Logical.ANY) {
                     if (action == null) {
@@ -115,7 +115,7 @@ public class MethodSecurityInterceptor implements MethodInterceptor, Application
             log.debug("not found TokenProfile, so authorization not success!");
             return UnauthorizedAction.INSTANCE;
         }
-        if (authorityManager.isSkipAuthenticationUser(profiles)) {
+        if (authorityManager.isSkipAuthentication(profiles)) {
             return null;
         }
         return toCheck(profiles, isRole, logical, elements, checkValues);

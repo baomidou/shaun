@@ -1,8 +1,8 @@
 package com.baomidou.shaun.core.config;
 
 import com.baomidou.shaun.core.authority.AuthorityManager;
-import com.baomidou.shaun.core.context.Cookie;
-import com.baomidou.shaun.core.enums.TokenLocation;
+import com.baomidou.shaun.core.credentials.TokenLocation;
+import com.baomidou.shaun.core.credentials.location.Cookie;
 import com.baomidou.shaun.core.handler.DefaultHttpActionHandler;
 import com.baomidou.shaun.core.handler.DefaultLogoutHandler;
 import com.baomidou.shaun.core.handler.HttpActionHandler;

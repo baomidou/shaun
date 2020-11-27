@@ -1,9 +1,9 @@
-package com.baomidou.shaun.core.models;
+package com.baomidou.shaun.core.intercept;
 
 import com.baomidou.shaun.core.config.Config;
 import com.baomidou.shaun.core.context.ProfileHolder;
 import com.baomidou.shaun.core.filter.ShaunFilter;
-import com.baomidou.shaun.core.filter.chain.ShaunFilterChain;
+import com.baomidou.shaun.core.intercept.support.ShaunFilterChain;
 import com.baomidou.shaun.core.util.WebUtil;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -31,13 +31,13 @@ import java.util.List;
 @Data
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = true)
-public class ShaunRequestFilter extends OncePerRequestFilter {
+public class ShaunOncePerRequestFilter extends OncePerRequestFilter {
 
     private final Config config;
     private final List<ShaunFilter> filterList;
     private MatchingChecker matchingChecker = new DefaultMatchingChecker();
 
-    public ShaunRequestFilter(Config config, ShaunFilterChain filterChain) {
+    public ShaunOncePerRequestFilter(Config config, ShaunFilterChain filterChain) {
         this.config = config;
         this.filterList = filterChain.getOrderFilter();
     }

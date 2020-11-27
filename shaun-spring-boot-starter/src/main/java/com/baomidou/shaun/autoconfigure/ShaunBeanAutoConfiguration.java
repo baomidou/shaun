@@ -4,16 +4,16 @@ import com.baomidou.shaun.autoconfigure.properties.ShaunProperties;
 import com.baomidou.shaun.core.authority.AuthorityManager;
 import com.baomidou.shaun.core.authority.DefaultAuthorityManager;
 import com.baomidou.shaun.core.config.Config;
-import com.baomidou.shaun.core.extractor.TokenExtractor;
+import com.baomidou.shaun.core.credentials.extractor.TokenCredentialsExtractor;
 import com.baomidou.shaun.core.filter.CallbackFilter;
 import com.baomidou.shaun.core.filter.LogoutFilter;
 import com.baomidou.shaun.core.filter.SecurityFilter;
 import com.baomidou.shaun.core.filter.SfLoginFilter;
-import com.baomidou.shaun.core.filter.chain.DefaultShaunFilterChain;
-import com.baomidou.shaun.core.filter.chain.ShaunFilterChain;
 import com.baomidou.shaun.core.handler.CallbackHandler;
 import com.baomidou.shaun.core.handler.HttpActionHandler;
 import com.baomidou.shaun.core.handler.LogoutHandler;
+import com.baomidou.shaun.core.intercept.support.DefaultShaunFilterChain;
+import com.baomidou.shaun.core.intercept.support.ShaunFilterChain;
 import com.baomidou.shaun.core.matching.OnlyPathMatcher;
 import com.baomidou.shaun.core.mgt.DefaultProfileJwtManager;
 import com.baomidou.shaun.core.mgt.ProfileJwtManager;
@@ -83,7 +83,7 @@ public class ShaunBeanAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public CredentialsExtractor<TokenCredentials> credentialsExtractor() {
-        return new TokenExtractor(properties.getTokenLocation(), properties.getHeader(), properties.getCookie(), properties.getParameter());
+        return new TokenCredentialsExtractor(properties.getTokenLocation(), properties.getHeader(), properties.getCookie(), properties.getParameter());
     }
 
     /**

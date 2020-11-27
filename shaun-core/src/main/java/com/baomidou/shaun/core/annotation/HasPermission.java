@@ -5,8 +5,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import com.baomidou.shaun.core.enums.Logical;
-
 /**
  * @author miemie
  * @since 2019-06-29

@@ -1,9 +1,8 @@
-package com.baomidou.shaun.core.context;
-
-import org.pac4j.core.context.HttpConstants;
-import org.pac4j.core.credentials.extractor.ParameterExtractor;
+package com.baomidou.shaun.core.credentials.location;
 
 import lombok.Data;
+import org.pac4j.core.context.HttpConstants;
+import org.pac4j.core.credentials.extractor.ParameterExtractor;
 
 /**
  * {@link ParameterExtractor}

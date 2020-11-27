@@ -1,9 +1,9 @@
 package com.baomidou.shaun.autoconfigure;
 
 import com.baomidou.shaun.core.config.Config;
-import com.baomidou.shaun.core.filter.chain.ShaunFilterChain;
-import com.baomidou.shaun.core.models.ShaunInterceptor;
-import com.baomidou.shaun.core.models.ShaunRequestFilter;
+import com.baomidou.shaun.core.intercept.ShaunHandlerInterceptor;
+import com.baomidou.shaun.core.intercept.ShaunOncePerRequestFilter;
+import com.baomidou.shaun.core.intercept.support.ShaunFilterChain;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -27,16 +27,16 @@ public class ShaunWebAutoConfiguration {
     @ConditionalOnMissingBean
     @ConditionalOnClass(HandlerInterceptor.class)
     @ConditionalOnProperty(prefix = "shaun", name = "model", havingValue = "interceptor", matchIfMissing = true)
-    public ShaunInterceptor shaunInterceptor(Config config, ShaunFilterChain chain) {
-        return new ShaunInterceptor(config, chain);
+    public ShaunHandlerInterceptor shaunHandlerInterceptor(Config config, ShaunFilterChain chain) {
+        return new ShaunHandlerInterceptor(config, chain);
     }
 
     @Bean
     @ConditionalOnMissingBean
     @ConditionalOnClass(OncePerRequestFilter.class)
     @ConditionalOnProperty(prefix = "shaun", name = "model", havingValue = "web_filter")
-    public ShaunRequestFilter shaunOncePerRequestFilter(Config config, ShaunFilterChain chain) {
-        return new ShaunRequestFilter(config, chain);
+    public ShaunOncePerRequestFilter shaunOncePerRequestFilter(Config config, ShaunFilterChain chain) {
+        return new ShaunOncePerRequestFilter(config, chain);
     }
 
     @Configuration(proxyBeanMethods = false)
@@ -49,11 +49,11 @@ public class ShaunWebAutoConfiguration {
         @Configuration(proxyBeanMethods = false)
         public static class ShaunWebConfiguration implements WebMvcConfigurer {
 
-            private final ShaunInterceptor shaunInterceptor;
+            private final ShaunHandlerInterceptor shaunHandlerInterceptor;
 
             @Override
             public void addInterceptors(InterceptorRegistry registry) {
-                registry.addInterceptor(shaunInterceptor).addPathPatterns("/**");
+                registry.addInterceptor(shaunHandlerInterceptor).addPathPatterns("/**");
             }
         }
     }

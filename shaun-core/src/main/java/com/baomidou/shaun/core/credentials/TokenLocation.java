@@ -1,4 +1,4 @@
-package com.baomidou.shaun.core.enums;
+package com.baomidou.shaun.core.credentials;
 
 /**
  * token 存放位置

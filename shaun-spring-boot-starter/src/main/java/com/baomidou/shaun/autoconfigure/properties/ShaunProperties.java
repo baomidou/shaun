@@ -1,11 +1,11 @@
 package com.baomidou.shaun.autoconfigure.properties;
 
-import com.baomidou.shaun.core.context.Cookie;
-import com.baomidou.shaun.core.context.Header;
-import com.baomidou.shaun.core.context.Parameter;
-import com.baomidou.shaun.core.enums.Model;
-import com.baomidou.shaun.core.enums.TokenLocation;
+import com.baomidou.shaun.core.credentials.TokenLocation;
+import com.baomidou.shaun.core.credentials.location.Cookie;
+import com.baomidou.shaun.core.credentials.location.Header;
+import com.baomidou.shaun.core.credentials.location.Parameter;
 import com.baomidou.shaun.core.handler.CallbackHandler;
+import com.baomidou.shaun.core.intercept.InterceptModel;
 import com.baomidou.shaun.core.mgt.SecurityManager;
 import com.baomidou.shaun.core.profile.TokenProfile;
 import lombok.Data;
@@ -55,9 +55,9 @@ public class ShaunProperties {
      */
     private boolean sessionOn = false;
     /**
-     * 拦截模式
+     * 只是为了在 yml 有提示
      */
-    private Model model = Model.INTERCEPTOR;
+    private final Annotations annotations = new Annotations();
     /**
      * authorizerNames,多个以逗号分隔(不包含自己注入的 {@link Authorizer}),
      * !!! 以下 {@link #excludePath} 和 {@link #excludeBranch} 和 {@link #excludeRegex} 排除掉的之外的地址都生效 !!!,
@@ -149,4 +149,16 @@ public class ShaunProperties {
      * 前后端不分离下注入 {@link IndirectClient} 后才有效
      */
     private String callbackUrl;
+    /**
+     * 拦截模式
+     */
+    private InterceptModel model = InterceptModel.INTERCEPTOR;
+
+    @Data
+    public static class Annotations {
+        /**
+         * 是否启用注解拦截
+         */
+        private boolean enabled = true;
+    }
 }

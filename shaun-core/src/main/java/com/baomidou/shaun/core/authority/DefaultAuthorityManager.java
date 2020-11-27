@@ -1,7 +1,6 @@
 package com.baomidou.shaun.core.authority;
 
 import com.baomidou.shaun.core.profile.TokenProfile;
-
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -20,7 +19,7 @@ public class DefaultAuthorityManager implements AuthorityManager {
     }
 
     @Override
-    public boolean isSkipAuthenticationUser(TokenProfile profile) {
+    public boolean isSkipAuthentication(TokenProfile profile) {
         return profile.getRoles().contains(skipAuthenticationRolePermission) ||
                 profile.getPermissions().contains(skipAuthenticationRolePermission);
     }

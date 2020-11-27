@@ -1,7 +1,7 @@
 package com.baomidou.shaun.core.handler;
 
 import com.baomidou.shaun.core.config.Config;
-import com.baomidou.shaun.core.context.Cookie;
+import com.baomidou.shaun.core.credentials.location.Cookie;
 import com.baomidou.shaun.core.profile.TokenProfile;
 import com.baomidou.shaun.core.util.WebUtil;
 import lombok.Data;

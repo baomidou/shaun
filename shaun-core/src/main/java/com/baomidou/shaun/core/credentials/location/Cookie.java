@@ -1,9 +1,8 @@
-package com.baomidou.shaun.core.context;
-
-import org.pac4j.core.util.Pac4jConstants;
-import org.pac4j.http.credentials.extractor.CookieExtractor;
+package com.baomidou.shaun.core.credentials.location;
 
 import lombok.Data;
+import org.pac4j.core.util.Pac4jConstants;
+import org.pac4j.http.credentials.extractor.CookieExtractor;
 
 /**
  * {@link CookieExtractor}

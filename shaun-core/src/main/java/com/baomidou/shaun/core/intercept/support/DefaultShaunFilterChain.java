@@ -1,4 +1,4 @@
-package com.baomidou.shaun.core.filter.chain;
+package com.baomidou.shaun.core.intercept.support;
 
 import com.baomidou.shaun.core.filter.ShaunFilter;
 

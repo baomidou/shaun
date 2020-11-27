@@ -1,4 +1,4 @@
-package com.baomidou.shaun.core.enums;
+package com.baomidou.shaun.core.annotation;
 
 /**
  * @author miemie

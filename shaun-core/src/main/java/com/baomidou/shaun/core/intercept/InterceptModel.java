@@ -1,4 +1,4 @@
-package com.baomidou.shaun.core.enums;
+package com.baomidou.shaun.core.intercept;
 
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -9,7 +9,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
  * @author miemie
  * @since 2019-08-08
  */
-public enum Model {
+public enum InterceptModel {
 
     /**
      * spring 的 {@link HandlerInterceptor}
