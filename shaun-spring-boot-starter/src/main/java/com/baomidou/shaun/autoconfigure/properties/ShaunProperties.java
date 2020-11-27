@@ -35,6 +35,18 @@ public class ShaunProperties {
      */
     private final Annotations annotations = new Annotations();
     /**
+     * 是否-前后端分离
+     */
+    private boolean stateless = true;
+    /**
+     * 是否-启用session
+     */
+    private boolean sessionOn = false;
+    /**
+     * token 的存放位置
+     */
+    private TokenLocation tokenLocation = TokenLocation.HEADER;
+    /**
      * 取 token 的方式之 header
      */
     @NestedConfigurationProperty
@@ -49,14 +61,6 @@ public class ShaunProperties {
      */
     @NestedConfigurationProperty
     private final Parameter parameter = new Parameter();
-    /**
-     * 是否-前后端分离
-     */
-    private boolean stateless = true;
-    /**
-     * 是否-启用session
-     */
-    private boolean sessionOn = false;
     /**
      * authorizerNames,多个以逗号分隔(不包含自己注入的 {@link Authorizer})
      * <p>
@@ -106,10 +110,6 @@ public class ShaunProperties {
      * </p>
      */
     private String expireTime;
-    /**
-     * token 的存放位置
-     */
-    private TokenLocation tokenLocation = TokenLocation.HEADER;
     /**
      * 登录页面的 url
      * <p>
