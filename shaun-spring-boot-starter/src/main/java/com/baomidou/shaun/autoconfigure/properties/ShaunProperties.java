@@ -31,6 +31,10 @@ import java.util.UUID;
 public class ShaunProperties {
 
     /**
+     * 只是为了在 yml 有提示
+     */
+    private final Annotations annotations = new Annotations();
+    /**
      * 取 token 的方式之 header
      */
     @NestedConfigurationProperty
@@ -53,10 +57,6 @@ public class ShaunProperties {
      * 是否-启用session
      */
     private boolean sessionOn = false;
-    /**
-     * 只是为了在 yml 有提示
-     */
-    private final Annotations annotations = new Annotations();
     /**
      * authorizerNames,多个以逗号分隔(不包含自己注入的 {@link Authorizer})
      * <p>
