@@ -12,6 +12,7 @@ import java.util.Date;
  * @since 2019-12-27
  */
 public class TokenProfile extends CommonProfile {
+    private static final long serialVersionUID = -1;
 
     private String token;
 
