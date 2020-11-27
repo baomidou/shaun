@@ -42,8 +42,8 @@ import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author miemie
@@ -125,7 +125,7 @@ public class ShaunBeanAutoConfiguration {
         logoutHandlerProvider.ifAvailable(shaunConfig::setLogoutHandler);
         String loginUrl = properties.getLoginUrl();
         if (!shaunConfig.isStateless()) {
-            Assert.hasText(loginUrl, "loginUrl must not black");
+            Assert.hasText(loginUrl, "loginUrl must not black when stateful");
         }
         shaunConfig.setLoginUrl(loginUrl);
         shaunConfig.setProfileTokenManager(profileTokenManager);
@@ -185,6 +185,8 @@ public class ShaunBeanAutoConfiguration {
 
         List<IndirectClient> indirectClients = indirectClientsProvider.getIfAvailable();
         if (!CollectionUtils.isEmpty(indirectClients)) {
+            Assert.isTrue(shaunConfig.isStateless(), "stateless model not support any IndirectClient");
+
             final String sfLoginUrl = properties.getSfLoginUrl();
             Assert.hasText(sfLoginUrl, "sfLoginUrl must not blank");
 
@@ -193,10 +195,9 @@ public class ShaunBeanAutoConfiguration {
 
             final CallbackHandler callbackHandler = callbackHandlerProvider.getIfAvailable();
             Assert.notNull(callbackHandler, "callbackHandler must not null");
-            List<Client> clientList = indirectClients.stream()
-                    .peek(i -> i.setAjaxRequestResolver(shaunConfig.getAjaxRequestResolver()))
-                    .collect(Collectors.toList());
+            List<Client> clientList = new ArrayList<>(indirectClients);
             Clients clients = new Clients(callbackUrl, clientList);
+            clients.setAjaxRequestResolver(shaunConfig.getAjaxRequestResolver());
 
             final SfLoginFilter sfLoginFilter = new SfLoginFilter(new OnlyPathMatcher(sfLoginUrl));
             sfLoginFilter.setClients(clients);
