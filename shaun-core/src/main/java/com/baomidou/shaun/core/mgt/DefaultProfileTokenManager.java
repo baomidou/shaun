@@ -66,7 +66,7 @@ public class DefaultProfileTokenManager implements ProfileTokenManager {
     }
 
     @Override
-    public String generateJwt(TokenProfile profile, String expireTime) {
+    public String generateToken(TokenProfile profile, String expireTime) {
         JwtGenerator<TokenProfile> jwtGenerator = new JwtGenerator<>(signatureConfiguration, encryptionConfiguration);
         if (CommonHelper.isNotBlank(expireTime)) {
             jwtGenerator.setExpirationTime(ExpireTimeUtil.getTargetDate(expireTime));

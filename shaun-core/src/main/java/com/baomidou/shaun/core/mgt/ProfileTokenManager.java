@@ -20,11 +20,11 @@ public interface ProfileTokenManager {
     TokenProfile getProfile(JEEContext context);
 
     /**
-     * 把 TokenProfile 构建为 jwt
+     * 把 TokenProfile 构建为 token(jwt)
      *
      * @param profile          TokenProfile
      * @param optionExpireTime 超时时间
-     * @return jwt
+     * @return token(jwt)
      */
-    String generateJwt(TokenProfile profile, String optionExpireTime);
+    String generateToken(TokenProfile profile, String optionExpireTime);
 }
