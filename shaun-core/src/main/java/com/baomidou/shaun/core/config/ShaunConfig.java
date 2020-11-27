@@ -91,23 +91,23 @@ public class ShaunConfig {
      */
     private AjaxRequestResolver ajaxRequestResolver = new DefaultAjaxRequestResolver();
     /**
-     * AuthorizationChecker
-     */
-    private AuthorizationChecker authorizationChecker = new DefaultAuthorizationChecker();
-    /**
      * MatchingChecker
      */
     private MatchingChecker matchingChecker = new DefaultMatchingChecker();
     /**
-     * 默认支持的一些参考 {@link DefaultAuthorizationChecker}
+     * AuthorizationChecker
      */
-    @Setter(AccessLevel.NONE)
-    private String authorizerNames;
+    private AuthorizationChecker authorizationChecker = new DefaultAuthorizationChecker();
     /**
      * 默认支持的一些参考 {@link DefaultMatchingChecker}
      */
     @Setter(AccessLevel.NONE)
-    private String matcherNames;
+    private String matcherNames = DefaultMatchers.NONE;
+    /**
+     * 默认支持的一些参考 {@link DefaultAuthorizationChecker}
+     */
+    @Setter(AccessLevel.NONE)
+    private String authorizerNames = DefaultAuthorizers.NONE;
 
     @Setter(AccessLevel.NONE)
     private Map<String, Authorizer> authorizersMap = new HashMap<>();
