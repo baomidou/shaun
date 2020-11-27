@@ -1,3 +1,5 @@
+description = "前后分离-header模式"
+
 dependencies {
     api project(":shaun-spring-boot-starter")
     api "org.springframework.boot:spring-boot-starter-web"

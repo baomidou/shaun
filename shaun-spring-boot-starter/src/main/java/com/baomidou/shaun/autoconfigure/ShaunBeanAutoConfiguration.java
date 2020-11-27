@@ -1,5 +1,30 @@
 package com.baomidou.shaun.autoconfigure;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.pac4j.core.authorization.authorizer.Authorizer;
+import org.pac4j.core.client.Client;
+import org.pac4j.core.client.Clients;
+import org.pac4j.core.client.IndirectClient;
+import org.pac4j.core.http.ajax.AjaxRequestResolver;
+import org.pac4j.core.http.url.DefaultUrlResolver;
+import org.pac4j.core.matching.matcher.Matcher;
+import org.pac4j.core.matching.matcher.PathMatcher;
+import org.pac4j.jwt.config.encryption.EncryptionConfiguration;
+import org.pac4j.jwt.config.encryption.SecretEncryptionConfiguration;
+import org.pac4j.jwt.config.signature.SecretSignatureConfiguration;
+import org.pac4j.jwt.config.signature.SignatureConfiguration;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
+
 import com.baomidou.shaun.autoconfigure.properties.ShaunProperties;
 import com.baomidou.shaun.core.authority.AuthorityManager;
 import com.baomidou.shaun.core.authority.DefaultAuthorityManager;
@@ -20,30 +45,8 @@ import com.baomidou.shaun.core.mgt.DefaultProfileTokenManager;
 import com.baomidou.shaun.core.mgt.ProfileStateManager;
 import com.baomidou.shaun.core.mgt.ProfileTokenManager;
 import com.baomidou.shaun.core.mgt.SecurityManager;
-import lombok.RequiredArgsConstructor;
-import org.pac4j.core.authorization.authorizer.Authorizer;
-import org.pac4j.core.client.Client;
-import org.pac4j.core.client.Clients;
-import org.pac4j.core.client.IndirectClient;
-import org.pac4j.core.http.ajax.AjaxRequestResolver;
-import org.pac4j.core.matching.matcher.Matcher;
-import org.pac4j.core.matching.matcher.PathMatcher;
-import org.pac4j.jwt.config.encryption.EncryptionConfiguration;
-import org.pac4j.jwt.config.encryption.SecretEncryptionConfiguration;
-import org.pac4j.jwt.config.signature.SecretSignatureConfiguration;
-import org.pac4j.jwt.config.signature.SignatureConfiguration;
-import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.boot.autoconfigure.AutoConfigureBefore;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.util.Assert;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 
 /**
  * @author miemie
@@ -157,20 +160,20 @@ public class ShaunBeanAutoConfiguration {
         DefaultShaunFilterChain chain = new DefaultShaunFilterChain();
 
         /* securityFilter begin */
-        final PathMatcher pathMatcher = new PathMatcher();
+        final PathMatcher securityPathMatcher = new PathMatcher();
         if (!CollectionUtils.isEmpty(properties.getExcludePath())) {
-            properties.getExcludePath().forEach(pathMatcher::excludePath);
+            properties.getExcludePath().forEach(securityPathMatcher::excludePath);
         }
         if (!CollectionUtils.isEmpty(properties.getExcludeBranch())) {
-            properties.getExcludeBranch().forEach(pathMatcher::excludeBranch);
+            properties.getExcludeBranch().forEach(securityPathMatcher::excludeBranch);
         }
         if (!CollectionUtils.isEmpty(properties.getExcludeRegex())) {
-            properties.getExcludeBranch().forEach(pathMatcher::excludeRegex);
+            properties.getExcludeBranch().forEach(securityPathMatcher::excludeRegex);
         }
         if (shaunConfig.getLoginUrl() != null) {
-            pathMatcher.excludePath(shaunConfig.getLoginUrl());
+            securityPathMatcher.excludePath(shaunConfig.getLoginUrl());
         }
-        final SecurityFilter securityFilter = new SecurityFilter(pathMatcher);
+        final SecurityFilter securityFilter = new SecurityFilter(securityPathMatcher);
         /* securityFilter end */
 
         chain.addShaunFilter(securityFilter);
@@ -185,7 +188,7 @@ public class ShaunBeanAutoConfiguration {
 
         List<Client> indirectClients = indirectClientsProvider.stream().collect(Collectors.toList());
         if (!CollectionUtils.isEmpty(indirectClients)) {
-            Assert.isTrue(shaunConfig.isStateless(), "stateless model not support any IndirectClient");
+            Assert.isTrue(!shaunConfig.isStateless(), "stateless model not support any IndirectClient");
 
             final String sfLoginUrl = properties.getSfLoginUrl();
             Assert.hasText(sfLoginUrl, "sfLoginUrl must not blank");
@@ -198,6 +201,7 @@ public class ShaunBeanAutoConfiguration {
 
             Clients clients = new Clients(callbackUrl, indirectClients);
             clients.setAjaxRequestResolver(shaunConfig.getAjaxRequestResolver());
+            clients.setUrlResolver(new DefaultUrlResolver(true));
 
             final SfLoginFilter sfLoginFilter = new SfLoginFilter(new OnlyPathMatcher(sfLoginUrl));
             sfLoginFilter.setClients(clients);

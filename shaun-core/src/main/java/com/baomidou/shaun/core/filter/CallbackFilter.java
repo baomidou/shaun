@@ -1,10 +1,8 @@
 package com.baomidou.shaun.core.filter;
 
-import com.baomidou.shaun.core.config.ShaunConfig;
-import com.baomidou.shaun.core.handler.CallbackHandler;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.util.List;
+import java.util.Optional;
+
 import org.pac4j.core.client.Client;
 import org.pac4j.core.client.Clients;
 import org.pac4j.core.client.finder.ClientFinder;
@@ -16,8 +14,12 @@ import org.pac4j.core.matching.matcher.Matcher;
 import org.pac4j.core.profile.UserProfile;
 import org.springframework.util.Assert;
 
-import java.util.List;
-import java.util.Optional;
+import com.baomidou.shaun.core.config.ShaunConfig;
+import com.baomidou.shaun.core.handler.CallbackHandler;
+
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * callback filter
@@ -69,7 +71,7 @@ public class CallbackFilter implements ShaunFilter {
 
     @Override
     public int order() {
-        return 200;
+        return 0;
     }
 
     @Override

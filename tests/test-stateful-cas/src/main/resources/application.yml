@@ -3,15 +3,15 @@ shaun:
   token-location: cookie
   stateless: false
   session-on: true
-  salt: ded4a7dc78674c6bb8ad15ffb1d4f973
-  expire-time: 10h
+  salt: c7e49600a5b144e48965e8b0b78ff41c
+  expire-time: 30m
   login-url: /login
   logout-url: /logout
+  sf-login-url: /sf
+  callback-url: /callback
   exclude-path:
     - /error
     - /favicon.ico
-  matcher-names: csrfToken
-  authorizer-names: csrfCheck
 
 spring:
   thymeleaf:

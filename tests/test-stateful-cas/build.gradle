@@ -1,7 +1,8 @@
-description = "前后不分离-cookie模式"
+description = "前后不分离-cookie模式-cas"
 
 dependencies {
     api project(":shaun-spring-boot-starter")
+    api "org.pac4j:pac4j-cas"
     api "org.springframework.boot:spring-boot-starter-web"
     api "org.springframework.boot:spring-boot-starter-thymeleaf"
     api "org.springframework.session:spring-session-core"
