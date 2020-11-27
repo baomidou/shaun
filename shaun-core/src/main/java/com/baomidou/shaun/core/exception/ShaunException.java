@@ -5,6 +5,7 @@ package com.baomidou.shaun.core.exception;
  * @since 2019-08-28
  */
 public class ShaunException extends RuntimeException {
+    private static final long serialVersionUID = -666180504077860523L;
 
     public ShaunException() {
     }

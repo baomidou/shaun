@@ -121,12 +121,18 @@ public class ShaunConfig {
      */
     private String loginUrl;
 
+    public void addAuthorizer(Authorizer authorizer) {
+        if (authorizer != null) {
+            String key = authorizer.getClass().getSimpleName();
+            authorizersMap.put(key, authorizer);
+            this.authorizerNamesAppend(key);
+        }
+    }
+
     public void addAuthorizers(Collection<Authorizer> authorizers) {
         if (!CollectionUtils.isEmpty(authorizers)) {
             for (Authorizer authorizer : authorizers) {
-                String key = authorizer.getClass().getSimpleName();
-                authorizersMap.put(key, authorizer);
-                this.authorizerNamesAppend(key);
+                addAuthorizer(authorizer);
             }
         }
     }
@@ -147,12 +153,18 @@ public class ShaunConfig {
         }
     }
 
+    public void addMatcher(Matcher matcher) {
+        if (matcher != null) {
+            String key = matcher.getClass().getSimpleName();
+            matchersMap.put(key, matcher);
+            this.matcherNamesAppend(key);
+        }
+    }
+
     public void addMatchers(Collection<Matcher> matchers) {
         if (!CollectionUtils.isEmpty(matchers)) {
             for (Matcher matcher : matchers) {
-                String key = matcher.getClass().getSimpleName();
-                matchersMap.put(key, matcher);
-                this.matcherNamesAppend(key);
+                addMatcher(matcher);
             }
         }
     }

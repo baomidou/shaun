@@ -1,12 +1,12 @@
 package com.baomidou.shaun.core.mgt;
 
 import com.baomidou.shaun.core.client.TokenClient;
+import com.baomidou.shaun.core.credentials.extractor.ShaunCredentialsExtractor;
 import com.baomidou.shaun.core.profile.TokenProfile;
 import com.baomidou.shaun.core.util.ExpireTimeUtil;
 import lombok.Data;
 import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.credentials.TokenCredentials;
-import org.pac4j.core.credentials.extractor.CredentialsExtractor;
 import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.core.profile.UserProfile;
 import org.pac4j.core.util.CommonHelper;
@@ -31,7 +31,7 @@ public class DefaultProfileJwtManager implements ProfileJwtManager {
 
     public DefaultProfileJwtManager(SignatureConfiguration signatureConfiguration,
                                     EncryptionConfiguration encryptionConfiguration,
-                                    CredentialsExtractor<TokenCredentials> credentialsExtractor) {
+                                    ShaunCredentialsExtractor credentialsExtractor) {
         this.signatureConfiguration = signatureConfiguration;
         this.encryptionConfiguration = encryptionConfiguration;
         this.tokenClient = new TokenClient(credentialsExtractor, new JwtAuthenticator(signatureConfiguration, encryptionConfiguration));

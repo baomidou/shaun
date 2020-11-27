@@ -4,7 +4,8 @@ import com.baomidou.shaun.autoconfigure.properties.ShaunProperties;
 import com.baomidou.shaun.core.authority.AuthorityManager;
 import com.baomidou.shaun.core.authority.DefaultAuthorityManager;
 import com.baomidou.shaun.core.config.ShaunConfig;
-import com.baomidou.shaun.core.credentials.extractor.TokenCredentialsExtractor;
+import com.baomidou.shaun.core.credentials.extractor.DefaultShaunCredentialsExtractor;
+import com.baomidou.shaun.core.credentials.extractor.ShaunCredentialsExtractor;
 import com.baomidou.shaun.core.filter.CallbackFilter;
 import com.baomidou.shaun.core.filter.LogoutFilter;
 import com.baomidou.shaun.core.filter.SecurityFilter;
@@ -24,8 +25,6 @@ import org.pac4j.core.authorization.authorizer.Authorizer;
 import org.pac4j.core.client.Client;
 import org.pac4j.core.client.Clients;
 import org.pac4j.core.client.IndirectClient;
-import org.pac4j.core.credentials.TokenCredentials;
-import org.pac4j.core.credentials.extractor.CredentialsExtractor;
 import org.pac4j.core.http.ajax.AjaxRequestResolver;
 import org.pac4j.core.matching.matcher.Matcher;
 import org.pac4j.core.matching.matcher.PathMatcher;
@@ -82,8 +81,8 @@ public class ShaunBeanAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean
-    public CredentialsExtractor<TokenCredentials> credentialsExtractor() {
-        return new TokenCredentialsExtractor(properties.getTokenLocation(), properties.getHeader(), properties.getCookie(), properties.getParameter());
+    public ShaunCredentialsExtractor credentialsExtractor() {
+        return new DefaultShaunCredentialsExtractor(properties.getTokenLocation(), properties.getHeader(), properties.getCookie(), properties.getParameter());
     }
 
     /**
@@ -93,7 +92,7 @@ public class ShaunBeanAutoConfiguration {
     @ConditionalOnMissingBean
     public ProfileJwtManager profileJwtManager(SignatureConfiguration signatureConfiguration,
                                                EncryptionConfiguration encryptionConfiguration,
-                                               CredentialsExtractor<TokenCredentials> credentialsExtractor) {
+                                               ShaunCredentialsExtractor credentialsExtractor) {
         return new DefaultProfileJwtManager(signatureConfiguration, encryptionConfiguration, credentialsExtractor);
     }
 
@@ -112,8 +111,8 @@ public class ShaunBeanAutoConfiguration {
                                    ObjectProvider<ProfileStateManager> profileStateManagerProvider,
                                    ObjectProvider<LogoutHandler> logoutHandlerProvider,
                                    ObjectProvider<AjaxRequestResolver> ajaxRequestResolverProvider,
-                                   ObjectProvider<List<Authorizer>> authorizerProvider,
-                                   ObjectProvider<List<Matcher>> matcherProvider,
+                                   ObjectProvider<Authorizer> authorizerProvider,
+                                   ObjectProvider<Matcher> matcherProvider,
                                    ObjectProvider<HttpActionHandler> httpActionHandlerProvider) {
         ShaunConfig shaunConfig = new ShaunConfig();
         shaunConfig.setStateless(properties.isStateless());
@@ -129,11 +128,13 @@ public class ShaunBeanAutoConfiguration {
             Assert.hasText(loginUrl, "loginUrl must not black");
         }
         shaunConfig.setLoginUrl(loginUrl);
-        shaunConfig.authorizerNamesAppend(properties.getAuthorizerNames());
         shaunConfig.setProfileJwtManager(profileJwtManager);
-        authorizerProvider.ifAvailable(shaunConfig::addAuthorizers);
+
+        shaunConfig.authorizerNamesAppend(properties.getAuthorizerNames());
+        authorizerProvider.stream().forEach(shaunConfig::addAuthorizer);
         shaunConfig.matcherNamesAppend(properties.getMatcherNames());
-        matcherProvider.ifAvailable(shaunConfig::addMatchers);
+        matcherProvider.stream().forEach(shaunConfig::addMatcher);
+
         httpActionHandlerProvider.ifUnique(shaunConfig::setHttpActionHandler);
         ajaxRequestResolverProvider.ifUnique(shaunConfig::setAjaxRequestResolver);
         return shaunConfig;

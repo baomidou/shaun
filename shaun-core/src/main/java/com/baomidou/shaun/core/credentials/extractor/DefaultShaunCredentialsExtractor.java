@@ -7,7 +7,6 @@ import com.baomidou.shaun.core.credentials.location.Parameter;
 import lombok.Data;
 import org.pac4j.core.context.WebContext;
 import org.pac4j.core.credentials.TokenCredentials;
-import org.pac4j.core.credentials.extractor.CredentialsExtractor;
 import org.pac4j.core.credentials.extractor.HeaderExtractor;
 import org.pac4j.core.credentials.extractor.ParameterExtractor;
 import org.pac4j.http.credentials.extractor.CookieExtractor;
@@ -15,20 +14,18 @@ import org.pac4j.http.credentials.extractor.CookieExtractor;
 import java.util.Optional;
 
 /**
- * 定义了从 WebContext 取 token 的方式
- *
  * @author miemie
  * @since 2019-07-20
  */
 @Data
-public class TokenCredentialsExtractor implements CredentialsExtractor<TokenCredentials> {
+public class DefaultShaunCredentialsExtractor implements ShaunCredentialsExtractor {
 
     private final TokenLocation tokenLocation;
     private final HeaderExtractor headerExtractor;
     private final CookieExtractor cookieExtractor;
     private final ParameterExtractor parameterExtractor;
 
-    public TokenCredentialsExtractor(TokenLocation tokenLocation, Header header, Cookie cookie, Parameter parameter) {
+    public DefaultShaunCredentialsExtractor(TokenLocation tokenLocation, Header header, Cookie cookie, Parameter parameter) {
         this.tokenLocation = tokenLocation;
         this.headerExtractor = new HeaderExtractor(header.getName(), header.getPrefix());
         this.headerExtractor.setTrimValue(header.isTrimValue());
