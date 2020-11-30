@@ -78,6 +78,7 @@ subprojects {
         include "**/*.java"
         exclude "**/test/**/*.java"
         exclude "**/*Test.java"
+        mapping "java", "SLASHSTAR_STYLE"
         ignoreFailures = true
         ext.newYear = 2020
     }
