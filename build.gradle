@@ -1,4 +1,4 @@
-import java.text.SimpleDateFormat
+import java.time.LocalDateTime
 
 plugins {
     id 'java'
@@ -13,7 +13,7 @@ ext {
 
 allprojects {
     group = "com.baomidou"
-    version = "0.0.1.18-SNAPSHOT"
+    version = "0.0.1.19-SNAPSHOT"
 
     repositories {
         mavenLocal()
@@ -57,7 +57,7 @@ subprojects {
                 attributes 'Build-OS': System.getProperty("os.name")
                 attributes 'Built-By': System.getProperty("user.name")
                 attributes 'Build-Jdk': System.getProperty("java.version")
-                attributes 'Build-Timestamp': new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
+                attributes 'Build-Timestamp': LocalDateTime.now().format("yyyy-MM-dd HH:mm:ss")
             }
         }
     }
