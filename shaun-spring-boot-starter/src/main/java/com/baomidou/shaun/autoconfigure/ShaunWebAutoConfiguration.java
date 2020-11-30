@@ -41,7 +41,6 @@ public class ShaunWebAutoConfiguration {
 
     @Configuration(proxyBeanMethods = false)
     @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
-    @ConditionalOnClass({HandlerInterceptor.class, WebMvcConfigurer.class})
     @ConditionalOnProperty(prefix = "shaun", name = "model", havingValue = "interceptor", matchIfMissing = true)
     static class ShaunWebMvcConfiguration {
 
