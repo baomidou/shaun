@@ -1,9 +1,9 @@
 dependencies {
     api "org.pac4j:pac4j-jwt"
     api "org.pac4j:pac4j-http"
-    api "org.springframework:spring-webmvc"
+    implementation "org.springframework:spring-web"
+    implementation "org.springframework:spring-webmvc"
     implementation "org.pac4j:pac4j-oauth"
     implementation "org.pac4j:pac4j-cas"
     implementation "javax.servlet:javax.servlet-api"
-    testCompile "org.assertj:assertj-core"
 }
