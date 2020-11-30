@@ -80,7 +80,7 @@ subprojects {
         exclude "**/*Test.java"
         mapping "java", "SLASHSTAR_STYLE"
         ignoreFailures = true
-        ext.newYear = 2020
+        ext.year = Calendar.getInstance().get(Calendar.YEAR)
     }
 
     //noinspection GroovyAssignabilityCheck
