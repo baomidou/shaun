@@ -1,10 +1,9 @@
 package shaun.test.stateless.cookie;
 
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.util.HashMap;
-import java.util.Map;
-
+import com.baomidou.shaun.core.mgt.ProfileStateManager;
+import com.baomidou.shaun.core.profile.TokenProfile;
+import com.nimbusds.jose.EncryptionMethod;
+import com.nimbusds.jose.JWEAlgorithm;
 import org.pac4j.jwt.config.encryption.EncryptionConfiguration;
 import org.pac4j.jwt.config.encryption.RSAEncryptionConfiguration;
 import org.pac4j.jwt.config.signature.RSASignatureConfiguration;
@@ -12,17 +11,17 @@ import org.pac4j.jwt.config.signature.SignatureConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.baomidou.shaun.core.mgt.ProfileStateManager;
-import com.baomidou.shaun.core.profile.TokenProfile;
-import com.nimbusds.jose.EncryptionMethod;
-import com.nimbusds.jose.JWEAlgorithm;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author miemie
  * @since 2019-10-29
  */
 @Configuration
-public class ShaunConfig {
+public class ShaunConfiguration {
 
     /**
      * 模拟缓存

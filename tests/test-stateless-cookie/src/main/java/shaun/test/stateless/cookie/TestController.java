@@ -1,15 +1,13 @@
 package shaun.test.stateless.cookie;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.baomidou.shaun.core.annotation.HasPermission;
 import com.baomidou.shaun.core.annotation.HasRole;
 import com.baomidou.shaun.core.context.ProfileHolder;
 import com.baomidou.shaun.core.mgt.SecurityManager;
 import com.baomidou.shaun.core.profile.TokenProfile;
-
 import lombok.AllArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @author miemie
@@ -50,7 +48,7 @@ public class TestController {
 
     @GetMapping("xx")
     public String xx() {
-        ShaunConfig.tokenMap.remove(ProfileHolder.getProfile().getId());
+        ShaunConfiguration.tokenMap.remove(ProfileHolder.getProfile().getId());
         return "xx";
     }
 }

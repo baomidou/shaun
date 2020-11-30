@@ -39,21 +39,17 @@ public class ShaunWebAutoConfiguration {
         return new ShaunOncePerRequestFilter(config, chain);
     }
 
+    @RequiredArgsConstructor
     @Configuration(proxyBeanMethods = false)
     @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
     @ConditionalOnProperty(prefix = "shaun", name = "model", havingValue = "interceptor", matchIfMissing = true)
-    static class ShaunWebMvcConfiguration {
+    public static class ShaunWebMvcConfigurer implements WebMvcConfigurer {
 
-        @RequiredArgsConstructor
-        @Configuration(proxyBeanMethods = false)
-        public static class ShaunWebConfiguration implements WebMvcConfigurer {
+        private final ShaunHandlerInterceptor shaunHandlerInterceptor;
 
-            private final ShaunHandlerInterceptor shaunHandlerInterceptor;
-
-            @Override
-            public void addInterceptors(InterceptorRegistry registry) {
-                registry.addInterceptor(shaunHandlerInterceptor).addPathPatterns("/**");
-            }
+        @Override
+        public void addInterceptors(InterceptorRegistry registry) {
+            registry.addInterceptor(shaunHandlerInterceptor).addPathPatterns("/**");
         }
     }
 }
