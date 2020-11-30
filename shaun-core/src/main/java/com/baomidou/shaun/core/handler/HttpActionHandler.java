@@ -16,30 +16,27 @@
 package com.baomidou.shaun.core.handler;
 
 import org.pac4j.core.context.JEEContext;
+import org.pac4j.core.exception.http.BadRequestAction;
 import org.pac4j.core.exception.http.HttpAction;
 import org.pac4j.core.exception.http.UnauthorizedAction;
 
 import com.baomidou.shaun.core.config.CoreConfig;
 
 /**
+ * 不能处理权限注解产生的异常
+ *
  * @author miemie
  * @since 2019-08-08
  */
-public class DefaultHttpActionAdapter implements HttpActionAdapter {
+public interface HttpActionHandler {
 
-    @Override
-    public void adapt(CoreConfig config, JEEContext context, HttpAction action) {
-        if (config.isStateless()) {
-            throw action;
-        }
-        if (config.getAjaxRequestResolver().isAjax(context)) {
-            throw action;
-        } else {
-            if (action instanceof UnauthorizedAction) {
-                config.redirectLoginUrl(context);
-            } else {
-                throw action;
-            }
-        }
-    }
+    /**
+     * 处理抛出的异常 <br>
+     * 常见 {@link UnauthorizedAction} 和 {@link BadRequestAction}
+     *
+     * @param ex      异常
+     * @param config  核心
+     * @param context 上下文
+     */
+    void handle(CoreConfig config, JEEContext context, HttpAction ex);
 }

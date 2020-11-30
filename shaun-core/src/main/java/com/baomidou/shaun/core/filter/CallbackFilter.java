@@ -75,7 +75,7 @@ public class CallbackFilter implements ShaunFilter {
                 }
             }
             if (config.getAjaxRequestResolver().isAjax(context)) {
-                config.getHttpActionAdapter().adapt(config, context, UnauthorizedAction.INSTANCE);
+                config.getHttpActionHandler().handle(config, context, UnauthorizedAction.INSTANCE);
                 return false;
             }
             config.redirectLoginUrl(context);

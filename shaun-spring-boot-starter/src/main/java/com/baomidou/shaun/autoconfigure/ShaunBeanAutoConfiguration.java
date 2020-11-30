@@ -51,7 +51,7 @@ import com.baomidou.shaun.core.filter.LogoutFilter;
 import com.baomidou.shaun.core.filter.SecurityFilter;
 import com.baomidou.shaun.core.filter.SfLoginFilter;
 import com.baomidou.shaun.core.handler.CallbackHandler;
-import com.baomidou.shaun.core.handler.HttpActionAdapter;
+import com.baomidou.shaun.core.handler.HttpActionHandler;
 import com.baomidou.shaun.core.handler.LogoutHandler;
 import com.baomidou.shaun.core.intercept.support.DefaultShaunFilterChain;
 import com.baomidou.shaun.core.intercept.support.ShaunFilterChain;
@@ -131,7 +131,7 @@ public class ShaunBeanAutoConfiguration {
                                  ObjectProvider<AjaxRequestResolver> ajaxRequestResolverProvider,
                                  ObjectProvider<Authorizer> authorizerProvider,
                                  ObjectProvider<Matcher> matcherProvider,
-                                 ObjectProvider<HttpActionAdapter> httpActionAdapterProvider) {
+                                 ObjectProvider<HttpActionHandler> httpActionHandlerProvider) {
         CoreConfig coreConfig = new CoreConfig();
         coreConfig.setStateless(properties.isStateless());
         coreConfig.setSessionOn(properties.isSessionOn());
@@ -153,7 +153,7 @@ public class ShaunBeanAutoConfiguration {
         coreConfig.matcherNamesAppend(properties.getMatcherNames());
         matcherProvider.stream().forEach(coreConfig::addMatcher);
 
-        httpActionAdapterProvider.ifAvailable(coreConfig::setHttpActionAdapter);
+        httpActionHandlerProvider.ifAvailable(coreConfig::setHttpActionHandler);
         ajaxRequestResolverProvider.ifAvailable(coreConfig::setAjaxRequestResolver);
         return coreConfig;
     }

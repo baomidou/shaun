@@ -61,13 +61,13 @@ public class SecurityFilter implements ShaunFilter {
                             return true;
                         }
                     }
-                    config.getHttpActionAdapter().adapt(config, context, UnauthorizedAction.INSTANCE);
+                    config.getHttpActionHandler().handle(config, context, UnauthorizedAction.INSTANCE);
                 } else {
-                    config.getHttpActionAdapter().adapt(config, context, BadRequestAction.INSTANCE);
+                    config.getHttpActionHandler().handle(config, context, BadRequestAction.INSTANCE);
                 }
             } catch (Exception e) {
                 if (e instanceof HttpAction) {
-                    config.getHttpActionAdapter().adapt(config, context, (HttpAction) e);
+                    config.getHttpActionHandler().handle(config, context, (HttpAction) e);
                 } else {
                     throw new RuntimeException(e);
                 }

@@ -40,9 +40,9 @@ import org.springframework.util.CollectionUtils;
 import com.baomidou.shaun.core.authority.AuthorityManager;
 import com.baomidou.shaun.core.credentials.TokenLocation;
 import com.baomidou.shaun.core.credentials.location.Cookie;
-import com.baomidou.shaun.core.handler.DefaultHttpActionAdapter;
+import com.baomidou.shaun.core.handler.DefaultHttpActionHandler;
 import com.baomidou.shaun.core.handler.DefaultLogoutHandler;
-import com.baomidou.shaun.core.handler.HttpActionAdapter;
+import com.baomidou.shaun.core.handler.HttpActionHandler;
 import com.baomidou.shaun.core.handler.LogoutHandler;
 import com.baomidou.shaun.core.mgt.ProfileStateManager;
 import com.baomidou.shaun.core.mgt.ProfileTokenManager;
@@ -101,7 +101,7 @@ public class CoreConfig {
     /**
      * 处理抛出的异常
      */
-    private HttpActionAdapter httpActionAdapter = new DefaultHttpActionAdapter();
+    private HttpActionHandler httpActionHandler = new DefaultHttpActionHandler();
     /**
      * 回调处理器用来发现client
      */

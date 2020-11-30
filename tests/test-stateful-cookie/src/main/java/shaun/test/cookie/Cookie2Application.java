@@ -7,7 +7,6 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
 import org.pac4j.core.authorization.authorizer.Authorizer;
-import org.pac4j.core.exception.http.HttpAction;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -16,7 +15,7 @@ import org.springframework.session.MapSessionRepository;
 import org.springframework.session.config.annotation.web.http.EnableSpringHttpSession;
 
 import com.baomidou.shaun.core.context.ProfileHolder;
-import com.baomidou.shaun.core.handler.HttpActionAdapter;
+import com.baomidou.shaun.core.handler.HttpActionHandler;
 import com.baomidou.shaun.core.profile.TokenProfile;
 
 /**
@@ -47,11 +46,11 @@ public class Cookie2Application {
     }
 
     @Bean
-    public HttpActionAdapter httpActionHandler() {
+    public HttpActionHandler httpActionHandler() {
         return (config, context, ex) -> {
             HttpServletResponse response = context.getNativeResponse();
             try {
-                response.setStatus(((HttpAction) ex).getCode());
+                response.setStatus(ex.getCode());
                 try (ServletOutputStream os = response.getOutputStream()) {
                     os.write("异常".getBytes());
                     os.flush();
