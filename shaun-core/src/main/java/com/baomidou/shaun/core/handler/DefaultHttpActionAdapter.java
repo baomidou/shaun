@@ -28,26 +28,18 @@ import com.baomidou.shaun.core.config.CoreConfig;
 public class DefaultHttpActionAdapter implements HttpActionAdapter {
 
     @Override
-    public void adapt(CoreConfig config, JEEContext context, Exception ex) {
-        if (ex instanceof HttpAction) {
-            /**
-             * 常见 {@link UnauthorizedAction} 和 {@link BadRequestAction}
-             */
-            final HttpAction action = (HttpAction) ex;
-            if (config.isStateless()) {
-                throw action;
-            }
-            if (config.getAjaxRequestResolver().isAjax(context)) {
-                throw action;
-            } else {
-                if (action instanceof UnauthorizedAction) {
-                    config.redirectLoginUrl(context);
-                } else {
-                    throw action;
-                }
-            }
+    public void adapt(CoreConfig config, JEEContext context, HttpAction action) {
+        if (config.isStateless()) {
+            throw action;
+        }
+        if (config.getAjaxRequestResolver().isAjax(context)) {
+            throw action;
         } else {
-            throw new RuntimeException(ex);
+            if (action instanceof UnauthorizedAction) {
+                config.redirectLoginUrl(context);
+            } else {
+                throw action;
+            }
         }
     }
 }

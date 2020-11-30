@@ -17,6 +17,7 @@ package com.baomidou.shaun.core.filter;
 
 import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.exception.http.BadRequestAction;
+import org.pac4j.core.exception.http.HttpAction;
 import org.pac4j.core.exception.http.UnauthorizedAction;
 import org.pac4j.core.matching.matcher.Matcher;
 import org.pac4j.core.util.CommonHelper;
@@ -65,7 +66,11 @@ public class SecurityFilter implements ShaunFilter {
                     config.getHttpActionAdapter().adapt(config, context, BadRequestAction.INSTANCE);
                 }
             } catch (Exception e) {
-                config.getHttpActionAdapter().adapt(config, context, e);
+                if (e instanceof HttpAction) {
+                    config.getHttpActionAdapter().adapt(config, context, (HttpAction) e);
+                } else {
+                    throw new RuntimeException(e);
+                }
             }
             return false;
         }

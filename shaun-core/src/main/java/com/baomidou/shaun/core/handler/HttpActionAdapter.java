@@ -16,6 +16,9 @@
 package com.baomidou.shaun.core.handler;
 
 import org.pac4j.core.context.JEEContext;
+import org.pac4j.core.exception.http.BadRequestAction;
+import org.pac4j.core.exception.http.HttpAction;
+import org.pac4j.core.exception.http.UnauthorizedAction;
 
 import com.baomidou.shaun.core.config.CoreConfig;
 
@@ -28,11 +31,12 @@ import com.baomidou.shaun.core.config.CoreConfig;
 public interface HttpActionAdapter {
 
     /**
-     * 处理抛出的异常
+     * 处理抛出的异常 <br>
+     * 常见 {@link UnauthorizedAction} 和 {@link BadRequestAction}
      *
      * @param ex      异常
      * @param config  核心
      * @param context 上下文
      */
-    void adapt(CoreConfig config, JEEContext context, Exception ex);
+    void adapt(CoreConfig config, JEEContext context, HttpAction ex);
 }
