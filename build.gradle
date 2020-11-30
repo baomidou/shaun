@@ -1,9 +1,5 @@
 import java.time.LocalDateTime
 
-plugins {
-    id 'java'
-}
-
 ext {
     pac4jVersion = "4.2.0"
     springBootVersion = "2.3.5.RELEASE"
