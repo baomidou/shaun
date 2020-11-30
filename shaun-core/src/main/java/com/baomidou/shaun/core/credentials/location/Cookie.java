@@ -15,9 +15,10 @@
  */
 package com.baomidou.shaun.core.credentials.location;
 
-import lombok.Data;
 import org.pac4j.core.util.Pac4jConstants;
 import org.pac4j.http.credentials.extractor.CookieExtractor;
+
+import lombok.Data;
 
 /**
  * {@link CookieExtractor}
@@ -44,7 +45,7 @@ public class Cookie {
      * @param maxAge 存活时间
      * @return cookie
      */
-    public org.pac4j.core.context.Cookie getPac4jCookie(final String token, int maxAge) {
+    public org.pac4j.core.context.Cookie getCookie(final String token, int maxAge) {
         org.pac4j.core.context.Cookie cookie = new org.pac4j.core.context.Cookie(name, token);
         cookie.setVersion(version);
         cookie.setSecure(secure);
@@ -54,5 +55,14 @@ public class Cookie {
         cookie.setComment(comment);
         cookie.setDomain(domain);
         return cookie;
+    }
+
+    /**
+     * 清理 cookie
+     *
+     * @return cookie
+     */
+    public org.pac4j.core.context.Cookie clean() {
+        return getCookie("", 0);
     }
 }
