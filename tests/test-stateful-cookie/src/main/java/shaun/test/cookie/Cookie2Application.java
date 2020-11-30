@@ -7,6 +7,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
 import org.pac4j.core.authorization.authorizer.Authorizer;
+import org.pac4j.core.exception.http.HttpAction;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -47,10 +48,10 @@ public class Cookie2Application {
 
     @Bean
     public HttpActionAdapter httpActionHandler() {
-        return (action, context) -> {
+        return (config, context, ex) -> {
             HttpServletResponse response = context.getNativeResponse();
             try {
-                response.setStatus(action.getCode());
+                response.setStatus(((HttpAction) ex).getCode());
                 try (ServletOutputStream os = response.getOutputStream()) {
                     os.write("异常".getBytes());
                     os.flush();
