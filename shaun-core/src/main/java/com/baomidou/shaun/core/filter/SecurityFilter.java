@@ -15,18 +15,19 @@
  */
 package com.baomidou.shaun.core.filter;
 
-import com.baomidou.shaun.core.config.CoreConfig;
-import com.baomidou.shaun.core.context.ProfileHolder;
-import com.baomidou.shaun.core.profile.TokenProfile;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.pac4j.core.context.JEEContext;
+import org.pac4j.core.exception.http.BadRequestAction;
 import org.pac4j.core.exception.http.UnauthorizedAction;
 import org.pac4j.core.matching.matcher.Matcher;
 import org.pac4j.core.util.CommonHelper;
 
-import java.util.Collections;
+import com.baomidou.shaun.core.config.CoreConfig;
+import com.baomidou.shaun.core.context.ProfileHolder;
+import com.baomidou.shaun.core.profile.TokenProfile;
+
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * security filter
@@ -42,39 +43,33 @@ public class SecurityFilter implements ShaunFilter {
     private final Matcher pathMatcher;
 
     @Override
-    public boolean goOnChain(CoreConfig config, JEEContext context) {
+    public boolean doFilter(CoreConfig config, JEEContext context) {
         if (pathMatcher.matches(context)) {
             if (log.isDebugEnabled()) {
                 log.debug("access security for path : \"{}\" -> \"{}\"", context.getPath(), context.getRequestMethod());
             }
-            TokenProfile profile = config.getProfileTokenManager().getProfile(context);
-            if (profile != null) {
-                if (config.getProfileStateManager().isOnline(profile) &&
-                        config.getAuthorizationChecker().isAuthorized(context, Collections.singletonList(profile),
-                                config.getAuthorizerNames(), config.getAuthorizersMap(), Collections.emptyList())) {
-                    ProfileHolder.setProfile(profile);
-                    if (log.isDebugEnabled()) {
-                        log.debug("authenticated and authorized -> grant access");
+            try {
+                if (config.matchingChecker(context)) {
+                    TokenProfile profile = config.getProfileTokenManager().getProfile(context);
+                    if (profile != null) {
+                        if (config.getProfileStateManager().isOnline(profile) && config.authorizationChecker(context, profile)) {
+                            ProfileHolder.setProfile(profile);
+                            if (log.isDebugEnabled()) {
+                                log.debug("authenticated and authorized -> grant access");
+                            }
+                            return true;
+                        }
                     }
-                    return true;
+                    config.getHttpActionAdapter().adapt(config, context, UnauthorizedAction.INSTANCE);
+                } else {
+                    config.getHttpActionAdapter().adapt(config, context, BadRequestAction.INSTANCE);
                 }
+            } catch (Exception e) {
+                config.getHttpActionAdapter().adapt(config, context, e);
             }
-            this.fail(config, context);
             return false;
         }
         return true;
-    }
-
-    protected void fail(CoreConfig config, JEEContext context) {
-        if (config.isStateless()) {
-            config.getHttpActionHandler().preHandle(UnauthorizedAction.INSTANCE, context);
-            return;
-        }
-        if (config.getAjaxRequestResolver().isAjax(context)) {
-            config.getHttpActionHandler().preHandle(UnauthorizedAction.INSTANCE, context);
-        } else {
-            config.redirectLoginUrl(context);
-        }
     }
 
     @Override

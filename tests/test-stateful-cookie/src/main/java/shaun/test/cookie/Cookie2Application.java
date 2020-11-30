@@ -15,7 +15,7 @@ import org.springframework.session.MapSessionRepository;
 import org.springframework.session.config.annotation.web.http.EnableSpringHttpSession;
 
 import com.baomidou.shaun.core.context.ProfileHolder;
-import com.baomidou.shaun.core.handler.HttpActionHandler;
+import com.baomidou.shaun.core.handler.HttpActionAdapter;
 import com.baomidou.shaun.core.profile.TokenProfile;
 
 /**
@@ -46,7 +46,7 @@ public class Cookie2Application {
     }
 
     @Bean
-    public HttpActionHandler httpActionHandler() {
+    public HttpActionAdapter httpActionHandler() {
         return (action, context) -> {
             HttpServletResponse response = context.getNativeResponse();
             try {

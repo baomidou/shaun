@@ -15,29 +15,25 @@
  */
 package com.baomidou.shaun.core.intercept;
 
-import com.baomidou.shaun.core.config.CoreConfig;
-import com.baomidou.shaun.core.context.ProfileHolder;
-import com.baomidou.shaun.core.filter.ShaunFilter;
-import com.baomidou.shaun.core.intercept.support.ShaunFilterChain;
-import com.baomidou.shaun.core.util.WebUtil;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.experimental.Accessors;
-import org.pac4j.core.context.JEEContext;
-import org.pac4j.core.exception.http.BadRequestAction;
-import org.pac4j.core.matching.checker.DefaultMatchingChecker;
-import org.pac4j.core.matching.checker.MatchingChecker;
-import org.springframework.lang.NonNull;
-import org.springframework.web.cors.CorsUtils;
-import org.springframework.web.filter.OncePerRequestFilter;
+import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
+
+import org.springframework.lang.NonNull;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+import com.baomidou.shaun.core.config.CoreConfig;
+import com.baomidou.shaun.core.filter.ShaunFilter;
+import com.baomidou.shaun.core.intercept.support.DoChainSupport;
+import com.baomidou.shaun.core.intercept.support.ShaunFilterChain;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
 
 /**
  * @author miemie
@@ -46,11 +42,10 @@ import java.util.List;
 @Data
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = true)
-public class ShaunOncePerRequestFilter extends OncePerRequestFilter {
+public class ShaunOncePerRequestFilter extends OncePerRequestFilter implements DoChainSupport {
 
     private final CoreConfig config;
     private final List<ShaunFilter> filterList;
-    private MatchingChecker matchingChecker = new DefaultMatchingChecker();
 
     public ShaunOncePerRequestFilter(CoreConfig config, ShaunFilterChain filterChain) {
         this.config = config;
@@ -60,23 +55,9 @@ public class ShaunOncePerRequestFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
                                     @NonNull FilterChain chain) throws ServletException, IOException {
-        final JEEContext context = WebUtil.getJEEContext(request, response, config.isSessionOn());
-        if (matchingChecker.matches(context, config.getMatcherNames(), config.getMatchersMap(), Collections.emptyList())) {
-            if (!CorsUtils.isPreFlightRequest(request)) {
-                for (ShaunFilter filter : filterList) {
-                    try {
-                        if (!filter.goOnChain(config, context)) {
-                            return;
-                        }
-                    } catch (Exception e) {
-                        ProfileHolder.clearProfile();
-                        throw e;
-                    }
-                }
-            }
-        } else {
-            config.getHttpActionHandler().preHandle(BadRequestAction.INSTANCE, context);
+        boolean result = doChain(request, response, config, filterList);
+        if (result) {
+            chain.doFilter(request, response);
         }
-        chain.doFilter(request, response);
     }
 }

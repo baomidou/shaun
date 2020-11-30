@@ -15,27 +15,9 @@
  */
 package com.baomidou.shaun.autoconfigure;
 
-import com.baomidou.shaun.autoconfigure.properties.ShaunProperties;
-import com.baomidou.shaun.core.authority.AuthorityManager;
-import com.baomidou.shaun.core.authority.DefaultAuthorityManager;
-import com.baomidou.shaun.core.config.CoreConfig;
-import com.baomidou.shaun.core.credentials.extractor.DefaultShaunCredentialsExtractor;
-import com.baomidou.shaun.core.credentials.extractor.ShaunCredentialsExtractor;
-import com.baomidou.shaun.core.filter.CallbackFilter;
-import com.baomidou.shaun.core.filter.LogoutFilter;
-import com.baomidou.shaun.core.filter.SecurityFilter;
-import com.baomidou.shaun.core.filter.SfLoginFilter;
-import com.baomidou.shaun.core.handler.CallbackHandler;
-import com.baomidou.shaun.core.handler.HttpActionHandler;
-import com.baomidou.shaun.core.handler.LogoutHandler;
-import com.baomidou.shaun.core.intercept.support.DefaultShaunFilterChain;
-import com.baomidou.shaun.core.intercept.support.ShaunFilterChain;
-import com.baomidou.shaun.core.matching.matcher.OnlyPathMatcher;
-import com.baomidou.shaun.core.mgt.DefaultProfileTokenManager;
-import com.baomidou.shaun.core.mgt.ProfileStateManager;
-import com.baomidou.shaun.core.mgt.ProfileTokenManager;
-import com.baomidou.shaun.core.mgt.SecurityManager;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.pac4j.core.authorization.authorizer.Authorizer;
 import org.pac4j.core.client.Client;
 import org.pac4j.core.client.Clients;
@@ -58,8 +40,28 @@ import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import com.baomidou.shaun.autoconfigure.properties.ShaunProperties;
+import com.baomidou.shaun.core.authority.AuthorityManager;
+import com.baomidou.shaun.core.authority.DefaultAuthorityManager;
+import com.baomidou.shaun.core.config.CoreConfig;
+import com.baomidou.shaun.core.credentials.extractor.DefaultShaunCredentialsExtractor;
+import com.baomidou.shaun.core.credentials.extractor.ShaunCredentialsExtractor;
+import com.baomidou.shaun.core.filter.CallbackFilter;
+import com.baomidou.shaun.core.filter.LogoutFilter;
+import com.baomidou.shaun.core.filter.SecurityFilter;
+import com.baomidou.shaun.core.filter.SfLoginFilter;
+import com.baomidou.shaun.core.handler.CallbackHandler;
+import com.baomidou.shaun.core.handler.HttpActionAdapter;
+import com.baomidou.shaun.core.handler.LogoutHandler;
+import com.baomidou.shaun.core.intercept.support.DefaultShaunFilterChain;
+import com.baomidou.shaun.core.intercept.support.ShaunFilterChain;
+import com.baomidou.shaun.core.matching.matcher.OnlyPathMatcher;
+import com.baomidou.shaun.core.mgt.DefaultProfileTokenManager;
+import com.baomidou.shaun.core.mgt.ProfileStateManager;
+import com.baomidou.shaun.core.mgt.ProfileTokenManager;
+import com.baomidou.shaun.core.mgt.SecurityManager;
+
+import lombok.RequiredArgsConstructor;
 
 /**
  * @author miemie
@@ -129,7 +131,7 @@ public class ShaunBeanAutoConfiguration {
                                  ObjectProvider<AjaxRequestResolver> ajaxRequestResolverProvider,
                                  ObjectProvider<Authorizer> authorizerProvider,
                                  ObjectProvider<Matcher> matcherProvider,
-                                 ObjectProvider<HttpActionHandler> httpActionHandlerProvider) {
+                                 ObjectProvider<HttpActionAdapter> httpActionAdapterProvider) {
         CoreConfig coreConfig = new CoreConfig();
         coreConfig.setStateless(properties.isStateless());
         coreConfig.setSessionOn(properties.isSessionOn());
@@ -151,7 +153,7 @@ public class ShaunBeanAutoConfiguration {
         coreConfig.matcherNamesAppend(properties.getMatcherNames());
         matcherProvider.stream().forEach(coreConfig::addMatcher);
 
-        httpActionHandlerProvider.ifAvailable(coreConfig::setHttpActionHandler);
+        httpActionAdapterProvider.ifAvailable(coreConfig::setHttpActionAdapter);
         ajaxRequestResolverProvider.ifAvailable(coreConfig::setAjaxRequestResolver);
         return coreConfig;
     }

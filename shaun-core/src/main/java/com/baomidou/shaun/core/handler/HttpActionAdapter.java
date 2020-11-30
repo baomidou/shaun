@@ -16,25 +16,23 @@
 package com.baomidou.shaun.core.handler;
 
 import org.pac4j.core.context.JEEContext;
-import org.pac4j.core.exception.http.BadRequestAction;
-import org.pac4j.core.exception.http.HttpAction;
-import org.pac4j.core.exception.http.UnauthorizedAction;
+
+import com.baomidou.shaun.core.config.CoreConfig;
 
 /**
- * 只能处理拦截到request的地方,
- * 主要用于处理 ajax 请求 ,
  * 不能处理权限注解产生的异常
  *
  * @author miemie
  * @since 2019-08-08
  */
-public interface HttpActionHandler {
+public interface HttpActionAdapter {
 
     /**
-     * 处理抛出的异常 {@link UnauthorizedAction} 和 {@link BadRequestAction}
+     * 处理抛出的异常
      *
-     * @param action  异常
+     * @param ex      异常
+     * @param config  核心
      * @param context 上下文
      */
-    void preHandle(HttpAction action, JEEContext context);
+    void adapt(CoreConfig config, JEEContext context, Exception ex);
 }

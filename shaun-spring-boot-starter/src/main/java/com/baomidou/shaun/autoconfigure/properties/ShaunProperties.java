@@ -15,15 +15,9 @@
  */
 package com.baomidou.shaun.autoconfigure.properties;
 
-import com.baomidou.shaun.core.credentials.TokenLocation;
-import com.baomidou.shaun.core.credentials.location.Cookie;
-import com.baomidou.shaun.core.credentials.location.Header;
-import com.baomidou.shaun.core.credentials.location.Parameter;
-import com.baomidou.shaun.core.handler.CallbackHandler;
-import com.baomidou.shaun.core.intercept.InterceptModel;
-import com.baomidou.shaun.core.mgt.SecurityManager;
-import com.baomidou.shaun.core.profile.TokenProfile;
-import lombok.Data;
+import java.util.List;
+import java.util.UUID;
+
 import org.pac4j.core.authorization.authorizer.Authorizer;
 import org.pac4j.core.authorization.authorizer.DefaultAuthorizers;
 import org.pac4j.core.authorization.checker.DefaultAuthorizationChecker;
@@ -34,8 +28,16 @@ import org.pac4j.core.matching.matcher.Matcher;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
-import java.util.List;
-import java.util.UUID;
+import com.baomidou.shaun.core.credentials.TokenLocation;
+import com.baomidou.shaun.core.credentials.location.Cookie;
+import com.baomidou.shaun.core.credentials.location.Header;
+import com.baomidou.shaun.core.credentials.location.Parameter;
+import com.baomidou.shaun.core.handler.CallbackHandler;
+import com.baomidou.shaun.core.intercept.InterceptModel;
+import com.baomidou.shaun.core.mgt.SecurityManager;
+import com.baomidou.shaun.core.profile.TokenProfile;
+
+import lombok.Data;
 
 /**
  * @author miemie
@@ -77,19 +79,19 @@ public class ShaunProperties {
     @NestedConfigurationProperty
     private final Parameter parameter = new Parameter();
     /**
-     * authorizerNames,多个以逗号分隔(不包含自己注入的 {@link Authorizer})
-     * <p>
-     * !!! 以下 {@link #excludePath} 和 {@link #excludeBranch} 和 {@link #excludeRegex} 排除掉的之外的地址都生效 !!! <p>
-     * 参考 {@link DefaultAuthorizationChecker}
-     */
-    private String authorizerNames = DefaultAuthorizers.NONE;
-    /**
      * matcherNames,多个以逗号分隔(不包含自己注入的 {@link Matcher})
      * <p>
-     * !!! 全部地址都生效 !!! <p>
+     * !!! 需要用户有登录信息的地址生效,比 authorizer 早 !!! <p>
      * 参考 {@link DefaultMatchingChecker}
      */
     private String matcherNames = DefaultMatchers.NONE;
+    /**
+     * authorizerNames,多个以逗号分隔(不包含自己注入的 {@link Authorizer})
+     * <p>
+     * !!! 需要用户有登录信息的地址生效,比 matcher 晚 !!! <p>
+     * 参考 {@link DefaultAuthorizationChecker}
+     */
+    private String authorizerNames = DefaultAuthorizers.NONE;
     /**
      * 跳过鉴权的 role 和 permission 的表现字符串(相当于系统超管)
      */
@@ -160,6 +162,7 @@ public class ShaunProperties {
 
     @Data
     public static class Annotations {
+
         /**
          * 是否启用注解拦截
          */

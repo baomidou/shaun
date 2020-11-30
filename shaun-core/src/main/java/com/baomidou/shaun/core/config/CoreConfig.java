@@ -16,6 +16,7 @@
 package com.baomidou.shaun.core.config;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,12 +40,13 @@ import org.springframework.util.CollectionUtils;
 import com.baomidou.shaun.core.authority.AuthorityManager;
 import com.baomidou.shaun.core.credentials.TokenLocation;
 import com.baomidou.shaun.core.credentials.location.Cookie;
-import com.baomidou.shaun.core.handler.DefaultHttpActionHandler;
+import com.baomidou.shaun.core.handler.DefaultHttpActionAdapter;
 import com.baomidou.shaun.core.handler.DefaultLogoutHandler;
-import com.baomidou.shaun.core.handler.HttpActionHandler;
+import com.baomidou.shaun.core.handler.HttpActionAdapter;
 import com.baomidou.shaun.core.handler.LogoutHandler;
 import com.baomidou.shaun.core.mgt.ProfileStateManager;
 import com.baomidou.shaun.core.mgt.ProfileTokenManager;
+import com.baomidou.shaun.core.profile.TokenProfile;
 import com.baomidou.shaun.core.util.WebUtil;
 
 import lombok.AccessLevel;
@@ -99,7 +101,7 @@ public class CoreConfig {
     /**
      * 处理抛出的异常
      */
-    private HttpActionHandler httpActionHandler = new DefaultHttpActionHandler();
+    private HttpActionAdapter httpActionAdapter = new DefaultHttpActionAdapter();
     /**
      * 回调处理器用来发现client
      */
@@ -201,6 +203,14 @@ public class CoreConfig {
                 }
             }
         }
+    }
+
+    public boolean matchingChecker(JEEContext context) {
+        return matchingChecker.matches(context, matcherNames, matchersMap, Collections.emptyList());
+    }
+
+    public boolean authorizationChecker(JEEContext context, TokenProfile profile) {
+        return authorizationChecker.isAuthorized(context, Collections.singletonList(profile), authorizerNames, authorizersMap, Collections.emptyList());
     }
 
     /**
