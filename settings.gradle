@@ -14,7 +14,7 @@ buildscript {
     }
 }
 
-include "shaun-core"
+include 'shaun-core'
 include 'shaun-spring-boot-starter'
 
 file("${rootDir}/tests").eachDir { include "tests:${it.name}" }

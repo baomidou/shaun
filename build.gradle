@@ -30,13 +30,15 @@ subprojects {
     apply plugin: 'java-library'
     apply plugin: 'signing'
     apply plugin: 'maven-publish'
-    apply plugin: "io.freefair.lombok"
+    apply plugin: 'io.freefair.lombok'
+    apply plugin: 'com.github.hierynomus.license'
 
     sourceCompatibility = "${javaVersion}"
     targetCompatibility = "${javaVersion}"
 
     tasks.withType(JavaCompile) {
         options.encoding = 'UTF-8'
+        options.warnings = false
         options.deprecation = true
         options.compilerArgs += ["-parameters"]
     }
@@ -48,6 +50,7 @@ subprojects {
     jar {
         afterEvaluate {
             manifest {
+                attributes 'Implementation-Title': archiveBaseName
                 attributes 'Implementation-Version': archiveVersion
                 attributes 'Built-Gradle': gradle.gradleVersion
                 attributes 'Bundle-DocURL': 'https://mybatis.plus/'
@@ -67,6 +70,16 @@ subprojects {
         testImplementation("org.assertj:assertj-core")
         testImplementation("org.junit.jupiter:junit-jupiter-engine")
         testImplementation("org.mockito:mockito-junit-jupiter")
+    }
+
+    license {
+        encoding = "UTF-8"
+        header = rootProject.file("license.txt")
+        include "**/*.java"
+        exclude "**/test/**/*.java"
+        exclude "**/*Test.java"
+        ignoreFailures = true
+        ext.newYear = 2020
     }
 
     //noinspection GroovyAssignabilityCheck
