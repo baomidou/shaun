@@ -26,7 +26,6 @@ allprojects {
 description = "easy security for web by pac4j"
 
 subprojects {
-    apply plugin: 'java'
     apply plugin: 'java-library'
     apply plugin: 'signing'
     apply plugin: 'maven-publish'
@@ -92,8 +91,8 @@ subprojects {
 
     //noinspection GroovyAssignabilityCheck
     task sourcesJar(type: Jar) {
-        from sourceSets.main.allJava
         archiveClassifier = "sources"
+        from sourceSets.main.allJava
     }
 
     javadoc {
@@ -110,8 +109,8 @@ subprojects {
     }
 
     task javadocJar(type: Jar) {
-        from javadoc
         archiveClassifier = "javadoc"
+        from javadoc
     }
 
     test {
