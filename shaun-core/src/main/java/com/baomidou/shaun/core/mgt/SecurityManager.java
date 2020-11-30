@@ -1,6 +1,6 @@
 package com.baomidou.shaun.core.mgt;
 
-import com.baomidou.shaun.core.config.ShaunConfig;
+import com.baomidou.shaun.core.config.CoreConfig;
 import com.baomidou.shaun.core.context.ProfileHolder;
 import com.baomidou.shaun.core.profile.TokenProfile;
 import com.baomidou.shaun.core.util.ExpireTimeUtil;
@@ -21,7 +21,7 @@ import org.pac4j.core.util.CommonHelper;
 @RequiredArgsConstructor
 public class SecurityManager {
 
-    private final ShaunConfig config;
+    private final CoreConfig config;
 
     /**
      * ignore

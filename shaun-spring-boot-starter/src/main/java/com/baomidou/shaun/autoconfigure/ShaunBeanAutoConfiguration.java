@@ -3,7 +3,7 @@ package com.baomidou.shaun.autoconfigure;
 import com.baomidou.shaun.autoconfigure.properties.ShaunProperties;
 import com.baomidou.shaun.core.authority.AuthorityManager;
 import com.baomidou.shaun.core.authority.DefaultAuthorityManager;
-import com.baomidou.shaun.core.config.ShaunConfig;
+import com.baomidou.shaun.core.config.CoreConfig;
 import com.baomidou.shaun.core.credentials.extractor.DefaultShaunCredentialsExtractor;
 import com.baomidou.shaun.core.credentials.extractor.ShaunCredentialsExtractor;
 import com.baomidou.shaun.core.filter.CallbackFilter;
@@ -108,37 +108,37 @@ public class ShaunBeanAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public ShaunConfig shaunConfig(AuthorityManager authorityManager, ProfileTokenManager profileTokenManager,
-                                   ObjectProvider<ProfileStateManager> profileStateManagerProvider,
-                                   ObjectProvider<LogoutHandler> logoutHandlerProvider,
-                                   ObjectProvider<AjaxRequestResolver> ajaxRequestResolverProvider,
-                                   ObjectProvider<Authorizer> authorizerProvider,
-                                   ObjectProvider<Matcher> matcherProvider,
-                                   ObjectProvider<HttpActionHandler> httpActionHandlerProvider) {
-        ShaunConfig shaunConfig = new ShaunConfig();
-        shaunConfig.setStateless(properties.isStateless());
-        shaunConfig.setSessionOn(properties.isSessionOn());
-        shaunConfig.setTokenLocation(properties.getTokenLocation());
-        shaunConfig.setCookie(properties.getCookie());
-        shaunConfig.setExpireTime(properties.getExpireTime());
-        shaunConfig.setAuthorityManager(authorityManager);
-        profileStateManagerProvider.ifAvailable(shaunConfig::setProfileStateManager);
-        logoutHandlerProvider.ifAvailable(shaunConfig::setLogoutHandler);
+    public CoreConfig coreConfig(AuthorityManager authorityManager, ProfileTokenManager profileTokenManager,
+                                 ObjectProvider<ProfileStateManager> profileStateManagerProvider,
+                                 ObjectProvider<LogoutHandler> logoutHandlerProvider,
+                                 ObjectProvider<AjaxRequestResolver> ajaxRequestResolverProvider,
+                                 ObjectProvider<Authorizer> authorizerProvider,
+                                 ObjectProvider<Matcher> matcherProvider,
+                                 ObjectProvider<HttpActionHandler> httpActionHandlerProvider) {
+        CoreConfig coreConfig = new CoreConfig();
+        coreConfig.setStateless(properties.isStateless());
+        coreConfig.setSessionOn(properties.isSessionOn());
+        coreConfig.setTokenLocation(properties.getTokenLocation());
+        coreConfig.setCookie(properties.getCookie());
+        coreConfig.setExpireTime(properties.getExpireTime());
+        coreConfig.setAuthorityManager(authorityManager);
+        profileStateManagerProvider.ifAvailable(coreConfig::setProfileStateManager);
+        logoutHandlerProvider.ifAvailable(coreConfig::setLogoutHandler);
         String loginUrl = properties.getLoginUrl();
-        if (!shaunConfig.isStateless()) {
+        if (!coreConfig.isStateless()) {
             Assert.hasText(loginUrl, "loginUrl must not black when stateful");
         }
-        shaunConfig.setLoginUrl(loginUrl);
-        shaunConfig.setProfileTokenManager(profileTokenManager);
+        coreConfig.setLoginUrl(loginUrl);
+        coreConfig.setProfileTokenManager(profileTokenManager);
 
-        shaunConfig.authorizerNamesAppend(properties.getAuthorizerNames());
-        authorizerProvider.stream().forEach(shaunConfig::addAuthorizer);
-        shaunConfig.matcherNamesAppend(properties.getMatcherNames());
-        matcherProvider.stream().forEach(shaunConfig::addMatcher);
+        coreConfig.authorizerNamesAppend(properties.getAuthorizerNames());
+        authorizerProvider.stream().forEach(coreConfig::addAuthorizer);
+        coreConfig.matcherNamesAppend(properties.getMatcherNames());
+        matcherProvider.stream().forEach(coreConfig::addMatcher);
 
-        httpActionHandlerProvider.ifAvailable(shaunConfig::setHttpActionHandler);
-        ajaxRequestResolverProvider.ifAvailable(shaunConfig::setAjaxRequestResolver);
-        return shaunConfig;
+        httpActionHandlerProvider.ifAvailable(coreConfig::setHttpActionHandler);
+        ajaxRequestResolverProvider.ifAvailable(coreConfig::setAjaxRequestResolver);
+        return coreConfig;
     }
 
     /**
@@ -146,13 +146,13 @@ public class ShaunBeanAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean
-    public SecurityManager securityManager(ShaunConfig shaunConfig) {
-        return new SecurityManager(shaunConfig);
+    public SecurityManager securityManager(CoreConfig coreConfig) {
+        return new SecurityManager(coreConfig);
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public ShaunFilterChain shaunFilterChain(ShaunConfig shaunConfig, SecurityManager securityManager,
+    public ShaunFilterChain shaunFilterChain(CoreConfig coreConfig, SecurityManager securityManager,
                                              ObjectProvider<CallbackHandler> callbackHandlerProvider,
                                              ObjectProvider<IndirectClient> indirectClientsProvider) {
         DefaultShaunFilterChain chain = new DefaultShaunFilterChain();
@@ -168,8 +168,8 @@ public class ShaunBeanAutoConfiguration {
         if (!CollectionUtils.isEmpty(properties.getExcludeRegex())) {
             properties.getExcludeBranch().forEach(securityPathMatcher::excludeRegex);
         }
-        if (shaunConfig.getLoginUrl() != null) {
-            securityPathMatcher.excludePath(shaunConfig.getLoginUrl());
+        if (coreConfig.getLoginUrl() != null) {
+            securityPathMatcher.excludePath(coreConfig.getLoginUrl());
         }
         final SecurityFilter securityFilter = new SecurityFilter(securityPathMatcher);
         chain.addShaunFilter(securityFilter);
@@ -184,7 +184,7 @@ public class ShaunBeanAutoConfiguration {
         /* logoutFilter end */
 
         /* other begin */
-        if (!shaunConfig.isStateless()) {
+        if (!coreConfig.isStateless()) {
             List<Client> indirectClients = indirectClientsProvider.stream().collect(Collectors.toList());
             if (!CollectionUtils.isEmpty(indirectClients)) {
                 final String sfLoginUrl = properties.getSfLoginUrl();
@@ -197,7 +197,7 @@ public class ShaunBeanAutoConfiguration {
                 Assert.notNull(callbackHandler, "callbackHandler must not null");
 
                 Clients clients = new Clients(callbackUrl, indirectClients);
-                clients.setAjaxRequestResolver(shaunConfig.getAjaxRequestResolver());
+                clients.setAjaxRequestResolver(coreConfig.getAjaxRequestResolver());
                 clients.setUrlResolver(new DefaultUrlResolver(true));
 
                 final SfLoginFilter sfLoginFilter = new SfLoginFilter(new OnlyPathMatcher(sfLoginUrl));

@@ -1,6 +1,6 @@
 package com.baomidou.shaun.core.intercept;
 
-import com.baomidou.shaun.core.config.ShaunConfig;
+import com.baomidou.shaun.core.config.CoreConfig;
 import com.baomidou.shaun.core.context.ProfileHolder;
 import com.baomidou.shaun.core.filter.ShaunFilter;
 import com.baomidou.shaun.core.intercept.support.ShaunFilterChain;
@@ -27,9 +27,9 @@ import java.util.List;
 public class ShaunHandlerInterceptor implements HandlerInterceptor {
 
     private final List<ShaunFilter> filterList;
-    private final ShaunConfig config;
+    private final CoreConfig config;
 
-    public ShaunHandlerInterceptor(ShaunConfig config, ShaunFilterChain filterChain) {
+    public ShaunHandlerInterceptor(CoreConfig config, ShaunFilterChain filterChain) {
         this.config = config;
         this.filterList = filterChain.getOrderFilter();
     }

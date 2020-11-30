@@ -1,6 +1,6 @@
 package com.baomidou.shaun.core.handler;
 
-import com.baomidou.shaun.core.config.ShaunConfig;
+import com.baomidou.shaun.core.config.CoreConfig;
 import com.baomidou.shaun.core.credentials.location.Cookie;
 import com.baomidou.shaun.core.profile.TokenProfile;
 import com.baomidou.shaun.core.util.WebUtil;
@@ -22,7 +22,7 @@ import org.pac4j.core.context.JEEContext;
 public class DefaultLogoutHandler implements LogoutHandler {
 
     @Override
-    public void logout(ShaunConfig config, TokenProfile profile) {
+    public void logout(CoreConfig config, TokenProfile profile) {
         boolean sessionOn = config.isSessionOn();
         Cookie cookie = config.getCookie();
         JEEContext jeeContext = WebUtil.getJEEContext(sessionOn);

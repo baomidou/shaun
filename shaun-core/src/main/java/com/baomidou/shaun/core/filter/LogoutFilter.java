@@ -1,6 +1,6 @@
 package com.baomidou.shaun.core.filter;
 
-import com.baomidou.shaun.core.config.ShaunConfig;
+import com.baomidou.shaun.core.config.CoreConfig;
 import com.baomidou.shaun.core.context.ProfileHolder;
 import com.baomidou.shaun.core.mgt.SecurityManager;
 import com.baomidou.shaun.core.profile.TokenProfile;
@@ -24,7 +24,7 @@ public class LogoutFilter implements ShaunFilter {
     private SecurityManager securityManager;
 
     @Override
-    public boolean goOnChain(ShaunConfig config, JEEContext context) {
+    public boolean goOnChain(CoreConfig config, JEEContext context) {
         if (pathMatcher.matches(context)) {
             final TokenProfile profile = ProfileHolder.getProfile();
             securityManager.logout(profile);
@@ -34,7 +34,7 @@ public class LogoutFilter implements ShaunFilter {
         return true;
     }
 
-    protected void logoutThen(ShaunConfig config, JEEContext context) {
+    protected void logoutThen(CoreConfig config, JEEContext context) {
         if (config.isStateless()) {
             return;
         }
