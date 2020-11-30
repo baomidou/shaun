@@ -136,8 +136,8 @@ public class ShaunBeanAutoConfiguration {
         shaunConfig.matcherNamesAppend(properties.getMatcherNames());
         matcherProvider.stream().forEach(shaunConfig::addMatcher);
 
-        httpActionHandlerProvider.ifUnique(shaunConfig::setHttpActionHandler);
-        ajaxRequestResolverProvider.ifUnique(shaunConfig::setAjaxRequestResolver);
+        httpActionHandlerProvider.ifAvailable(shaunConfig::setHttpActionHandler);
+        ajaxRequestResolverProvider.ifAvailable(shaunConfig::setAjaxRequestResolver);
         return shaunConfig;
     }
 
