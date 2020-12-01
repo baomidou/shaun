@@ -15,12 +15,12 @@
  */
 package com.baomidou.shaun.core.filter;
 
-import static org.pac4j.core.util.CommonHelper.assertNotNull;
-import static org.pac4j.core.util.CommonHelper.assertTrue;
-
-import java.util.List;
-import java.util.Optional;
-
+import com.baomidou.shaun.core.client.finder.DefaultSfClientFinder;
+import com.baomidou.shaun.core.config.CoreConfig;
+import com.baomidou.shaun.core.util.WebUtil;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.pac4j.core.client.Client;
 import org.pac4j.core.client.Clients;
 import org.pac4j.core.client.finder.ClientFinder;
@@ -30,13 +30,11 @@ import org.pac4j.core.exception.http.RedirectionAction;
 import org.pac4j.core.matching.matcher.Matcher;
 import org.pac4j.core.util.CommonHelper;
 
-import com.baomidou.shaun.core.client.finder.DefaultSfClientFinder;
-import com.baomidou.shaun.core.config.CoreConfig;
-import com.baomidou.shaun.core.util.WebUtil;
+import java.util.List;
+import java.util.Optional;
 
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import static org.pac4j.core.util.CommonHelper.assertNotNull;
+import static org.pac4j.core.util.CommonHelper.assertTrue;
 
 /**
  * 三方登录 filter
@@ -51,8 +49,8 @@ import lombok.extern.slf4j.Slf4j;
 public class SfLoginFilter implements ShaunFilter {
 
     private final Matcher pathMatcher;
+    private final Clients clients;
     private ClientFinder clientFinder = new DefaultSfClientFinder();
-    private Clients clients;
 
     @Override
     public boolean doFilter(CoreConfig config, JEEContext context) {

@@ -15,9 +15,11 @@
  */
 package com.baomidou.shaun.core.filter;
 
-import java.util.List;
-import java.util.Optional;
-
+import com.baomidou.shaun.core.config.CoreConfig;
+import com.baomidou.shaun.core.handler.CallbackHandler;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.pac4j.core.client.Client;
 import org.pac4j.core.client.Clients;
 import org.pac4j.core.client.finder.ClientFinder;
@@ -27,14 +29,11 @@ import org.pac4j.core.credentials.Credentials;
 import org.pac4j.core.exception.http.UnauthorizedAction;
 import org.pac4j.core.matching.matcher.Matcher;
 import org.pac4j.core.profile.UserProfile;
+import org.pac4j.core.util.CommonHelper;
 import org.springframework.util.Assert;
 
-import com.baomidou.shaun.core.config.CoreConfig;
-import com.baomidou.shaun.core.handler.CallbackHandler;
-
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * callback filter
@@ -49,9 +48,9 @@ import lombok.extern.slf4j.Slf4j;
 public class CallbackFilter implements ShaunFilter {
 
     private final Matcher pathMatcher;
+    private final Clients clients;
+    private final CallbackHandler callbackHandler;
     private ClientFinder clientFinder = new DefaultCallbackClientFinder();
-    private Clients clients;
-    private CallbackHandler callbackHandler;
 
     @Override
     public boolean doFilter(CoreConfig config, JEEContext context) {
@@ -91,7 +90,8 @@ public class CallbackFilter implements ShaunFilter {
 
     @Override
     public void initCheck() {
-        Assert.notNull(clients, "clients cannot be null");
-        Assert.notNull(callbackHandler, "callbackHandler cannot be null");
+        CommonHelper.assertNotNull("pathMatcher", pathMatcher);
+        CommonHelper.assertNotNull("clients", clients);
+        CommonHelper.assertNotNull("callbackHandler", callbackHandler);
     }
 }
