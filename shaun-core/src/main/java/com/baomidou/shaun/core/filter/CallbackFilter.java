@@ -17,8 +17,7 @@ package com.baomidou.shaun.core.filter;
 
 import com.baomidou.shaun.core.config.CoreConfig;
 import com.baomidou.shaun.core.handler.CallbackHandler;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.pac4j.core.client.Client;
 import org.pac4j.core.client.Clients;
@@ -42,50 +41,37 @@ import java.util.Optional;
  * @author miemie
  * @since 2019-07-24
  */
-@SuppressWarnings("unchecked")
+@Setter
 @Slf4j
-@Data
-@RequiredArgsConstructor
-public class CallbackFilter implements ShaunFilter {
+@SuppressWarnings("unchecked")
+public class CallbackFilter extends AbstractShaunFilter {
 
-    private final Matcher pathMatcher;
     private Clients clients;
     private CallbackHandler callbackHandler;
     private ClientFinder clientFinder = new DefaultCallbackClientFinder();
 
-    @Override
-    public HttpAction doFilter(CoreConfig config, JEEContext context) {
-        if (pathMatcher.matches(context)) {
-            if (log.isDebugEnabled()) {
-                log.debug("access sfLogin \"{}\"", context.getFullRequestURL());
-            }
+    public CallbackFilter(Matcher pathMatcher) {
+        super(pathMatcher);
+    }
 
-            try {
-                final List<Client<?>> foundClients = clientFinder.find(this.clients, context, null);
-                Assert.isTrue(foundClients != null && foundClients.size() == 1,
-                        "unable to find one indirect client for the callback: check the callback URL for a client name parameter");
-                final Client foundClient = foundClients.get(0);
-                log.debug("foundClient: {}", foundClient);
-                Assert.notNull(foundClient, "foundClient cannot be null");
-                final Optional<Credentials> credentials = foundClient.getCredentials(context);
-                log.debug("credentials: {}", credentials);
-                if (credentials.isPresent()) {
-                    final Optional<UserProfile> profile = foundClient.getUserProfile(credentials.get(), context);
-                    log.debug("profile: {}", profile);
-                    if (profile.isPresent()) {
-                        return callbackHandler.callBack(context, profile.get());
-                    }
-                }
-                return BadRequestAction.INSTANCE;
-            } catch (Exception e) {
-                if (e instanceof HttpAction) {
-                    return (HttpAction) e;
-                } else {
-                    throw new RuntimeException(e);
-                }
+    @Override
+    protected HttpAction matchThen(CoreConfig config, JEEContext context) {
+        final List<Client<?>> foundClients = clientFinder.find(this.clients, context, null);
+        Assert.isTrue(foundClients != null && foundClients.size() == 1,
+                "unable to find one indirect client for the callback: check the callback URL for a client name parameter");
+        final Client foundClient = foundClients.get(0);
+        log.debug("foundClient: {}", foundClient);
+        Assert.notNull(foundClient, "foundClient cannot be null");
+        final Optional<Credentials> credentials = foundClient.getCredentials(context);
+        log.debug("credentials: {}", credentials);
+        if (credentials.isPresent()) {
+            final Optional<UserProfile> profile = foundClient.getUserProfile(credentials.get(), context);
+            log.debug("profile: {}", profile);
+            if (profile.isPresent()) {
+                return callbackHandler.callBack(context, profile.get());
             }
         }
-        return null;
+        return BadRequestAction.INSTANCE;
     }
 
     @Override
@@ -95,7 +81,6 @@ public class CallbackFilter implements ShaunFilter {
 
     @Override
     public void initCheck() {
-        CommonHelper.assertNotNull("pathMatcher", pathMatcher);
         CommonHelper.assertNotNull("clients", clients);
         CommonHelper.assertNotNull("callbackHandler", callbackHandler);
     }

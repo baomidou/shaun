@@ -28,11 +28,9 @@ import org.pac4j.core.exception.http.HttpAction;
 public interface ShaunFilter {
 
     /**
-     * 是否继续执行 FilterChain.doFilter(request, response);
-     *
      * @param config  全局配置
      * @param context webContext
-     * @return 是否继续执行
+     * @return HttpAction
      */
     HttpAction doFilter(CoreConfig config, JEEContext context);
 
@@ -45,5 +43,7 @@ public interface ShaunFilter {
         return 0;
     }
 
-    void initCheck();
+    default void initCheck() {
+        // ignore
+    }
 }

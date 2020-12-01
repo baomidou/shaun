@@ -30,24 +30,52 @@ public class DefaultHttpActionHandler implements HttpActionHandler {
     @Override
     public void handle(CoreConfig config, JEEContext context, HttpAction action) {
         if (config.isStateless()) {
-            if (action instanceof RedirectionAction) {
-                return;
-            }
-            throw action;
+            handleStateless(config, context, action);
         }
+        handleStateful(config, context, action);
+    }
+
+    /**
+     * 无状态 下处理
+     */
+    protected void handleStateless(CoreConfig config, JEEContext context, HttpAction action) {
+        if (action instanceof RedirectionAction) {
+            return;
+        }
+        throw action;
+    }
+
+    /**
+     * 有状态 下处理
+     */
+    protected void handleStateful(CoreConfig config, JEEContext context, HttpAction action) {
         if (config.getAjaxRequestResolver().isAjax(context)) {
-            throw action;
+            handleStatefulAjax(config, context, action);
         } else {
-            if (action instanceof UnauthorizedAction || action instanceof ForbiddenAction ||
-                    action instanceof FoundLoginAction) {
-                WebUtil.redirectUrl(context, config.getLoginUrl());
-            } else if (action instanceof WithLocationAction) {
-                WebUtil.redirectUrl(context, action.getCode(), ((WithLocationAction) action).getLocation());
-            } else if (action instanceof WithContentAction) {
-                WebUtil.write(context, action.getCode(), ((WithContentAction) action).getContent());
-            } else {
-                throw action;
-            }
+            handleStatefulNotAjax(config, context, action);
+        }
+    }
+
+    /**
+     * 有状态 下处理 ajax
+     */
+    protected void handleStatefulAjax(CoreConfig config, JEEContext context, HttpAction action) {
+        throw action;
+    }
+
+    /**
+     * 有状态 下处理 非ajax
+     */
+    protected void handleStatefulNotAjax(CoreConfig config, JEEContext context, HttpAction action) {
+        if (action instanceof UnauthorizedAction || action instanceof ForbiddenAction ||
+                action instanceof FoundLoginAction) {
+            WebUtil.redirectUrl(context, config.getLoginUrl());
+        } else if (action instanceof WithLocationAction) {
+            WebUtil.redirectUrl(context, action.getCode(), ((WithLocationAction) action).getLocation());
+        } else if (action instanceof WithContentAction) {
+            WebUtil.write(context, action.getCode(), ((WithContentAction) action).getContent());
+        } else {
+            throw action;
         }
     }
 }

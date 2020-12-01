@@ -17,8 +17,7 @@ package com.baomidou.shaun.core.filter;
 
 import com.baomidou.shaun.core.client.finder.DefaultSfClientFinder;
 import com.baomidou.shaun.core.config.CoreConfig;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.pac4j.core.client.Client;
 import org.pac4j.core.client.Clients;
@@ -42,37 +41,35 @@ import static org.pac4j.core.util.CommonHelper.assertTrue;
  * @author miemie
  * @since 2019-07-24
  */
-@SuppressWarnings("unchecked")
 @Slf4j
-@Data
-@RequiredArgsConstructor
-public class SfLoginFilter implements ShaunFilter {
+@Setter
+@SuppressWarnings("unchecked")
+public class SfLoginFilter extends AbstractShaunFilter {
 
-    private final Matcher pathMatcher;
     private Clients clients;
     private ClientFinder clientFinder = new DefaultSfClientFinder();
 
+    public SfLoginFilter(Matcher pathMatcher) {
+        super(pathMatcher);
+    }
+
     @Override
-    public HttpAction doFilter(CoreConfig config, JEEContext context) {
-        if (pathMatcher.matches(context)) {
-            if (log.isDebugEnabled()) {
-                log.debug("access sfLogin \"{}\"", context.getFullRequestURL());
-            }
-
-            final List<Client<?>> foundClients = clientFinder.find(this.clients, context, null);
-            assertTrue(foundClients != null && foundClients.size() == 1,
-                    "unable to find one indirect client for the sfLogin: check the sfLogin URL for a client name parameter");
-            final Client foundClient = foundClients.get(0);
-            log.debug("foundClient: {}", foundClient);
-            assertNotNull("foundClient", foundClient);
-
-            Optional<RedirectionAction> redirect = foundClient.getRedirectionAction(context);
-            if (redirect.isPresent()) {
-                return redirect.get();
-            }
-            return BadRequestAction.INSTANCE;
+    protected HttpAction matchThen(CoreConfig config, JEEContext context) {
+        if (log.isDebugEnabled()) {
+            log.debug("access sfLogin \"{}\"", context.getFullRequestURL());
         }
-        return null;
+        final List<Client<?>> foundClients = clientFinder.find(this.clients, context, null);
+        assertTrue(foundClients != null && foundClients.size() == 1,
+                "unable to find one indirect client for the sfLogin: check the sfLogin URL for a client name parameter");
+        final Client foundClient = foundClients.get(0);
+        log.debug("foundClient: {}", foundClient);
+        assertNotNull("foundClient", foundClient);
+
+        Optional<RedirectionAction> redirect = foundClient.getRedirectionAction(context);
+        if (redirect.isPresent()) {
+            return redirect.get();
+        }
+        return BadRequestAction.INSTANCE;
     }
 
     @Override
@@ -83,6 +80,5 @@ public class SfLoginFilter implements ShaunFilter {
     @Override
     public void initCheck() {
         CommonHelper.assertNotNull("clients", clients);
-        CommonHelper.assertNotNull("pathMatcher", pathMatcher);
     }
 }

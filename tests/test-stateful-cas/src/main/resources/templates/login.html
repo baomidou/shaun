@@ -1,12 +1,26 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>login</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
 <div id="app">
-    <a th:href="@{/sf?client_name=casClient}">cas登陆</a>
+    <a th:href="@{/sf?client_name=casClient}">cas登陆:get</a>
+    <p></p>
+    <button id='bt' type="button">cas登陆:post</button>
 </div>
+<script type="text/javascript">
+    $('#bt').click(function () {
+        $.ajax({
+            type: "POST",
+            url: "/sf?client_name=casClient&javax.faces.partial.ajax=1",
+            success: function (data) {
+                $('#h2').html(data)
+            }
+        });
+    })
+</script>
 </body>
 </html>

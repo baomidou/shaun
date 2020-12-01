@@ -20,8 +20,7 @@ import com.baomidou.shaun.core.context.ProfileHolder;
 import com.baomidou.shaun.core.exception.http.FoundLoginAction;
 import com.baomidou.shaun.core.mgt.SecurityManager;
 import com.baomidou.shaun.core.profile.TokenProfile;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.exception.http.HttpAction;
@@ -34,25 +33,24 @@ import org.pac4j.core.util.CommonHelper;
  * @author miemie
  * @since 2019-07-24
  */
-@Data
+@Setter
 @Slf4j
-@RequiredArgsConstructor
-public class LogoutFilter implements ShaunFilter {
+public class LogoutFilter extends AbstractShaunFilter {
 
-    private final Matcher pathMatcher;
     private SecurityManager securityManager;
 
+    public LogoutFilter(Matcher pathMatcher) {
+        super(pathMatcher);
+    }
+
     @Override
-    public HttpAction doFilter(CoreConfig config, JEEContext context) {
-        if (pathMatcher.matches(context)) {
-            if (log.isDebugEnabled()) {
-                log.debug("access logout");
-            }
-            final TokenProfile profile = ProfileHolder.getProfile();
-            securityManager.logout(profile);
-            return FoundLoginAction.INSTANCE;
+    protected HttpAction matchThen(CoreConfig config, JEEContext context) {
+        if (log.isDebugEnabled()) {
+            log.debug("access logout");
         }
-        return null;
+        final TokenProfile profile = ProfileHolder.getProfile();
+        securityManager.logout(profile);
+        return FoundLoginAction.INSTANCE;
     }
 
     @Override
@@ -62,7 +60,6 @@ public class LogoutFilter implements ShaunFilter {
 
     @Override
     public void initCheck() {
-        CommonHelper.assertNotNull("pathMatcher", pathMatcher);
         CommonHelper.assertNotNull("securityManager", securityManager);
     }
 }

@@ -26,6 +26,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 
 /**
  * @author miemie
@@ -104,8 +106,9 @@ public abstract class WebUtil {
         final HttpServletResponse response = context.getNativeResponse();
         response.setStatus(code);
         if (content != null) {
-            try {
-                response.getWriter().write(content);
+            try (OutputStream os = response.getOutputStream()) {
+                os.write(content.getBytes(StandardCharsets.UTF_8));
+                os.flush();
             } catch (IOException e) {
                 throw new ShaunException(e);
             }

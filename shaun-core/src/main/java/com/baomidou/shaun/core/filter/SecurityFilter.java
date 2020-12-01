@@ -18,8 +18,6 @@ package com.baomidou.shaun.core.filter;
 import com.baomidou.shaun.core.config.CoreConfig;
 import com.baomidou.shaun.core.context.ProfileHolder;
 import com.baomidou.shaun.core.profile.TokenProfile;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.exception.http.BadRequestAction;
@@ -27,7 +25,6 @@ import org.pac4j.core.exception.http.ForbiddenAction;
 import org.pac4j.core.exception.http.HttpAction;
 import org.pac4j.core.exception.http.UnauthorizedAction;
 import org.pac4j.core.matching.matcher.Matcher;
-import org.pac4j.core.util.CommonHelper;
 
 /**
  * security filter
@@ -36,40 +33,30 @@ import org.pac4j.core.util.CommonHelper;
  * @since 2019-07-24
  */
 @Slf4j
-@Data
-@RequiredArgsConstructor
-public class SecurityFilter implements ShaunFilter {
+public class SecurityFilter extends AbstractShaunFilter {
 
-    private final Matcher pathMatcher;
+    public SecurityFilter(Matcher pathMatcher) {
+        super(pathMatcher);
+    }
 
     @Override
-    public HttpAction doFilter(CoreConfig config, JEEContext context) {
-        if (pathMatcher.matches(context)) {
-            if (log.isDebugEnabled()) {
-                log.debug("access security for path : \"{}\" -> \"{}\"", context.getPath(), context.getRequestMethod());
-            }
-            try {
-                if (!config.matchingChecker(context)) {
-                    return BadRequestAction.INSTANCE;
-                }
-                TokenProfile profile = config.getProfileTokenManager().getProfile(context);
-                if (profile == null) {
-                    return UnauthorizedAction.INSTANCE;
-                }
-                if (!config.getProfileStateManager().isOnline(profile) || !config.authorizationChecker(context, profile)) {
-                    return ForbiddenAction.INSTANCE;
-                }
-                ProfileHolder.setProfile(profile);
-                if (log.isDebugEnabled()) {
-                    log.debug("authenticated and authorized -> grant access");
-                }
-            } catch (Exception e) {
-                if (e instanceof HttpAction) {
-                    return (HttpAction) e;
-                } else {
-                    throw new RuntimeException(e);
-                }
-            }
+    protected HttpAction matchThen(CoreConfig config, JEEContext context) {
+        if (log.isDebugEnabled()) {
+            log.debug("access security for path : \"{}\" -> \"{}\"", context.getPath(), context.getRequestMethod());
+        }
+        if (!config.matchingChecker(context)) {
+            return BadRequestAction.INSTANCE;
+        }
+        TokenProfile profile = config.getProfileTokenManager().getProfile(context);
+        if (profile == null) {
+            return UnauthorizedAction.INSTANCE;
+        }
+        if (!config.getProfileStateManager().isOnline(profile) || !config.authorizationChecker(context, profile)) {
+            return ForbiddenAction.INSTANCE;
+        }
+        ProfileHolder.setProfile(profile);
+        if (log.isDebugEnabled()) {
+            log.debug("authenticated and authorized -> grant access");
         }
         return null;
     }
@@ -77,10 +64,5 @@ public class SecurityFilter implements ShaunFilter {
     @Override
     public int order() {
         return 200;
-    }
-
-    @Override
-    public void initCheck() {
-        CommonHelper.assertNotNull("pathMatcher", pathMatcher);
     }
 }
