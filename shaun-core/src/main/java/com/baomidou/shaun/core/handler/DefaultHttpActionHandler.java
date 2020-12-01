@@ -42,7 +42,9 @@ public class DefaultHttpActionHandler implements HttpActionHandler {
                     action instanceof FoundLoginAction) {
                 WebUtil.redirectUrl(context, config.getLoginUrl());
             } else if (action instanceof WithLocationAction) {
-                WebUtil.redirectUrl(context, ((WithLocationAction) action).getLocation());
+                WebUtil.redirectUrl(context, action.getCode(), ((WithLocationAction) action).getLocation());
+            } else if (action instanceof WithContentAction) {
+                WebUtil.write(context, action.getCode(), ((WithContentAction) action).getContent());
             } else {
                 throw action;
             }

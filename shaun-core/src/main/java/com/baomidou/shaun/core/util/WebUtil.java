@@ -16,6 +16,7 @@
 package com.baomidou.shaun.core.util;
 
 import com.baomidou.shaun.core.context.session.NoSessionStore;
+import com.baomidou.shaun.core.exception.ShaunException;
 import org.pac4j.core.context.HttpConstants;
 import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.context.session.JEESessionStore;
@@ -24,6 +25,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * @author miemie
@@ -65,18 +67,49 @@ public abstract class WebUtil {
      * @param url     地址
      */
     public static void redirectUrl(JEEContext context, String url) {
-        redirectUrl(context.getNativeResponse(), url);
+        redirectUrl(context, HttpConstants.FOUND, url);
     }
 
     /**
      * 重定向到指定页面
      *
-     * @param response HttpServletResponse
-     * @param url      地址
+     * @param context 上下文
+     * @param code    httpCode
+     * @param url     地址
      */
-    public static void redirectUrl(HttpServletResponse response, String url) {
+    public static void redirectUrl(JEEContext context, int code, String url) {
+        final HttpServletResponse response = context.getNativeResponse();
         response.setHeader(HttpConstants.LOCATION_HEADER, url);
-        response.setStatus(HttpConstants.FOUND);
+        response.setStatus(code);
+    }
+
+    /**
+     * 写入内容
+     *
+     * @param context 上下文
+     * @param content 信息
+     */
+    public static void write(JEEContext context, String content) {
+        write(context, HttpConstants.OK, content);
+    }
+
+    /**
+     * 写入内容
+     *
+     * @param context 上下文
+     * @param code    httpCode
+     * @param content 信息
+     */
+    public static void write(JEEContext context, int code, String content) {
+        final HttpServletResponse response = context.getNativeResponse();
+        response.setStatus(code);
+        if (content != null) {
+            try {
+                response.getWriter().write(content);
+            } catch (IOException e) {
+                throw new ShaunException(e);
+            }
+        }
     }
 
     public static JEEContext getJEEContext(boolean session) {

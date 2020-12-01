@@ -18,6 +18,7 @@ package com.baomidou.shaun.core.handler;
 import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.exception.http.FoundAction;
 import org.pac4j.core.exception.http.HttpAction;
+import org.pac4j.core.exception.http.SeeOtherAction;
 import org.pac4j.core.profile.UserProfile;
 
 /**
@@ -31,7 +32,7 @@ public interface CallbackHandler {
     /**
      * callback 之后对返回获取到的 profile 转换成 TokenProfile <br>
      * 再调用 SecurityManager.login 进行登陆 <br>
-     * 一般再 return {@link FoundAction};
+     * 一般再 return {@link FoundAction} ,如果是 post 请求过来的可以考虑 {@link SeeOtherAction}
      *
      * @param context 上下文
      * @param profile callback 获取到的 profile
