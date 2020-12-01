@@ -33,9 +33,7 @@
 
 - shaun-core: 核心包。
 - shaun-spring-boot-starter: spring boot 快速启动包。
-- shaun-test-cookie: 前后端不分离下的测试演示。
-- shaun-test-stateless-cookie: 前后端分离下使用cookie存token的测试演示。
-- shaun-test-stateless-header: 前后端分离下使用request header携带token的测试演示。
+- tests下: 各种测试演示。
 
 # 使用方法
 
