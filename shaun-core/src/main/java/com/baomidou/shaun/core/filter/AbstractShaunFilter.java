@@ -20,7 +20,7 @@ public abstract class AbstractShaunFilter implements ShaunFilter {
     }
 
     @Override
-    public HttpAction doFilter(CoreConfig config, JEEContext context) {
+    final public HttpAction doFilter(CoreConfig config, JEEContext context) {
         if (pathMatcher.matches(context)) {
             try {
                 return matchThen(config, context);
