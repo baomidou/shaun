@@ -83,7 +83,7 @@ shaun:
     - /doc.html
   exclude-branch: # 排除以此路径开头
     - /webjars
-  expire-time: '1d' # 不设置默认永久有效
+  expire-time: 1d # 不设置默认永久有效
   
  # jwt 超时时间 10s : 表示10秒内有效
  #             10m 结尾: 表示10分钟内有效
