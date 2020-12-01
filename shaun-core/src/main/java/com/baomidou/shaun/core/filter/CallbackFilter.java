@@ -26,7 +26,8 @@ import org.pac4j.core.client.finder.ClientFinder;
 import org.pac4j.core.client.finder.DefaultCallbackClientFinder;
 import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.credentials.Credentials;
-import org.pac4j.core.exception.http.UnauthorizedAction;
+import org.pac4j.core.exception.http.BadRequestAction;
+import org.pac4j.core.exception.http.HttpAction;
 import org.pac4j.core.matching.matcher.Matcher;
 import org.pac4j.core.profile.UserProfile;
 import org.pac4j.core.util.CommonHelper;
@@ -53,36 +54,38 @@ public class CallbackFilter implements ShaunFilter {
     private ClientFinder clientFinder = new DefaultCallbackClientFinder();
 
     @Override
-    public boolean doFilter(CoreConfig config, JEEContext context) {
+    public HttpAction doFilter(CoreConfig config, JEEContext context) {
         if (pathMatcher.matches(context)) {
             if (log.isDebugEnabled()) {
                 log.debug("access sfLogin \"{}\"", context.getFullRequestURL());
             }
 
-            final List<Client<?>> foundClients = clientFinder.find(this.clients, context, null);
-            Assert.isTrue(foundClients != null && foundClients.size() == 1,
-                    "unable to find one indirect client for the callback: check the callback URL for a client name parameter");
-            final Client foundClient = foundClients.get(0);
-            log.debug("foundClient: {}", foundClient);
-            Assert.notNull(foundClient, "foundClient cannot be null");
-            final Optional<Credentials> credentials = foundClient.getCredentials(context);
-            log.debug("credentials: {}", credentials);
-            if (credentials.isPresent()) {
-                final Optional<UserProfile> profile = foundClient.getUserProfile(credentials.get(), context);
-                log.debug("profile: {}", profile);
-                if (profile.isPresent()) {
-                    callbackHandler.callBack(context, profile.get());
-                    return false;
+            try {
+                final List<Client<?>> foundClients = clientFinder.find(this.clients, context, null);
+                Assert.isTrue(foundClients != null && foundClients.size() == 1,
+                        "unable to find one indirect client for the callback: check the callback URL for a client name parameter");
+                final Client foundClient = foundClients.get(0);
+                log.debug("foundClient: {}", foundClient);
+                Assert.notNull(foundClient, "foundClient cannot be null");
+                final Optional<Credentials> credentials = foundClient.getCredentials(context);
+                log.debug("credentials: {}", credentials);
+                if (credentials.isPresent()) {
+                    final Optional<UserProfile> profile = foundClient.getUserProfile(credentials.get(), context);
+                    log.debug("profile: {}", profile);
+                    if (profile.isPresent()) {
+                        return callbackHandler.callBack(context, profile.get());
+                    }
+                }
+                return BadRequestAction.INSTANCE;
+            } catch (Exception e) {
+                if (e instanceof HttpAction) {
+                    return (HttpAction) e;
+                } else {
+                    throw new RuntimeException(e);
                 }
             }
-            if (config.getAjaxRequestResolver().isAjax(context)) {
-                config.getHttpActionHandler().handle(config, context, UnauthorizedAction.INSTANCE);
-                return false;
-            }
-            config.redirectLoginUrl(context);
-            return false;
         }
-        return true;
+        return null;
     }
 
     @Override

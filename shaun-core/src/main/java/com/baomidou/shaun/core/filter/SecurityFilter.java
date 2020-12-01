@@ -42,38 +42,35 @@ public class SecurityFilter implements ShaunFilter {
     private final Matcher pathMatcher;
 
     @Override
-    public boolean doFilter(CoreConfig config, JEEContext context) {
+    public HttpAction doFilter(CoreConfig config, JEEContext context) {
         if (pathMatcher.matches(context)) {
             if (log.isDebugEnabled()) {
                 log.debug("access security for path : \"{}\" -> \"{}\"", context.getPath(), context.getRequestMethod());
             }
-
             try {
-                if (config.matchingChecker(context)) {
-                    TokenProfile profile = config.getProfileTokenManager().getProfile(context);
-                    if (profile != null) {
-                        if (config.getProfileStateManager().isOnline(profile) && config.authorizationChecker(context, profile)) {
-                            ProfileHolder.setProfile(profile);
-                            if (log.isDebugEnabled()) {
-                                log.debug("authenticated and authorized -> grant access");
-                            }
-                            return true;
-                        }
-                    }
-                    config.getHttpActionHandler().handle(config, context, UnauthorizedAction.INSTANCE);
-                } else {
-                    config.getHttpActionHandler().handle(config, context, BadRequestAction.INSTANCE);
+                if (!config.matchingChecker(context)) {
+                    return BadRequestAction.INSTANCE;
+                }
+                TokenProfile profile = config.getProfileTokenManager().getProfile(context);
+                if (profile == null) {
+                    return UnauthorizedAction.INSTANCE;
+                }
+                if (!config.getProfileStateManager().isOnline(profile) || !config.authorizationChecker(context, profile)) {
+                    return UnauthorizedAction.INSTANCE;
+                }
+                ProfileHolder.setProfile(profile);
+                if (log.isDebugEnabled()) {
+                    log.debug("authenticated and authorized -> grant access");
                 }
             } catch (Exception e) {
                 if (e instanceof HttpAction) {
-                    config.getHttpActionHandler().handle(config, context, (HttpAction) e);
+                    return (HttpAction) e;
                 } else {
                     throw new RuntimeException(e);
                 }
             }
-            return false;
         }
-        return true;
+        return null;
     }
 
     @Override

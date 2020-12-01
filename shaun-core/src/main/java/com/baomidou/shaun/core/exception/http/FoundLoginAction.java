@@ -13,27 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.baomidou.shaun.core.handler;
+package com.baomidou.shaun.core.exception.http;
 
-import org.pac4j.core.context.JEEContext;
-import org.pac4j.core.exception.http.HttpAction;
-import org.pac4j.core.profile.UserProfile;
+import org.pac4j.core.context.HttpConstants;
+import org.pac4j.core.exception.http.RedirectionAction;
 
 /**
- * 回调操作
+ * 跳转登录页
  *
  * @author miemie
- * @since 2019-07-26
+ * @since 2020-12-01
  */
-public interface CallbackHandler {
+public class FoundLoginAction extends RedirectionAction {
+    public static final FoundLoginAction INSTANCE = new FoundLoginAction();
+    private static final long serialVersionUID = 3129463209921232281L;
 
-    /**
-     * callback 之后对返回获取到的 profile 转换成 TokenProfile ,
-     * 再调用 SecurityManager.login 进行登陆,
-     * 一般再 WebUtil.redirectUrl(context, yourUrl);
-     *
-     * @param context 上下文
-     * @param profile callback 获取到的 profile
-     */
-    HttpAction callBack(JEEContext context, UserProfile profile);
+    protected FoundLoginAction() {
+        super(HttpConstants.FOUND);
+    }
 }

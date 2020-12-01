@@ -15,18 +15,17 @@
  */
 package com.baomidou.shaun.core.intercept.support;
 
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.pac4j.core.context.JEEContext;
-import org.springframework.web.cors.CorsUtils;
-
 import com.baomidou.shaun.core.config.CoreConfig;
 import com.baomidou.shaun.core.context.ProfileHolder;
 import com.baomidou.shaun.core.filter.ShaunFilter;
 import com.baomidou.shaun.core.util.WebUtil;
+import org.pac4j.core.context.JEEContext;
+import org.pac4j.core.exception.http.HttpAction;
+import org.springframework.web.cors.CorsUtils;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * @author miemie
@@ -39,7 +38,9 @@ public interface DoChainSupport {
         if (!CorsUtils.isPreFlightRequest(request)) {
             for (ShaunFilter filter : filterList) {
                 try {
-                    if (!filter.doFilter(config, context)) {
+                    HttpAction action = filter.doFilter(config, context);
+                    if (action != null) {
+                        config.getHttpActionHandler().handle(config, context, action);
                         return false;
                     }
                 } catch (Exception e) {

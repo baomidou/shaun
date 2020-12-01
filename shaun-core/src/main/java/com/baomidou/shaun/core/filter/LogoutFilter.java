@@ -17,12 +17,14 @@ package com.baomidou.shaun.core.filter;
 
 import com.baomidou.shaun.core.config.CoreConfig;
 import com.baomidou.shaun.core.context.ProfileHolder;
+import com.baomidou.shaun.core.exception.http.FoundLoginAction;
 import com.baomidou.shaun.core.mgt.SecurityManager;
 import com.baomidou.shaun.core.profile.TokenProfile;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.pac4j.core.context.JEEContext;
+import org.pac4j.core.exception.http.HttpAction;
 import org.pac4j.core.matching.matcher.Matcher;
 import org.pac4j.core.util.CommonHelper;
 
@@ -41,26 +43,16 @@ public class LogoutFilter implements ShaunFilter {
     private SecurityManager securityManager;
 
     @Override
-    public boolean doFilter(CoreConfig config, JEEContext context) {
+    public HttpAction doFilter(CoreConfig config, JEEContext context) {
         if (pathMatcher.matches(context)) {
             if (log.isDebugEnabled()) {
                 log.debug("access logout");
             }
             final TokenProfile profile = ProfileHolder.getProfile();
             securityManager.logout(profile);
-            logoutThen(config, context);
-            return false;
+            return FoundLoginAction.INSTANCE;
         }
-        return true;
-    }
-
-    protected void logoutThen(CoreConfig config, JEEContext context) {
-        if (config.isStateless()) {
-            return;
-        }
-        if (!config.getAjaxRequestResolver().isAjax(context)) {
-            config.redirectLoginUrl(context);
-        }
+        return null;
     }
 
     @Override
