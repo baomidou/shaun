@@ -15,29 +15,24 @@
  */
 package com.baomidou.shaun.core.exception;
 
+import org.pac4j.core.exception.TechnicalException;
+
 /**
  * @author miemie
  * @since 2019-08-28
  */
-public class ShaunException extends RuntimeException {
+public class ShaunException extends TechnicalException {
     private static final long serialVersionUID = -666180504077860523L;
-
-    public ShaunException() {
-    }
 
     public ShaunException(String message) {
         super(message);
-    }
-
-    public ShaunException(String message, Throwable cause) {
-        super(message, cause);
     }
 
     public ShaunException(Throwable cause) {
         super(cause);
     }
 
-    public ShaunException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
+    public ShaunException(String message, Throwable cause) {
+        super(message, cause);
     }
 }
