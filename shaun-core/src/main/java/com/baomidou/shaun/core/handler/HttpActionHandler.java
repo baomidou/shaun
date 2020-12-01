@@ -15,15 +15,12 @@
  */
 package com.baomidou.shaun.core.handler;
 
-import org.pac4j.core.context.JEEContext;
-import org.pac4j.core.exception.http.BadRequestAction;
-import org.pac4j.core.exception.http.HttpAction;
-import org.pac4j.core.exception.http.UnauthorizedAction;
-
 import com.baomidou.shaun.core.config.CoreConfig;
+import org.pac4j.core.context.JEEContext;
+import org.pac4j.core.exception.http.HttpAction;
 
 /**
- * 不能处理权限注解产生的异常
+ * HttpAction 处理器
  *
  * @author miemie
  * @since 2019-08-08
@@ -31,12 +28,11 @@ import com.baomidou.shaun.core.config.CoreConfig;
 public interface HttpActionHandler {
 
     /**
-     * 处理抛出的异常 <br>
-     * 常见 {@link UnauthorizedAction} 和 {@link BadRequestAction}
+     * 处理拦截器发出的 HttpAction
      *
-     * @param ex      异常
      * @param config  核心
      * @param context 上下文
+     * @param action  异常
      */
-    void handle(CoreConfig config, JEEContext context, HttpAction ex);
+    void handle(CoreConfig config, JEEContext context, HttpAction action);
 }
