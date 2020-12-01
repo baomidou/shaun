@@ -1,11 +1,7 @@
 package shaun.test.cookie;
 
-import java.io.IOException;
-import java.util.concurrent.ConcurrentHashMap;
-
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
-
+import com.baomidou.shaun.core.context.ProfileHolder;
+import com.baomidou.shaun.core.profile.TokenProfile;
 import org.pac4j.core.authorization.authorizer.Authorizer;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -14,9 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.session.MapSessionRepository;
 import org.springframework.session.config.annotation.web.http.EnableSpringHttpSession;
 
-import com.baomidou.shaun.core.context.ProfileHolder;
-import com.baomidou.shaun.core.handler.HttpActionHandler;
-import com.baomidou.shaun.core.profile.TokenProfile;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author miemie
@@ -42,22 +36,6 @@ public class Cookie2Application {
             final TokenProfile profile = profiles.get(0);
             profile.setLinkedId("111222333444555666777888999000");
             return true;
-        };
-    }
-
-    @Bean
-    public HttpActionHandler httpActionHandler() {
-        return (config, context, ex) -> {
-            HttpServletResponse response = context.getNativeResponse();
-            try {
-                response.setStatus(ex.getCode());
-                try (ServletOutputStream os = response.getOutputStream()) {
-                    os.write("异常".getBytes());
-                    os.flush();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         };
     }
 
