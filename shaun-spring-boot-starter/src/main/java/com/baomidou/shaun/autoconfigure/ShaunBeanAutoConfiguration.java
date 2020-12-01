@@ -215,8 +215,14 @@ public class ShaunBeanAutoConfiguration {
                 clients.setAjaxRequestResolver(coreConfig.getAjaxRequestResolver());
                 clients.setUrlResolver(new DefaultUrlResolver(true));
 
-                chain.addShaunFilter(new SfLoginFilter(new OnlyPathMatcher(sfLoginUrl), clients));
-                chain.addShaunFilter(new CallbackFilter(new OnlyPathMatcher(callbackUrl), clients, callbackHandler));
+                SfLoginFilter sfLoginFilter = new SfLoginFilter(new OnlyPathMatcher(sfLoginUrl));
+                sfLoginFilter.setClients(clients);
+                chain.addShaunFilter(sfLoginFilter);
+
+                CallbackFilter callbackFilter = new CallbackFilter(new OnlyPathMatcher(callbackUrl));
+                callbackFilter.setClients(clients);
+                callbackFilter.setCallbackHandler(callbackHandler);
+                chain.addShaunFilter(callbackFilter);
             }
         }
         /* other end */

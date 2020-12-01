@@ -49,7 +49,7 @@ import static org.pac4j.core.util.CommonHelper.assertTrue;
 public class SfLoginFilter implements ShaunFilter {
 
     private final Matcher pathMatcher;
-    private final Clients clients;
+    private Clients clients;
     private ClientFinder clientFinder = new DefaultSfClientFinder();
 
     @Override

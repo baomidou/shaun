@@ -49,8 +49,8 @@ import java.util.Optional;
 public class CallbackFilter implements ShaunFilter {
 
     private final Matcher pathMatcher;
-    private final Clients clients;
-    private final CallbackHandler callbackHandler;
+    private Clients clients;
+    private CallbackHandler callbackHandler;
     private ClientFinder clientFinder = new DefaultCallbackClientFinder();
 
     @Override
