@@ -19,7 +19,6 @@ import com.baomidou.shaun.core.client.TokenClient;
 import com.baomidou.shaun.core.credentials.extractor.ShaunCredentialsExtractor;
 import com.baomidou.shaun.core.profile.TokenProfile;
 import com.baomidou.shaun.core.util.ExpireTimeUtil;
-import lombok.Data;
 import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.credentials.TokenCredentials;
 import org.pac4j.core.profile.CommonProfile;
@@ -37,7 +36,6 @@ import java.util.Set;
  * @author miemie
  * @since 2020-10-29
  */
-@Data
 public class DefaultProfileTokenManager implements ProfileTokenManager {
 
     private final TokenClient tokenClient;

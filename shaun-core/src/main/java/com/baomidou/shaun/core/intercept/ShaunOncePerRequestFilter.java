@@ -15,33 +15,24 @@
  */
 package com.baomidou.shaun.core.intercept;
 
-import java.io.IOException;
-import java.util.List;
+import com.baomidou.shaun.core.config.CoreConfig;
+import com.baomidou.shaun.core.filter.ShaunFilter;
+import com.baomidou.shaun.core.intercept.support.DoChainSupport;
+import com.baomidou.shaun.core.intercept.support.ShaunFilterChain;
+import org.springframework.lang.NonNull;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.lang.NonNull;
-import org.springframework.web.filter.OncePerRequestFilter;
-
-import com.baomidou.shaun.core.config.CoreConfig;
-import com.baomidou.shaun.core.filter.ShaunFilter;
-import com.baomidou.shaun.core.intercept.support.DoChainSupport;
-import com.baomidou.shaun.core.intercept.support.ShaunFilterChain;
-
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.experimental.Accessors;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * @author miemie
  * @since 2019-08-08
  */
-@Data
-@Accessors(chain = true)
-@EqualsAndHashCode(callSuper = true)
 public class ShaunOncePerRequestFilter extends OncePerRequestFilter implements DoChainSupport {
 
     private final CoreConfig config;

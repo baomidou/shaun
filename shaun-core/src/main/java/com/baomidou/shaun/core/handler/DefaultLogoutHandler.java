@@ -15,16 +15,12 @@
  */
 package com.baomidou.shaun.core.handler;
 
-import org.pac4j.core.context.JEEContext;
-
 import com.baomidou.shaun.core.config.CoreConfig;
 import com.baomidou.shaun.core.credentials.location.Cookie;
 import com.baomidou.shaun.core.profile.TokenProfile;
 import com.baomidou.shaun.core.util.WebUtil;
-
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.pac4j.core.context.JEEContext;
 
 /**
  * 默认登出操作
@@ -33,9 +29,7 @@ import lombok.extern.slf4j.Slf4j;
  * @since 2019-07-31
  */
 @Slf4j
-@Data
 @SuppressWarnings("unchecked")
-@RequiredArgsConstructor
 public class DefaultLogoutHandler implements LogoutHandler {
 
     @Override

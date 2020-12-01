@@ -15,17 +15,14 @@
  */
 package com.baomidou.shaun.core.mgt;
 
-import org.pac4j.core.context.JEEContext;
-import org.pac4j.core.util.CommonHelper;
-
 import com.baomidou.shaun.core.config.CoreConfig;
 import com.baomidou.shaun.core.context.ProfileHolder;
 import com.baomidou.shaun.core.profile.TokenProfile;
 import com.baomidou.shaun.core.util.ExpireTimeUtil;
 import com.baomidou.shaun.core.util.WebUtil;
-
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.pac4j.core.context.JEEContext;
+import org.pac4j.core.util.CommonHelper;
 
 /**
  * 安全管理器,封装下,统一的登录登出
@@ -34,7 +31,6 @@ import lombok.RequiredArgsConstructor;
  * @author miemie
  * @since 2019-08-02
  */
-@Data
 @RequiredArgsConstructor
 public class SecurityManager {
 

@@ -15,28 +15,21 @@
  */
 package com.baomidou.shaun.core.intercept;
 
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.lang.NonNull;
-import org.springframework.web.servlet.HandlerInterceptor;
-
 import com.baomidou.shaun.core.config.CoreConfig;
 import com.baomidou.shaun.core.filter.ShaunFilter;
 import com.baomidou.shaun.core.intercept.support.DoChainSupport;
 import com.baomidou.shaun.core.intercept.support.ShaunFilterChain;
+import org.springframework.lang.NonNull;
+import org.springframework.web.servlet.HandlerInterceptor;
 
-import lombok.Data;
-import lombok.experimental.Accessors;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * @author miemie
  * @since 2019-07-29
  */
-@Data
-@Accessors(chain = true)
 public class ShaunHandlerInterceptor implements HandlerInterceptor, DoChainSupport {
 
     private final List<ShaunFilter> filterList;

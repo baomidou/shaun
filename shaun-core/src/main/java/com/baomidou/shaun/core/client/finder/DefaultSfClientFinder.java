@@ -15,7 +15,7 @@
  */
 package com.baomidou.shaun.core.client.finder;
 
-import lombok.Data;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.pac4j.core.client.Client;
 import org.pac4j.core.client.Clients;
@@ -33,7 +33,7 @@ import java.util.Optional;
  * @since 2019-08-04
  */
 @Slf4j
-@Data
+@Setter
 public class DefaultSfClientFinder implements ClientFinder {
 
     private String clientNameParameter = Pac4jConstants.DEFAULT_CLIENT_NAME_PARAMETER;
