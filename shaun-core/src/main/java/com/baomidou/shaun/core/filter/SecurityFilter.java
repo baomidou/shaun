@@ -23,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.exception.http.BadRequestAction;
+import org.pac4j.core.exception.http.ForbiddenAction;
 import org.pac4j.core.exception.http.HttpAction;
 import org.pac4j.core.exception.http.UnauthorizedAction;
 import org.pac4j.core.matching.matcher.Matcher;
@@ -56,7 +57,7 @@ public class SecurityFilter implements ShaunFilter {
                     return UnauthorizedAction.INSTANCE;
                 }
                 if (!config.getProfileStateManager().isOnline(profile) || !config.authorizationChecker(context, profile)) {
-                    return UnauthorizedAction.INSTANCE;
+                    return ForbiddenAction.INSTANCE;
                 }
                 ProfileHolder.setProfile(profile);
                 if (log.isDebugEnabled()) {

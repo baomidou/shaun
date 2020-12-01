@@ -19,10 +19,7 @@ import com.baomidou.shaun.core.config.CoreConfig;
 import com.baomidou.shaun.core.exception.http.FoundLoginAction;
 import com.baomidou.shaun.core.util.WebUtil;
 import org.pac4j.core.context.JEEContext;
-import org.pac4j.core.exception.http.HttpAction;
-import org.pac4j.core.exception.http.RedirectionAction;
-import org.pac4j.core.exception.http.UnauthorizedAction;
-import org.pac4j.core.exception.http.WithLocationAction;
+import org.pac4j.core.exception.http.*;
 
 /**
  * @author miemie
@@ -41,7 +38,8 @@ public class DefaultHttpActionHandler implements HttpActionHandler {
         if (config.getAjaxRequestResolver().isAjax(context)) {
             throw action;
         } else {
-            if (action instanceof UnauthorizedAction || action instanceof FoundLoginAction) {
+            if (action instanceof UnauthorizedAction || action instanceof ForbiddenAction ||
+                    action instanceof FoundLoginAction) {
                 WebUtil.redirectUrl(context, config.getLoginUrl());
             } else if (action instanceof WithLocationAction) {
                 WebUtil.redirectUrl(context, ((WithLocationAction) action).getLocation());

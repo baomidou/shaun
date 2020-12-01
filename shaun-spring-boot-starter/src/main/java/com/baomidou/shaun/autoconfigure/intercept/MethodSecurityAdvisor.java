@@ -28,11 +28,11 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
 /**
- * 注解优先级:
- * <p> method &gt; type </p>
- * <p> HasRole &gt; HasPermission &gt; HasAuthorization </p>
- *
- * <p> 注意: 只会命中一个注解! </p>
+ * 注解优先级: <br>
+ * method &gt; type <br>
+ * HasRole &gt; HasPermission &gt; HasAuthorization <br>
+ * <p>
+ * 注意: 只会命中一个注解!
  * copy from {org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor}
  *
  * @author miemie
@@ -41,6 +41,7 @@ import java.lang.reflect.Method;
 @Slf4j
 @SuppressWarnings("unchecked")
 public class MethodSecurityAdvisor extends StaticMethodMatcherPointcutAdvisor {
+    private static final long serialVersionUID = 7078426685195033081L;
 
     private static final Class<? extends Annotation>[] AUTHZ_ANNOTATION_CLASSES =
             new Class[]{HasRole.class, HasPermission.class, HasAuthorization.class};

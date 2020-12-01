@@ -44,11 +44,11 @@ import java.util.Set;
 import java.util.function.Function;
 
 /**
- * 注解优先级:
- * <p> method &gt; type </p>
- * <p> HasRole &gt; HasPermission &gt; HasAuthorization </p>
- *
- * <p> 注意: 只会命中一个注解! </p>
+ * 注解优先级: <br>
+ * method &gt; type <br>
+ * HasRole &gt; HasPermission &gt; HasAuthorization <br>
+ * <p>
+ * 注意: 只会命中一个注解!
  *
  * @author miemie
  * @since 2020-05-19

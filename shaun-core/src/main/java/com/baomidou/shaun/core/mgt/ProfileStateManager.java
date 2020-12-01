@@ -16,6 +16,7 @@
 package com.baomidou.shaun.core.mgt;
 
 import com.baomidou.shaun.core.profile.TokenProfile;
+import org.pac4j.core.exception.http.ForbiddenAction;
 
 /**
  * profile 状态管理器
@@ -37,8 +38,9 @@ public interface ProfileStateManager {
     }
 
     /**
-     * 访问需要登录的资源之前进行验证是否允许访问
-     * 只适合判断该用户的登录信息是否有效
+     * 访问需要登录的资源之前进行验证是否允许访问 <br>
+     * 只适合判断该用户的登录信息是否有效 <br>
+     * 如果返回 false 需要去处理 {@link ForbiddenAction}
      * <p>
      * 可以在这里从外部(比如redis)读取用户判断是否允许访问
      *
