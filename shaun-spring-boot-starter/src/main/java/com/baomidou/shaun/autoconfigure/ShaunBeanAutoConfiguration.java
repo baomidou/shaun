@@ -211,15 +211,15 @@ public class ShaunBeanAutoConfiguration {
                 final CallbackHandler callbackHandler = callbackHandlerProvider.getIfAvailable();
                 Assert.notNull(callbackHandler, "callbackHandler must not null");
 
-                Clients clients = new Clients(callbackUrl, indirectClients);
+                final Clients clients = new Clients(callbackUrl, indirectClients);
                 clients.setAjaxRequestResolver(coreConfig.getAjaxRequestResolver());
                 clients.setUrlResolver(new DefaultUrlResolver(true));
 
-                SfLoginFilter sfLoginFilter = new SfLoginFilter(new OnlyPathMatcher(sfLoginUrl));
+                final SfLoginFilter sfLoginFilter = new SfLoginFilter(new OnlyPathMatcher(sfLoginUrl));
                 sfLoginFilter.setClients(clients);
                 chain.addShaunFilter(sfLoginFilter);
 
-                CallbackFilter callbackFilter = new CallbackFilter(new OnlyPathMatcher(callbackUrl));
+                final CallbackFilter callbackFilter = new CallbackFilter(new OnlyPathMatcher(callbackUrl));
                 callbackFilter.setClients(clients);
                 callbackFilter.setCallbackHandler(callbackHandler);
                 chain.addShaunFilter(callbackFilter);
