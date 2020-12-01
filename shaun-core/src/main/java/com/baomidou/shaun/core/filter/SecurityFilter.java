@@ -15,20 +15,18 @@
  */
 package com.baomidou.shaun.core.filter;
 
+import com.baomidou.shaun.core.config.CoreConfig;
+import com.baomidou.shaun.core.context.ProfileHolder;
+import com.baomidou.shaun.core.profile.TokenProfile;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.exception.http.BadRequestAction;
 import org.pac4j.core.exception.http.HttpAction;
 import org.pac4j.core.exception.http.UnauthorizedAction;
 import org.pac4j.core.matching.matcher.Matcher;
 import org.pac4j.core.util.CommonHelper;
-
-import com.baomidou.shaun.core.config.CoreConfig;
-import com.baomidou.shaun.core.context.ProfileHolder;
-import com.baomidou.shaun.core.profile.TokenProfile;
-
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * security filter
@@ -49,6 +47,7 @@ public class SecurityFilter implements ShaunFilter {
             if (log.isDebugEnabled()) {
                 log.debug("access security for path : \"{}\" -> \"{}\"", context.getPath(), context.getRequestMethod());
             }
+
             try {
                 if (config.matchingChecker(context)) {
                     TokenProfile profile = config.getProfileTokenManager().getProfile(context);

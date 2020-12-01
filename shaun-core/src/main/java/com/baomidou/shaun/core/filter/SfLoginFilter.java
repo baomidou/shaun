@@ -55,7 +55,9 @@ public class SfLoginFilter implements ShaunFilter {
     @Override
     public boolean doFilter(CoreConfig config, JEEContext context) {
         if (pathMatcher.matches(context)) {
-            log.debug("=== SF LOGIN ===");
+            if (log.isDebugEnabled()) {
+                log.debug("access sfLogin \"{}\"", context.getFullRequestURL());
+            }
 
             final List<Client<?>> foundClients = clientFinder.find(this.clients, context, null);
             assertTrue(foundClients != null && foundClients.size() == 1,

@@ -55,7 +55,9 @@ public class CallbackFilter implements ShaunFilter {
     @Override
     public boolean doFilter(CoreConfig config, JEEContext context) {
         if (pathMatcher.matches(context)) {
-            log.debug("=== CALLBACK ===");
+            if (log.isDebugEnabled()) {
+                log.debug("access sfLogin \"{}\"", context.getFullRequestURL());
+            }
 
             final List<Client<?>> foundClients = clientFinder.find(this.clients, context, null);
             Assert.isTrue(foundClients != null && foundClients.size() == 1,
