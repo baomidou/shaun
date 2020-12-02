@@ -16,17 +16,17 @@
 package com.baomidou.shaun.core.profile;
 
 import com.baomidou.shaun.core.config.ProfileConstants;
-import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.core.profile.jwt.JwtClaims;
+import org.pac4j.jwt.profile.JwtProfile;
 import org.springframework.util.Assert;
 
-import java.util.Date;
+import java.util.List;
 
 /**
  * @author miemie
  * @since 2019-12-27
  */
-public class TokenProfile extends CommonProfile {
+public class TokenProfile extends JwtProfile {
     private static final long serialVersionUID = -1;
 
     private String token;
@@ -41,12 +41,18 @@ public class TokenProfile extends CommonProfile {
         this.token = token;
     }
 
-    public Date getIssuedAt() {
-        return (Date) getAttribute(JwtClaims.ISSUED_AT);
+    /**
+     * 设置 iss
+     */
+    public void setIssuer(String iss) {
+        addAttribute(JwtClaims.ISSUER, iss);
     }
 
-    public Date getExpirationDate() {
-        return (Date) getAttribute(JwtClaims.EXPIRATION_TIME);
+    /**
+     * 设置 aud
+     */
+    public void setAudience(List<String> aud) {
+        addAttribute(JwtClaims.AUDIENCE, aud);
     }
 
     /**

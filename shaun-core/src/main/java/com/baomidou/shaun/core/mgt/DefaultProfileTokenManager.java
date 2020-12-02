@@ -19,6 +19,7 @@ import com.baomidou.shaun.core.client.TokenClient;
 import com.baomidou.shaun.core.credentials.extractor.ShaunCredentialsExtractor;
 import com.baomidou.shaun.core.profile.TokenProfile;
 import com.baomidou.shaun.core.util.ExpireTimeUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.credentials.TokenCredentials;
 import org.pac4j.core.profile.CommonProfile;
@@ -36,6 +37,7 @@ import java.util.Set;
  * @author miemie
  * @since 2020-10-29
  */
+@Slf4j
 public class DefaultProfileTokenManager implements ProfileTokenManager {
 
     private final TokenClient tokenClient;
@@ -84,6 +86,10 @@ public class DefaultProfileTokenManager implements ProfileTokenManager {
         if (CommonHelper.isNotBlank(expireTime)) {
             jwtGenerator.setExpirationTime(ExpireTimeUtil.getTargetDate(expireTime));
         }
-        return jwtGenerator.generate(profile);
+        String jwt = jwtGenerator.generate(profile);
+        if (jwt.length() > 4000) {
+            log.warn("the JWT length is {}, it's over 4000, please be careful!", jwt.length());
+        }
+        return jwt;
     }
 }
