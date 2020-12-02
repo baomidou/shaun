@@ -35,18 +35,20 @@ public interface DoChainSupport {
 
     default boolean doChain(HttpServletRequest request, HttpServletResponse response, CoreConfig config, List<ShaunFilter> filterList) {
         final JEEContext context = WebUtil.getJEEContext(request, response, config.isSessionOn());
-        if (!CorsUtils.isPreFlightRequest(request)) {
-            for (ShaunFilter filter : filterList) {
-                try {
-                    HttpAction action = filter.doFilter(config, context);
-                    if (action != null) {
-                        config.getHttpActionHandler().handle(config, context, action);
-                        return false;
-                    }
-                } catch (Exception e) {
-                    ProfileHolder.clearProfile();
-                    throw e;
+        if (CorsUtils.isPreFlightRequest(request)) {
+            // cors 预检请求 不做处理
+            return true;
+        }
+        for (ShaunFilter filter : filterList) {
+            try {
+                HttpAction action = filter.doFilter(config, context);
+                if (action != null) {
+                    config.getHttpActionHandler().handle(config, context, action);
+                    return false;
                 }
+            } catch (Exception e) {
+                ProfileHolder.clearProfile();
+                throw e;
             }
         }
         return true;
