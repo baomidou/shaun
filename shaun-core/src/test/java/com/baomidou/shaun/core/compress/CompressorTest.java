@@ -1,11 +1,14 @@
 package com.baomidou.shaun.core.compress;
 
-import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.Assertions.assertThat;
 
+import java.text.DecimalFormat;
 import java.util.UUID;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Test;
+
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author miemie
@@ -14,39 +17,86 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Slf4j
 class CompressorTest {
 
-    private static final int strLen = 100;
+    private static final int strLen = 5_000;
+    private static final int forSize = 10_000;
+    private static final DecimalFormat format = new DecimalFormat("0.00");
 
     @Test
-    void zlib() {
-        Compressor compressor = new ZlibCompressor();
+    void deflate() {
+        Compressor compressor = new DeflateCompressor();
+        doIt(compressor);
+    }
+
+    @Test
+    void bzip2() {
+        Compressor compressor = new Bzip2Compressor();
+        doIt(compressor);
+    }
+
+    @Test
+    void lz4() {
+        Compressor compressor = new Lz4Compressor();
         doIt(compressor);
     }
 
     void doIt(Compressor compressor) {
-        String str = str();
-        int ol = str.length();
-        log.info("原始字符串: {}", str);
-        log.info("原始长度: {}", ol);
-        long begin = System.currentTimeMillis();
-        String nStr = compressor.compress(str);
-        long o1 = System.currentTimeMillis();
-        int nl = nStr.length();
-        log.info("压缩后长度: {}, 压缩率: {}, 耗时: {} 毫秒", nl, (double) nl / (double) ol, o1 - begin);
-        log.info("压缩后字符串: {}", nStr);
-        String os = compressor.decompress(nStr);
-        long o2 = System.currentTimeMillis();
-        log.info("解压缩耗时: {} 毫秒", o2 - o1);
-        log.info("压缩后字符串: {}", os);
-        assertThat(os).isEqualTo(str);
+        Result result = new Result();
+        for (int i = 0; i < forSize; i++) {
+            String str = str();
+            result.upSize(str.length());
+            long begin = System.currentTimeMillis();
+            String nStr = compressor.compress(str);
+            long end = System.currentTimeMillis();
+            result.upCompress(end - begin);
+            result.upNewSize(nStr.length());
+
+            begin = System.currentTimeMillis();
+            String os = compressor.decompress(nStr);
+            end = System.currentTimeMillis();
+            result.upDecompress(end - begin);
+            assertThat(os).isEqualTo(str);
+        }
+        double time = (double) result.getCompress() / forSize;
+        double time2 = (double) result.getDecompress() / forSize;
+        double lv = (double) result.getNewSize() / (double) result.getSize();
+        log.info("目标字符串(每次都不一样)长度: {}, 压缩解压缩: {}次, 平均压缩时长: {}毫秒, 解压时长: {}毫秒, 压缩率: {}",
+                strLen, forSize, format.format(time), format.format(time2), format.format(lv));
     }
 
     String str() {
         StringBuilder s = new StringBuilder(uuid());
-        for (int i = 0; i < strLen; i++) {
+        while (s.length() < strLen) {
             s.append(uuid());
         }
-        System.out.println(s.length());
+        if (s.length() > strLen) {
+            s.setLength(strLen);
+        }
         return s.toString();
+    }
+
+    @Data
+    private static class Result {
+
+        private long compress;
+        private long decompress;
+        private long size;
+        private long newSize;
+
+        public void upCompress(long compress) {
+            this.compress += compress;
+        }
+
+        public void upDecompress(long decompress) {
+            this.decompress += decompress;
+        }
+
+        public void upSize(long size) {
+            this.size += size;
+        }
+
+        public void upNewSize(long newSize) {
+            this.newSize += newSize;
+        }
     }
 
     String uuid() {
