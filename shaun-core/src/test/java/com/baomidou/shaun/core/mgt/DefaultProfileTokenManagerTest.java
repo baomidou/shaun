@@ -1,10 +1,9 @@
 package com.baomidou.shaun.core.mgt;
 
+import com.baomidou.shaun.core.BaseTokenTest;
 import com.baomidou.shaun.core.profile.TokenProfile;
 import com.google.common.collect.Lists;
 import org.junit.jupiter.api.Test;
-import org.pac4j.jwt.config.encryption.SecretEncryptionConfiguration;
-import org.pac4j.jwt.config.signature.SecretSignatureConfiguration;
 import org.pac4j.jwt.credentials.authenticator.JwtAuthenticator;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -13,25 +12,20 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author miemie
  * @since 2020-12-02
  */
-class DefaultProfileTokenManagerTest {
-
-    private final static String SIGN = "9bfd771777984dc89868fd258f823e48";
+class DefaultProfileTokenManagerTest extends BaseTokenTest {
 
     @Test
     void token() {
-        SecretSignatureConfiguration signatureConfiguration = new SecretSignatureConfiguration(SIGN);
-        SecretEncryptionConfiguration encryptionConfiguration = new SecretEncryptionConfiguration(SIGN);
-        DefaultProfileTokenManager manager = new DefaultProfileTokenManager(signatureConfiguration,
-                encryptionConfiguration, null);
+        DefaultProfileTokenManager manager = new DefaultProfileTokenManager(signatureConfiguration, encryptionConfiguration, null);
         TokenProfile profile = new TokenProfile();
-        profile.setId("11111");
-        profile.setLinkedId("22222");
-        profile.setTenantId("222222222");
-        profile.addPermission("permission");
-        profile.addRole("role");
-        profile.setIssuer("iss");
-        profile.setAudience(Lists.newArrayList("iss"));
-        profile.addAuthenticationAttribute("2222222", "22222222");
+        profile.setId(uuid());
+        profile.setLinkedId(uuid());
+        profile.setTenantId(uuid());
+        profile.addPermission(uuid());
+        profile.addRole(uuid());
+        profile.setIssuer(uuid());
+        profile.setAudience(Lists.newArrayList(uuid()));
+        profile.addAuthenticationAttribute(uuid(), uuid());
         assertThat(profile.getAuthenticationAttributes()).isNotEmpty();
         System.out.println(profile);
         System.out.println("----------------------------------------------------------------------------------");

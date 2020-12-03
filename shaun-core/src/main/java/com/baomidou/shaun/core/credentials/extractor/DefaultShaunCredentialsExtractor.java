@@ -19,7 +19,6 @@ import com.baomidou.shaun.core.credentials.TokenLocation;
 import com.baomidou.shaun.core.credentials.location.Cookie;
 import com.baomidou.shaun.core.credentials.location.Header;
 import com.baomidou.shaun.core.credentials.location.Parameter;
-import lombok.Data;
 import org.pac4j.core.context.WebContext;
 import org.pac4j.core.credentials.TokenCredentials;
 import org.pac4j.core.credentials.extractor.HeaderExtractor;
@@ -32,7 +31,6 @@ import java.util.Optional;
  * @author miemie
  * @since 2019-07-20
  */
-@Data
 public class DefaultShaunCredentialsExtractor implements ShaunCredentialsExtractor {
 
     private final TokenLocation tokenLocation;

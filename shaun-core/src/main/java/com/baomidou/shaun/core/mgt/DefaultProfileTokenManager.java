@@ -16,11 +16,9 @@
 package com.baomidou.shaun.core.mgt;
 
 import com.baomidou.shaun.core.client.TokenClient;
-import com.baomidou.shaun.core.compress.Compressor;
 import com.baomidou.shaun.core.credentials.extractor.ShaunCredentialsExtractor;
 import com.baomidou.shaun.core.profile.TokenProfile;
 import com.baomidou.shaun.core.util.ExpireTimeUtil;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.credentials.TokenCredentials;
@@ -46,9 +44,6 @@ public class DefaultProfileTokenManager implements ProfileTokenManager {
     private final SignatureConfiguration signatureConfiguration;
     private final EncryptionConfiguration encryptionConfiguration;
 
-    @Setter
-    private Compressor compressor;
-
     public DefaultProfileTokenManager(SignatureConfiguration signatureConfiguration,
                                       EncryptionConfiguration encryptionConfiguration,
                                       ShaunCredentialsExtractor credentialsExtractor) {
@@ -59,7 +54,7 @@ public class DefaultProfileTokenManager implements ProfileTokenManager {
 
     @Override
     public TokenProfile getProfile(JEEContext context) {
-        TokenCredentials credentials = getCredentials(context);
+        TokenCredentials credentials = tokenClient.getCredentials(context).orElse(null);
         if (credentials == null) {
             return null;
         }
@@ -83,10 +78,6 @@ public class DefaultProfileTokenManager implements ProfileTokenManager {
             return tokenProfile;
         }
         return null;
-    }
-
-    protected TokenCredentials getCredentials(JEEContext context) {
-        return tokenClient.getCredentials(context).orElse(null);
     }
 
     @Override
