@@ -14,8 +14,8 @@ import java.util.UUID;
 public abstract class BaseTokenTest {
 
     private final static String SIGN = "9bfd771777984dc89868fd258f823e48";
-    protected SignatureConfiguration signatureConfiguration = new SecretSignatureConfiguration(SIGN);
-    protected EncryptionConfiguration encryptionConfiguration = new SecretEncryptionConfiguration(SIGN);
+    protected final SignatureConfiguration signatureConfiguration = new SecretSignatureConfiguration(SIGN);
+    protected final EncryptionConfiguration encryptionConfiguration = new SecretEncryptionConfiguration(SIGN);
 
     protected String str(int len) {
         StringBuilder s = new StringBuilder(uuid());

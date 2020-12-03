@@ -87,8 +87,9 @@ public class DefaultProfileTokenManager implements ProfileTokenManager {
             jwtGenerator.setExpirationTime(ExpireTimeUtil.getTargetDate(expireTime));
         }
         String jwt = jwtGenerator.generate(profile);
-        if (jwt.length() > 4000) {
-            log.warn("the JWT length is {}, it's over 4000, please be careful!", jwt.length());
+        final int length = jwt.length();
+        if (length > 3072) {
+            log.warn("the JWT length is {}, it's over 3072, please be careful!", length);
         }
         return jwt;
     }
