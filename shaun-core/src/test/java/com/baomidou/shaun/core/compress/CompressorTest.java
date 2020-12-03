@@ -1,14 +1,13 @@
 package com.baomidou.shaun.core.compress;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Test;
 
 import java.text.DecimalFormat;
 import java.util.UUID;
 
-import org.junit.jupiter.api.Test;
-
-import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author miemie
@@ -41,25 +40,30 @@ class CompressorTest {
 
     void doIt(Compressor compressor) {
         Result result = new Result();
+        String str = str();
+        long begin = System.currentTimeMillis();
+        result.setSize(str.length());
+        String nStr = null;
         for (int i = 0; i < forSize; i++) {
-            String str = str();
-            result.upSize(str.length());
-            long begin = System.currentTimeMillis();
-            String nStr = compressor.compress(str);
-            long end = System.currentTimeMillis();
-            result.upCompress(end - begin);
-            result.upNewSize(nStr.length());
-
-            begin = System.currentTimeMillis();
-            String os = compressor.decompress(nStr);
-            end = System.currentTimeMillis();
-            result.upDecompress(end - begin);
-            assertThat(os).isEqualTo(str);
+            nStr = compressor.compress(str);
         }
+        long end = System.currentTimeMillis();
+        result.setNewSize(nStr.length());
+        result.setCompress(end - begin);
+
+        begin = System.currentTimeMillis();
+        String os = null;
+        for (int i = 0; i < forSize; i++) {
+            os = compressor.decompress(nStr);
+        }
+        end = System.currentTimeMillis();
+        result.setDecompress(end - begin);
+        assertThat(os).isEqualTo(str);
+
         double time = (double) result.getCompress() / forSize;
         double time2 = (double) result.getDecompress() / forSize;
         double lv = (double) result.getNewSize() / (double) result.getSize();
-        log.info("目标字符串(每次都不一样)长度: {}, 压缩解压缩: {}次, 平均压缩时长: {}毫秒, 解压时长: {}毫秒, 压缩率: {}",
+        log.info("目标字符串长度: {}, 压缩解压缩: {}次, 平均压缩时长: {}毫秒, 解压时长: {}毫秒, 压缩率: {}",
                 strLen, forSize, format.format(time), format.format(time2), format.format(lv));
     }
 
@@ -81,22 +85,6 @@ class CompressorTest {
         private long decompress;
         private long size;
         private long newSize;
-
-        public void upCompress(long compress) {
-            this.compress += compress;
-        }
-
-        public void upDecompress(long decompress) {
-            this.decompress += decompress;
-        }
-
-        public void upSize(long size) {
-            this.size += size;
-        }
-
-        public void upNewSize(long newSize) {
-            this.newSize += newSize;
-        }
     }
 
     String uuid() {

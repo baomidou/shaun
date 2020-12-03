@@ -15,15 +15,15 @@
  */
 package com.baomidou.shaun.core.compress;
 
-import java.io.ByteArrayOutputStream;
-import java.util.zip.Deflater;
-import java.util.zip.Inflater;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import java.io.ByteArrayOutputStream;
+import java.util.zip.Deflater;
+import java.util.zip.Inflater;
 
 /**
  * deflate 是同时使用了LZ77算法与哈夫曼编码（Huffman Coding）的一个无损数据压缩算法
@@ -32,6 +32,10 @@ import lombok.extern.slf4j.Slf4j;
  * <p>
  * 系统: win10, CPU: AMD 1700 8核16线程 3.2GHz, RAM: 8G*2 2666MHz
  * 目标字符串(每次都不一样)长度: 5000, 压缩解压缩: 10000次, 平均压缩时长: 0.16毫秒, 解压时长: 0.07毫秒, 压缩率: 0.77
+ * </p>
+ * <p>
+ * 机器 Mac mini, CPU: i5 6核 3GHz, RAM: 8G*2 2666MHz
+ * 目标字符串长度: 5000, 压缩解压缩: 10000次, 平均压缩时长: 0.12毫秒, 解压时长: 0.05毫秒, 压缩率: 0.77
  * </p>
  *
  * @author miemie

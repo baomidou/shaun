@@ -15,17 +15,16 @@
  */
 package com.baomidou.shaun.core.compress;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-
-import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
-import org.apache.commons.compress.compressors.bzip2.BZip2CompressorOutputStream;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
+import org.apache.commons.compress.compressors.bzip2.BZip2CompressorOutputStream;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 
 /**
  * bzip2是Julian Seward开发并按照自由软件／开源软件协议发布的数据压缩算法及程序
@@ -34,8 +33,13 @@ import lombok.extern.slf4j.Slf4j;
  * 默认配置下测试: <br>
  * <p>
  * 系统: win10, CPU: AMD 1700 8核16线程 3.2GHz, RAM: 8G*2 2666MHz
- * blockSize为9时: 目标字符串(每次都不一样)长度: 5000, 压缩解压缩: 10000次, 平均压缩时长: 2.15毫秒, 解压时长: 0.42毫秒, 压缩率: 0.71
  * blockSize为1时: 目标字符串(每次都不一样)长度: 5000, 压缩解压缩: 10000次, 平均压缩时长: 0.98毫秒, 解压时长: 0.33毫秒, 压缩率: 0.71
+ * blockSize为9时: 目标字符串(每次都不一样)长度: 5000, 压缩解压缩: 10000次, 平均压缩时长: 2.15毫秒, 解压时长: 0.42毫秒, 压缩率: 0.71
+ * </p>
+ * <p>
+ * 机器 Mac mini, CPU: i5 6核 3GHz, RAM: 8G*2 2666MHz
+ * blockSize为1时: 目标字符串长度: 5000, 压缩解压缩: 10000次, 平均压缩时长: 0.86毫秒, 解压时长: 0.30毫秒, 压缩率: 0.71
+ * blockSize为9时: 目标字符串长度: 5000, 压缩解压缩: 10000次, 平均压缩时长: 1.58毫秒, 解压时长: 0.34毫秒, 压缩率: 0.71
  * </p>
  *
  * @author miemie
