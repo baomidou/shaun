@@ -19,6 +19,8 @@ import com.baomidou.shaun.autoconfigure.properties.ShaunProperties;
 import com.baomidou.shaun.core.authority.AuthorityManager;
 import com.baomidou.shaun.core.authority.DefaultAuthorityManager;
 import com.baomidou.shaun.core.config.CoreConfig;
+import com.baomidou.shaun.core.config.DefaultJwtModelSelector;
+import com.baomidou.shaun.core.config.JwtModelSelector;
 import com.baomidou.shaun.core.credentials.extractor.DefaultShaunCredentialsExtractor;
 import com.baomidou.shaun.core.credentials.extractor.ShaunCredentialsExtractor;
 import com.baomidou.shaun.core.filter.CallbackFilter;
@@ -44,10 +46,6 @@ import org.pac4j.core.http.ajax.AjaxRequestResolver;
 import org.pac4j.core.http.url.DefaultUrlResolver;
 import org.pac4j.core.matching.matcher.Matcher;
 import org.pac4j.core.matching.matcher.PathMatcher;
-import org.pac4j.jwt.config.encryption.EncryptionConfiguration;
-import org.pac4j.jwt.config.encryption.SecretEncryptionConfiguration;
-import org.pac4j.jwt.config.signature.SecretSignatureConfiguration;
-import org.pac4j.jwt.config.signature.SignatureConfiguration;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -74,22 +72,10 @@ public class ShaunBeanAutoConfiguration {
 
     private final ShaunProperties properties;
 
-    /**
-     * jwt 签名类
-     */
     @Bean
     @ConditionalOnMissingBean
-    public SignatureConfiguration signatureConfiguration() {
-        return new SecretSignatureConfiguration(properties.getSalt());
-    }
-
-    /**
-     * jwt 加密类
-     */
-    @Bean
-    @ConditionalOnMissingBean
-    public EncryptionConfiguration encryptionConfiguration() {
-        return new SecretEncryptionConfiguration(properties.getSalt());
+    public JwtModelSelector jwtModelSelector() {
+        return new DefaultJwtModelSelector(properties.getJwtModel(), properties.getSalt());
     }
 
     /**
@@ -106,10 +92,9 @@ public class ShaunBeanAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean
-    public ProfileTokenManager profileTokenManager(SignatureConfiguration signatureConfiguration,
-                                                   EncryptionConfiguration encryptionConfiguration,
+    public ProfileTokenManager profileTokenManager(JwtModelSelector jwtModelSelector,
                                                    ShaunCredentialsExtractor credentialsExtractor) {
-        return new DefaultProfileTokenManager(signatureConfiguration, encryptionConfiguration, credentialsExtractor);
+        return new DefaultProfileTokenManager(jwtModelSelector, credentialsExtractor);
     }
 
     /**

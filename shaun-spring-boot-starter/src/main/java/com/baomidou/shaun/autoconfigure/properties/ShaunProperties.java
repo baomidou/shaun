@@ -15,9 +15,16 @@
  */
 package com.baomidou.shaun.autoconfigure.properties;
 
-import java.util.List;
-import java.util.UUID;
-
+import com.baomidou.shaun.core.config.JwtModel;
+import com.baomidou.shaun.core.credentials.TokenLocation;
+import com.baomidou.shaun.core.credentials.location.Cookie;
+import com.baomidou.shaun.core.credentials.location.Header;
+import com.baomidou.shaun.core.credentials.location.Parameter;
+import com.baomidou.shaun.core.handler.CallbackHandler;
+import com.baomidou.shaun.core.intercept.InterceptModel;
+import com.baomidou.shaun.core.mgt.SecurityManager;
+import com.baomidou.shaun.core.profile.TokenProfile;
+import lombok.Data;
 import org.pac4j.core.authorization.authorizer.Authorizer;
 import org.pac4j.core.authorization.authorizer.DefaultAuthorizers;
 import org.pac4j.core.authorization.checker.DefaultAuthorizationChecker;
@@ -28,16 +35,8 @@ import org.pac4j.core.matching.matcher.Matcher;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
-import com.baomidou.shaun.core.credentials.TokenLocation;
-import com.baomidou.shaun.core.credentials.location.Cookie;
-import com.baomidou.shaun.core.credentials.location.Header;
-import com.baomidou.shaun.core.credentials.location.Parameter;
-import com.baomidou.shaun.core.handler.CallbackHandler;
-import com.baomidou.shaun.core.intercept.InterceptModel;
-import com.baomidou.shaun.core.mgt.SecurityManager;
-import com.baomidou.shaun.core.profile.TokenProfile;
-
-import lombok.Data;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * @author miemie
@@ -109,7 +108,11 @@ public class ShaunProperties {
      */
     private List<String> excludeRegex;
     /**
-     * jwt 加密盐值(默认加密方式只支持 32 位字符)
+     * jwt 模式
+     */
+    private JwtModel jwtModel = JwtModel.SIGNATURE_ENCRYPTION;
+    /**
+     * jwt 盐值(默认只支持 32 位字符)
      */
     private String salt = UUID.randomUUID().toString().replace("-", "");
     /**

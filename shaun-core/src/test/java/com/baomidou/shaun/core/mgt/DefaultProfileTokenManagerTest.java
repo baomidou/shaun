@@ -60,21 +60,77 @@ class DefaultProfileTokenManagerTest extends BaseTokenTest {
         assertThat(profile.getAuthenticationAttributes()).isEmpty();
     }
 
+    /**
+     * 安全
+     * 只存一个ID,token 长度: 456
+     */
     @Test
     void lengthInfo() {
         DefaultProfileTokenManager manager = new DefaultProfileTokenManager(signatureConfiguration, encryptionConfiguration, null);
         final JwtAuthenticator authenticator = new JwtAuthenticator(signatureConfiguration, encryptionConfiguration);
+        lengthInfo(manager, authenticator, "签名又加密的");
+        // 42个
+    }
+
+    /**
+     * 只签名会暴露 payload, 不安全
+     * 只存一个ID,token 长度: 269
+     */
+    @Test
+    void lengthInfo2() {
+        DefaultProfileTokenManager manager = new DefaultProfileTokenManager(signatureConfiguration, null, null);
+        final JwtAuthenticator authenticator = new JwtAuthenticator(signatureConfiguration);
+        lengthInfo(manager, authenticator, "只签名的");
+        // 61个
+    }
+
+    /**
+     * 只加密不会暴露 payload, 安全
+     * 只存一个ID,token 长度: 285
+     */
+    @Test
+    void lengthInfo3() {
+        DefaultProfileTokenManager manager = new DefaultProfileTokenManager(null, encryptionConfiguration, null);
+        final JwtAuthenticator authenticator = new JwtAuthenticator();
+        authenticator.setEncryptionConfiguration(encryptionConfiguration);
+        lengthInfo(manager, authenticator, "只加密的");
+        // 60个
+    }
+
+    /**
+     * 不签名不加密的 , 不安全
+     * 只存一个ID,token 长度: 225
+     */
+    @Test
+    void lengthInfo4() {
+        DefaultProfileTokenManager manager = new DefaultProfileTokenManager(null, null, null);
+        final JwtAuthenticator authenticator = new JwtAuthenticator();
+        lengthInfo(manager, authenticator, "不签名不加密的");
+        // 62个
+    }
+
+    void lengthInfo(DefaultProfileTokenManager manager, JwtAuthenticator authenticator, String node) {
+        String jwt = null;
+        int len = 0;
         for (int i = 0; i < 100; i++) {
             String token = manager.generateToken(profile(i), "1d");
-            if (token.length() > 4000) {
-                log.info("添加 permission 到第 {} 个时,token 长度超过了 4000", i);
-                log.info("换算一下每个uuid长32,id长32,总长: {}", 32 * (i + 1));
+            if (i == 0) {
+                len = token.length();
+            }
+            if (i == 2) {
+                jwt = token;
+            }
+            if (token.length() > 3072) {
+                log.info("{} - 添加 permission 到第 {} 个时,token 长度超过了 4000", node, i);
+                log.info("{} - 换算一下每个uuid长32,id长32,总长: {}", node, 32 * (i + 1));
                 break;
             }
             TokenCredentials credentials = new TokenCredentials(token);
             TokenProfile profile = (TokenProfile) authenticator.validateToken(credentials.getToken());
             assertThat(profile).isNotNull();
         }
+        log.info("jwt: {}", jwt);
+        log.info("{} - 只存一个ID,token 长度: {}", node, len);
     }
 
     TokenProfile profile(int permissionSize) {
