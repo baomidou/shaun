@@ -1,6 +1,9 @@
 package com.baomidou.shaun.core.mgt;
 
 import com.baomidou.shaun.core.BaseTokenTest;
+import com.baomidou.shaun.core.config.DefaultJwtModelSelector;
+import com.baomidou.shaun.core.config.JwtModel;
+import com.baomidou.shaun.core.config.JwtModelSelector;
 import com.baomidou.shaun.core.profile.TokenProfile;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
@@ -66,8 +69,9 @@ class DefaultProfileTokenManagerTest extends BaseTokenTest {
      */
     @Test
     void lengthInfo() {
-        DefaultProfileTokenManager manager = new DefaultProfileTokenManager(signatureConfiguration, encryptionConfiguration, null);
-        final JwtAuthenticator authenticator = new JwtAuthenticator(signatureConfiguration, encryptionConfiguration);
+        JwtModelSelector selector = new DefaultJwtModelSelector(signatureConfiguration, encryptionConfiguration);
+        DefaultProfileTokenManager manager = new DefaultProfileTokenManager(selector, null);
+        final JwtAuthenticator authenticator = selector.getJwtAuthenticator();
         lengthInfo(manager, authenticator, "签名又加密的");
         // 42个
     }
@@ -78,8 +82,9 @@ class DefaultProfileTokenManagerTest extends BaseTokenTest {
      */
     @Test
     void lengthInfo2() {
-        DefaultProfileTokenManager manager = new DefaultProfileTokenManager(signatureConfiguration, null, null);
-        final JwtAuthenticator authenticator = new JwtAuthenticator(signatureConfiguration);
+        JwtModelSelector selector = new DefaultJwtModelSelector(signatureConfiguration, null);
+        DefaultProfileTokenManager manager = new DefaultProfileTokenManager(selector, null);
+        final JwtAuthenticator authenticator = selector.getJwtAuthenticator();
         lengthInfo(manager, authenticator, "只签名的");
         // 61个
     }
@@ -90,9 +95,9 @@ class DefaultProfileTokenManagerTest extends BaseTokenTest {
      */
     @Test
     void lengthInfo3() {
-        DefaultProfileTokenManager manager = new DefaultProfileTokenManager(null, encryptionConfiguration, null);
-        final JwtAuthenticator authenticator = new JwtAuthenticator();
-        authenticator.setEncryptionConfiguration(encryptionConfiguration);
+        JwtModelSelector selector = new DefaultJwtModelSelector(null, encryptionConfiguration);
+        DefaultProfileTokenManager manager = new DefaultProfileTokenManager(selector, null);
+        final JwtAuthenticator authenticator = selector.getJwtAuthenticator();
         lengthInfo(manager, authenticator, "只加密的");
         // 60个
     }
@@ -103,8 +108,9 @@ class DefaultProfileTokenManagerTest extends BaseTokenTest {
      */
     @Test
     void lengthInfo4() {
-        DefaultProfileTokenManager manager = new DefaultProfileTokenManager(null, null, null);
-        final JwtAuthenticator authenticator = new JwtAuthenticator();
+        JwtModelSelector selector = new DefaultJwtModelSelector(JwtModel.NONE, null);
+        DefaultProfileTokenManager manager = new DefaultProfileTokenManager(selector, null);
+        final JwtAuthenticator authenticator = selector.getJwtAuthenticator();
         lengthInfo(manager, authenticator, "不签名不加密的");
         // 62个
     }

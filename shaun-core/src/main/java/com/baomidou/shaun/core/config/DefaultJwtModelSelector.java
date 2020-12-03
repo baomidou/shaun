@@ -40,6 +40,18 @@ public class DefaultJwtModelSelector implements JwtModelSelector {
         }
     }
 
+    public DefaultJwtModelSelector(SignatureConfiguration signatureConfiguration, EncryptionConfiguration encryptionConfiguration) {
+        this.signatureConfiguration = signatureConfiguration;
+        this.encryptionConfiguration = encryptionConfiguration;
+        jwtAuthenticator = new JwtAuthenticator();
+        if (this.signatureConfiguration != null) {
+            jwtAuthenticator.setSignatureConfiguration(this.signatureConfiguration);
+        }
+        if (this.encryptionConfiguration != null) {
+            jwtAuthenticator.setEncryptionConfiguration(this.encryptionConfiguration);
+        }
+    }
+
     @Override
     public JwtGenerator<TokenProfile> getJwtGenerator() {
         return new JwtGenerator<>(signatureConfiguration, encryptionConfiguration);
