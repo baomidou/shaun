@@ -28,7 +28,8 @@ import java.io.ByteArrayOutputStream;
 
 /**
  * bzip2是Julian Seward开发并按照自由软件／开源软件协议发布的数据压缩算法及程序
- * bzip2比传统的gzip的压缩效率更高，但是它的压缩速度较慢
+ * bzip2比传统的gzip的压缩效率更高，但是它的压缩速度较慢 <br>
+ * 依赖 org.apache.commons:commons-compress
  * <p>
  * 默认配置下测试: <br>
  * <p>

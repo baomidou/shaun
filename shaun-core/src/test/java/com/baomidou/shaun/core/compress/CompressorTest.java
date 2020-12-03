@@ -32,27 +32,23 @@ class CompressorTest {
         doIt(compressor);
     }
 
-    @Test
-    void lz4() {
-        Compressor compressor = new Lz4Compressor();
-        doIt(compressor);
-    }
-
     void doIt(Compressor compressor) {
         Result result = new Result();
         String str = str();
-        long begin = System.currentTimeMillis();
         result.setSize(str.length());
         String nStr = null;
+        long begin = System.currentTimeMillis();
         for (int i = 0; i < forSize; i++) {
             nStr = compressor.compress(str);
         }
         long end = System.currentTimeMillis();
         result.setNewSize(nStr.length());
         result.setCompress(end - begin);
+        log.info("目标字符串长度: {}, 压缩后长度: {}, 压缩后字符串: {}", str.length(), nStr.length(), nStr);
+        assertThat(nStr.length()).isLessThan(str.length());
 
-        begin = System.currentTimeMillis();
         String os = null;
+        begin = System.currentTimeMillis();
         for (int i = 0; i < forSize; i++) {
             os = compressor.decompress(nStr);
         }
