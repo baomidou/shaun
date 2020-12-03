@@ -22,7 +22,8 @@ class DefaultProfileTokenManagerTest extends BaseTokenTest {
 
     @Test
     void token() {
-        DefaultProfileTokenManager manager = new DefaultProfileTokenManager(signatureConfiguration, encryptionConfiguration, null);
+        JwtModelSelector selector = new DefaultJwtModelSelector(signatureConfiguration, encryptionConfiguration);
+        DefaultProfileTokenManager manager = new DefaultProfileTokenManager(selector, null);
         TokenProfile profile = new TokenProfile();
         profile.setId(uuid());
         profile.setLinkedId(uuid());
@@ -38,7 +39,7 @@ class DefaultProfileTokenManagerTest extends BaseTokenTest {
         String token = manager.generateToken(profile, "1h");
         System.out.println(token);
         System.out.println(token.length());
-        JwtAuthenticator authenticator = new JwtAuthenticator(signatureConfiguration, encryptionConfiguration);
+        JwtAuthenticator authenticator = selector.getJwtAuthenticator();
         profile = (TokenProfile) authenticator.validateToken(token);
         System.out.println(profile);
         assertThat(profile).isNotNull();
