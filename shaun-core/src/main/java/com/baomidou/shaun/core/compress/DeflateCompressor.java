@@ -28,7 +28,7 @@ import java.util.zip.Inflater;
 /**
  * deflate 是同时使用了LZ77算法与哈夫曼编码（Huffman Coding）的一个无损数据压缩算法
  * <p>
- * 默认配置下测试: <br>
+ * 性能测试: <br>
  * <p>
  * 系统: win10, CPU: AMD 1700 8核16线程 3.2GHz, RAM: 8G*2 2666MHz
  * 目标字符串(每次都不一样)长度: 5000, 压缩解压缩: 10000次, 平均压缩时长: 0.16毫秒, 解压时长: 0.07毫秒, 压缩率: 0.77
@@ -46,7 +46,7 @@ import java.util.zip.Inflater;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class DeflateCompressor extends CompressorSupport implements Compressor {
+public class DeflateCompressor extends AbstractCompressor {
 
     private int level = Deflater.BEST_COMPRESSION;
     private boolean nowrap = false;
@@ -55,42 +55,55 @@ public class DeflateCompressor extends CompressorSupport implements Compressor {
         this.level = level;
     }
 
+    public DeflateCompressor(boolean nowrap) {
+        this.nowrap = nowrap;
+    }
+
+    @Override
+    protected double compressionRatio() {
+        return 0.75;
+    }
+
     @Override
     public String compress(String str) {
-        Deflater compress = new Deflater(level, nowrap);
+        Deflater deflater = new Deflater(level, nowrap);
         try (ByteArrayOutputStream out = new ByteArrayOutputStream(forSize)) {
-            compress.setInput(string2Byte(str));
-            compress.finish();
+            deflater.setInput(string2Byte(str));
+            deflater.finish();
             final byte[] buf = new byte[forSize];
-            while (!compress.finished()) {
-                int len = compress.deflate(buf);
+            while (!deflater.finished()) {
+                int len = deflater.deflate(buf);
                 out.write(buf, 0, len);
             }
             return encodeBase64(out.toByteArray());
         } catch (Exception e) {
-            log.error("compress error", e);
+            if (infoLog) {
+                log.error("compress error", e);
+            }
             return str;
         } finally {
-            compress.end();
+            deflater.end();
         }
     }
 
     @Override
     public String decompress(String str) {
-        Inflater decompress = new Inflater(nowrap);
+        Inflater inflater = new Inflater(nowrap);
         try (ByteArrayOutputStream out = new ByteArrayOutputStream(forSize)) {
-            decompress.setInput(decodeBase64(str));
+            inflater.setInput(decodeBase64(str));
             final byte[] buf = new byte[forSize];
-            while (!decompress.finished()) {
-                int len = decompress.inflate(buf);
+            while (!inflater.finished()) {
+                int len = inflater.inflate(buf);
                 out.write(buf, 0, len);
             }
-            return byte2String(out.toByteArray());
+            return byte2String(out);
         } catch (Exception e) {
-            log.error("decompress error", e);
+            if (infoLog) {
+                log.error("decompress error", e);
+            }
             return str;
         } finally {
-            decompress.end();
+            inflater.end();
         }
     }
 }

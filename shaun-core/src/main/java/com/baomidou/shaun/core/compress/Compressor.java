@@ -22,6 +22,22 @@ package com.baomidou.shaun.core.compress;
 public interface Compressor {
 
     /**
+     * 是否需要压缩
+     *
+     * @param str 字符串
+     * @return 是否
+     */
+    boolean needCompress(String str);
+
+    /**
+     * 是否需要解压
+     *
+     * @param str 字符串
+     * @return 是否
+     */
+    boolean needDecompress(String str);
+
+    /**
      * 压缩
      *
      * @param str 需要压缩的字符串

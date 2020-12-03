@@ -15,21 +15,47 @@
  */
 package com.baomidou.shaun.core.compress;
 
+import lombok.Setter;
+
+import java.io.ByteArrayOutputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
-
-import lombok.Setter;
 
 /**
  * @author miemie
  * @since 2020-12-02
  */
-public class CompressorSupport {
-
+@Setter
+public abstract class AbstractCompressor implements Compressor {
     protected final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
-    @Setter
+
+    protected boolean infoLog = false;
     protected int forSize = 1024;
+    /**
+     * 触发压缩的字符串长度
+     */
+    protected int strLengthThreshold = 1024 * 3;
+
+    @Override
+    public boolean needCompress(String str) {
+        return str.length() > strLengthThreshold;
+    }
+
+    @Override
+    public boolean needDecompress(String str) {
+        int length = str.length();
+        if (length > strLengthThreshold) {
+            return true;
+        }
+        double v = (double) length / compressionRatio();
+        return (long) v > strLengthThreshold;
+    }
+
+    /**
+     * 压缩比, 需要高估
+     */
+    protected abstract double compressionRatio();
 
     protected byte[] decodeBase64(String str) {
         return Base64.getDecoder().decode(string2Byte(str));
@@ -45,5 +71,9 @@ public class CompressorSupport {
 
     protected String byte2String(byte[] bytes) {
         return new String(bytes, DEFAULT_CHARSET);
+    }
+
+    protected String byte2String(ByteArrayOutputStream out) {
+        return byte2String(out.toByteArray());
     }
 }

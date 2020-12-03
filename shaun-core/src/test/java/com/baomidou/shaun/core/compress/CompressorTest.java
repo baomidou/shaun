@@ -61,15 +61,36 @@ class CompressorTest {
         double lv = (double) result.getNewSize() / (double) result.getSize();
         log.info("目标字符串长度: {}, 压缩解压缩: {}次, 平均压缩时长: {}毫秒, 解压时长: {}毫秒, 压缩率: {}",
                 strLen, forSize, format.format(time), format.format(time2), format.format(lv));
+
+        String xx = null;
+        for (int i = 1024 * 2; i < 10000; i++) {
+            str = str(i);
+            boolean needCompress = compressor.needCompress(str);
+            if (needCompress) {
+                xx = compressor.compress(str);
+                boolean needDecompress = compressor.needDecompress(xx);
+                assertThat(needDecompress).as("要解压长度:" + xx.length() + ",原始长度:" + i).isTrue();
+                assertThat(compressor.decompress(xx)).as("比较要解压长度:" + xx.length() + ",原始长度:" + i).isEqualTo(str);
+            } else {
+                if (compressor.needDecompress(str)) {
+                    String decompress = compressor.decompress(str);
+                    assertThat(decompress).as("尝试解压").isEqualTo(str);
+                }
+            }
+        }
     }
 
     String str() {
+        return str(strLen);
+    }
+
+    String str(int len) {
         StringBuilder s = new StringBuilder(uuid());
-        while (s.length() < strLen) {
+        while (s.length() < len) {
             s.append(uuid());
         }
-        if (s.length() > strLen) {
-            s.setLength(strLen);
+        if (s.length() > len) {
+            s.setLength(len);
         }
         return s.toString();
     }

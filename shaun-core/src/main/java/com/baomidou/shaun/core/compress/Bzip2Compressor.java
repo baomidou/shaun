@@ -31,7 +31,7 @@ import java.io.ByteArrayOutputStream;
  * bzip2比传统的gzip的压缩效率更高，但是它的压缩速度较慢 <br>
  * 依赖 org.apache.commons:commons-compress
  * <p>
- * 默认配置下测试: <br>
+ * 性能测试: <br>
  * <p>
  * 系统: win10, CPU: AMD 1700 8核16线程 3.2GHz, RAM: 8G*2 2666MHz
  * blockSize为1时: 目标字符串(每次都不一样)长度: 5000, 压缩解压缩: 10000次, 平均压缩时长: 0.98毫秒, 解压时长: 0.33毫秒, 压缩率: 0.71
@@ -51,19 +51,26 @@ import java.io.ByteArrayOutputStream;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class Bzip2Compressor extends CompressorSupport implements Compressor {
+public class Bzip2Compressor extends AbstractCompressor {
 
     private int blockSize = BZip2CompressorOutputStream.MIN_BLOCKSIZE;
 
     @Override
+    protected double compressionRatio() {
+        return 0.69;
+    }
+
+    @Override
     public String compress(String str) {
         try (ByteArrayOutputStream out = new ByteArrayOutputStream(forSize);
-             BZip2CompressorOutputStream gos = new BZip2CompressorOutputStream(out, blockSize)) {
-            gos.write(string2Byte(str));
-            gos.close();
+             BZip2CompressorOutputStream bzip2 = new BZip2CompressorOutputStream(out, blockSize)) {
+            bzip2.write(string2Byte(str));
+            bzip2.close();
             return encodeBase64(out.toByteArray());
         } catch (Exception e) {
-            log.error("compress error", e);
+            if (infoLog) {
+                log.error("compress error", e);
+            }
             return str;
         }
     }
@@ -78,9 +85,11 @@ public class Bzip2Compressor extends CompressorSupport implements Compressor {
             while ((n = bis.read(buffer)) >= 0) {
                 out.write(buffer, 0, n);
             }
-            return byte2String(out.toByteArray());
+            return byte2String(out);
         } catch (Exception e) {
-            log.error("decompress error", e);
+            if (infoLog) {
+                log.error("decompress error", e);
+            }
             return str;
         }
     }
