@@ -30,8 +30,8 @@ import com.baomidou.shaun.core.handler.HttpActionHandler;
 import com.baomidou.shaun.core.handler.LogoutHandler;
 import com.baomidou.shaun.core.intercept.support.DefaultShaunFilterChain;
 import com.baomidou.shaun.core.intercept.support.ShaunFilterChain;
-import com.baomidou.shaun.core.jwt.DefaultJwtModelSelector;
-import com.baomidou.shaun.core.jwt.JwtModelSelector;
+import com.baomidou.shaun.core.jwt.DefaultJwtTypeSelector;
+import com.baomidou.shaun.core.jwt.JwtTypeSelector;
 import com.baomidou.shaun.core.matching.matcher.OnlyPathMatcher;
 import com.baomidou.shaun.core.mgt.JwtProfileTokenManager;
 import com.baomidou.shaun.core.mgt.ProfileStateManager;
@@ -74,8 +74,8 @@ public class ShaunBeanAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public JwtModelSelector jwtModelSelector() {
-        return new DefaultJwtModelSelector(properties.getJwtModel(), properties.getSalt());
+    public JwtTypeSelector jwtTypeSelector() {
+        return new DefaultJwtTypeSelector(properties.getJwtType(), properties.getSalt());
     }
 
     /**
@@ -92,9 +92,8 @@ public class ShaunBeanAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean
-    public ProfileTokenManager profileTokenManager(JwtModelSelector jwtModelSelector,
-                                                   TokenCredentialsExtractor credentialsExtractor) {
-        return new JwtProfileTokenManager(jwtModelSelector, credentialsExtractor);
+    public ProfileTokenManager profileTokenManager(JwtTypeSelector jwtTypeSelector, TokenCredentialsExtractor credentialsExtractor) {
+        return new JwtProfileTokenManager(jwtTypeSelector, credentialsExtractor);
     }
 
     /**

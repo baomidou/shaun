@@ -21,7 +21,7 @@ import com.baomidou.shaun.core.credentials.location.Header;
 import com.baomidou.shaun.core.credentials.location.Parameter;
 import com.baomidou.shaun.core.handler.CallbackHandler;
 import com.baomidou.shaun.core.intercept.InterceptModel;
-import com.baomidou.shaun.core.jwt.JwtModel;
+import com.baomidou.shaun.core.jwt.JwtType;
 import com.baomidou.shaun.core.mgt.SecurityManager;
 import com.baomidou.shaun.core.profile.TokenProfile;
 import lombok.Data;
@@ -110,7 +110,7 @@ public class ShaunProperties {
     /**
      * jwt 模式
      */
-    private JwtModel jwtModel = JwtModel.SIGNATURE_ENCRYPTION;
+    private JwtType jwtType = JwtType.DEFAULT;
     /**
      * jwt 盐值(默认只支持 32 位字符)
      */

@@ -1,7 +1,7 @@
 package com.baomidou.shaun.core.mgt;
 
 import com.baomidou.shaun.core.BaseTokenTest;
-import com.baomidou.shaun.core.jwt.JwtModelSelector;
+import com.baomidou.shaun.core.jwt.JwtTypeSelector;
 import com.baomidou.shaun.core.profile.TokenProfile;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +36,7 @@ class JwtProfileTokenManagerTest extends BaseTokenTest {
         String token = manager.generateToken(profile, "1h");
         System.out.println(token);
         System.out.println(token.length());
-        JwtAuthenticator authenticator = bothSelector.getJwtAuthenticator();
+        JwtAuthenticator authenticator = bothSelector.getAuthenticator();
         profile = (TokenProfile) authenticator.validateToken(token);
         System.out.println(profile);
         assertThat(profile).isNotNull();
@@ -101,9 +101,9 @@ class JwtProfileTokenManagerTest extends BaseTokenTest {
         // 62个
     }
 
-    void lengthInfo(JwtModelSelector selector, String node) {
+    void lengthInfo(JwtTypeSelector selector, String node) {
         ProfileTokenManager manager = new JwtProfileTokenManager(selector, null);
-        final JwtAuthenticator authenticator = selector.getJwtAuthenticator();
+        final JwtAuthenticator authenticator = selector.getAuthenticator();
         String jwt = null;
         int len = 0;
         for (int i = 0; i < 100; i++) {

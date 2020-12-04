@@ -1,7 +1,7 @@
 package shaun.test.stateless.cookie;
 
-import com.baomidou.shaun.core.jwt.DefaultJwtModelSelector;
-import com.baomidou.shaun.core.jwt.JwtModelSelector;
+import com.baomidou.shaun.core.jwt.DefaultJwtTypeSelector;
+import com.baomidou.shaun.core.jwt.JwtTypeSelector;
 import com.baomidou.shaun.core.mgt.ProfileStateManager;
 import com.baomidou.shaun.core.profile.TokenProfile;
 import com.nimbusds.jose.EncryptionMethod;
@@ -42,8 +42,9 @@ public class ShaunConfiguration {
         }
     }
 
-    public JwtModelSelector jwtModelSelector() {
-        return new DefaultJwtModelSelector(new RSASignatureConfiguration(keyPair),
+    @Bean
+    public JwtTypeSelector jwtTypeSelector() {
+        return new DefaultJwtTypeSelector(new RSASignatureConfiguration(keyPair),
                 new RSAEncryptionConfiguration(keyPair, JWEAlgorithm.RSA_OAEP_256, EncryptionMethod.A128GCM));
     }
 
