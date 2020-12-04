@@ -125,12 +125,16 @@ public class CoreConfig {
      */
     @Setter(AccessLevel.NONE)
     private String authorizerNames = DefaultAuthorizers.NONE;
-
-    @Setter(AccessLevel.NONE)
-    private Map<String, Authorizer> authorizersMap = new HashMap<>();
-
+    /**
+     * Matchers
+     */
     @Setter(AccessLevel.NONE)
     private Map<String, Matcher> matchersMap = new HashMap<>();
+    /**
+     * Authorizers
+     */
+    @Setter(AccessLevel.NONE)
+    private Map<String, Authorizer> authorizersMap = new HashMap<>();
     /**
      * 登录页地址
      * <p>
