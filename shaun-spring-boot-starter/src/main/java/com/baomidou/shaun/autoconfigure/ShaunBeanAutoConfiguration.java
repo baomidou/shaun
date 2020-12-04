@@ -152,7 +152,7 @@ public class ShaunBeanAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public ShaunFilterChain shaunFilterChain(CoreConfig coreConfig, SecurityManager securityManager,
+    public ShaunFilterChain shaunFilterChain(CoreConfig coreConfig,
                                              ObjectProvider<CallbackHandler> callbackHandlerProvider,
                                              ObjectProvider<IndirectClient> indirectClientsProvider) {
         DefaultShaunFilterChain chain = new DefaultShaunFilterChain();
