@@ -8,6 +8,7 @@ shaun:
   login-url: /login
   logout-url: /logout
   exclude-path:
+    - /auth/login
     - /error
     - /favicon.ico
   matcher-names: csrfToken
@@ -20,4 +21,3 @@ logging:
   level:
     root: info
     com.baomidou.shaun: debug
-

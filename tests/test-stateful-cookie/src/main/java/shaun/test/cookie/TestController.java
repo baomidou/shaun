@@ -1,9 +1,11 @@
 package shaun.test.cookie;
 
-import java.util.UUID;
-
-import javax.servlet.http.HttpServletRequest;
-
+import com.baomidou.shaun.core.annotation.HasPermission;
+import com.baomidou.shaun.core.annotation.HasRole;
+import com.baomidou.shaun.core.context.ProfileHolder;
+import com.baomidou.shaun.core.profile.TokenProfile;
+import com.baomidou.shaun.core.util.WebUtil;
+import lombok.AllArgsConstructor;
 import org.pac4j.core.util.Pac4jConstants;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,13 +13,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.baomidou.shaun.core.annotation.HasPermission;
-import com.baomidou.shaun.core.annotation.HasRole;
-import com.baomidou.shaun.core.context.ProfileHolder;
-import com.baomidou.shaun.core.profile.TokenProfile;
-import com.baomidou.shaun.core.util.WebUtil;
-
-import lombok.AllArgsConstructor;
+import javax.servlet.http.HttpServletRequest;
+import java.util.UUID;
 
 /**
  * @author miemie
@@ -31,7 +28,6 @@ public class TestController {
 
     @GetMapping("/login")
     public String login() {
-        service.login();
         return "login";
     }
 

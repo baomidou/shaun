@@ -1,14 +1,20 @@
 package shaun.test.cookie;
 
+import com.baomidou.shaun.autoconfigure.properties.ShaunProperties;
 import com.baomidou.shaun.core.context.ProfileHolder;
 import com.baomidou.shaun.core.profile.TokenProfile;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.pac4j.core.authorization.authorizer.Authorizer;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.session.MapSessionRepository;
 import org.springframework.session.config.annotation.web.http.EnableSpringHttpSession;
+import org.springframework.stereotype.Component;
+import shaun.test.support.StarterWebInfo;
 
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -43,5 +49,18 @@ public class Cookie2Application {
     @ConditionalOnMissingBean
     public MyAspect myAspect() {
         return new MyAspect();
+    }
+
+    @Slf4j
+    @Component
+    @RequiredArgsConstructor
+    public static class Show extends StarterWebInfo implements CommandLineRunner {
+
+        private final ShaunProperties properties;
+
+        @Override
+        public void run(String... args) throws Exception {
+            logUrl(properties.getCookie().getDomain(), "index");
+        }
     }
 }

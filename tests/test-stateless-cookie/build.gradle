@@ -1,8 +1,7 @@
 description = "前后分离-cookie模式"
 
 dependencies {
-    api project(":shaun-spring-boot-starter")
-    api "org.springframework.boot:spring-boot-starter-web"
+    api project(":tests:test-support")
     testImplementation "org.apache.shiro:shiro-spring-boot-web-starter:${shiroVersion}"
     testImplementation "org.springframework.boot:spring-boot-starter-security"
 }

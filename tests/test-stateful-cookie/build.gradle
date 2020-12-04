@@ -1,8 +1,7 @@
 description = "前后不分离-cookie模式"
 
 dependencies {
-    api project(":shaun-spring-boot-starter")
-    api "org.springframework.boot:spring-boot-starter-web"
+    api project(":tests:test-support")
     api "org.springframework.boot:spring-boot-starter-thymeleaf"
     api "org.springframework.session:spring-session-core"
 }
