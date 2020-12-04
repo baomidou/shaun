@@ -30,7 +30,6 @@ import org.pac4j.jwt.profile.JwtGenerator;
 
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Consumer;
 
 /**
  * @author miemie
@@ -87,11 +86,5 @@ public class DefaultProfileTokenManager implements ProfileTokenManager {
             log.warn("the JWT length is {}, it's over 3072, please be careful!", length);
         }
         return jwt;
-    }
-
-    private <T> void notNullThen(T t, Consumer<T> consumer) {
-        if (t != null) {
-            consumer.accept(t);
-        }
     }
 }
