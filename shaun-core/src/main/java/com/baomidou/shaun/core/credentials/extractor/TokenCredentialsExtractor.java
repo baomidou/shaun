@@ -24,5 +24,5 @@ import org.pac4j.core.credentials.extractor.CredentialsExtractor;
  * @author miemie
  * @since 2020-11-27
  */
-public interface ShaunCredentialsExtractor extends CredentialsExtractor<TokenCredentials> {
+public interface TokenCredentialsExtractor extends CredentialsExtractor<TokenCredentials> {
 }

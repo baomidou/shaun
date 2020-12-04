@@ -19,8 +19,8 @@ import com.baomidou.shaun.autoconfigure.properties.ShaunProperties;
 import com.baomidou.shaun.core.authority.AuthorityManager;
 import com.baomidou.shaun.core.authority.DefaultAuthorityManager;
 import com.baomidou.shaun.core.config.CoreConfig;
-import com.baomidou.shaun.core.credentials.extractor.DefaultShaunCredentialsExtractor;
-import com.baomidou.shaun.core.credentials.extractor.ShaunCredentialsExtractor;
+import com.baomidou.shaun.core.credentials.extractor.DefaultTokenCredentialsExtractor;
+import com.baomidou.shaun.core.credentials.extractor.TokenCredentialsExtractor;
 import com.baomidou.shaun.core.filter.CallbackFilter;
 import com.baomidou.shaun.core.filter.LogoutFilter;
 import com.baomidou.shaun.core.filter.SecurityFilter;
@@ -33,7 +33,7 @@ import com.baomidou.shaun.core.intercept.support.ShaunFilterChain;
 import com.baomidou.shaun.core.jwt.DefaultJwtModelSelector;
 import com.baomidou.shaun.core.jwt.JwtModelSelector;
 import com.baomidou.shaun.core.matching.matcher.OnlyPathMatcher;
-import com.baomidou.shaun.core.mgt.DefaultProfileTokenManager;
+import com.baomidou.shaun.core.mgt.JwtProfileTokenManager;
 import com.baomidou.shaun.core.mgt.ProfileStateManager;
 import com.baomidou.shaun.core.mgt.ProfileTokenManager;
 import com.baomidou.shaun.core.mgt.SecurityManager;
@@ -83,8 +83,8 @@ public class ShaunBeanAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean
-    public ShaunCredentialsExtractor credentialsExtractor() {
-        return new DefaultShaunCredentialsExtractor(properties.getTokenLocation(), properties.getHeader(), properties.getCookie(), properties.getParameter());
+    public TokenCredentialsExtractor credentialsExtractor() {
+        return new DefaultTokenCredentialsExtractor(properties.getTokenLocation(), properties.getHeader(), properties.getCookie(), properties.getParameter());
     }
 
     /**
@@ -93,8 +93,8 @@ public class ShaunBeanAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public ProfileTokenManager profileTokenManager(JwtModelSelector jwtModelSelector,
-                                                   ShaunCredentialsExtractor credentialsExtractor) {
-        return new DefaultProfileTokenManager(jwtModelSelector, credentialsExtractor);
+                                                   TokenCredentialsExtractor credentialsExtractor) {
+        return new JwtProfileTokenManager(jwtModelSelector, credentialsExtractor);
     }
 
     /**

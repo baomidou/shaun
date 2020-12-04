@@ -31,14 +31,14 @@ import java.util.Optional;
  * @author miemie
  * @since 2019-07-20
  */
-public class DefaultShaunCredentialsExtractor implements ShaunCredentialsExtractor {
+public class DefaultTokenCredentialsExtractor implements TokenCredentialsExtractor {
 
     private final TokenLocation tokenLocation;
     private final HeaderExtractor headerExtractor;
     private final CookieExtractor cookieExtractor;
     private final ParameterExtractor parameterExtractor;
 
-    public DefaultShaunCredentialsExtractor(TokenLocation tokenLocation, Header header, Cookie cookie, Parameter parameter) {
+    public DefaultTokenCredentialsExtractor(TokenLocation tokenLocation, Header header, Cookie cookie, Parameter parameter) {
         this.tokenLocation = tokenLocation;
         this.headerExtractor = new HeaderExtractor(header.getName(), header.getPrefix());
         this.headerExtractor.setTrimValue(header.isTrimValue());

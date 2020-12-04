@@ -26,9 +26,9 @@ import java.util.Optional;
  * @author miemie
  * @since 2019-08-03
  */
-public class NoSessionStore implements SessionStore<JEEContext> {
+public class NoneSessionStore implements SessionStore<JEEContext> {
 
-    public static final NoSessionStore INSTANCE = new NoSessionStore();
+    public static final NoneSessionStore INSTANCE = new NoneSessionStore();
 
     @Override
     public String getOrCreateSessionId(JEEContext context) {

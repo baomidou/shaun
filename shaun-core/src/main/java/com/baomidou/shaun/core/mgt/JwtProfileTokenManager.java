@@ -16,7 +16,7 @@
 package com.baomidou.shaun.core.mgt;
 
 import com.baomidou.shaun.core.client.TokenClient;
-import com.baomidou.shaun.core.credentials.extractor.ShaunCredentialsExtractor;
+import com.baomidou.shaun.core.credentials.extractor.TokenCredentialsExtractor;
 import com.baomidou.shaun.core.jwt.JwtModelSelector;
 import com.baomidou.shaun.core.profile.TokenProfile;
 import com.baomidou.shaun.core.util.ExpireTimeUtil;
@@ -36,12 +36,12 @@ import java.util.Set;
  * @since 2020-10-29
  */
 @Slf4j
-public class DefaultProfileTokenManager implements ProfileTokenManager {
+public class JwtProfileTokenManager implements ProfileTokenManager {
 
     private final TokenClient tokenClient;
     private final JwtModelSelector selector;
 
-    public DefaultProfileTokenManager(JwtModelSelector jwtModelSelector, ShaunCredentialsExtractor credentialsExtractor) {
+    public JwtProfileTokenManager(JwtModelSelector jwtModelSelector, TokenCredentialsExtractor credentialsExtractor) {
         this.selector = jwtModelSelector;
         this.tokenClient = new TokenClient(credentialsExtractor, this.selector.getJwtAuthenticator());
     }

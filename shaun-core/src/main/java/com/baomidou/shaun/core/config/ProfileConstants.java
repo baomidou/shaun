@@ -21,5 +21,8 @@ package com.baomidou.shaun.core.config;
  */
 public interface ProfileConstants {
 
+    /**
+     * 多租户 ID
+     */
     String tenantId = "tenantId";
 }

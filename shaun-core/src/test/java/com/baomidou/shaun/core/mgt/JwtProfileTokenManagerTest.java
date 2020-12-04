@@ -16,11 +16,11 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @since 2020-12-02
  */
 @Slf4j
-class DefaultProfileTokenManagerTest extends BaseTokenTest {
+class JwtProfileTokenManagerTest extends BaseTokenTest {
 
     @Test
     void token() {
-        DefaultProfileTokenManager manager = new DefaultProfileTokenManager(bothSelector, null);
+        JwtProfileTokenManager manager = new JwtProfileTokenManager(bothSelector, null);
         TokenProfile profile = new TokenProfile();
         profile.setId(uuid());
         profile.setLinkedId(uuid());
@@ -102,7 +102,7 @@ class DefaultProfileTokenManagerTest extends BaseTokenTest {
     }
 
     void lengthInfo(JwtModelSelector selector, String node) {
-        ProfileTokenManager manager = new DefaultProfileTokenManager(selector, null);
+        ProfileTokenManager manager = new JwtProfileTokenManager(selector, null);
         final JwtAuthenticator authenticator = selector.getJwtAuthenticator();
         String jwt = null;
         int len = 0;

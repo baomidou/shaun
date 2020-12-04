@@ -15,7 +15,7 @@
  */
 package com.baomidou.shaun.core.util;
 
-import com.baomidou.shaun.core.context.session.NoSessionStore;
+import com.baomidou.shaun.core.context.session.NoneSessionStore;
 import com.baomidou.shaun.core.exception.ShaunException;
 import org.pac4j.core.context.HttpConstants;
 import org.pac4j.core.context.JEEContext;
@@ -121,6 +121,6 @@ public abstract class WebUtil {
     }
 
     public static JEEContext getJEEContext(HttpServletRequest request, HttpServletResponse response, boolean session) {
-        return new JEEContext(request, response, session ? JEESessionStore.INSTANCE : NoSessionStore.INSTANCE);
+        return new JEEContext(request, response, session ? JEESessionStore.INSTANCE : NoneSessionStore.INSTANCE);
     }
 }
