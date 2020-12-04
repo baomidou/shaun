@@ -16,7 +16,6 @@
 package com.baomidou.shaun.core.mgt;
 
 import com.baomidou.shaun.core.config.CoreConfig;
-import com.baomidou.shaun.core.context.ProfileHolder;
 import com.baomidou.shaun.core.profile.TokenProfile;
 import com.baomidou.shaun.core.util.ExpireTimeUtil;
 import com.baomidou.shaun.core.util.WebUtil;
@@ -77,8 +76,7 @@ public class SecurityManager {
      * 用户登出
      */
     public void logout(TokenProfile profile) {
-        ProfileHolder.clearProfile();
-        config.getLogoutHandler().logout(config, profile);
+        config.getLogoutHandler().logout(config, WebUtil.getJEEContext(config.isSessionOn()), profile);
         config.getProfileStateManager().offline(profile);
     }
 

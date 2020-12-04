@@ -17,6 +17,7 @@ package com.baomidou.shaun.core.handler;
 
 import com.baomidou.shaun.core.config.CoreConfig;
 import com.baomidou.shaun.core.profile.TokenProfile;
+import org.pac4j.core.context.JEEContext;
 
 /**
  * 登出执行器
@@ -30,7 +31,9 @@ public interface LogoutHandler {
     /**
      * 登出操作
      *
+     * @param config  核心
+     * @param context 上下文
      * @param profile profile
      */
-    void logout(CoreConfig config, TokenProfile profile);
+    void logout(CoreConfig config, JEEContext context, TokenProfile profile);
 }

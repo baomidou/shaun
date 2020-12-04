@@ -18,8 +18,7 @@ package com.baomidou.shaun.core.filter;
 import com.baomidou.shaun.core.config.CoreConfig;
 import com.baomidou.shaun.core.context.ProfileHolder;
 import com.baomidou.shaun.core.exception.http.FoundLoginAction;
-import com.baomidou.shaun.core.mgt.SecurityManager;
-import com.baomidou.shaun.core.profile.TokenProfile;
+import com.baomidou.shaun.core.handler.LogoutHandler;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.pac4j.core.context.JEEContext;
@@ -37,7 +36,7 @@ import org.pac4j.core.util.CommonHelper;
 @Slf4j
 public class LogoutFilter extends AbstractShaunFilter {
 
-    private SecurityManager securityManager;
+    private LogoutHandler logoutHandler;
 
     public LogoutFilter(Matcher pathMatcher) {
         super(pathMatcher);
@@ -48,8 +47,7 @@ public class LogoutFilter extends AbstractShaunFilter {
         if (log.isDebugEnabled()) {
             log.debug("access logout");
         }
-        final TokenProfile profile = ProfileHolder.getProfile();
-        securityManager.logout(profile);
+        logoutHandler.logout(config, context, ProfileHolder.getProfile());
         return FoundLoginAction.INSTANCE;
     }
 
@@ -60,6 +58,6 @@ public class LogoutFilter extends AbstractShaunFilter {
 
     @Override
     public void initCheck() {
-        CommonHelper.assertNotNull("securityManager", securityManager);
+        CommonHelper.assertNotNull("LogoutHandler", logoutHandler);
     }
 }

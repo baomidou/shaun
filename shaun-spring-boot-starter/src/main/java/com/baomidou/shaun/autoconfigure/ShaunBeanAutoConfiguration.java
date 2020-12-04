@@ -178,7 +178,7 @@ public class ShaunBeanAutoConfiguration {
         /* logoutFilter begin */
         if (StringUtils.hasText(properties.getLogoutUrl())) {
             final LogoutFilter logoutFilter = new LogoutFilter(new OnlyPathMatcher(properties.getLogoutUrl()));
-            logoutFilter.setSecurityManager(securityManager);
+            logoutFilter.setLogoutHandler(coreConfig.getLogoutHandler());
             chain.addShaunFilter(logoutFilter);
         }
         /* logoutFilter end */
