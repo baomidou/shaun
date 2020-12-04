@@ -19,7 +19,6 @@ import com.baomidou.shaun.core.config.CoreConfig;
 import com.baomidou.shaun.core.context.ProfileHolder;
 import com.baomidou.shaun.core.credentials.location.Cookie;
 import com.baomidou.shaun.core.profile.TokenProfile;
-import com.baomidou.shaun.core.util.WebUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.pac4j.core.context.JEEContext;
 
@@ -37,13 +36,12 @@ public class DefaultLogoutHandler implements LogoutHandler {
     public void logout(CoreConfig config, JEEContext context, TokenProfile profile) {
         boolean sessionOn = config.isSessionOn();
         Cookie cookie = config.getCookie();
-        JEEContext jeeContext = WebUtil.getJEEContext(sessionOn);
         if (config.getTokenLocation().enableCookie()) {
-            jeeContext.addResponseCookie(cookie.clean());
+            context.addResponseCookie(cookie.clean());
             log.debug("logoutHandler clean cookie success!");
         }
         if (sessionOn) {
-            boolean b = jeeContext.getSessionStore().destroySession(jeeContext);
+            boolean b = context.getSessionStore().destroySession(context);
             if (b) {
                 log.debug("LogoutHandler destroySession success!");
             } else {
