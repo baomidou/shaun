@@ -16,8 +16,8 @@
 package com.baomidou.shaun.core.mgt;
 
 import com.baomidou.shaun.core.client.TokenClient;
-import com.baomidou.shaun.core.config.JwtModelSelector;
 import com.baomidou.shaun.core.credentials.extractor.ShaunCredentialsExtractor;
+import com.baomidou.shaun.core.jwt.JwtModelSelector;
 import com.baomidou.shaun.core.profile.TokenProfile;
 import com.baomidou.shaun.core.util.ExpireTimeUtil;
 import lombok.extern.slf4j.Slf4j;

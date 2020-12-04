@@ -15,13 +15,13 @@
  */
 package com.baomidou.shaun.autoconfigure.properties;
 
-import com.baomidou.shaun.core.config.JwtModel;
 import com.baomidou.shaun.core.credentials.TokenLocation;
 import com.baomidou.shaun.core.credentials.location.Cookie;
 import com.baomidou.shaun.core.credentials.location.Header;
 import com.baomidou.shaun.core.credentials.location.Parameter;
 import com.baomidou.shaun.core.handler.CallbackHandler;
 import com.baomidou.shaun.core.intercept.InterceptModel;
+import com.baomidou.shaun.core.jwt.JwtModel;
 import com.baomidou.shaun.core.mgt.SecurityManager;
 import com.baomidou.shaun.core.profile.TokenProfile;
 import lombok.Data;

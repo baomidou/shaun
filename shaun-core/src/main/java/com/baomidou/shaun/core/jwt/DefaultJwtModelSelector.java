@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.baomidou.shaun.core.config;
+package com.baomidou.shaun.core.jwt;
 
 import com.baomidou.shaun.core.profile.TokenProfile;
+import org.pac4j.core.util.InitializableObject;
 import org.pac4j.jwt.config.encryption.EncryptionConfiguration;
 import org.pac4j.jwt.config.encryption.SecretEncryptionConfiguration;
 import org.pac4j.jwt.config.signature.SecretSignatureConfiguration;
@@ -27,53 +28,65 @@ import org.pac4j.jwt.profile.JwtGenerator;
  * @author miemie
  * @since 2020-12-03
  */
-public class DefaultJwtModelSelector implements JwtModelSelector {
+public class DefaultJwtModelSelector extends InitializableObject implements JwtModelSelector {
 
-    private final JwtAuthenticator jwtAuthenticator;
+    private JwtAuthenticator jwtAuthenticator;
     private SignatureConfiguration signatureConfiguration;
     private EncryptionConfiguration encryptionConfiguration;
 
+    /**
+     * 不推荐
+     */
+    public DefaultJwtModelSelector() {
+        this(JwtModel.NONE, null);
+    }
+
     public DefaultJwtModelSelector(JwtModel model, String sign) {
-        if (model != JwtModel.NONE) {
-            if (model == JwtModel.SIGNATURE_ENCRYPTION) {
+        if (model != null && model != JwtModel.NONE) {
+            if (model == JwtModel.DEFAULT) {
                 this.signatureConfiguration = new SecretSignatureConfiguration(sign);
                 this.encryptionConfiguration = new SecretEncryptionConfiguration(sign);
-            }
-            if (model == JwtModel.ONLY_ENCRYPTION) {
+            } else if (model == JwtModel.ONLY_ENCRYPTION) {
                 this.encryptionConfiguration = new SecretEncryptionConfiguration(sign);
-            }
-            if (model == JwtModel.ONLY_SIGNATURE) {
+            } else if (model == JwtModel.ONLY_SIGNATURE) {
                 this.signatureConfiguration = new SecretSignatureConfiguration(sign);
             }
         }
-        jwtAuthenticator = new JwtAuthenticator();
-        if (this.signatureConfiguration != null) {
-            jwtAuthenticator.setSignatureConfiguration(this.signatureConfiguration);
-        }
-        if (this.encryptionConfiguration != null) {
-            jwtAuthenticator.setEncryptionConfiguration(this.encryptionConfiguration);
-        }
+    }
+
+    public DefaultJwtModelSelector(SignatureConfiguration signatureConfiguration) {
+        this(signatureConfiguration, null);
+    }
+
+    public DefaultJwtModelSelector(EncryptionConfiguration encryptionConfiguration) {
+        this(null, encryptionConfiguration);
     }
 
     public DefaultJwtModelSelector(SignatureConfiguration signatureConfiguration, EncryptionConfiguration encryptionConfiguration) {
         this.signatureConfiguration = signatureConfiguration;
         this.encryptionConfiguration = encryptionConfiguration;
-        jwtAuthenticator = new JwtAuthenticator();
+    }
+
+    @Override
+    public JwtGenerator<TokenProfile> getJwtGenerator() {
+        init();
+        return new JwtGenerator<>(signatureConfiguration, encryptionConfiguration);
+    }
+
+    @Override
+    public JwtAuthenticator getJwtAuthenticator() {
+        init();
+        return jwtAuthenticator;
+    }
+
+    @Override
+    protected void internalInit() {
+        this.jwtAuthenticator = new JwtAuthenticator();
         if (this.signatureConfiguration != null) {
             jwtAuthenticator.setSignatureConfiguration(this.signatureConfiguration);
         }
         if (this.encryptionConfiguration != null) {
             jwtAuthenticator.setEncryptionConfiguration(this.encryptionConfiguration);
         }
-    }
-
-    @Override
-    public JwtGenerator<TokenProfile> getJwtGenerator() {
-        return new JwtGenerator<>(signatureConfiguration, encryptionConfiguration);
-    }
-
-    @Override
-    public JwtAuthenticator getJwtAuthenticator() {
-        return jwtAuthenticator;
     }
 }

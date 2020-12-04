@@ -1,18 +1,19 @@
 package shaun.test.stateless.cookie;
 
+import com.baomidou.shaun.core.jwt.DefaultJwtModelSelector;
+import com.baomidou.shaun.core.jwt.JwtModelSelector;
 import com.baomidou.shaun.core.mgt.ProfileStateManager;
 import com.baomidou.shaun.core.profile.TokenProfile;
 import com.nimbusds.jose.EncryptionMethod;
 import com.nimbusds.jose.JWEAlgorithm;
-import org.pac4j.jwt.config.encryption.EncryptionConfiguration;
 import org.pac4j.jwt.config.encryption.RSAEncryptionConfiguration;
 import org.pac4j.jwt.config.signature.RSASignatureConfiguration;
-import org.pac4j.jwt.config.signature.SignatureConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,27 +29,22 @@ public class ShaunConfiguration {
      */
     public static Map<String, String> tokenMap = new HashMap<>();
 
-    @Bean
-    public KeyPair keyPair() throws Exception {
-        final KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
-        keyGen.initialize(2048);
-        return keyGen.generateKeyPair();
+    private static final KeyPair keyPair = initKeyPair();
+
+    static KeyPair initKeyPair() {
+        final KeyPairGenerator keyGen;
+        try {
+            keyGen = KeyPairGenerator.getInstance("RSA");
+            keyGen.initialize(2048);
+            return keyGen.generateKeyPair();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    /**
-     * jwt 签名类
-     */
-    @Bean
-    public SignatureConfiguration signatureConfiguration(KeyPair keyPair) {
-        return new RSASignatureConfiguration(keyPair);
-    }
-
-    /**
-     * jwt 加密类
-     */
-    @Bean
-    public EncryptionConfiguration encryptionConfiguration(KeyPair keyPair) {
-        return new RSAEncryptionConfiguration(keyPair, JWEAlgorithm.RSA_OAEP_256, EncryptionMethod.A128GCM);
+    public JwtModelSelector jwtModelSelector() {
+        return new DefaultJwtModelSelector(new RSASignatureConfiguration(keyPair),
+                new RSAEncryptionConfiguration(keyPair, JWEAlgorithm.RSA_OAEP_256, EncryptionMethod.A128GCM));
     }
 
     @Bean

@@ -13,29 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.baomidou.shaun.core.config;
-
-import com.baomidou.shaun.core.profile.TokenProfile;
-import org.pac4j.jwt.credentials.authenticator.JwtAuthenticator;
-import org.pac4j.jwt.profile.JwtGenerator;
+package com.baomidou.shaun.core.jwt;
 
 /**
+ * jwt 模式
+ *
  * @author miemie
  * @since 2020-12-03
  */
-public interface JwtModelSelector {
-
+public enum JwtModel {
     /**
-     * jwt encode
-     *
-     * @return JwtGenerator
+     * 签名 和 加密
+     * 默认,如果只存入一个长度 32 的 id,生成的 jwt 长度大概为 456
      */
-    JwtGenerator<TokenProfile> getJwtGenerator();
-
+    DEFAULT,
     /**
-     * jwt decode
-     *
-     * @return JwtAuthenticator
+     * 只加密
+     * 可以,不会暴露 payload,如果只存入一个长度 32 的 id,生成的 jwt 长度大概为 285
      */
-    JwtAuthenticator getJwtAuthenticator();
+    ONLY_ENCRYPTION,
+    /**
+     * 只签名
+     * 不建议,会暴露 payload,如果只存入一个长度 32 的 id,生成的 jwt 长度大概为 269
+     */
+    ONLY_SIGNATURE,
+    /**
+     * 不签名也不加密
+     * 不建议,会暴露 payload,如果只存入一个长度 32 的 id,生成的 jwt 长度大概为 225
+     */
+    NONE;
 }
