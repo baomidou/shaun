@@ -13,19 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.baomidou.shaun.autoconfigure.intercept;
+package com.baomidou.shaun.core.aop;
 
-import com.baomidou.shaun.core.annotation.HasAuthorization;
-import com.baomidou.shaun.core.annotation.HasPermission;
-import com.baomidou.shaun.core.annotation.HasRole;
-import lombok.extern.slf4j.Slf4j;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+
 import org.springframework.aop.support.StaticMethodMatcherPointcutAdvisor;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
+import com.baomidou.shaun.core.annotation.HasAuthorization;
+import com.baomidou.shaun.core.annotation.HasPermission;
+import com.baomidou.shaun.core.annotation.HasRole;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 注解优先级: <br>
@@ -35,7 +37,7 @@ import java.lang.reflect.Method;
  * 注意: 只会命中一个注解!
  * copy from {org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor}
  *
- * @author miemie
+ * @author miemieAuthorizationAttributeSourceAdvisor
  * @since 2020-05-19
  */
 @Slf4j

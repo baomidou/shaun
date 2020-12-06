@@ -15,11 +15,12 @@
  */
 package com.baomidou.shaun.autoconfigure;
 
-import com.baomidou.shaun.autoconfigure.intercept.MethodSecurityAdvisor;
-import com.baomidou.shaun.autoconfigure.intercept.MethodSecurityInterceptor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import com.baomidou.shaun.core.aop.MethodSecurityAdvisor;
+import com.baomidou.shaun.core.aop.MethodSecurityInterceptor;
 
 /**
  * @author miemie
