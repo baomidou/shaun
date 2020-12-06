@@ -15,9 +15,6 @@
  */
 package com.baomidou.shaun.core.util;
 
-import com.baomidou.shaun.core.exception.ShaunException;
-import org.springframework.lang.NonNull;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -25,6 +22,10 @@ import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.Date;
+
+import org.springframework.lang.NonNull;
+
+import com.baomidou.shaun.core.exception.ShaunException;
 
 /**
  * @author miemie
@@ -51,14 +52,14 @@ public abstract class ExpireTimeUtil {
     /**
      * 获取超时时间 Date
      * <p>
-     * jwt 超时时间
-     * <li> 10s : 表示10秒有效 </li>
-     * <li> 10m 结尾: 表示10分钟有效 </li>
-     * <li> 10h 结尾: 表示10小时有效 </li>
+     * jwt 超时时间 : <br>
+     * 10s : 表示10秒有效
+     * 10m 结尾: 表示10分钟有效
+     * 10h 结尾: 表示10小时有效
      * <p>
-     * <li> 1d : 表示有效时间到第二天 00:00:00  </li>
-     * <li> 2d1h : 表示有效时间到第二天 01:00:00 </li>
-     * <b> `d` 后面 只支持上面三个(`s`,`m`,`h`)之一 </b>
+     * 1d : 表示有效时间到第二天 00:00:00
+     * 2d1h : 表示有效时间到第二天 01:00:00 <br>
+     * `d` 后面 只支持上面三个(`s`,`m`,`h`)之一
      *
      * @param expireTime 表达式
      * @return 到期时间
