@@ -15,12 +15,9 @@
  */
 package com.baomidou.shaun.core.mgt;
 
-import com.baomidou.shaun.core.client.TokenClient;
-import com.baomidou.shaun.core.credentials.extractor.TokenCredentialsExtractor;
-import com.baomidou.shaun.core.jwt.JwtTypeSelector;
-import com.baomidou.shaun.core.profile.TokenProfile;
-import com.baomidou.shaun.core.util.ExpireTimeUtil;
-import lombok.extern.slf4j.Slf4j;
+import java.util.Optional;
+import java.util.Set;
+
 import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.credentials.TokenCredentials;
 import org.pac4j.core.profile.CommonProfile;
@@ -28,8 +25,13 @@ import org.pac4j.core.profile.UserProfile;
 import org.pac4j.core.util.CommonHelper;
 import org.pac4j.jwt.profile.JwtGenerator;
 
-import java.util.Optional;
-import java.util.Set;
+import com.baomidou.shaun.core.client.TokenClient;
+import com.baomidou.shaun.core.credentials.extractor.TokenCredentialsExtractor;
+import com.baomidou.shaun.core.jwt.JwtTypeSelector;
+import com.baomidou.shaun.core.profile.TokenProfile;
+import com.baomidou.shaun.core.util.ExpireTimeUtil;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author miemie
@@ -39,11 +41,11 @@ import java.util.Set;
 public class JwtProfileTokenManager implements ProfileTokenManager {
 
     private final TokenClient tokenClient;
-    private final JwtTypeSelector selector;
+    private final JwtTypeSelector jwtTypeSelector;
 
-    public JwtProfileTokenManager(JwtTypeSelector jwtModelSelector, TokenCredentialsExtractor credentialsExtractor) {
-        this.selector = jwtModelSelector;
-        this.tokenClient = new TokenClient(credentialsExtractor, this.selector.getAuthenticator());
+    public JwtProfileTokenManager(JwtTypeSelector jwtTypeSelector, TokenCredentialsExtractor credentialsExtractor) {
+        this.jwtTypeSelector = jwtTypeSelector;
+        this.tokenClient = new TokenClient(credentialsExtractor, jwtTypeSelector.getAuthenticator());
     }
 
     @Override
@@ -76,7 +78,7 @@ public class JwtProfileTokenManager implements ProfileTokenManager {
 
     @Override
     public String generateToken(TokenProfile profile, String expireTime) {
-        JwtGenerator<TokenProfile> jwtGenerator = selector.getGenerator();
+        JwtGenerator<TokenProfile> jwtGenerator = jwtTypeSelector.getGenerator();
         if (CommonHelper.isNotBlank(expireTime)) {
             jwtGenerator.setExpirationTime(ExpireTimeUtil.getTargetDate(expireTime));
         }
