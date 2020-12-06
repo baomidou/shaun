@@ -27,6 +27,7 @@ import org.aopalliance.intercept.MethodInvocation;
 import org.pac4j.core.exception.http.ForbiddenAction;
 import org.pac4j.core.exception.http.HttpAction;
 import org.pac4j.core.exception.http.UnauthorizedAction;
+import org.pac4j.core.util.InitializableObject;
 import org.springframework.aop.framework.AopProxyUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
@@ -56,20 +57,14 @@ import lombok.extern.slf4j.Slf4j;
  * @since 2020-05-19
  */
 @Slf4j
-public class MethodSecurityInterceptor implements MethodInterceptor, ApplicationContextAware {
+public class MethodSecurityInterceptor extends InitializableObject implements MethodInterceptor, ApplicationContextAware {
 
     private AuthorityManager authorityManager;
     private ApplicationContext context;
 
-    private void initAuthorityManager() {
-        if (authorityManager == null) {
-            authorityManager = context.getBean(AuthorityManager.class);
-        }
-    }
-
     @Override
     public Object invoke(MethodInvocation mi) throws Throwable {
-        this.initAuthorityManager();
+        init();
         HttpAction action = decide(mi);
         if (action != null) {
             throw action;
@@ -196,5 +191,12 @@ public class MethodSecurityInterceptor implements MethodInterceptor, Application
     @Override
     public void setApplicationContext(@NonNull ApplicationContext applicationContext) throws BeansException {
         this.context = applicationContext;
+    }
+
+    @Override
+    protected void internalInit() {
+        if (authorityManager == null) {
+            authorityManager = context.getBean(AuthorityManager.class);
+        }
     }
 }
