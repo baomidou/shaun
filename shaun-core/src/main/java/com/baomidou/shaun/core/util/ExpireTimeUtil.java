@@ -52,7 +52,6 @@ public abstract class ExpireTimeUtil {
     /**
      * 获取超时时间 Date
      * <p>
-     * jwt 超时时间 : <br>
      * 10s : 表示10秒有效
      * 10m 结尾: 表示10分钟有效
      * 10h 结尾: 表示10小时有效
