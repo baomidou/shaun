@@ -15,13 +15,15 @@
  */
 package com.baomidou.shaun.core.mgt;
 
+import org.pac4j.core.context.JEEContext;
+import org.pac4j.core.util.CommonHelper;
+
 import com.baomidou.shaun.core.config.CoreConfig;
 import com.baomidou.shaun.core.profile.TokenProfile;
 import com.baomidou.shaun.core.util.ExpireTimeUtil;
 import com.baomidou.shaun.core.util.WebUtil;
+
 import lombok.RequiredArgsConstructor;
-import org.pac4j.core.context.JEEContext;
-import org.pac4j.core.util.CommonHelper;
 
 /**
  * 安全管理器,封装下,统一的登录登出
@@ -77,7 +79,6 @@ public class SecurityManager {
      */
     public void logout(TokenProfile profile) {
         config.getLogoutHandler().logout(config, WebUtil.getJEEContext(config.isSessionOn()), profile);
-        config.getProfileStateManager().offline(profile);
     }
 
     private String chooseExpireTime(String optionExpireTime) {

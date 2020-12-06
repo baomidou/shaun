@@ -15,11 +15,13 @@
  */
 package com.baomidou.shaun.core.handler;
 
+import org.pac4j.core.context.JEEContext;
+
 import com.baomidou.shaun.core.config.CoreConfig;
 import com.baomidou.shaun.core.context.ProfileHolder;
 import com.baomidou.shaun.core.profile.TokenProfile;
+
 import lombok.extern.slf4j.Slf4j;
-import org.pac4j.core.context.JEEContext;
 
 /**
  * 默认登出操作
@@ -45,6 +47,7 @@ public class DefaultLogoutHandler implements LogoutHandler {
                 log.warn("LogoutHandler destroySession fail!");
             }
         }
+        config.getProfileStateManager().offline(profile);
         ProfileHolder.clearProfile();
     }
 }

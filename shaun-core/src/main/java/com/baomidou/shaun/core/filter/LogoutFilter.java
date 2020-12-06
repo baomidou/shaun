@@ -15,16 +15,16 @@
  */
 package com.baomidou.shaun.core.filter;
 
-import com.baomidou.shaun.core.config.CoreConfig;
-import com.baomidou.shaun.core.context.ProfileHolder;
-import com.baomidou.shaun.core.exception.http.FoundLoginAction;
-import com.baomidou.shaun.core.handler.LogoutHandler;
-import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.exception.http.HttpAction;
 import org.pac4j.core.matching.matcher.Matcher;
-import org.pac4j.core.util.CommonHelper;
+
+import com.baomidou.shaun.core.config.CoreConfig;
+import com.baomidou.shaun.core.context.ProfileHolder;
+import com.baomidou.shaun.core.exception.http.FoundLoginAction;
+
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * logout filter
@@ -36,8 +36,6 @@ import org.pac4j.core.util.CommonHelper;
 @Slf4j
 public class LogoutFilter extends AbstractShaunFilter {
 
-    private LogoutHandler logoutHandler;
-
     public LogoutFilter(Matcher pathMatcher) {
         super(pathMatcher);
     }
@@ -47,17 +45,12 @@ public class LogoutFilter extends AbstractShaunFilter {
         if (log.isDebugEnabled()) {
             log.debug("access logout");
         }
-        logoutHandler.logout(config, context, ProfileHolder.getProfile());
+        config.getLogoutHandler().logout(config, context, ProfileHolder.getProfile());
         return FoundLoginAction.INSTANCE;
     }
 
     @Override
     public int order() {
         return 300;
-    }
-
-    @Override
-    public void initCheck() {
-        CommonHelper.assertNotNull("LogoutHandler", logoutHandler);
     }
 }

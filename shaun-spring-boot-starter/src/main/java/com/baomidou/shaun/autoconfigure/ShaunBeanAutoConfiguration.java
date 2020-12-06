@@ -15,6 +15,27 @@
  */
 package com.baomidou.shaun.autoconfigure;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.pac4j.core.authorization.authorizer.Authorizer;
+import org.pac4j.core.client.Client;
+import org.pac4j.core.client.Clients;
+import org.pac4j.core.client.IndirectClient;
+import org.pac4j.core.http.ajax.AjaxRequestResolver;
+import org.pac4j.core.http.url.DefaultUrlResolver;
+import org.pac4j.core.matching.matcher.Matcher;
+import org.pac4j.core.matching.matcher.PathMatcher;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
+
 import com.baomidou.shaun.autoconfigure.properties.ShaunProperties;
 import com.baomidou.shaun.core.authority.AuthorityManager;
 import com.baomidou.shaun.core.authority.DefaultAuthorityManager;
@@ -37,27 +58,8 @@ import com.baomidou.shaun.core.mgt.JwtProfileTokenManager;
 import com.baomidou.shaun.core.mgt.ProfileStateManager;
 import com.baomidou.shaun.core.mgt.ProfileTokenManager;
 import com.baomidou.shaun.core.mgt.SecurityManager;
-import lombok.RequiredArgsConstructor;
-import org.pac4j.core.authorization.authorizer.Authorizer;
-import org.pac4j.core.client.Client;
-import org.pac4j.core.client.Clients;
-import org.pac4j.core.client.IndirectClient;
-import org.pac4j.core.http.ajax.AjaxRequestResolver;
-import org.pac4j.core.http.url.DefaultUrlResolver;
-import org.pac4j.core.matching.matcher.Matcher;
-import org.pac4j.core.matching.matcher.PathMatcher;
-import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.boot.autoconfigure.AutoConfigureBefore;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.util.Assert;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 
 /**
  * @author miemie
@@ -176,9 +178,7 @@ public class ShaunBeanAutoConfiguration {
 
         /* logoutFilter begin */
         if (StringUtils.hasText(properties.getLogoutUrl())) {
-            final LogoutFilter logoutFilter = new LogoutFilter(new OnlyPathMatcher(properties.getLogoutUrl()));
-            logoutFilter.setLogoutHandler(coreConfig.getLogoutHandler());
-            chain.addShaunFilter(logoutFilter);
+            chain.addShaunFilter(new LogoutFilter(new OnlyPathMatcher(properties.getLogoutUrl())));
         }
         /* logoutFilter end */
 
