@@ -34,6 +34,8 @@ class JwtProfileTokenManagerTest extends BaseTokenTest {
         System.out.println(profile);
         System.out.println("----------------------------------------------------------------------------------");
         String token = manager.generateToken(profile, "1h");
+        assertThat(profile.getIssuedAt()).isNotNull();
+        assertThat(profile.getExpirationDate()).isNotNull();
         System.out.println(token);
         System.out.println(token.length());
         JwtAuthenticator authenticator = bothSelector.getAuthenticator();

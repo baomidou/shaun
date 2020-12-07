@@ -72,7 +72,7 @@ public class DefaultJwtTypeSelector extends InitializableObject implements JwtTy
     @Override
     public JwtGenerator<TokenProfile> getGenerator() {
         init();
-        return new JwtGenerator<>(signatureConfiguration, encryptionConfiguration);
+        return new ShaunJwtGenerator(signatureConfiguration, encryptionConfiguration);
     }
 
     @Override
