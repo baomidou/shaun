@@ -17,8 +17,8 @@ package com.baomidou.shaun.core.profile;
 
 import com.baomidou.shaun.core.config.ProfileConstants;
 import lombok.NoArgsConstructor;
+import org.pac4j.core.profile.jwt.AbstractJwtProfile;
 import org.pac4j.core.profile.jwt.JwtClaims;
-import org.pac4j.jwt.profile.JwtProfile;
 import org.springframework.util.Assert;
 
 import java.util.List;
@@ -28,7 +28,7 @@ import java.util.List;
  * @since 2019-12-27
  */
 @NoArgsConstructor
-public class TokenProfile extends JwtProfile {
+public class TokenProfile extends AbstractJwtProfile {
     private static final long serialVersionUID = -1;
 
     private String token;
