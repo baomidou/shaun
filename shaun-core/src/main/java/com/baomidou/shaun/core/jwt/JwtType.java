@@ -24,22 +24,22 @@ package com.baomidou.shaun.core.jwt;
 public enum JwtType {
     /**
      * 签名 和 加密
-     * 默认,如果只存入一个长度 32 的 id,生成的 jwt 长度大概为 456
+     * 默认,如果只存入一个长度 32 的 id,并且有超时时间,生成的 jwt 长度大概为 456
      */
     DEFAULT,
     /**
      * 只加密
-     * 可以,不会暴露 payload,如果只存入一个长度 32 的 id,生成的 jwt 长度大概为 285
+     * 可以,不会暴露 payload,如果只存入一个长度 32 的 id,并且有超时时间,生成的 jwt 长度大概为 285
      */
     ONLY_ENCRYPTION,
     /**
      * 只签名
-     * 不建议,会暴露 payload,如果只存入一个长度 32 的 id,生成的 jwt 长度大概为 269
+     * 不建议,会暴露 payload,如果只存入一个长度 32 的 id,并且有超时时间,生成的 jwt 长度大概为 269
      */
     ONLY_SIGNATURE,
     /**
      * 不签名也不加密
-     * 不建议,会暴露 payload,如果只存入一个长度 32 的 id,生成的 jwt 长度大概为 225
+     * 不建议,会暴露 payload,如果只存入一个长度 32 的 id,并且有超时时间,生成的 jwt 长度大概为 225
      */
     NONE;
 }
