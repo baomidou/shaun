@@ -30,12 +30,10 @@ public class DefaultAuthorityManager implements AuthorityManager {
     @Override
     public void skipAuthentication(TokenProfile profile) {
         profile.addRole(skipAuthenticationRolePermission);
-        profile.addPermission(skipAuthenticationRolePermission);
     }
 
     @Override
     public boolean isSkipAuthentication(TokenProfile profile) {
-        return profile.getRoles().contains(skipAuthenticationRolePermission) ||
-                profile.getPermissions().contains(skipAuthenticationRolePermission);
+        return profile.getRoles().contains(skipAuthenticationRolePermission);
     }
 }
