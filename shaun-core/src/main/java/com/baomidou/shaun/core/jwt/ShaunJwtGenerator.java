@@ -17,6 +17,7 @@ package com.baomidou.shaun.core.jwt;
 
 import com.baomidou.shaun.core.profile.TokenProfile;
 import com.nimbusds.jwt.JWTClaimsSet;
+import lombok.Getter;
 import org.pac4j.core.profile.jwt.JwtClaims;
 import org.pac4j.jwt.config.encryption.EncryptionConfiguration;
 import org.pac4j.jwt.config.signature.SignatureConfiguration;
@@ -29,6 +30,9 @@ import java.util.Date;
  * @since 2020-12-07
  */
 public class ShaunJwtGenerator extends JwtGenerator<TokenProfile> {
+
+    @Getter
+    private Date expirationTime;
 
     public ShaunJwtGenerator() {
     }
@@ -55,12 +59,17 @@ public class ShaunJwtGenerator extends JwtGenerator<TokenProfile> {
         builder.claim(INTERNAL_LINKEDID, profile.getLinkedId());
 
         builder.subject(profile.getTypedId());
-        if (getExpirationTime() != null) {
-            builder.expirationTime(getExpirationTime());
-            profile.addAttribute(JwtClaims.EXPIRATION_TIME, getExpirationTime());
+        if (expirationTime != null) {
+            builder.expirationTime(expirationTime);
+            profile.addAttribute(JwtClaims.EXPIRATION_TIME, expirationTime);
         }
         profile.addAttribute(JwtClaims.ISSUED_AT, issueAt);
         // claims
         return builder.build();
+    }
+
+    @Override
+    public void setExpirationTime(final Date expirationTime) {
+        this.expirationTime = new Date(expirationTime.getTime());
     }
 }
