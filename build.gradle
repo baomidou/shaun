@@ -19,7 +19,7 @@ allprojects {
     }
 }
 
-description = "基于 pac4j-jwt 的 WEB 安全框架"
+description = "基于 pac4j-jwt 的 WEB 安全组件"
 
 subprojects {
     apply plugin: 'java-library'

@@ -28,7 +28,7 @@ publishing {
 
                 name = 'shaun'
                 packaging 'jar'
-                description = '基于 pac4j-jwt 的 WEB 安全框架'
+                description = '基于 pac4j-jwt 的 WEB 安全组件'
                 url = 'https://gitee.com/baomidou/shaun'
 
                 scm {
