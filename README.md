@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-	<strong>基于 pac4j-jwt 的 WEB 安全框架</strong>
+	<strong>基于 pac4j-jwt 的 WEB 安全组件</strong>
 </p>
 
 <p align="center">
