@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2020 baomidou (wonderming@vip.qq.com)
+ * Copyright 2019-2021 baomidou (wonderming@vip.qq.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,17 +15,19 @@
  */
 package com.baomidou.shaun.core.intercept.support;
 
-import com.baomidou.shaun.core.config.CoreConfig;
-import com.baomidou.shaun.core.context.ProfileHolder;
-import com.baomidou.shaun.core.filter.ShaunFilter;
-import com.baomidou.shaun.core.util.WebUtil;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.exception.http.HttpAction;
 import org.springframework.web.cors.CorsUtils;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.List;
+import com.baomidou.shaun.core.config.CoreConfig;
+import com.baomidou.shaun.core.context.ProfileHolder;
+import com.baomidou.shaun.core.filter.ShaunFilter;
+import com.baomidou.shaun.core.util.WebUtil;
 
 /**
  * @author miemie

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2020 baomidou (wonderming@vip.qq.com)
+ * Copyright 2019-2021 baomidou (wonderming@vip.qq.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,13 +15,14 @@
  */
 package com.baomidou.shaun.core.context;
 
-import com.baomidou.shaun.core.profile.TokenProfile;
+import javax.servlet.http.HttpServletRequest;
+
 import org.pac4j.core.util.Pac4jConstants;
 import org.springframework.util.Assert;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.http.HttpServletRequest;
+import com.baomidou.shaun.core.profile.TokenProfile;
 
 /**
  * @author miemie

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2020 baomidou (wonderming@vip.qq.com)
+ * Copyright 2019-2021 baomidou (wonderming@vip.qq.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,19 +15,21 @@
  */
 package com.baomidou.shaun.core.intercept;
 
-import com.baomidou.shaun.core.config.CoreConfig;
-import com.baomidou.shaun.core.filter.ShaunFilter;
-import com.baomidou.shaun.core.intercept.support.DoChainSupport;
-import com.baomidou.shaun.core.intercept.support.ShaunFilterChain;
-import org.springframework.lang.NonNull;
-import org.springframework.web.filter.OncePerRequestFilter;
+import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.List;
+
+import org.springframework.lang.NonNull;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+import com.baomidou.shaun.core.config.CoreConfig;
+import com.baomidou.shaun.core.filter.ShaunFilter;
+import com.baomidou.shaun.core.intercept.support.DoChainSupport;
+import com.baomidou.shaun.core.intercept.support.ShaunFilterChain;
 
 /**
  * @author miemie

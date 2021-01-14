@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2020 baomidou (wonderming@vip.qq.com)
+ * Copyright 2019-2021 baomidou (wonderming@vip.qq.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,15 +15,17 @@
  */
 package com.baomidou.shaun.core.jwt;
 
-import com.baomidou.shaun.core.profile.TokenProfile;
-import com.nimbusds.jwt.JWTClaimsSet;
-import lombok.Getter;
+import java.util.Date;
+
 import org.pac4j.core.profile.jwt.JwtClaims;
 import org.pac4j.jwt.config.encryption.EncryptionConfiguration;
 import org.pac4j.jwt.config.signature.SignatureConfiguration;
 import org.pac4j.jwt.profile.JwtGenerator;
 
-import java.util.Date;
+import com.baomidou.shaun.core.profile.TokenProfile;
+import com.nimbusds.jwt.JWTClaimsSet;
+
+import lombok.Getter;
 
 /**
  * @author miemie

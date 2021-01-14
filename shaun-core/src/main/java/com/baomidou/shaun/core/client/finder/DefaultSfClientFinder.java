@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2020 baomidou (wonderming@vip.qq.com)
+ * Copyright 2019-2021 baomidou (wonderming@vip.qq.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,10 @@
  */
 package com.baomidou.shaun.core.client.finder;
 
-import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import org.pac4j.core.client.Client;
 import org.pac4j.core.client.Clients;
 import org.pac4j.core.client.finder.ClientFinder;
@@ -24,9 +26,8 @@ import org.pac4j.core.context.WebContext;
 import org.pac4j.core.credentials.Credentials;
 import org.pac4j.core.util.Pac4jConstants;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author miemie

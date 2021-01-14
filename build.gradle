@@ -19,7 +19,7 @@ allprojects {
     }
 }
 
-description = "easy security for web by pac4j"
+description = "基于 pac4j-jwt 的 WEB 安全框架"
 
 subprojects {
     apply plugin: 'java-library'
@@ -28,6 +28,17 @@ subprojects {
 
     sourceCompatibility = "${javaVersion}"
     targetCompatibility = "${javaVersion}"
+
+    dependencies {
+        implementation(platform("org.pac4j:pac4j:${pac4jVersion}"))
+        implementation(platform("org.springframework.boot:spring-boot-dependencies:${springBootVersion}"))
+        annotationProcessor(platform("org.springframework.boot:spring-boot-dependencies:${springBootVersion}"))
+
+        testImplementation("org.assertj:assertj-core")
+        testImplementation("org.junit.jupiter:junit-jupiter-engine")
+        testImplementation("org.mockito:mockito-junit-jupiter")
+        testImplementation("ch.qos.logback:logback-classic")
+    }
 
     tasks.withType(JavaCompile) {
         options.encoding = 'UTF-8'
@@ -62,17 +73,6 @@ subprojects {
         }
     }
 
-    dependencies {
-        implementation(platform("org.pac4j:pac4j:${pac4jVersion}"))
-        implementation(platform("org.springframework.boot:spring-boot-dependencies:${springBootVersion}"))
-        annotationProcessor(platform("org.springframework.boot:spring-boot-dependencies:${springBootVersion}"))
-
-        testImplementation("org.assertj:assertj-core")
-        testImplementation("org.junit.jupiter:junit-jupiter-engine")
-        testImplementation("org.mockito:mockito-junit-jupiter")
-        testImplementation("ch.qos.logback:logback-classic")
-    }
-
     license {
         encoding = "UTF-8"
         header = rootProject.file("license.txt")
@@ -80,7 +80,7 @@ subprojects {
         exclude "**/test/**/*.java"
         exclude "**/*Test.java"
         mapping "java", "SLASHSTAR_STYLE"
-        ignoreFailures = true
+//        ignoreFailures = true
         ext.year = Calendar.getInstance().get(Calendar.YEAR)
     }
 

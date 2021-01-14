@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2020 baomidou (wonderming@vip.qq.com)
+ * Copyright 2019-2021 baomidou (wonderming@vip.qq.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,13 +15,15 @@
  */
 package com.baomidou.shaun.core.profile;
 
-import com.baomidou.shaun.core.config.ProfileConstants;
-import lombok.NoArgsConstructor;
+import java.util.List;
+
 import org.pac4j.core.profile.jwt.AbstractJwtProfile;
 import org.pac4j.core.profile.jwt.JwtClaims;
 import org.springframework.util.Assert;
 
-import java.util.List;
+import com.baomidou.shaun.core.config.ProfileConstants;
+
+import lombok.NoArgsConstructor;
 
 /**
  * @author miemie
