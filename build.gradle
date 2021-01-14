@@ -80,7 +80,6 @@ subprojects {
         exclude "**/test/**/*.java"
         exclude "**/*Test.java"
         mapping "java", "SLASHSTAR_STYLE"
-//        ignoreFailures = true
         ext.year = Calendar.getInstance().get(Calendar.YEAR)
     }
 
