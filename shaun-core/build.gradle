@@ -1,3 +1,5 @@
+apply from: "${rootDir}/gradle/publications.gradle"
+
 dependencies {
     api "org.pac4j:pac4j-jwt"
     api "org.pac4j:pac4j-http"
