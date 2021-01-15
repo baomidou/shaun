@@ -51,28 +51,6 @@ subprojects {
         enabled = false
     }
 
-    jar {
-        into("META-INF/") {
-            from rootProject.file("LICENSE")
-        }
-        into("META-INF/maven/$project.group/$project.name") {
-            from { generatePomFileForMavenJavaPublication }
-            rename ".*", "pom.xml"
-        }
-        afterEvaluate {
-            manifest {
-                attributes 'Implementation-Title': archiveBaseName
-                attributes 'Implementation-Version': archiveVersion
-                attributes 'Built-Gradle': gradle.gradleVersion
-                attributes 'Bundle-DocURL': 'https://gitee.com/baomidou/shaun'
-                attributes 'Build-OS': System.getProperty("os.name")
-                attributes 'Built-By': System.getProperty("user.name")
-                attributes 'Build-Jdk': System.getProperty("java.version")
-                attributes 'Build-Timestamp': LocalDateTime.now().format("yyyy-MM-dd HH:mm:ss")
-            }
-        }
-    }
-
     license {
         encoding = "UTF-8"
         header = rootProject.file("license.txt")
