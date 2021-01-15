@@ -39,17 +39,16 @@
 
 1. 引入: shaun-spring-boot-starter 和 spring-boot-starter-web
 
-```xml
-
+``` xml
 <dependency>
     <groupId>com.baomidou</groupId>
     <artifactId>shaun-spring-boot-starter</artifactId>
-    <version>latest version</version>
+    <version>Latest Version</version>
 </dependency>
 <dependency>
-<groupId>org.springframework.boot</groupId>
-<artifactId>spring-boot-starter-web</artifactId>
-<version>spring boot version</version>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-web</artifactId>
+    <version>spring-boot-version</version>
 </dependency>
 ```
 
