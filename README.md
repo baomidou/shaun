@@ -81,11 +81,13 @@ shaun:
 3. 编写登陆代码
 
 ``` java
+import com.baomidou.shaun.core.mgt.SecurityManager;
+
 @Service
-@AllArgsConstructor
 public class LoginServiceImpl implements LoginService {
 
-    private final SecurityManager securityManager;
+    @Autowired
+    private SecurityManager securityManager;
 
     @Override
     @Transactional
