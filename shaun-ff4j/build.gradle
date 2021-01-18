@@ -1,0 +1,6 @@
+apply from: "${rootDir}/gradle/publications.gradle"
+
+dependencies {
+    api project(":shaun-core")
+    api "org.ff4j:ff4j-core:${ff4jVersion}"
+}

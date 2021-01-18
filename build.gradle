@@ -5,6 +5,7 @@ ext {
     pac4jVersion = "4.3.0"
     springBootVersion = "2.3.5.RELEASE"
     shiroVersion = "1.7.0"
+    ff4jVersion = "1.8.11"
 }
 
 allprojects {

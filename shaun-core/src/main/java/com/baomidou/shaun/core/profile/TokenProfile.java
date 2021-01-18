@@ -15,15 +15,18 @@
  */
 package com.baomidou.shaun.core.profile;
 
-import java.util.List;
-
+import com.baomidou.shaun.core.config.ProfileConstants;
+import lombok.NoArgsConstructor;
+import org.pac4j.core.profile.Gender;
+import org.pac4j.core.profile.definition.CommonProfileDefinition;
 import org.pac4j.core.profile.jwt.AbstractJwtProfile;
 import org.pac4j.core.profile.jwt.JwtClaims;
+import org.pac4j.core.util.Pac4jConstants;
 import org.springframework.util.Assert;
 
-import com.baomidou.shaun.core.config.ProfileConstants;
-
-import lombok.NoArgsConstructor;
+import java.net.URI;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * @author miemie
@@ -50,20 +53,6 @@ public class TokenProfile extends AbstractJwtProfile {
     }
 
     /**
-     * 设置 iss
-     */
-    public void setIssuer(String iss) {
-        addAttribute(JwtClaims.ISSUER, iss);
-    }
-
-    /**
-     * 设置 aud
-     */
-    public void setAudience(List<String> aud) {
-        addAttribute(JwtClaims.AUDIENCE, aud);
-    }
-
-    /**
      * 获取租户ID
      *
      * @return 租户ID
@@ -79,5 +68,91 @@ public class TokenProfile extends AbstractJwtProfile {
      */
     public void setTenantId(String tenantId) {
         addAttribute(ProfileConstants.tenantId, tenantId);
+    }
+
+    /* 以下是对父类的 get method 的对应 set method 的补充 */
+
+    /**
+     * {@link #getIssuer()}
+     */
+    public void setIssuer(String iss) {
+        addAttribute(JwtClaims.ISSUER, iss);
+    }
+
+    /**
+     * {@link #getAudience()}
+     */
+    public void setAudience(List<String> aud) {
+        addAttribute(JwtClaims.AUDIENCE, aud);
+    }
+
+    /**
+     * {@link #getEmail()}
+     */
+    public void setEmail(String email) {
+        addAttribute(CommonProfileDefinition.EMAIL, email);
+    }
+
+    /**
+     * {@link #getFirstName()}
+     */
+    public void setFirstName(String firstName) {
+        addAttribute(CommonProfileDefinition.FIRST_NAME, firstName);
+    }
+
+    /**
+     * {@link #getFamilyName()}
+     */
+    public void setFamilyName(String familyName) {
+        addAttribute(CommonProfileDefinition.FAMILY_NAME, familyName);
+    }
+
+    /**
+     * {@link #getDisplayName()}
+     */
+    public void setDisplayName(String displayName) {
+        addAttribute(CommonProfileDefinition.DISPLAY_NAME, displayName);
+    }
+
+    /**
+     * {@link #getUsername()}
+     */
+    public void setUsername(String username) {
+        addAttribute(Pac4jConstants.USERNAME, username);
+    }
+
+    /**
+     * {@link #getGender()}
+     */
+    public void setGender(Gender gender) {
+        addAttribute(CommonProfileDefinition.GENDER, gender);
+    }
+
+    /**
+     * {@link #getLocale()}
+     */
+    public void setLocale(Locale locale) {
+        addAttribute(CommonProfileDefinition.LOCALE, locale);
+    }
+
+    /**
+     * {@link #getPictureUrl()}
+     */
+    public void setPictureUrl(URI pictureUrl) {
+        addAttribute(CommonProfileDefinition.PICTURE_URL, pictureUrl);
+    }
+
+    /**
+     * {@link #getProfileUrl()}
+     */
+    public void setProfileUrl(URI profileUrl) {
+        addAttribute(CommonProfileDefinition.PROFILE_URL, profileUrl);
+    }
+
+    /**
+     * {@link #getLocation()}
+     */
+    public void setLocation(String location) {
+        addAttribute(CommonProfileDefinition.LOCATION, location);
     }
 }

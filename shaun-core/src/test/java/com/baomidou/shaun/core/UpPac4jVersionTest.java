@@ -1,10 +1,9 @@
 package com.baomidou.shaun.core;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
+import com.baomidou.shaun.core.profile.TokenProfile;
 import org.junit.jupiter.api.Test;
 
-import com.baomidou.shaun.core.profile.TokenProfile;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author miemie
@@ -22,6 +21,7 @@ class UpPac4jVersionTest extends BaseTokenTest {
     @Test
     void test() {
         TokenProfile profile = (TokenProfile) bothSelector.getAuthenticator().validateToken(jwt);
+
         assertThat(profile).isNotNull();
         assertThat(profile.getId()).isEqualTo(id);
     }
