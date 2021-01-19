@@ -1,4 +1,4 @@
-description = "前后分离-header模式"
+description = "前后分离-togglz特性开关集成"
 
 dependencies {
     api project(":tests:test-support")

@@ -26,13 +26,15 @@ public class TestController {
         return securityManager.login(profile, true);
     }
 
-    @GetMapping("a1")
-    public String a1() {
-        return String.valueOf(MyFeatures.ONE.isActive());
-    }
-
-    @GetMapping("a2")
-    public String a2() {
-        return String.valueOf(MyFeatures.TWO.isActive());
+    @GetMapping("a")
+    public String a() {
+        String result = "";
+        if (MyFeatures.ONE.isActive()) {
+            result += "ONE is active\n";
+        }
+        if (MyFeatures.TWO.isActive()) {
+            result += "TWO is active\n";
+        }
+        return result;
     }
 }
