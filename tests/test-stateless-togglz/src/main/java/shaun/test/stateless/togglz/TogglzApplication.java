@@ -23,7 +23,10 @@ public class TogglzApplication {
 
     @Bean
     public UserProvider userProvider(CoreConfig config) {
-        return new ShaunUserProvider(config, "featureAdmin");
+        return new ShaunUserProvider(config, "featureAdmin", i -> {
+            System.out.println("走到我了!!!!!");
+            return i.getId();
+        });
     }
 
     @Component
