@@ -15,7 +15,6 @@ buildscript {
 }
 
 include 'shaun-core'
-include 'shaun-ff4j'
 include 'shaun-togglz'
 include 'shaun-spring-boot-starter'
 

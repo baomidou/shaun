@@ -1,4 +1,4 @@
-description = "前后分离-togglz特性开关集成"
+description = "前后分离-togglz 特性开关集成"
 
 dependencies {
     api project(":tests:test-support")
