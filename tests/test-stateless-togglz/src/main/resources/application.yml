@@ -1,0 +1,25 @@
+shaun:
+  model: web_filter # 只支持 web_filter 模式
+  token-location: cookie
+  salt: ded4a7dc78674c6bb8ad15ffb1d4f974
+  expire-time: 10h
+  login-url: /login
+  logout-url: /logout
+  exclude-path:
+    - /auth/login
+    - /error
+    - /favicon.ico
+
+spring:
+  thymeleaf:
+    cache: false
+logging:
+  level:
+    root: info
+    com.baomidou.shaun: info
+    org.togglz: debug
+
+togglz:
+  feature-enums: shaun.test.stateless.togglz.MyFeatures
+  console:
+    path: /togglz-console #默认的

@@ -29,6 +29,6 @@ public class StarterWebInfo implements ApplicationListener<WebServerInitializedE
         if (!StringUtils.hasText(path)) {
             path = "";
         }
-        log.info("http://{}:{}/{}", domain, port, path);
+        log.info("http://{}:{}{}", domain, port, path);
     }
 }

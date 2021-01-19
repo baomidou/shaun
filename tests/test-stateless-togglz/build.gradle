@@ -1,0 +1,10 @@
+description = "前后分离-header模式"
+
+dependencies {
+    api project(":tests:test-support")
+    api project(":shaun-togglz")
+    api("org.togglz:togglz-console:${togglzVersion}")
+    api("org.togglz:togglz-spring-boot-starter:${togglzVersion}") {
+        exclude(group: "org.thymeleaf")
+    }
+}

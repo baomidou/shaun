@@ -11,6 +11,8 @@ import org.togglz.core.user.UserProvider;
 import java.util.function.Function;
 
 /**
+ * 注意: 只适用于 web_filter 的拦截方式
+ *
  * @author miemie
  * @since 2021-01-18
  */

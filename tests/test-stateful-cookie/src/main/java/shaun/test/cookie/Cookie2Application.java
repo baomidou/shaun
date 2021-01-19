@@ -60,7 +60,7 @@ public class Cookie2Application {
 
         @Override
         public void run(String... args) throws Exception {
-            logUrl(properties.getCookie().getDomain(), "index");
+            logUrl(properties.getCookie().getDomain(), "/index");
         }
     }
 }
