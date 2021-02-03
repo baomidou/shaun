@@ -23,7 +23,7 @@ public class HeaderApplication {
 
         @Override
         public void run(String... args) throws Exception {
-            logUrl(null, "login");
+            logUrl(null, "/login");
         }
     }
 }

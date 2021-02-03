@@ -1,5 +1,6 @@
 shaun:
   login-url: /login
+  exclude-path: /favicon.ico
 
 logging:
   level:
