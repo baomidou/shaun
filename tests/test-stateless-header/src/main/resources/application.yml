@@ -1,7 +1,5 @@
 shaun:
-  model: web_filter
-  exclude-path:
-    - /login
+  login-url: /login
 
 logging:
   level:
