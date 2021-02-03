@@ -57,6 +57,7 @@ import java.util.Set;
  * 文档: <a herf="https://doc.yonyoucloud.com/doc/apache-shiro-1.2.x-reference/II.%20Core%20%E6%A0%B8%E5%BF%83/6.1.%20Permissions%20%E6%9D%83%E9%99%90.html"></a>
  *
  * @author miemie
+ * @since 1.1
  * @since 2019-08-01
  */
 
