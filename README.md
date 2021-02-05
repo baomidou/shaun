@@ -76,7 +76,6 @@ shaun:
   exclude-branch: # 排除以此路径开头
     - /webjars
   expire-time: 1d # 不设置默认永久有效 
-# 更多配置参见源码
 ```
 
 > expire-time: jwt 有效时长(`d`后面只支持三个(`s`,`m`,`h`)之一)
@@ -85,6 +84,8 @@ shaun:
 > > 10h 结尾: 表示10小时内有效  
 > > 1d : 表示有效时间到第二天 00:00:00  
 > > 2d1h : 表示有效时间到第三天 01:00:00
+
+> 更多 yml 配置[点此查看](https://gitee.com/baomidou/shaun/blob/master/shaun-spring-boot-starter/src/main/java/com/baomidou/shaun/autoconfigure/properties/ShaunProperties.java)
 
 3. 编写登陆代码
 
