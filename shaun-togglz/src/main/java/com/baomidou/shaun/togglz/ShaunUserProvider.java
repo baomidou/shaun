@@ -26,6 +26,7 @@ import org.togglz.core.user.UserProvider;
 import java.util.function.Function;
 
 /**
+ * A {@link UserProvider} implementation for Shaun.
  * 注意: 只适用于 web_filter 的拦截方式
  *
  * @author miemie

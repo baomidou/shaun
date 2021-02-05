@@ -21,17 +21,25 @@
     </a>
 </p>
 
-# 特性:
+# 简介
 
-- 底层基于 `pac4j-jwt`,默认使用 `jwt` 进行身份认证
+主要依托 `pac4j-jwt` 来提供默认使用 `JWT` 的 WEB 安全组件
+
+技术讨论 QQ 群: 183066216
+
+# 优点
+
+- 迅速集成,只需要少量配置+代码即可实现基本的接口防护
+- 默认使用 `jwt` 进行身份认证
 - 灵活的 `jwt` 配置,默认`签名`+`加密`
-- 启动简单,不使用高级功能则只需在`yml`配置即可进行安全拦截(只有登陆需要你自己写)
+- 更多高级功能只需实现对应接口并注入到spring容器内
 - 本框架各类均不会使用`session`(`pac4j`提供的类除外)
 - 前后端不分离下,能依托`pac4j`的各种client快速集成三方登录(redirect跳转那种),例如oauth(qq,微信) 和 cas。
 
 # 模块简介
 
 - shaun-core: 核心包。
+- shaun-togglz: 提供对 `togglz` 的 `UserProvider` 一个实现类
 - shaun-spring-boot-starter: spring boot 快速启动包。
 - tests下: 各种测试演示。
 
