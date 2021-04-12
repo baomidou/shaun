@@ -121,32 +121,59 @@ public class TokenProfile extends AbstractJwtProfile {
         addAttribute(Pac4jConstants.USERNAME, username);
     }
 
+    @Override
+    public Gender getGender() {
+        String attribute = getAttribute(CommonProfileDefinition.GENDER, String.class);
+        if (attribute == null) {
+            return Gender.UNSPECIFIED;
+        }
+        return Gender.valueOf(attribute);
+    }
+
     /**
      * {@link #getGender()}
      */
     public void setGender(Gender gender) {
-        addAttribute(CommonProfileDefinition.GENDER, gender);
+        addAttribute(CommonProfileDefinition.GENDER, gender.name());
+    }
+
+    @Override
+    public Locale getLocale() {
+        String attribute = getAttribute(CommonProfileDefinition.LOCALE, String.class);
+        return attribute == null ? null : Locale.forLanguageTag(attribute);
     }
 
     /**
      * {@link #getLocale()}
      */
     public void setLocale(Locale locale) {
-        addAttribute(CommonProfileDefinition.LOCALE, locale);
+        addAttribute(CommonProfileDefinition.LOCALE, locale.toLanguageTag());
+    }
+
+    @Override
+    public URI getPictureUrl() {
+        String attribute = getAttribute(CommonProfileDefinition.PICTURE_URL, String.class);
+        return attribute == null ? null : URI.create(attribute);
     }
 
     /**
      * {@link #getPictureUrl()}
      */
     public void setPictureUrl(URI pictureUrl) {
-        addAttribute(CommonProfileDefinition.PICTURE_URL, pictureUrl);
+        addAttribute(CommonProfileDefinition.PICTURE_URL, pictureUrl.toASCIIString());
+    }
+
+    @Override
+    public URI getProfileUrl() {
+        String attribute = getAttribute(CommonProfileDefinition.PROFILE_URL, String.class);
+        return attribute == null ? null : URI.create(attribute);
     }
 
     /**
      * {@link #getProfileUrl()}
      */
     public void setProfileUrl(URI profileUrl) {
-        addAttribute(CommonProfileDefinition.PROFILE_URL, profileUrl);
+        addAttribute(CommonProfileDefinition.PROFILE_URL, profileUrl.toASCIIString());
     }
 
     /**
