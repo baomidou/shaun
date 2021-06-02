@@ -8,13 +8,12 @@ ext {
 
 allprojects {
     group = "com.baomidou"
-    version = "1.1.1-SNAPSHOT"
+    version = "1.2"
 
     repositories {
         mavenLocal()
         maven { url "https://maven.aliyun.com/nexus/content/groups/public/" }
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-        jcenter()
     }
 }
 
@@ -23,7 +22,7 @@ description = "基于 pac4j-jwt 的 WEB 安全组件"
 subprojects {
     apply plugin: 'java-library'
     apply plugin: 'io.freefair.lombok'
-    apply plugin: 'com.github.hierynomus.license'
+//    apply plugin: 'com.github.hierynomus.license'
 
     sourceCompatibility = "${javaVersion}"
     targetCompatibility = "${javaVersion}"
@@ -50,15 +49,15 @@ subprojects {
         enabled = false
     }
 
-    license {
-        encoding = "UTF-8"
-        header = rootProject.file("license.txt")
-        include "**/*.java"
-        exclude "**/test/**/*.java"
-        exclude "**/*Test.java"
-        mapping "java", "SLASHSTAR_STYLE"
-        ext.year = Calendar.getInstance().get(Calendar.YEAR)
-    }
+//    license {
+//        encoding = "UTF-8"
+//        header = rootProject.file("license.txt")
+//        include "**/*.java"
+//        exclude "**/test/**/*.java"
+//        exclude "**/*Test.java"
+//        mapping "java", "SLASHSTAR_STYLE"
+//        ext.year = Calendar.getInstance().get(Calendar.YEAR)
+//    }
 
     //noinspection GroovyAssignabilityCheck
     task sourcesJar(type: Jar) {
