@@ -1,6 +1,6 @@
 ext {
     javaVersion = JavaVersion.VERSION_1_8
-    pac4jVersion = "4.5.0"
+    pac4jVersion = "4.5.1"
     springBootVersion = "2.3.10.RELEASE"
     shiroVersion = "1.7.1"
     togglzVersion = "2.9.4"
