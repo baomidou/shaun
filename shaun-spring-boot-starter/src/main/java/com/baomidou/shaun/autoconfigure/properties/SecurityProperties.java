@@ -24,18 +24,21 @@ import java.util.List;
  * @since 2022-06-06
  */
 @Data
-public class PathProperties {
-
+public class SecurityProperties {
     /**
-     * 具体地址
+     * 是否启用
      */
-    private List<String> path;
+    private boolean enable = true;
     /**
-     * 地址前缀
+     * 排除的 url
      */
-    private List<String> branch;
+    private List<String> excludePath;
     /**
-     * 地址正则
+     * 排除的 url 的统一前缀
      */
-    private List<String> regex;
+    private List<String> excludeBranch;
+    /**
+     * 排除的 url 的 正则表达式
+     */
+    private List<String> excludeRegex;
 }

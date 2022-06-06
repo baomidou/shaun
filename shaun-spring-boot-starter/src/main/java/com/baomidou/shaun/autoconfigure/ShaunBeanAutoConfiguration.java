@@ -16,7 +16,7 @@
 package com.baomidou.shaun.autoconfigure;
 
 import com.baomidou.shaun.autoconfigure.properties.ActuatorProperties;
-import com.baomidou.shaun.autoconfigure.properties.PathProperties;
+import com.baomidou.shaun.autoconfigure.properties.SecurityProperties;
 import com.baomidou.shaun.autoconfigure.properties.ShaunProperties;
 import com.baomidou.shaun.core.authority.AuthorityManager;
 import com.baomidou.shaun.core.authority.DefaultAuthorityManager;
@@ -37,6 +37,7 @@ import com.baomidou.shaun.core.mgt.ProfileStateManager;
 import com.baomidou.shaun.core.mgt.ProfileTokenManager;
 import com.baomidou.shaun.core.mgt.SecurityManager;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.pac4j.core.authorization.authorizer.Authorizer;
 import org.pac4j.core.client.Client;
 import org.pac4j.core.client.Clients;
@@ -63,6 +64,7 @@ import java.util.stream.Collectors;
  * @author miemie
  * @since 2019-07-18
  */
+@Slf4j
 @RequiredArgsConstructor
 @SuppressWarnings("rawtypes")
 @Configuration(proxyBeanMethods = false)
@@ -159,15 +161,15 @@ public class ShaunBeanAutoConfiguration {
 
         /* securityFilter begin */
         final PathMatcher securityPathMatcher = new PathMatcher();
-        PathProperties securityPath = properties.getSecurityPath();
-        if (!CollectionUtils.isEmpty(securityPath.getPath())) {
-            securityPath.getPath().forEach(securityPathMatcher::excludePath);
+        SecurityProperties security = properties.getSecurity();
+        if (!CollectionUtils.isEmpty(security.getExcludePath())) {
+            security.getExcludePath().forEach(securityPathMatcher::excludePath);
         }
-        if (!CollectionUtils.isEmpty(securityPath.getBranch())) {
-            securityPath.getBranch().forEach(securityPathMatcher::excludeBranch);
+        if (!CollectionUtils.isEmpty(security.getExcludeBranch())) {
+            security.getExcludeBranch().forEach(securityPathMatcher::excludeBranch);
         }
-        if (!CollectionUtils.isEmpty(securityPath.getRegex())) {
-            securityPath.getRegex().forEach(securityPathMatcher::excludeRegex);
+        if (!CollectionUtils.isEmpty(security.getExcludeRegex())) {
+            security.getExcludeRegex().forEach(securityPathMatcher::excludeRegex);
         }
         if (!CollectionUtils.isEmpty(properties.getExcludePath())) {
             properties.getExcludePath().forEach(securityPathMatcher::excludePath);
@@ -181,8 +183,13 @@ public class ShaunBeanAutoConfiguration {
         if (coreConfig.getLoginUrl() != null) {
             securityPathMatcher.excludePath(coreConfig.getLoginUrl());
         }
-        final SecurityFilter securityFilter = new SecurityFilter(securityPathMatcher);
-        chain.addShaunFilter(securityFilter);
+        if (security.isEnable()) {
+            log.info("security is enable");
+            final SecurityFilter securityFilter = new SecurityFilter(securityPathMatcher);
+            chain.addShaunFilter(securityFilter);
+        } else {
+            log.info("security is not enable");
+        }
         /* securityFilter end */
 
         /* logoutFilter begin */

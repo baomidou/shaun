@@ -101,7 +101,7 @@ public class ShaunProperties {
      * @since 1.3
      */
     @NestedConfigurationProperty
-    private final PathProperties securityPath = new PathProperties();
+    private final SecurityProperties security = new SecurityProperties();
     /**
      * spring actuator
      * <p>
@@ -112,17 +112,24 @@ public class ShaunProperties {
     /**
      * 排除的 url
      *
-     * @deprecated 2022-06-06 see {@link #securityPath} {@link PathProperties#path}
+     * @deprecated 2022-06-06 see {@link #security} {@link SecurityProperties#excludePath}
      */
     @Deprecated
     private List<String> excludePath;
     /**
      * 排除的 url 的统一前缀
      *
-     * @deprecated 2022-06-06 see {@link #securityPath} {@link PathProperties#branch}
+     * @deprecated 2022-06-06 see {@link #security} {@link SecurityProperties#excludeBranch}
      */
     @Deprecated
     private List<String> excludeBranch;
+    /**
+     * 排除的 url 的 正则表达式
+     *
+     * @deprecated 2022-06-06 see {@link #security} {@link SecurityProperties#excludeRegex}
+     */
+    @Deprecated
+    private List<String> excludeRegex;
     /**
      * jwt 模式
      */
@@ -160,13 +167,6 @@ public class ShaunProperties {
      * 前后端不分离下会重定向到 {@link #loginUrl}
      */
     private String logoutUrl;
-    /**
-     * 排除的 url 的 正则表达式
-     *
-     * @deprecated 2022-06-06 see {@link #securityPath} {@link PathProperties#regex}
-     */
-    @Deprecated
-    private List<String> excludeRegex;
     /**
      * 触发三方登录的url
      * <p>

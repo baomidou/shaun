@@ -1,0 +1,6 @@
+description = "只有 actuator"
+
+dependencies {
+    api project(":tests:test-support")
+    api "org.springframework.boot:spring-boot-starter-actuator"
+}

@@ -1,0 +1,21 @@
+shaun:
+  model: web_filter
+  security:
+    enable: false
+  actuator:
+    username: 1
+    password: 2
+
+logging:
+  level:
+    root: info
+    com.baomidou.shaun: debug
+
+management:
+  endpoint:
+    shutdown:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: shutdown,health
