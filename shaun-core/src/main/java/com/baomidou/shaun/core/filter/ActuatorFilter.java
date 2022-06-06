@@ -19,6 +19,7 @@ import java.util.Optional;
 @Slf4j
 public class ActuatorFilter extends AbstractShaunFilter {
 
+    private final String prefix = "Basic ";
     @Setter
     private String username;
     @Setter
@@ -38,7 +39,10 @@ public class ActuatorFilter extends AbstractShaunFilter {
                 return UnauthorizedAction.INSTANCE;
             }
             String auth = header.get();
-            auth = auth.substring("Basic ".length());
+            if (!auth.startsWith(prefix)) {
+                return UnauthorizedAction.INSTANCE;
+            }
+            auth = auth.substring(prefix.length());
             String basicAuth = HttpHeaders.encodeBasicAuth(username, password, null);
             if (!basicAuth.equals(auth)) {
                 return UnauthorizedAction.INSTANCE;
