@@ -14,9 +14,6 @@ shaun:
       - /auth/login
       - /error
       - /favicon.ico
-  actuator:
-    username: 1
-    password: 2
 
 spring:
   thymeleaf:
@@ -33,5 +30,4 @@ management:
   endpoints:
     web:
       exposure:
-        include:
-          - shutdown
+        include: shutdown,health
