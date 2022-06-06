@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2021 baomidou (wonderming@vip.qq.com)
+ * Copyright 2019-2022 baomidou (wonderming@vip.qq.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,10 @@
  */
 package com.baomidou.shaun.core.intercept.support;
 
+import com.baomidou.shaun.core.filter.ShaunFilter;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import com.baomidou.shaun.core.filter.ShaunFilter;
 
 /**
  * @author miemie

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2021 baomidou (wonderming@vip.qq.com)
+ * Copyright 2019-2022 baomidou (wonderming@vip.qq.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,12 +15,11 @@
  */
 package com.baomidou.shaun.core.authority;
 
-import java.util.Set;
-
-import org.springframework.util.CollectionUtils;
-
 import com.baomidou.shaun.core.annotation.Logical;
 import com.baomidou.shaun.core.profile.TokenProfile;
+import org.springframework.util.CollectionUtils;
+
+import java.util.Set;
 
 /**
  * 用户 role 和 permission 授权,鉴权 类

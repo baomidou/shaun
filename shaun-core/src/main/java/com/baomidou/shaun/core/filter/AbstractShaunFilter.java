@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2021 baomidou (wonderming@vip.qq.com)
+ * Copyright 2019-2022 baomidou (wonderming@vip.qq.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,12 +15,11 @@
  */
 package com.baomidou.shaun.core.filter;
 
+import com.baomidou.shaun.core.config.CoreConfig;
 import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.exception.http.HttpAction;
 import org.pac4j.core.matching.matcher.Matcher;
 import org.pac4j.core.util.CommonHelper;
-
-import com.baomidou.shaun.core.config.CoreConfig;
 
 /**
  * @author miemie

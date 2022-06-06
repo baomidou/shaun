@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2021 baomidou (wonderming@vip.qq.com)
+ * Copyright 2019-2022 baomidou (wonderming@vip.qq.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,15 +15,13 @@
  */
 package com.baomidou.shaun.core.mgt;
 
-import org.pac4j.core.context.JEEContext;
-import org.pac4j.core.util.CommonHelper;
-
 import com.baomidou.shaun.core.config.CoreConfig;
 import com.baomidou.shaun.core.profile.TokenProfile;
 import com.baomidou.shaun.core.util.ExpireTimeUtil;
 import com.baomidou.shaun.core.util.WebUtil;
-
 import lombok.RequiredArgsConstructor;
+import org.pac4j.core.context.JEEContext;
+import org.pac4j.core.util.CommonHelper;
 
 /**
  * 安全管理器,封装下,统一的登录登出

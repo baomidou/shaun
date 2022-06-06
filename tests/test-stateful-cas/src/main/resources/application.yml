@@ -21,3 +21,10 @@ logging:
     root: info
     com.baomidou.shaun: debug
 
+server:
+  port: 443
+  ssl:
+    key-store: classpath:keystore.p12
+    key-store-password: springboot
+    key-store-type: PKCS12
+    key-alias: tomcat

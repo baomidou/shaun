@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2021 baomidou (wonderming@vip.qq.com)
+ * Copyright 2019-2022 baomidou (wonderming@vip.qq.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,18 +15,17 @@
  */
 package com.baomidou.shaun.core.credentials.extractor;
 
-import java.util.Optional;
-
+import com.baomidou.shaun.core.credentials.TokenLocation;
+import com.baomidou.shaun.core.credentials.location.Cookie;
+import com.baomidou.shaun.core.credentials.location.Header;
+import com.baomidou.shaun.core.credentials.location.Parameter;
 import org.pac4j.core.context.WebContext;
 import org.pac4j.core.credentials.TokenCredentials;
 import org.pac4j.core.credentials.extractor.HeaderExtractor;
 import org.pac4j.core.credentials.extractor.ParameterExtractor;
 import org.pac4j.http.credentials.extractor.CookieExtractor;
 
-import com.baomidou.shaun.core.credentials.TokenLocation;
-import com.baomidou.shaun.core.credentials.location.Cookie;
-import com.baomidou.shaun.core.credentials.location.Header;
-import com.baomidou.shaun.core.credentials.location.Parameter;
+import java.util.Optional;
 
 /**
  * @author miemie

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2021 baomidou (wonderming@vip.qq.com)
+ * Copyright 2019-2022 baomidou (wonderming@vip.qq.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,9 +15,10 @@
  */
 package com.baomidou.shaun.core.filter;
 
-import java.util.List;
-import java.util.Optional;
-
+import com.baomidou.shaun.core.config.CoreConfig;
+import com.baomidou.shaun.core.handler.CallbackHandler;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.pac4j.core.client.Client;
 import org.pac4j.core.client.Clients;
 import org.pac4j.core.client.finder.ClientFinder;
@@ -31,11 +32,8 @@ import org.pac4j.core.profile.UserProfile;
 import org.pac4j.core.util.CommonHelper;
 import org.springframework.util.Assert;
 
-import com.baomidou.shaun.core.config.CoreConfig;
-import com.baomidou.shaun.core.handler.CallbackHandler;
-
-import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * callback filter

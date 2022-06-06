@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2021 baomidou (wonderming@vip.qq.com)
+ * Copyright 2019-2022 baomidou (wonderming@vip.qq.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,11 +15,19 @@
  */
 package com.baomidou.shaun.core.config;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-
+import com.baomidou.shaun.core.authority.AuthorityManager;
+import com.baomidou.shaun.core.credentials.TokenLocation;
+import com.baomidou.shaun.core.credentials.location.Cookie;
+import com.baomidou.shaun.core.handler.DefaultHttpActionHandler;
+import com.baomidou.shaun.core.handler.DefaultLogoutHandler;
+import com.baomidou.shaun.core.handler.HttpActionHandler;
+import com.baomidou.shaun.core.handler.LogoutHandler;
+import com.baomidou.shaun.core.mgt.ProfileStateManager;
+import com.baomidou.shaun.core.mgt.ProfileTokenManager;
+import com.baomidou.shaun.core.profile.TokenProfile;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.Setter;
 import org.pac4j.core.authorization.authorizer.Authorizer;
 import org.pac4j.core.authorization.authorizer.DefaultAuthorizers;
 import org.pac4j.core.authorization.checker.AuthorizationChecker;
@@ -37,20 +45,10 @@ import org.pac4j.core.util.CommonHelper;
 import org.pac4j.core.util.Pac4jConstants;
 import org.springframework.util.CollectionUtils;
 
-import com.baomidou.shaun.core.authority.AuthorityManager;
-import com.baomidou.shaun.core.credentials.TokenLocation;
-import com.baomidou.shaun.core.credentials.location.Cookie;
-import com.baomidou.shaun.core.handler.DefaultHttpActionHandler;
-import com.baomidou.shaun.core.handler.DefaultLogoutHandler;
-import com.baomidou.shaun.core.handler.HttpActionHandler;
-import com.baomidou.shaun.core.handler.LogoutHandler;
-import com.baomidou.shaun.core.mgt.ProfileStateManager;
-import com.baomidou.shaun.core.mgt.ProfileTokenManager;
-import com.baomidou.shaun.core.profile.TokenProfile;
-
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.Setter;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author miemie

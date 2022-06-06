@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2021 baomidou (wonderming@vip.qq.com)
+ * Copyright 2019-2022 baomidou (wonderming@vip.qq.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,10 @@
  */
 package com.baomidou.shaun.core.context.session;
 
-import java.util.Optional;
-
 import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.context.session.SessionStore;
+
+import java.util.Optional;
 
 /**
  * 不用 session(替换掉 pac4j 提供的)

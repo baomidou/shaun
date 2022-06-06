@@ -23,7 +23,7 @@ public class CasApplication {
 
     @Bean
     public CasClient casClient() {
-        CasConfiguration configuration = new CasConfiguration("https://127.0.0.1/cas/login");
+        CasConfiguration configuration = new CasConfiguration("https://cas.example.org:8843/cas/login");
         return new CasClient(configuration);
     }
 

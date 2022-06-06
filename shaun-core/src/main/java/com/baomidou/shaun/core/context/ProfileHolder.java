@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2021 baomidou (wonderming@vip.qq.com)
+ * Copyright 2019-2022 baomidou (wonderming@vip.qq.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,12 +15,11 @@
  */
 package com.baomidou.shaun.core.context;
 
-import java.lang.reflect.Constructor;
-
+import com.baomidou.shaun.core.profile.TokenProfile;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 
-import com.baomidou.shaun.core.profile.TokenProfile;
+import java.lang.reflect.Constructor;
 
 /**
  * 参考至 {org.springframework.security.core.context.SecurityContextHolder}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2021 baomidou (wonderming@vip.qq.com)
+ * Copyright 2019-2022 baomidou (wonderming@vip.qq.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,9 +15,16 @@
  */
 package com.baomidou.shaun.autoconfigure.properties;
 
-import java.util.List;
-import java.util.UUID;
-
+import com.baomidou.shaun.core.credentials.TokenLocation;
+import com.baomidou.shaun.core.credentials.location.Cookie;
+import com.baomidou.shaun.core.credentials.location.Header;
+import com.baomidou.shaun.core.credentials.location.Parameter;
+import com.baomidou.shaun.core.handler.CallbackHandler;
+import com.baomidou.shaun.core.intercept.InterceptModel;
+import com.baomidou.shaun.core.jwt.JwtType;
+import com.baomidou.shaun.core.mgt.SecurityManager;
+import com.baomidou.shaun.core.profile.TokenProfile;
+import lombok.Data;
 import org.pac4j.core.authorization.authorizer.Authorizer;
 import org.pac4j.core.authorization.authorizer.DefaultAuthorizers;
 import org.pac4j.core.authorization.checker.DefaultAuthorizationChecker;
@@ -28,17 +35,8 @@ import org.pac4j.core.matching.matcher.Matcher;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
-import com.baomidou.shaun.core.credentials.TokenLocation;
-import com.baomidou.shaun.core.credentials.location.Cookie;
-import com.baomidou.shaun.core.credentials.location.Header;
-import com.baomidou.shaun.core.credentials.location.Parameter;
-import com.baomidou.shaun.core.handler.CallbackHandler;
-import com.baomidou.shaun.core.intercept.InterceptModel;
-import com.baomidou.shaun.core.jwt.JwtType;
-import com.baomidou.shaun.core.mgt.SecurityManager;
-import com.baomidou.shaun.core.profile.TokenProfile;
-
-import lombok.Data;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * @author miemie
@@ -98,17 +96,33 @@ public class ShaunProperties {
      */
     private String skipAuthenticationRolePermission = "shaun-admin-role-permission";
     /**
-     * 排除的 url
+     * 集中管理安全拦截地址
+     *
+     * @since 1.3
      */
+    @NestedConfigurationProperty
+    private final PathProperties securityPath = new PathProperties();
+    /**
+     * spring actuator
+     * <p>
+     * 如果检测到项目里有 spring-boot-starter-actuator 该配置才会生效
+     */
+    @NestedConfigurationProperty
+    private final ActuatorProperties actuator = new ActuatorProperties();
+    /**
+     * 排除的 url
+     *
+     * @deprecated 2022-06-06 see {@link #securityPath} {@link PathProperties#path}
+     */
+    @Deprecated
     private List<String> excludePath;
     /**
      * 排除的 url 的统一前缀
+     *
+     * @deprecated 2022-06-06 see {@link #securityPath} {@link PathProperties#branch}
      */
+    @Deprecated
     private List<String> excludeBranch;
-    /**
-     * 排除的 url 的 正则表达式
-     */
-    private List<String> excludeRegex;
     /**
      * jwt 模式
      */
@@ -146,6 +160,13 @@ public class ShaunProperties {
      * 前后端不分离下会重定向到 {@link #loginUrl}
      */
     private String logoutUrl;
+    /**
+     * 排除的 url 的 正则表达式
+     *
+     * @deprecated 2022-06-06 see {@link #securityPath} {@link PathProperties#regex}
+     */
+    @Deprecated
+    private List<String> excludeRegex;
     /**
      * 触发三方登录的url
      * <p>

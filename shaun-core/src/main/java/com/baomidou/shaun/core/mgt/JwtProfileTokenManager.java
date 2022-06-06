@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2021 baomidou (wonderming@vip.qq.com)
+ * Copyright 2019-2022 baomidou (wonderming@vip.qq.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,9 +15,12 @@
  */
 package com.baomidou.shaun.core.mgt;
 
-import java.util.Optional;
-import java.util.Set;
-
+import com.baomidou.shaun.core.client.TokenClient;
+import com.baomidou.shaun.core.credentials.extractor.TokenCredentialsExtractor;
+import com.baomidou.shaun.core.jwt.JwtTypeSelector;
+import com.baomidou.shaun.core.profile.TokenProfile;
+import com.baomidou.shaun.core.util.ExpireTimeUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.credentials.TokenCredentials;
 import org.pac4j.core.profile.CommonProfile;
@@ -25,13 +28,8 @@ import org.pac4j.core.profile.UserProfile;
 import org.pac4j.core.util.CommonHelper;
 import org.pac4j.jwt.profile.JwtGenerator;
 
-import com.baomidou.shaun.core.client.TokenClient;
-import com.baomidou.shaun.core.credentials.extractor.TokenCredentialsExtractor;
-import com.baomidou.shaun.core.jwt.JwtTypeSelector;
-import com.baomidou.shaun.core.profile.TokenProfile;
-import com.baomidou.shaun.core.util.ExpireTimeUtil;
-
-import lombok.extern.slf4j.Slf4j;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * @author miemie

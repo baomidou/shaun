@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2021 baomidou (wonderming@vip.qq.com)
+ * Copyright 2019-2022 baomidou (wonderming@vip.qq.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,11 @@
  */
 package com.baomidou.shaun.autoconfigure;
 
+import com.baomidou.shaun.core.config.CoreConfig;
+import com.baomidou.shaun.core.intercept.ShaunHandlerInterceptor;
+import com.baomidou.shaun.core.intercept.ShaunOncePerRequestFilter;
+import com.baomidou.shaun.core.intercept.support.ShaunFilterChain;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -25,13 +30,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
-import com.baomidou.shaun.core.config.CoreConfig;
-import com.baomidou.shaun.core.intercept.ShaunHandlerInterceptor;
-import com.baomidou.shaun.core.intercept.ShaunOncePerRequestFilter;
-import com.baomidou.shaun.core.intercept.support.ShaunFilterChain;
-
-import lombok.RequiredArgsConstructor;
 
 /**
  * @author miemie

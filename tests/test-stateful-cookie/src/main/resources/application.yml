@@ -1,5 +1,5 @@
 shaun:
-  model: interceptor
+  model: web_filter
   token-location: cookie
   stateless: false
   session-on: true
@@ -7,12 +7,16 @@ shaun:
   expire-time: 10h
   login-url: /login
   logout-url: /logout
-  exclude-path:
-    - /auth/login
-    - /error
-    - /favicon.ico
   matcher-names: csrfToken
   authorizer-names: csrfCheck
+  security-path:
+    path:
+      - /auth/login
+      - /error
+      - /favicon.ico
+  actuator:
+    username: 1
+    password: 2
 
 spring:
   thymeleaf:
@@ -21,3 +25,12 @@ logging:
   level:
     root: info
     com.baomidou.shaun: debug
+
+management:
+  endpoint:
+    shutdown:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: '*'
