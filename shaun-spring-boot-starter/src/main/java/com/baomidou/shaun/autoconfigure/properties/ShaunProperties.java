@@ -105,7 +105,7 @@ public class ShaunProperties {
     /**
      * spring actuator
      * <p>
-     * 如果检测到项目里有 spring-boot-starter-actuator 该配置才会生效
+     * 如果检测到项目里有 spring-boot-starter-actuator 该配置自动生效
      */
     @NestedConfigurationProperty
     private final ActuatorProperties actuator = new ActuatorProperties();
