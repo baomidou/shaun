@@ -178,7 +178,7 @@ public class ShaunBeanAutoConfiguration {
             properties.getExcludeBranch().forEach(securityPathMatcher::excludeBranch);
         }
         if (!CollectionUtils.isEmpty(properties.getExcludeRegex())) {
-            properties.getExcludeBranch().forEach(securityPathMatcher::excludeRegex);
+            properties.getExcludeRegex().forEach(securityPathMatcher::excludeRegex);
         }
         if (coreConfig.getLoginUrl() != null) {
             securityPathMatcher.excludePath(coreConfig.getLoginUrl());
