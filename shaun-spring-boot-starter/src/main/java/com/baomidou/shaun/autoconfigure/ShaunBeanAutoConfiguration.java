@@ -181,6 +181,8 @@ public class ShaunBeanAutoConfiguration {
         if (coreConfig.getLoginUrl() != null) {
             securityPathMatcher.excludePath(coreConfig.getLoginUrl());
         }
+        final SecurityFilter securityFilter = new SecurityFilter(securityPathMatcher);
+        chain.addShaunFilter(securityFilter);
         /* securityFilter end */
 
         /* logoutFilter begin */
@@ -200,9 +202,6 @@ public class ShaunBeanAutoConfiguration {
             chain.addShaunFilter(actuatorFilter);
         }
         /* actuatorFilter end */
-
-        final SecurityFilter securityFilter = new SecurityFilter(securityPathMatcher);
-        chain.addShaunFilter(securityFilter);
 
         /* other begin */
         if (!coreConfig.isStateless()) {
