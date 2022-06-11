@@ -15,19 +15,20 @@
  */
 package com.baomidou.shaun.core.util;
 
-import com.baomidou.shaun.core.context.session.NoneSessionStore;
-import com.baomidou.shaun.core.exception.ShaunException;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.pac4j.core.context.HttpConstants;
 import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.context.session.JEESessionStore;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
+import com.baomidou.shaun.core.context.session.NoneSessionStore;
+import com.baomidou.shaun.core.exception.ShaunException;
 
 /**
  * @author miemie
@@ -104,14 +105,16 @@ public abstract class WebUtil {
      */
     public static void write(JEEContext context, int code, String content) {
         final HttpServletResponse response = context.getNativeResponse();
-        response.setStatus(code);
-        if (content != null) {
-            try (OutputStream os = response.getOutputStream()) {
-                os.write(content.getBytes(StandardCharsets.UTF_8));
-                os.flush();
-            } catch (IOException e) {
-                throw new ShaunException(e);
+        try {
+            response.setStatus(code);
+            if (content != null) {
+                response.setCharacterEncoding(StandardCharsets.UTF_8.name());
+                response.setContentType("text/plain");
+                response.getWriter().write(content);
             }
+            response.flushBuffer();
+        } catch (IOException e) {
+            throw new ShaunException(e);
         }
     }
 

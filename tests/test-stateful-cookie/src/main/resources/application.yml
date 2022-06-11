@@ -9,8 +9,8 @@ shaun:
   logout-url: /logout
   matcher-names: csrfToken
   authorizer-names: csrfCheck
-  security-path:
-    path:
+  security:
+    exclude-path:
       - /auth/login
       - /error
       - /favicon.ico
