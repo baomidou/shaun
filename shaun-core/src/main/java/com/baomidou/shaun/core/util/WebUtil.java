@@ -104,12 +104,23 @@ public abstract class WebUtil {
      * @param content 信息
      */
     public static void write(JEEContext context, int code, String content) {
+        write(context, code, content, "text/plain");
+    }
+
+    /**
+     * 写入内容
+     *
+     * @param context 上下文
+     * @param code    httpCode
+     * @param content 信息
+     */
+    public static void write(JEEContext context, int code, String content, String contentType) {
         final HttpServletResponse response = context.getNativeResponse();
         try {
             response.setStatus(code);
             if (content != null) {
                 response.setCharacterEncoding(StandardCharsets.UTF_8.name());
-                response.setContentType("text/plain");
+                response.setContentType(contentType);
                 response.getWriter().write(content);
             }
             response.flushBuffer();
