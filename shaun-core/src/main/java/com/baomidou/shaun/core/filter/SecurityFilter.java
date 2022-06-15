@@ -51,7 +51,10 @@ public class SecurityFilter extends AbstractShaunFilter {
         if (profile == null) {
             return UnauthorizedAction.INSTANCE;
         }
-        if (!config.getProfileStateManager().isOnline(profile) || !config.authorizationChecker(context, profile)) {
+        if (!config.getProfileStateManager().isOnline(profile)) {
+            return UnauthorizedAction.INSTANCE;
+        }
+        if (!config.authorizationChecker(context, profile)) {
             return ForbiddenAction.INSTANCE;
         }
         ProfileHolder.setProfile(profile);
