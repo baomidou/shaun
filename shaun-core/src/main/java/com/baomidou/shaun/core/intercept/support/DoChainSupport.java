@@ -20,6 +20,7 @@ import com.baomidou.shaun.core.context.ProfileHolder;
 import com.baomidou.shaun.core.filter.ShaunFilter;
 import com.baomidou.shaun.core.util.WebUtil;
 import org.pac4j.core.context.JEEContext;
+import org.pac4j.core.exception.http.BadRequestAction;
 import org.pac4j.core.exception.http.HttpAction;
 import org.springframework.web.cors.CorsUtils;
 
@@ -38,6 +39,10 @@ public interface DoChainSupport {
         if (CorsUtils.isPreFlightRequest(request)) {
             // cors 预检请求 不做处理
             return true;
+        }
+        if (!config.matchingChecker(context)) {
+            config.getHttpActionHandler().handle(config, context, BadRequestAction.INSTANCE);
+            return false;
         }
         for (ShaunFilter filter : filterList) {
             try {

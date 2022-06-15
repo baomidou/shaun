@@ -20,7 +20,6 @@ import com.baomidou.shaun.core.context.ProfileHolder;
 import com.baomidou.shaun.core.profile.TokenProfile;
 import lombok.extern.slf4j.Slf4j;
 import org.pac4j.core.context.JEEContext;
-import org.pac4j.core.exception.http.BadRequestAction;
 import org.pac4j.core.exception.http.ForbiddenAction;
 import org.pac4j.core.exception.http.HttpAction;
 import org.pac4j.core.exception.http.UnauthorizedAction;
@@ -43,9 +42,6 @@ public class SecurityFilter extends AbstractShaunFilter {
     protected HttpAction matchThen(CoreConfig config, JEEContext context) {
         if (log.isDebugEnabled()) {
             log.debug("access security for path : \"{}\" -> \"{}\"", context.getPath(), context.getRequestMethod());
-        }
-        if (!config.matchingChecker(context)) {
-            return BadRequestAction.INSTANCE;
         }
         TokenProfile profile = config.getProfileTokenManager().getProfile(context);
         if (profile == null) {
