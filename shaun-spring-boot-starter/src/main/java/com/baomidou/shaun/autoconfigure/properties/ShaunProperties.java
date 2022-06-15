@@ -15,28 +15,15 @@
  */
 package com.baomidou.shaun.autoconfigure.properties;
 
-import com.baomidou.shaun.core.credentials.TokenLocation;
-import com.baomidou.shaun.core.credentials.location.Cookie;
-import com.baomidou.shaun.core.credentials.location.Header;
-import com.baomidou.shaun.core.credentials.location.Parameter;
-import com.baomidou.shaun.core.handler.CallbackHandler;
-import com.baomidou.shaun.core.intercept.InterceptModel;
-import com.baomidou.shaun.core.jwt.JwtType;
-import com.baomidou.shaun.core.mgt.SecurityManager;
-import com.baomidou.shaun.core.profile.TokenProfile;
-import lombok.Data;
-import org.pac4j.core.authorization.authorizer.Authorizer;
-import org.pac4j.core.authorization.authorizer.DefaultAuthorizers;
-import org.pac4j.core.authorization.checker.DefaultAuthorizationChecker;
-import org.pac4j.core.client.IndirectClient;
 import org.pac4j.core.matching.checker.DefaultMatchingChecker;
 import org.pac4j.core.matching.matcher.DefaultMatchers;
 import org.pac4j.core.matching.matcher.Matcher;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
-import java.util.List;
-import java.util.UUID;
+import com.baomidou.shaun.core.intercept.InterceptModel;
+
+import lombok.Data;
 
 /**
  * @author miemie
@@ -47,9 +34,10 @@ import java.util.UUID;
 public class ShaunProperties {
 
     /**
-     * 只是为了在 yml 有提示
+     * 第三方验证登录的配置
      */
-    private final Annotations annotations = new Annotations();
+    @NestedConfigurationProperty
+    private final ThirdPartyAuthProperties thirdParty = new ThirdPartyAuthProperties();
     /**
      * 是否-前后端分离
      */
@@ -59,46 +47,18 @@ public class ShaunProperties {
      */
     private boolean sessionOn = false;
     /**
-     * token 的存放位置
+     * 拦截模式
      */
-    private TokenLocation tokenLocation = TokenLocation.HEADER;
-    /**
-     * 取 token 的方式之 header
-     */
-    @NestedConfigurationProperty
-    private final Header header = new Header();
-    /**
-     * token 存在 cookie 里
-     */
-    @NestedConfigurationProperty
-    private final Cookie cookie = new Cookie();
-    /**
-     * 取 token 的方式之 parameter
-     */
-    @NestedConfigurationProperty
-    private final Parameter parameter = new Parameter();
+    private InterceptModel model = InterceptModel.INTERCEPTOR;
     /**
      * matcherNames,多个以逗号分隔(不包含自己注入的 {@link Matcher})
      * <p>
-     * !!! 需要用户有登录信息的地址生效,比 authorizer 早 !!! <p>
+     * !!! 全局地址生效,早于所有其他拦截器 !!! <p>
      * 参考 {@link DefaultMatchingChecker}
      */
     private String matcherNames = DefaultMatchers.NONE;
     /**
-     * authorizerNames,多个以逗号分隔(不包含自己注入的 {@link Authorizer})
-     * <p>
-     * !!! 需要用户有登录信息的地址生效,比 matcher 晚 !!! <p>
-     * 参考 {@link DefaultAuthorizationChecker}
-     */
-    private String authorizerNames = DefaultAuthorizers.NONE;
-    /**
-     * 跳过鉴权的 role 和 permission 的表现字符串(相当于系统超管)
-     */
-    private String skipAuthenticationRolePermission = "shaun-admin-role-permission";
-    /**
      * 集中管理安全拦截地址
-     *
-     * @since 1.3
      */
     @NestedConfigurationProperty
     private final SecurityProperties security = new SecurityProperties();
@@ -110,88 +70,10 @@ public class ShaunProperties {
     @NestedConfigurationProperty
     private final ActuatorProperties actuator = new ActuatorProperties();
     /**
-     * 排除的 url
-     *
-     * @deprecated 2022-06-06 see {@link #security} {@link SecurityProperties#excludePath}
-     */
-    @Deprecated
-    private List<String> excludePath;
-    /**
-     * 排除的 url 的统一前缀
-     *
-     * @deprecated 2022-06-06 see {@link #security} {@link SecurityProperties#excludeBranch}
-     */
-    @Deprecated
-    private List<String> excludeBranch;
-    /**
-     * 排除的 url 的 正则表达式
-     *
-     * @deprecated 2022-06-06 see {@link #security} {@link SecurityProperties#excludeRegex}
-     */
-    @Deprecated
-    private List<String> excludeRegex;
-    /**
-     * jwt 模式
-     */
-    private JwtType jwtType = JwtType.DEFAULT;
-    /**
-     * jwt 盐值(默认只支持 32 位字符)
-     */
-    private String salt = UUID.randomUUID().toString().replace("-", "");
-    /**
-     * jwt 超时时间: <br>
-     * 10s : 表示10秒有效
-     * 10m 结尾: 表示10分钟有效
-     * 10h 结尾: 表示10小时有效
-     * <p>
-     * 1d : 表示有效时间到第二天 00:00:00
-     * 2d1h : 表示有效时间到第三天 01:00:00
-     * `d` 后面 只支持上面三个(`s`,`m`,`h`)之一
-     *
-     * <p>
-     * 纯 cookie 模式下可以不设置,则cookie过期时间为会话时间但是token永不过期
-     * </p>
-     */
-    private String expireTime;
-    /**
      * 登录页面的 url
      * <p>
      * 配置后会自动加入地址过滤链,避免请求该地址被拦截,
      * 并且前后端不分离下访问授权保护的页面未通过鉴权会被重定向到登录页
      */
     private String loginUrl;
-    /**
-     * 登出请求的 url
-     * <p>
-     * 请求该地址会自动调用 {@link SecurityManager#logout(TokenProfile)},
-     * 前后端不分离下会重定向到 {@link #loginUrl}
-     */
-    private String logoutUrl;
-    /**
-     * 触发三方登录的url
-     * <p>
-     * 配置后此url会被拦截进行重定向到相应的网址进行三方登陆,
-     * 前后端不分离下注入 {@link IndirectClient} 后才有效
-     */
-    private String sfLoginUrl;
-    /**
-     * callback url
-     * <p>
-     * 三方登录的回调地址,回调后触发 {@link CallbackHandler},
-     * 前后端不分离下注入 {@link IndirectClient} 后才有效
-     */
-    private String callbackUrl;
-    /**
-     * 拦截模式
-     */
-    private InterceptModel model = InterceptModel.INTERCEPTOR;
-
-    @Data
-    public static class Annotations {
-
-        /**
-         * 是否启用注解拦截
-         */
-        private boolean enabled = true;
-    }
 }

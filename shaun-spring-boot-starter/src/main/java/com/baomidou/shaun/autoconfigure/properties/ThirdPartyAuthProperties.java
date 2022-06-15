@@ -15,7 +15,9 @@
  */
 package com.baomidou.shaun.autoconfigure.properties;
 
-import com.baomidou.shaun.core.filter.ActuatorFilter;
+import org.pac4j.core.client.IndirectClient;
+
+import com.baomidou.shaun.core.handler.CallbackHandler;
 
 import lombok.Data;
 
@@ -24,26 +26,24 @@ import lombok.Data;
  * @since 2022-06-06
  */
 @Data
-public class ActuatorProperties {
+public class ThirdPartyAuthProperties {
 
     /**
-     * 是否启用对 actuator 地址的支持
-     * 如果不启用则 {@link #branch} 的值也会被安全拦截器拦截检查用户token状态(不建议)
-     * 如果不启用,为了 actuator 的安全性建议参考 {@link ActuatorFilter} 实现一个 filter 注入到 spring 中
+     * 是否启用
      */
     private boolean enable = true;
     /**
-     * see management.endpoints.web.base-path
-     */
-    private String branch = "/actuator";
-    /**
-     * see spring.boot.admin.client.username
+     * 触发三方登录的url
      * <p>
-     * https://learning.postman.com/docs/sending-requests/authorization/#basic-auth
+     * 配置后此url会被拦截进行重定向到相应的网址进行三方登陆,
+     * 前后端不分离下注入 {@link IndirectClient} 后才有效
      */
-    private String username;
+    private String loginUrl;
     /**
-     * see spring.boot.admin.client.password
+     * callback url
+     * <p>
+     * 三方登录的回调地址,回调后触发 {@link CallbackHandler},
+     * 前后端不分离下注入 {@link IndirectClient} 后才有效
      */
-    private String password;
+    private String callbackUrl;
 }

@@ -1,17 +1,22 @@
 shaun:
   model: interceptor
-  token-location: cookie
   stateless: false
   session-on: true
-  salt: c7e49600a5b144e48965e8b0b78ff41c
-  expire-time: 30m
+  security:
+    logout-url: /logout
+    jwt:
+      salt: c7e49600a5b144e48965e8b0b78ff41c
+      expire-time: 30m
+    extractor:
+      location: cookie
+    exclude-path:
+      path:
+        - /error
+        - /favicon.ico
   login-url: /login
-  logout-url: /logout
-  sf-login-url: /sf
-  callback-url: /callback
-  exclude-path:
-    - /error
-    - /favicon.ico
+  third-party:
+    login-url: /sf
+    callback-url: /callback
 
 spring:
   thymeleaf:

@@ -65,6 +65,11 @@ subprojects {
         from sourceSets.main.allJava
     }
 
+    tasks.clean {
+        delete "${projectDir}/build"
+        delete "${projectDir}/out"
+    }
+
     javadoc {
         afterEvaluate {
             configure(options) {

@@ -1,10 +1,13 @@
 shaun:
   login-url: /login
-  logout-url: /logout
   matcher-names: xssprotection
-  exclude-path:
-    - /favicon.ico
-  token-location: cookie
+  security:
+    logout-url: /logout
+    exclude-path:
+      path:
+        - /favicon.ico
+    extractor:
+      location: cookie
 
 logging:
   level:

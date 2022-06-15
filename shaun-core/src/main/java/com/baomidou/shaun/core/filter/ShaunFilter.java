@@ -15,9 +15,10 @@
  */
 package com.baomidou.shaun.core.filter;
 
-import com.baomidou.shaun.core.config.CoreConfig;
 import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.exception.http.HttpAction;
+
+import com.baomidou.shaun.core.config.CoreConfig;
 
 /**
  * 内部 filter
@@ -38,8 +39,8 @@ public interface ShaunFilter {
      * 有多个子类时执行顺序(越小越优先)
      * <p>
      * 默认一些优先级:
-     * CallbackFilter: 0
-     * SfLoginFilter: 100
+     * ThirdPartyCallbackFilter: 0
+     * ThirdPartyAuthLoginFilter: 100
      * SecurityFilter: 200
      * LogoutFilter: 300
      * ActuatorFilter: 400

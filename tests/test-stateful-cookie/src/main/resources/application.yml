@@ -1,19 +1,22 @@
 shaun:
   model: web_filter
-  token-location: cookie
   stateless: false
   session-on: true
-  salt: ded4a7dc78674c6bb8ad15ffb1d4f973
-  expire-time: 10h
   login-url: /login
-  logout-url: /logout
   matcher-names: csrfToken
-  authorizer-names: csrfCheck
   security:
+    logout-url: /logout
+    jwt:
+      salt: ded4a7dc78674c6bb8ad15ffb1d4f973
+      expire-time: 10h
     exclude-path:
-      - /auth/login
-      - /error
-      - /favicon.ico
+      path:
+        - /auth/login
+        - /error
+        - /favicon.ico
+    extractor:
+      location: cookie
+    authorizer-names: csrfCheck
 
 spring:
   thymeleaf:
