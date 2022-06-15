@@ -3,7 +3,7 @@ ext {
     pac4jVersion = "4.5.6"
     springBootVersion = "2.3.12.RELEASE"
     shiroVersion = "1.9.0"
-    togglzVersion = "2.9.4"
+    togglzVersion = "3.2.1"
 }
 
 allprojects {
