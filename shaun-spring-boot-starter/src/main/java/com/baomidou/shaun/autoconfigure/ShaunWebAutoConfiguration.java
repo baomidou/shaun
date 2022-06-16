@@ -24,6 +24,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -50,8 +51,11 @@ public class ShaunWebAutoConfiguration {
     @ConditionalOnMissingBean
     @ConditionalOnClass(OncePerRequestFilter.class)
     @ConditionalOnProperty(prefix = "shaun", name = "model", havingValue = "web_filter")
-    public ShaunOncePerRequestFilter shaunOncePerRequestFilter(CoreConfig coreConfig, ShaunFilterChain shaunFilterChain) {
-        return new ShaunOncePerRequestFilter(coreConfig, shaunFilterChain);
+    public FilterRegistrationBean<ShaunOncePerRequestFilter> shaunFilterRegistrationBean(CoreConfig coreConfig, ShaunFilterChain shaunFilterChain) {
+        FilterRegistrationBean<ShaunOncePerRequestFilter> bean = new FilterRegistrationBean<>();
+        bean.setFilter(new ShaunOncePerRequestFilter(coreConfig, shaunFilterChain));
+        bean.addUrlPatterns("/*");
+        return bean;
     }
 
     @RequiredArgsConstructor
