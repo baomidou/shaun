@@ -15,14 +15,6 @@
  */
 package com.baomidou.shaun.autoconfigure.properties;
 
-import java.util.List;
-import java.util.UUID;
-
-import org.pac4j.core.authorization.authorizer.Authorizer;
-import org.pac4j.core.authorization.authorizer.DefaultAuthorizers;
-import org.pac4j.core.authorization.checker.DefaultAuthorizationChecker;
-import org.springframework.boot.context.properties.NestedConfigurationProperty;
-
 import com.baomidou.shaun.core.credentials.TokenLocation;
 import com.baomidou.shaun.core.credentials.location.Cookie;
 import com.baomidou.shaun.core.credentials.location.Header;
@@ -30,8 +22,14 @@ import com.baomidou.shaun.core.credentials.location.Parameter;
 import com.baomidou.shaun.core.jwt.JwtType;
 import com.baomidou.shaun.core.mgt.SecurityManager;
 import com.baomidou.shaun.core.profile.TokenProfile;
-
 import lombok.Data;
+import org.pac4j.core.authorization.authorizer.Authorizer;
+import org.pac4j.core.authorization.authorizer.DefaultAuthorizers;
+import org.pac4j.core.authorization.checker.DefaultAuthorizationChecker;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
+
+import java.util.List;
+import java.util.UUID;
 
 /**
  * @author miemie
@@ -39,7 +37,6 @@ import lombok.Data;
  */
 @Data
 public class SecurityProperties {
-
     public static final String DEFAULT_SKIP_AUTHENTICATION_ROLE_PERMISSION = "shaun-admin-role-permission";
 
     /**
@@ -47,15 +44,15 @@ public class SecurityProperties {
      */
     private boolean enable = true;
     /**
-     * jwt 的配置
+     * jwt
      */
     private final Jwt jwt = new Jwt();
     /**
-     * 提取 jwt 配置
+     * 提取 jwt
      */
     private final Extractor extractor = new Extractor();
     /**
-     * 排除路径配置
+     * 排除路径
      */
     private final ExcludePath excludePath = new ExcludePath();
     /**
@@ -68,7 +65,7 @@ public class SecurityProperties {
      * 请求该地址会自动调用 {@link SecurityManager#logout(TokenProfile)},
      * 前后端不分离下会重定向到 loginUrl
      */
-    private String logoutUrl;
+    private String logoutPath;
     /**
      * 跳过鉴权的 role 和 permission 的表现字符串(相当于系统超管)
      */
@@ -76,7 +73,7 @@ public class SecurityProperties {
     /**
      * authorizerNames,多个以逗号分隔(不包含自己注入的 {@link Authorizer})
      * <p>
-     * !!! 需要用户有登录信息的地址生效,比 matcher 晚 !!! <p>
+     * !!! 需要用户有登录信息的地址生效 !!! <p>
      * 参考 {@link DefaultAuthorizationChecker}
      */
     private String authorizerNames = DefaultAuthorizers.NONE;
@@ -111,7 +108,10 @@ public class SecurityProperties {
 
     @Data
     public static class Extractor {
-
+        /**
+         * token 的存放位置
+         */
+        private TokenLocation location = TokenLocation.HEADER;
         /**
          * 取 token 的方式之 header
          */
@@ -127,10 +127,6 @@ public class SecurityProperties {
          */
         @NestedConfigurationProperty
         private final Parameter parameter = new Parameter();
-        /**
-         * token 的存放位置
-         */
-        private TokenLocation location = TokenLocation.HEADER;
     }
 
     @Data

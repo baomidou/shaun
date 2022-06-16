@@ -69,7 +69,7 @@ public class DefaultHttpActionHandler implements HttpActionHandler {
     protected void handleStatefulNotAjax(CoreConfig config, JEEContext context, HttpAction action) {
         if (action instanceof UnauthorizedAction || action instanceof ForbiddenAction ||
                 action instanceof FoundLoginAction) {
-            WebUtil.redirectUrl(context, config.getLoginUrl());
+            WebUtil.redirectUrl(context, config.getLoginPath());
         } else if (action instanceof WithLocationAction) {
             WebUtil.redirectUrl(context, action.getCode(), ((WithLocationAction) action).getLocation());
         } else if (action instanceof WithContentAction) {

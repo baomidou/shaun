@@ -1,5 +1,5 @@
 shaun:
-  login-url: /login
+  login-path: /login
   security:
     exclude-path:
       path: /favicon.ico

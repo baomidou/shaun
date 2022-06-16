@@ -16,7 +16,6 @@
 package com.baomidou.shaun.autoconfigure.properties;
 
 import com.baomidou.shaun.core.filter.ActuatorFilter;
-
 import lombok.Data;
 
 /**
@@ -28,14 +27,14 @@ public class ActuatorProperties {
 
     /**
      * 是否启用对 actuator 地址的支持
-     * 如果不启用则 {@link #branch} 的值也会被安全拦截器拦截检查用户token状态(不建议)
+     * 如果不启用则 {@link #basePath} 的值也会被安全拦截器拦截检查用户token状态(不建议)
      * 如果不启用,为了 actuator 的安全性建议参考 {@link ActuatorFilter} 实现一个 filter 注入到 spring 中
      */
     private boolean enable = true;
     /**
      * see management.endpoints.web.base-path
      */
-    private String branch = "/actuator";
+    private String basePath = "/actuator";
     /**
      * see spring.boot.admin.client.username
      * <p>

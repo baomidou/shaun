@@ -15,15 +15,13 @@
  */
 package com.baomidou.shaun.autoconfigure.properties;
 
+import com.baomidou.shaun.core.intercept.InterceptModel;
+import lombok.Data;
 import org.pac4j.core.matching.checker.DefaultMatchingChecker;
 import org.pac4j.core.matching.matcher.DefaultMatchers;
 import org.pac4j.core.matching.matcher.Matcher;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
-
-import com.baomidou.shaun.core.intercept.InterceptModel;
-
-import lombok.Data;
 
 /**
  * @author miemie
@@ -32,7 +30,6 @@ import lombok.Data;
 @Data
 @ConfigurationProperties("shaun")
 public class ShaunProperties {
-
     /**
      * 第三方验证登录的配置
      */
@@ -47,16 +44,16 @@ public class ShaunProperties {
      */
     private boolean sessionOn = false;
     /**
-     * 拦截模式
-     */
-    private InterceptModel model = InterceptModel.INTERCEPTOR;
-    /**
      * matcherNames,多个以逗号分隔(不包含自己注入的 {@link Matcher})
      * <p>
      * !!! 全局地址生效,早于所有其他拦截器 !!! <p>
      * 参考 {@link DefaultMatchingChecker}
      */
     private String matcherNames = DefaultMatchers.NONE;
+    /**
+     * 拦截模式
+     */
+    private InterceptModel model = InterceptModel.INTERCEPTOR;
     /**
      * 集中管理安全拦截地址
      */
@@ -75,5 +72,5 @@ public class ShaunProperties {
      * 配置后会自动加入地址过滤链,避免请求该地址被拦截,
      * 并且前后端不分离下访问授权保护的页面未通过鉴权会被重定向到登录页
      */
-    private String loginUrl;
+    private String loginPath;
 }

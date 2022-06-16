@@ -2,8 +2,9 @@ shaun:
   model: interceptor
   stateless: false
   session-on: true
+  login-path: /login
   security:
-    logout-url: /logout
+    logout-path: /logout
     jwt:
       salt: c7e49600a5b144e48965e8b0b78ff41c
       expire-time: 30m
@@ -13,10 +14,9 @@ shaun:
       path:
         - /error
         - /favicon.ico
-  login-url: /login
   third-party:
-    login-url: /sf
-    callback-url: /callback
+    trigger-path: /sf
+    callback-path: /callback
 
 spring:
   thymeleaf:

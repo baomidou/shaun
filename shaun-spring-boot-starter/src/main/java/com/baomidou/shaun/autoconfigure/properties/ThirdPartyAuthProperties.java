@@ -15,11 +15,9 @@
  */
 package com.baomidou.shaun.autoconfigure.properties;
 
-import org.pac4j.core.client.IndirectClient;
-
 import com.baomidou.shaun.core.handler.CallbackHandler;
-
 import lombok.Data;
+import org.pac4j.core.client.IndirectClient;
 
 /**
  * @author miemie
@@ -33,17 +31,17 @@ public class ThirdPartyAuthProperties {
      */
     private boolean enable = true;
     /**
-     * 触发三方登录的url
+     * 触发三方登录的 path
      * <p>
      * 配置后此url会被拦截进行重定向到相应的网址进行三方登陆,
      * 前后端不分离下注入 {@link IndirectClient} 后才有效
      */
-    private String loginUrl;
+    private String triggerPath;
     /**
-     * callback url
+     * callback path
      * <p>
      * 三方登录的回调地址,回调后触发 {@link CallbackHandler},
      * 前后端不分离下注入 {@link IndirectClient} 后才有效
      */
-    private String callbackUrl;
+    private String callbackPath;
 }

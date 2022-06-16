@@ -2,10 +2,10 @@ shaun:
   model: web_filter
   stateless: false
   session-on: true
-  login-url: /login
+  login-path: /login
   matcher-names: csrfToken
   security:
-    logout-url: /logout
+    logout-path: /logout
     jwt:
       salt: ded4a7dc78674c6bb8ad15ffb1d4f973
       expire-time: 10h

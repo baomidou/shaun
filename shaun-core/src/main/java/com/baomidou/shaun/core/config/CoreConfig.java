@@ -140,7 +140,7 @@ public class CoreConfig {
      * <p>
      * 会自动加入地址过滤链,避免请求该地址被拦截
      */
-    private String loginUrl;
+    private String loginPath;
 
     public void addAuthorizer(Authorizer authorizer) {
         if (authorizer != null) {

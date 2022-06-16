@@ -1,7 +1,7 @@
 shaun:
   model: web_filter # 只支持 web_filter 模式
   security:
-    logout-url: /logout
+    logout-path: /logout
     extractor:
       location: cookie
     jwt:
@@ -12,7 +12,7 @@ shaun:
         - /auth/login
         - /error
         - /favicon.ico
-  login-url: /login
+  login-path: /login
 
 spring:
   thymeleaf:

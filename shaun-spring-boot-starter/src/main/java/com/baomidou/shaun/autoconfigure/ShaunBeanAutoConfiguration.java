@@ -15,9 +15,30 @@
  */
 package com.baomidou.shaun.autoconfigure;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
+import com.baomidou.shaun.autoconfigure.properties.ActuatorProperties;
+import com.baomidou.shaun.autoconfigure.properties.SecurityProperties;
+import com.baomidou.shaun.autoconfigure.properties.ShaunProperties;
+import com.baomidou.shaun.autoconfigure.properties.ThirdPartyAuthProperties;
+import com.baomidou.shaun.core.authority.AuthorityManager;
+import com.baomidou.shaun.core.authority.DefaultAuthorityManager;
+import com.baomidou.shaun.core.config.CoreConfig;
+import com.baomidou.shaun.core.credentials.extractor.DefaultTokenCredentialsExtractor;
+import com.baomidou.shaun.core.credentials.extractor.TokenCredentialsExtractor;
+import com.baomidou.shaun.core.filter.*;
+import com.baomidou.shaun.core.handler.CallbackHandler;
+import com.baomidou.shaun.core.handler.HttpActionHandler;
+import com.baomidou.shaun.core.handler.LogoutHandler;
+import com.baomidou.shaun.core.intercept.support.DefaultShaunFilterChain;
+import com.baomidou.shaun.core.intercept.support.ShaunFilterChain;
+import com.baomidou.shaun.core.jwt.DefaultJwtTypeSelector;
+import com.baomidou.shaun.core.jwt.JwtTypeSelector;
+import com.baomidou.shaun.core.matching.matcher.IncludePathMatcher;
+import com.baomidou.shaun.core.mgt.JwtProfileTokenManager;
+import com.baomidou.shaun.core.mgt.ProfileStateManager;
+import com.baomidou.shaun.core.mgt.ProfileTokenManager;
+import com.baomidou.shaun.core.mgt.SecurityManager;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.pac4j.core.authorization.authorizer.Authorizer;
 import org.pac4j.core.client.Client;
 import org.pac4j.core.client.Clients;
@@ -38,36 +59,8 @@ import org.springframework.util.ClassUtils;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import com.baomidou.shaun.autoconfigure.properties.ActuatorProperties;
-import com.baomidou.shaun.autoconfigure.properties.SecurityProperties;
-import com.baomidou.shaun.autoconfigure.properties.ShaunProperties;
-import com.baomidou.shaun.autoconfigure.properties.ThirdPartyAuthProperties;
-import com.baomidou.shaun.core.authority.AuthorityManager;
-import com.baomidou.shaun.core.authority.DefaultAuthorityManager;
-import com.baomidou.shaun.core.config.CoreConfig;
-import com.baomidou.shaun.core.credentials.extractor.DefaultTokenCredentialsExtractor;
-import com.baomidou.shaun.core.credentials.extractor.TokenCredentialsExtractor;
-import com.baomidou.shaun.core.filter.ActuatorFilter;
-import com.baomidou.shaun.core.filter.LogoutFilter;
-import com.baomidou.shaun.core.filter.SecurityFilter;
-import com.baomidou.shaun.core.filter.ShaunFilter;
-import com.baomidou.shaun.core.filter.ThirdPartyAuthLoginFilter;
-import com.baomidou.shaun.core.filter.ThirdPartyCallbackFilter;
-import com.baomidou.shaun.core.handler.CallbackHandler;
-import com.baomidou.shaun.core.handler.HttpActionHandler;
-import com.baomidou.shaun.core.handler.LogoutHandler;
-import com.baomidou.shaun.core.intercept.support.DefaultShaunFilterChain;
-import com.baomidou.shaun.core.intercept.support.ShaunFilterChain;
-import com.baomidou.shaun.core.jwt.DefaultJwtTypeSelector;
-import com.baomidou.shaun.core.jwt.JwtTypeSelector;
-import com.baomidou.shaun.core.matching.matcher.IncludePathMatcher;
-import com.baomidou.shaun.core.mgt.JwtProfileTokenManager;
-import com.baomidou.shaun.core.mgt.ProfileStateManager;
-import com.baomidou.shaun.core.mgt.ProfileTokenManager;
-import com.baomidou.shaun.core.mgt.SecurityManager;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author miemie
@@ -100,11 +93,11 @@ public class ShaunBeanAutoConfiguration {
         httpActionHandlerProvider.ifAvailable(coreConfig::setHttpActionHandler);
         ajaxRequestResolverProvider.ifAvailable(coreConfig::setAjaxRequestResolver);
 
-        String loginUrl = properties.getLoginUrl();
+        String loginPath = properties.getLoginPath();
         if (!coreConfig.isStateless()) {
-            Assert.hasText(loginUrl, "loginUrl must not black when stateful");
+            Assert.hasText(loginPath, "loginPath must not black when stateful");
         }
-        coreConfig.setLoginUrl(loginUrl);
+        coreConfig.setLoginPath(loginPath);
 
         coreConfig.matcherNamesAppend(properties.getMatcherNames());
         matcherProvider.stream().forEach(coreConfig::addMatcher);
@@ -154,16 +147,16 @@ public class ShaunBeanAutoConfiguration {
         if (!CollectionUtils.isEmpty(path.getRegex())) {
             path.getRegex().forEach(securityPathMatcher::excludeRegex);
         }
-        if (coreConfig.getLoginUrl() != null) {
-            securityPathMatcher.excludePath(coreConfig.getLoginUrl());
+        if (coreConfig.getLoginPath() != null) {
+            securityPathMatcher.excludePath(coreConfig.getLoginPath());
         }
         if (security.isEnable()) {
             log.info("security is enable");
             final SecurityFilter securityFilter = new SecurityFilter(securityPathMatcher);
             chain.addShaunFilter(securityFilter);
             /* logoutFilter begin */
-            if (StringUtils.hasText(security.getLogoutUrl())) {
-                chain.addShaunFilter(new LogoutFilter(new IncludePathMatcher().includePath(security.getLogoutUrl())));
+            if (StringUtils.hasText(security.getLogoutPath())) {
+                chain.addShaunFilter(new LogoutFilter(new IncludePathMatcher().includePath(security.getLogoutPath())));
             }
             /* logoutFilter end */
         } else {
@@ -175,8 +168,8 @@ public class ShaunBeanAutoConfiguration {
         ActuatorProperties actuator = properties.getActuator();
         if (ClassUtils.isPresent("org.springframework.boot.actuate.autoconfigure.endpoint.EndpointAutoConfiguration",
                 getClass().getClassLoader()) && actuator.isEnable()) {
-            securityPathMatcher.excludeBranch(actuator.getBranch());
-            ActuatorFilter actuatorFilter = new ActuatorFilter(new IncludePathMatcher().includeBranch(actuator.getBranch()));
+            securityPathMatcher.excludeBranch(actuator.getBasePath());
+            ActuatorFilter actuatorFilter = new ActuatorFilter(new IncludePathMatcher().includeBranch(actuator.getBasePath()));
             actuatorFilter.setUsername(actuator.getUsername());
             actuatorFilter.setPassword(actuator.getPassword());
             chain.addShaunFilter(actuatorFilter);
@@ -188,24 +181,24 @@ public class ShaunBeanAutoConfiguration {
         if (!coreConfig.isStateless() && thirdParty.isEnable()) {
             List<Client> indirectClients = indirectClientsProvider.stream().collect(Collectors.toList());
             if (!CollectionUtils.isEmpty(indirectClients)) {
-                final String sfLoginUrl = thirdParty.getLoginUrl();
-                Assert.hasText(sfLoginUrl, "thirdParty.LoginUrl must not blank");
+                final String triggerPath = thirdParty.getTriggerPath();
+                Assert.hasText(triggerPath, "thirdParty.triggerPath must not blank");
 
-                final String callbackUrl = thirdParty.getCallbackUrl();
-                Assert.hasText(callbackUrl, "thirdParty.callbackUrl must not blank");
+                final String callbackPath = thirdParty.getCallbackPath();
+                Assert.hasText(callbackPath, "thirdParty.callbackPath must not blank");
 
                 final CallbackHandler callbackHandler = callbackHandlerProvider.getIfAvailable();
                 Assert.notNull(callbackHandler, "callbackHandler must not null");
 
-                final Clients clients = new Clients(callbackUrl, indirectClients);
+                final Clients clients = new Clients(callbackPath, indirectClients);
                 clients.setAjaxRequestResolver(coreConfig.getAjaxRequestResolver());
                 clients.setUrlResolver(new DefaultUrlResolver(true));
 
-                final ThirdPartyAuthLoginFilter thirdPartyAuthLoginFilter = new ThirdPartyAuthLoginFilter(new IncludePathMatcher().includePath(sfLoginUrl));
+                final ThirdPartyAuthLoginFilter thirdPartyAuthLoginFilter = new ThirdPartyAuthLoginFilter(new IncludePathMatcher().includePath(triggerPath));
                 thirdPartyAuthLoginFilter.setClients(clients);
                 chain.addShaunFilter(thirdPartyAuthLoginFilter);
 
-                final ThirdPartyCallbackFilter thirdPartyCallbackFilter = new ThirdPartyCallbackFilter(new IncludePathMatcher().includePath(callbackUrl));
+                final ThirdPartyCallbackFilter thirdPartyCallbackFilter = new ThirdPartyCallbackFilter(new IncludePathMatcher().includePath(callbackPath));
                 thirdPartyCallbackFilter.setClients(clients);
                 thirdPartyCallbackFilter.setCallbackHandler(callbackHandler);
                 chain.addShaunFilter(thirdPartyCallbackFilter);
