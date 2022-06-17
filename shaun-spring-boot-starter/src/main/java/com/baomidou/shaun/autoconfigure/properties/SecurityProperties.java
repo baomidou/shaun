@@ -44,6 +44,10 @@ public class SecurityProperties {
      */
     private boolean enable = true;
     /**
+     * 是否启用: 验证通过注解指定用户拥有的 role 和 permission 的权限
+     */
+    private boolean annotation = true;
+    /**
      * jwt
      */
     private final Jwt jwt = new Jwt();
@@ -55,10 +59,6 @@ public class SecurityProperties {
      * 排除路径
      */
     private final ExcludePath excludePath = new ExcludePath();
-    /**
-     * 是否启用: 验证通过注解指定用户拥有的 role 和 permission 的权限
-     */
-    private boolean annotation = true;
     /**
      * 登出请求的 url
      * <p>
