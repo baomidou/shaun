@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## [v1.4] 2022-06-19
+
+- feat: 加入对spring-actuator的支持
+- style: pac4j up to 4.5.6
+- refactor: yml 字段配置重构,不向下兼容,详细配置查看wiki
+
 ## [v1.2] 2021-06-02
 
 - fix: `TokenProfile` 个别属性无法使用
