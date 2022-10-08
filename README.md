@@ -61,29 +61,18 @@
 ```
 
 2. 配置 `application.yml`
+> 详情查看 wiki
 
 ```yaml
 shaun:
-  salt: 32位字符串,不配置则每次启动不一样导致重启前登录的用户token失效
-  stateless: true # 默认 true,表示是前后端分离的
-  session-on: false # 默认 false,表示不用session(会影响pac4j的类对session的操作)
-  login-url: /login # 如果配置,则会加入 exclude-path 内,前后端不分离下鉴权失败会被重定向到此
-  token-location: header # 默认 header,token 的存取位置
-  exclude-path: # 排除具体的路径
-    - /v2/api-docs
-    - /swagger-resources
-    - /doc.html
-  exclude-branch: # 排除以此路径开头
-    - /webjars
-  expire-time: 1d # 不设置默认永久有效 
+  ......
+  security:
+    ......
+  actuator:
+    ......
+  thirdParty:
+    ......
 ```
-
-> expire-time: jwt 有效时长(`d`后面只支持三个(`s`,`m`,`h`)之一)
->> 10s : 表示10秒内有效  
-> > 10m 结尾: 表示10分钟内有效  
-> > 10h 结尾: 表示10小时内有效  
-> > 1d : 表示有效时间到第二天 00:00:00  
-> > 2d1h : 表示有效时间到第三天 01:00:00
 
 > 更多 yml 配置[点此查看](https://gitee.com/baomidou/shaun/blob/master/shaun-spring-boot-starter/src/main/java/com/baomidou/shaun/autoconfigure/properties/ShaunProperties.java)
 
