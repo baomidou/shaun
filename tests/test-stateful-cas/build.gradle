@@ -2,7 +2,7 @@ description = "前后不分离-cookie模式-cas"
 
 dependencies {
     api project(":tests:test-support")
-    api "org.pac4j:pac4j-cas"
+    api "org.pac4j:pac4j-cas:${pac4jVersion}"
     api "org.springframework.boot:spring-boot-starter-thymeleaf"
     api "org.springframework.session:spring-session-core"
 }

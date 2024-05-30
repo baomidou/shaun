@@ -16,12 +16,12 @@
 package com.baomidou.shaun.core.context;
 
 import com.baomidou.shaun.core.profile.TokenProfile;
+import jakarta.servlet.http.HttpServletRequest;
 import org.pac4j.core.util.Pac4jConstants;
 import org.springframework.util.Assert;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author miemie

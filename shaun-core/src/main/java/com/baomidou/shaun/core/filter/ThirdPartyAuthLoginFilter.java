@@ -15,27 +15,25 @@
  */
 package com.baomidou.shaun.core.filter;
 
-import static org.pac4j.core.util.CommonHelper.assertNotNull;
-import static org.pac4j.core.util.CommonHelper.assertTrue;
-
-import java.util.List;
-import java.util.Optional;
-
+import com.baomidou.shaun.core.client.finder.DefaultSfClientFinder;
+import com.baomidou.shaun.core.config.CoreConfig;
+import com.baomidou.shaun.core.util.HttpActionInstance;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.pac4j.core.client.Client;
 import org.pac4j.core.client.Clients;
 import org.pac4j.core.client.finder.ClientFinder;
-import org.pac4j.core.context.JEEContext;
-import org.pac4j.core.exception.http.BadRequestAction;
 import org.pac4j.core.exception.http.HttpAction;
 import org.pac4j.core.exception.http.RedirectionAction;
 import org.pac4j.core.matching.matcher.Matcher;
 import org.pac4j.core.util.CommonHelper;
+import org.pac4j.jee.context.JEEContext;
 
-import com.baomidou.shaun.core.client.finder.DefaultSfClientFinder;
-import com.baomidou.shaun.core.config.CoreConfig;
+import java.util.List;
+import java.util.Optional;
 
-import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
+import static org.pac4j.core.util.CommonHelper.assertNotNull;
+import static org.pac4j.core.util.CommonHelper.assertTrue;
 
 /**
  * 三方登录 filter
@@ -71,7 +69,7 @@ public class ThirdPartyAuthLoginFilter extends AbstractShaunFilter {
         if (redirect.isPresent()) {
             return redirect.get();
         }
-        return BadRequestAction.INSTANCE;
+        return HttpActionInstance.BAD_REQUEST;
     }
 
     @Override

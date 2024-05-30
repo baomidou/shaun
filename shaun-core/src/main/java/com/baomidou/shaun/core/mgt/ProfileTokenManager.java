@@ -16,7 +16,7 @@
 package com.baomidou.shaun.core.mgt;
 
 import com.baomidou.shaun.core.profile.TokenProfile;
-import org.pac4j.core.context.JEEContext;
+import org.pac4j.jee.context.JEEContext;
 
 /**
  * profile 管理器

@@ -17,7 +17,7 @@ package com.baomidou.shaun.core.handler;
 
 import com.baomidou.shaun.core.config.CoreConfig;
 import com.baomidou.shaun.core.profile.TokenProfile;
-import org.pac4j.core.context.JEEContext;
+import org.pac4j.jee.context.JEEContext;
 
 /**
  * 登出执行器

@@ -192,7 +192,7 @@ public class MethodSecurityInterceptor extends InitializableObject implements Me
     }
 
     @Override
-    protected void internalInit() {
+    protected void internalInit(boolean forceReinit) {
         if (authorityManager == null) {
             authorityManager = context.getBean(AuthorityManager.class);
         }

@@ -34,7 +34,6 @@ import org.pac4j.core.authorization.checker.AuthorizationChecker;
 import org.pac4j.core.authorization.checker.DefaultAuthorizationChecker;
 import org.pac4j.core.client.finder.ClientFinder;
 import org.pac4j.core.client.finder.DefaultCallbackClientFinder;
-import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.http.ajax.AjaxRequestResolver;
 import org.pac4j.core.http.ajax.DefaultAjaxRequestResolver;
 import org.pac4j.core.matching.checker.DefaultMatchingChecker;
@@ -43,6 +42,7 @@ import org.pac4j.core.matching.matcher.DefaultMatchers;
 import org.pac4j.core.matching.matcher.Matcher;
 import org.pac4j.core.util.CommonHelper;
 import org.pac4j.core.util.Pac4jConstants;
+import org.pac4j.jee.context.JEEContext;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Collection;
@@ -62,10 +62,10 @@ public class CoreConfig {
      * 是否-前后端分离
      */
     private boolean stateless = true;
-    /**
-     * 是否-启用session
-     */
-    private boolean sessionOn = false;
+//    /**
+//     * 是否-启用session
+//     */
+//    private boolean sessionOn = false;
     /**
      * token 位置
      */

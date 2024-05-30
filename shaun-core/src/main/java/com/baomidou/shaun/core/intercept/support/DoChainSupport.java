@@ -18,14 +18,14 @@ package com.baomidou.shaun.core.intercept.support;
 import com.baomidou.shaun.core.config.CoreConfig;
 import com.baomidou.shaun.core.context.ProfileHolder;
 import com.baomidou.shaun.core.filter.ShaunFilter;
+import com.baomidou.shaun.core.util.HttpActionInstance;
 import com.baomidou.shaun.core.util.WebUtil;
-import org.pac4j.core.context.JEEContext;
-import org.pac4j.core.exception.http.BadRequestAction;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.pac4j.core.exception.http.HttpAction;
+import org.pac4j.jee.context.JEEContext;
 import org.springframework.web.cors.CorsUtils;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -35,13 +35,13 @@ import java.util.List;
 public interface DoChainSupport {
 
     default boolean doChain(HttpServletRequest request, HttpServletResponse response, CoreConfig config, List<ShaunFilter> filterList) {
-        final JEEContext context = WebUtil.getJEEContext(request, response, config.isSessionOn());
+        final JEEContext context = WebUtil.getJEEContext(request, response);
         if (CorsUtils.isPreFlightRequest(request)) {
             // cors 预检请求 不做处理
             return true;
         }
         if (!config.matchingChecker(context)) {
-            config.getHttpActionHandler().handle(config, context, BadRequestAction.INSTANCE);
+            config.getHttpActionHandler().handle(config, context, HttpActionInstance.BAD_REQUEST);
             return false;
         }
         for (ShaunFilter filter : filterList) {

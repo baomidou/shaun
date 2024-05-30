@@ -20,8 +20,8 @@ import com.baomidou.shaun.core.profile.TokenProfile;
 import com.baomidou.shaun.core.util.ExpireTimeUtil;
 import com.baomidou.shaun.core.util.WebUtil;
 import lombok.RequiredArgsConstructor;
-import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.util.CommonHelper;
+import org.pac4j.jee.context.JEEContext;
 
 /**
  * 安全管理器,封装下,统一的登录登出

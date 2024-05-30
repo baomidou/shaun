@@ -1,0 +1,3 @@
+com.baomidou.shaun.autoconfigure.ShaunBeanAutoConfiguration
+com.baomidou.shaun.autoconfigure.ShaunWebAutoConfiguration
+com.baomidou.shaun.autoconfigure.ShaunAnnotationAutoConfiguration

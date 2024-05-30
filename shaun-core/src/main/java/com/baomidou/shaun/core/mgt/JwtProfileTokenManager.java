@@ -21,11 +21,11 @@ import com.baomidou.shaun.core.jwt.JwtTypeSelector;
 import com.baomidou.shaun.core.profile.TokenProfile;
 import com.baomidou.shaun.core.util.ExpireTimeUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.credentials.TokenCredentials;
 import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.core.profile.UserProfile;
 import org.pac4j.core.util.CommonHelper;
+import org.pac4j.jee.context.JEEContext;
 import org.pac4j.jwt.profile.JwtGenerator;
 
 import java.util.Optional;

@@ -15,27 +15,25 @@
  */
 package com.baomidou.shaun.core.filter;
 
-import java.util.List;
-import java.util.Optional;
-
+import com.baomidou.shaun.core.config.CoreConfig;
+import com.baomidou.shaun.core.handler.CallbackHandler;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.pac4j.core.client.Client;
 import org.pac4j.core.client.Clients;
 import org.pac4j.core.client.finder.ClientFinder;
 import org.pac4j.core.client.finder.DefaultCallbackClientFinder;
-import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.credentials.Credentials;
 import org.pac4j.core.exception.http.BadRequestAction;
 import org.pac4j.core.exception.http.HttpAction;
 import org.pac4j.core.matching.matcher.Matcher;
 import org.pac4j.core.profile.UserProfile;
 import org.pac4j.core.util.CommonHelper;
+import org.pac4j.jee.context.JEEContext;
 import org.springframework.util.Assert;
 
-import com.baomidou.shaun.core.config.CoreConfig;
-import com.baomidou.shaun.core.handler.CallbackHandler;
-
-import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * callback filter

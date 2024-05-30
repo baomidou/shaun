@@ -18,8 +18,8 @@ package com.baomidou.shaun.core.handler;
 import com.baomidou.shaun.core.config.CoreConfig;
 import com.baomidou.shaun.core.exception.http.FoundLoginAction;
 import com.baomidou.shaun.core.util.WebUtil;
-import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.exception.http.*;
+import org.pac4j.jee.context.JEEContext;
 
 /**
  * @author miemie

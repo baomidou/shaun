@@ -16,10 +16,10 @@
 package com.baomidou.shaun.core.filter;
 
 import com.baomidou.shaun.core.config.CoreConfig;
-import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.exception.http.HttpAction;
 import org.pac4j.core.matching.matcher.Matcher;
 import org.pac4j.core.util.CommonHelper;
+import org.pac4j.jee.context.JEEContext;
 
 /**
  * @author miemie

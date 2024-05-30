@@ -15,11 +15,11 @@
  */
 package com.baomidou.shaun.core.handler;
 
-import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.exception.http.FoundAction;
 import org.pac4j.core.exception.http.HttpAction;
 import org.pac4j.core.exception.http.SeeOtherAction;
 import org.pac4j.core.profile.UserProfile;
+import org.pac4j.jee.context.JEEContext;
 
 /**
  * 回调操作

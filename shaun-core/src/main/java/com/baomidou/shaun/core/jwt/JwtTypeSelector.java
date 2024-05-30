@@ -15,7 +15,6 @@
  */
 package com.baomidou.shaun.core.jwt;
 
-import com.baomidou.shaun.core.profile.TokenProfile;
 import org.pac4j.jwt.credentials.authenticator.JwtAuthenticator;
 import org.pac4j.jwt.profile.JwtGenerator;
 
@@ -30,7 +29,7 @@ public interface JwtTypeSelector {
      *
      * @return JwtGenerator
      */
-    JwtGenerator<TokenProfile> getGenerator();
+    JwtGenerator getGenerator();
 
     /**
      * jwt decode

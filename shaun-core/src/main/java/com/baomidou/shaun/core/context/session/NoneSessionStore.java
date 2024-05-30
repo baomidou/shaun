@@ -15,8 +15,8 @@
  */
 package com.baomidou.shaun.core.context.session;
 
-import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.context.session.SessionStore;
+import org.pac4j.jee.context.JEEContext;
 
 import java.util.Optional;
 

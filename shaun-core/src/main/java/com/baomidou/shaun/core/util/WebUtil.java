@@ -15,20 +15,16 @@
  */
 package com.baomidou.shaun.core.util;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.baomidou.shaun.core.exception.ShaunException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.pac4j.core.context.HttpConstants;
-import org.pac4j.core.context.JEEContext;
-import org.pac4j.core.context.session.JEESessionStore;
+import org.pac4j.jee.context.JEEContext;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import com.baomidou.shaun.core.context.session.NoneSessionStore;
-import com.baomidou.shaun.core.exception.ShaunException;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 /**
  * @author miemie
@@ -129,12 +125,12 @@ public abstract class WebUtil {
         }
     }
 
-    public static JEEContext getJEEContext(boolean session) {
+    public static JEEContext getJEEContext() {
         ServletRequestAttributes sra = getServletRequestAttributes();
-        return getJEEContext(sra.getRequest(), sra.getResponse(), session);
+        return getJEEContext(sra.getRequest(), sra.getResponse());
     }
 
-    public static JEEContext getJEEContext(HttpServletRequest request, HttpServletResponse response, boolean session) {
-        return new JEEContext(request, response, session ? JEESessionStore.INSTANCE : NoneSessionStore.INSTANCE);
+    public static JEEContext getJEEContext(HttpServletRequest request, HttpServletResponse response) {
+        return new JEEContext(request, response);
     }
 }

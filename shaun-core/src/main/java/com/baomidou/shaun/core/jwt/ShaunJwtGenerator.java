@@ -18,6 +18,8 @@ package com.baomidou.shaun.core.jwt;
 import com.baomidou.shaun.core.profile.TokenProfile;
 import com.nimbusds.jwt.JWTClaimsSet;
 import lombok.Getter;
+import lombok.val;
+import org.pac4j.core.profile.UserProfile;
 import org.pac4j.core.profile.jwt.JwtClaims;
 import org.pac4j.jwt.config.encryption.EncryptionConfiguration;
 import org.pac4j.jwt.config.signature.SignatureConfiguration;
@@ -29,7 +31,8 @@ import java.util.Date;
  * @author miemie
  * @since 2020-12-07
  */
-public class ShaunJwtGenerator extends JwtGenerator<TokenProfile> {
+public class ShaunJwtGenerator extends JwtGenerator {
+    public static final String INTERNAL_PERMISSIONS = "$int_perms";
 
     @Getter
     private Date expirationTime;
@@ -46,17 +49,18 @@ public class ShaunJwtGenerator extends JwtGenerator<TokenProfile> {
     }
 
     @Override
-    protected JWTClaimsSet buildJwtClaimsSet(TokenProfile profile) {
+    protected JWTClaimsSet buildJwtClaimsSet(UserProfile profile) {
+        TokenProfile tokenProfile = (TokenProfile) profile;
         // claims builder with subject and issue time
         final Date issueAt = new Date();
-        final JWTClaimsSet.Builder builder = new JWTClaimsSet.Builder()
-                .issueTime(issueAt);
+        val builder = new JWTClaimsSet.Builder()
+                .issueTime(new Date());
 
         // add attributes
-        profile.getAttributes().forEach(builder::claim);
-        builder.claim(INTERNAL_ROLES, profile.getRoles());
-        builder.claim(INTERNAL_PERMISSIONS, profile.getPermissions());
-        builder.claim(INTERNAL_LINKEDID, profile.getLinkedId());
+        tokenProfile.getAttributes().forEach(builder::claim);
+        builder.claim(INTERNAL_ROLES, tokenProfile.getRoles());
+        builder.claim(INTERNAL_PERMISSIONS, tokenProfile.getPermissions());
+        builder.claim(INTERNAL_LINKEDID, tokenProfile.getLinkedId());
 
         builder.subject(profile.getTypedId());
         if (expirationTime != null) {

@@ -18,11 +18,11 @@ package com.baomidou.shaun.core.filter;
 import com.baomidou.shaun.core.config.CoreConfig;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.exception.http.HttpAction;
 import org.pac4j.core.exception.http.UnauthorizedAction;
 import org.pac4j.core.matching.matcher.Matcher;
 import org.pac4j.core.util.CommonHelper;
+import org.pac4j.jee.context.JEEContext;
 import org.springframework.http.HttpHeaders;
 
 import java.util.Optional;

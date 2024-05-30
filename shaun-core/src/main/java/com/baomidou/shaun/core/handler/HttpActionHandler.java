@@ -16,8 +16,8 @@
 package com.baomidou.shaun.core.handler;
 
 import com.baomidou.shaun.core.config.CoreConfig;
-import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.exception.http.HttpAction;
+import org.pac4j.jee.context.JEEContext;
 
 /**
  * HttpAction 处理器

@@ -18,12 +18,11 @@ package com.baomidou.shaun.core.filter;
 import com.baomidou.shaun.core.config.CoreConfig;
 import com.baomidou.shaun.core.context.ProfileHolder;
 import com.baomidou.shaun.core.profile.TokenProfile;
+import com.baomidou.shaun.core.util.HttpActionInstance;
 import lombok.extern.slf4j.Slf4j;
-import org.pac4j.core.context.JEEContext;
-import org.pac4j.core.exception.http.ForbiddenAction;
 import org.pac4j.core.exception.http.HttpAction;
-import org.pac4j.core.exception.http.UnauthorizedAction;
 import org.pac4j.core.matching.matcher.Matcher;
+import org.pac4j.jee.context.JEEContext;
 
 /**
  * security filter
@@ -45,13 +44,13 @@ public class SecurityFilter extends AbstractShaunFilter {
         }
         TokenProfile profile = config.getProfileTokenManager().getProfile(context);
         if (profile == null) {
-            return UnauthorizedAction.INSTANCE;
+            return HttpActionInstance.UNAUTHORIZED;
         }
         if (!config.getProfileStateManager().isOnline(profile)) {
-            return UnauthorizedAction.INSTANCE;
+            return HttpActionInstance.UNAUTHORIZED;
         }
         if (!config.authorizationChecker(context, profile)) {
-            return ForbiddenAction.INSTANCE;
+            return HttpActionInstance.FORBIDDEN;
         }
         ProfileHolder.setProfile(profile);
         if (log.isDebugEnabled()) {

@@ -15,10 +15,9 @@
  */
 package com.baomidou.shaun.core.filter;
 
-import org.pac4j.core.context.JEEContext;
-import org.pac4j.core.exception.http.HttpAction;
-
 import com.baomidou.shaun.core.config.CoreConfig;
+import org.pac4j.core.exception.http.HttpAction;
+import org.pac4j.jee.context.JEEContext;
 
 /**
  * 内部 filter

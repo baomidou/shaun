@@ -21,12 +21,12 @@ import org.pac4j.core.profile.Gender;
 import org.pac4j.core.profile.definition.CommonProfileDefinition;
 import org.pac4j.core.profile.jwt.AbstractJwtProfile;
 import org.pac4j.core.profile.jwt.JwtClaims;
+import org.pac4j.core.util.CommonHelper;
 import org.pac4j.core.util.Pac4jConstants;
 import org.springframework.util.Assert;
 
 import java.net.URI;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 /**
  * @author miemie
@@ -35,6 +35,7 @@ import java.util.Locale;
 @NoArgsConstructor
 public class TokenProfile extends AbstractJwtProfile {
     private static final long serialVersionUID = -1;
+    private Set<String> permissions = new HashSet<>();
 
     private String token;
 
@@ -181,5 +182,24 @@ public class TokenProfile extends AbstractJwtProfile {
      */
     public void setLocation(String location) {
         addAttribute(CommonProfileDefinition.LOCATION, location);
+    }
+
+    public void addPermission(final String permission) {
+        CommonHelper.assertNotBlank("permission", permission);
+        this.permissions.add(permission);
+    }
+
+    public void addPermissions(final Collection<String> permissions) {
+        CommonHelper.assertNotNull("permissions", permissions);
+        this.permissions.addAll(permissions);
+    }
+
+    public Set<String> getPermissions() {
+        return new LinkedHashSet<>(this.permissions);
+    }
+
+    public void setPermissions(Set<String> permissions) {
+        CommonHelper.assertNotNull("permissions", permissions);
+        this.permissions = permissions;
     }
 }
