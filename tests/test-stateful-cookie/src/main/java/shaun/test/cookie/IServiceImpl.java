@@ -2,16 +2,16 @@ package shaun.test.cookie;
 
 import com.baomidou.shaun.core.mgt.SecurityManager;
 import com.baomidou.shaun.core.profile.TokenProfile;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 /**
  * @author miemie
  * @since 2020-06-10
  */
+@Service
 @RequiredArgsConstructor
-@org.springframework.stereotype.Service
-public class ServiceImpl implements Service {
+public class IServiceImpl implements IService {
 
     private final SecurityManager securityManager;
 

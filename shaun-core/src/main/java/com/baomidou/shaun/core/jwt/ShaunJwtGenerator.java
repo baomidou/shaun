@@ -15,6 +15,7 @@
  */
 package com.baomidou.shaun.core.jwt;
 
+import com.baomidou.shaun.core.config.ProfileConstants;
 import com.baomidou.shaun.core.profile.TokenProfile;
 import com.nimbusds.jwt.JWTClaimsSet;
 import lombok.Getter;
@@ -31,10 +32,9 @@ import java.util.Date;
  * @author miemie
  * @since 2020-12-07
  */
+@Getter
 public class ShaunJwtGenerator extends JwtGenerator {
-    public static final String INTERNAL_PERMISSIONS = "$int_perms";
 
-    @Getter
     private Date expirationTime;
 
     public ShaunJwtGenerator() {
@@ -59,10 +59,10 @@ public class ShaunJwtGenerator extends JwtGenerator {
         // add attributes
         tokenProfile.getAttributes().forEach(builder::claim);
         builder.claim(INTERNAL_ROLES, tokenProfile.getRoles());
-        builder.claim(INTERNAL_PERMISSIONS, tokenProfile.getPermissions());
+        builder.claim(ProfileConstants.INTERNAL_PERMISSIONS, tokenProfile.getPermissions());
         builder.claim(INTERNAL_LINKEDID, tokenProfile.getLinkedId());
 
-        builder.subject(profile.getTypedId());
+        builder.subject(profile.getId());
         if (expirationTime != null) {
             builder.expirationTime(expirationTime);
             profile.addAttribute(JwtClaims.EXPIRATION_TIME, expirationTime);

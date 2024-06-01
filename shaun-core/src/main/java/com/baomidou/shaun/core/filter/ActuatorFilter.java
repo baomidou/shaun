@@ -16,13 +16,14 @@
 package com.baomidou.shaun.core.filter;
 
 import com.baomidou.shaun.core.config.CoreConfig;
+import com.baomidou.shaun.core.util.HttpActionInstance;
+import com.baomidou.shaun.core.util.WebUtil;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.pac4j.core.context.CallContext;
 import org.pac4j.core.exception.http.HttpAction;
-import org.pac4j.core.exception.http.UnauthorizedAction;
 import org.pac4j.core.matching.matcher.Matcher;
 import org.pac4j.core.util.CommonHelper;
-import org.pac4j.jee.context.JEEContext;
 import org.springframework.http.HttpHeaders;
 
 import java.util.Optional;
@@ -33,8 +34,7 @@ import java.util.Optional;
  */
 @Slf4j
 public class ActuatorFilter extends AbstractShaunFilter {
-
-    private final String prefix = "Basic ";
+    private final static String prefix = "Basic ";
     @Setter
     private String username;
     @Setter
@@ -47,20 +47,20 @@ public class ActuatorFilter extends AbstractShaunFilter {
     }
 
     @Override
-    protected HttpAction matchThen(CoreConfig config, JEEContext context) {
+    protected HttpAction matchThen(CoreConfig config, CallContext context) {
         if (checkAuth) {
-            Optional<String> header = context.getRequestHeader(HttpHeaders.AUTHORIZATION);
-            if (!header.isPresent()) {
-                return UnauthorizedAction.INSTANCE;
+            Optional<String> header = WebUtil.getJEEContext(context).getRequestHeader(HttpHeaders.AUTHORIZATION);
+            if (header.isEmpty()) {
+                return HttpActionInstance.UNAUTHORIZED;
             }
             String auth = header.get();
             if (!auth.startsWith(prefix)) {
-                return UnauthorizedAction.INSTANCE;
+                return HttpActionInstance.UNAUTHORIZED;
             }
             auth = auth.substring(prefix.length());
             String basicAuth = HttpHeaders.encodeBasicAuth(username, password, null);
             if (!basicAuth.equals(auth)) {
-                return UnauthorizedAction.INSTANCE;
+                return HttpActionInstance.UNAUTHORIZED;
             }
         }
         return null;

@@ -5,6 +5,7 @@ import com.baomidou.shaun.core.annotation.HasRole;
 import com.baomidou.shaun.core.context.ProfileHolder;
 import com.baomidou.shaun.core.profile.TokenProfile;
 import com.baomidou.shaun.core.util.WebUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.pac4j.core.util.Pac4jConstants;
 import org.springframework.stereotype.Controller;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.UUID;
 
 /**
@@ -24,7 +24,7 @@ import java.util.UUID;
 @Controller
 public class TestController {
 
-    private final Service service;
+    private final IService IService;
 
     @GetMapping("/login")
     public String login() {
@@ -33,7 +33,7 @@ public class TestController {
 
     @GetMapping("/auth/login")
     public String alogin() {
-        service.login();
+        IService.login();
         return "redirect:/index";
     }
 
@@ -53,7 +53,7 @@ public class TestController {
     @GetMapping("/a1")
     public String a1(Model model) {
         model.addAttribute("a", "a1");
-        model.addAttribute("csrf", WebUtil.getJEEContext(false).getRequestAttribute(Pac4jConstants.CSRF_TOKEN).orElse(null));
+        model.addAttribute("csrf", WebUtil.getJEEContext().getRequestAttribute(Pac4jConstants.CSRF_TOKEN).orElse(null));
         return "a";
     }
 
@@ -62,7 +62,7 @@ public class TestController {
     @HasRole("admin")
     public String a2(Model model) {
         model.addAttribute("a", "a2");
-        model.addAttribute("csrf", WebUtil.getJEEContext(false).getRequestAttribute(Pac4jConstants.CSRF_TOKEN).orElse(null));
+        model.addAttribute("csrf", WebUtil.getJEEContext().getRequestAttribute(Pac4jConstants.CSRF_TOKEN).orElse(null));
         return "a";
     }
 
@@ -72,7 +72,7 @@ public class TestController {
     public String a3(HttpServletRequest request, Model model) {
         System.out.println(request);
         model.addAttribute("a", "a3");
-        model.addAttribute("csrf", WebUtil.getJEEContext(false).getRequestAttribute(Pac4jConstants.CSRF_TOKEN).orElse(null));
+        model.addAttribute("csrf", WebUtil.getJEEContext().getRequestAttribute(Pac4jConstants.CSRF_TOKEN).orElse(null));
         return "a";
     }
 

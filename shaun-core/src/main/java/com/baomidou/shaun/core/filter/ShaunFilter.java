@@ -16,8 +16,8 @@
 package com.baomidou.shaun.core.filter;
 
 import com.baomidou.shaun.core.config.CoreConfig;
+import org.pac4j.core.context.CallContext;
 import org.pac4j.core.exception.http.HttpAction;
-import org.pac4j.jee.context.JEEContext;
 
 /**
  * 内部 filter
@@ -32,7 +32,7 @@ public interface ShaunFilter {
      * @param context webContext
      * @return HttpAction
      */
-    HttpAction doFilter(CoreConfig config, JEEContext context);
+    HttpAction doFilter(CoreConfig config, CallContext context);
 
     /**
      * 有多个子类时执行顺序(越小越优先)

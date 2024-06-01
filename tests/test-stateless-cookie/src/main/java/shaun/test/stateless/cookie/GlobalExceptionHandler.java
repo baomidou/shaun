@@ -1,7 +1,7 @@
 package shaun.test.stateless.cookie;
 
-import javax.servlet.http.HttpServletResponse;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.pac4j.core.context.HttpConstants;
 import org.pac4j.core.exception.http.ForbiddenAction;
 import org.pac4j.core.exception.http.HttpAction;

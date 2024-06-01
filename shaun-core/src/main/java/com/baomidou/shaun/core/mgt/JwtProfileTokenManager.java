@@ -16,20 +16,19 @@
 package com.baomidou.shaun.core.mgt;
 
 import com.baomidou.shaun.core.client.TokenClient;
-import com.baomidou.shaun.core.credentials.extractor.TokenCredentialsExtractor;
 import com.baomidou.shaun.core.jwt.JwtTypeSelector;
 import com.baomidou.shaun.core.profile.TokenProfile;
 import com.baomidou.shaun.core.util.ExpireTimeUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.pac4j.core.context.CallContext;
+import org.pac4j.core.credentials.Credentials;
 import org.pac4j.core.credentials.TokenCredentials;
-import org.pac4j.core.profile.CommonProfile;
+import org.pac4j.core.credentials.extractor.CredentialsExtractor;
 import org.pac4j.core.profile.UserProfile;
 import org.pac4j.core.util.CommonHelper;
-import org.pac4j.jee.context.JEEContext;
 import org.pac4j.jwt.profile.JwtGenerator;
 
 import java.util.Optional;
-import java.util.Set;
 
 /**
  * @author miemie
@@ -41,42 +40,30 @@ public class JwtProfileTokenManager implements ProfileTokenManager {
     private final TokenClient tokenClient;
     private final JwtTypeSelector jwtTypeSelector;
 
-    public JwtProfileTokenManager(JwtTypeSelector jwtTypeSelector, TokenCredentialsExtractor credentialsExtractor) {
+    public JwtProfileTokenManager(JwtTypeSelector jwtTypeSelector, CredentialsExtractor credentialsExtractor) {
         this.jwtTypeSelector = jwtTypeSelector;
         this.tokenClient = new TokenClient(credentialsExtractor, jwtTypeSelector.getAuthenticator());
     }
 
     @Override
-    public TokenProfile getProfile(JEEContext context) {
-        TokenCredentials credentials = tokenClient.getCredentials(context).orElse(null);
+    public TokenProfile getProfile(CallContext context) {
+        Credentials credentials = tokenClient.getCredentials(context).orElse(null);
         if (credentials == null) {
             return null;
         }
-        Optional<UserProfile> profile = tokenClient.getUserProfile(credentials, context);
+        TokenProfile tokenProfile = null;
+        Optional<UserProfile> profile = tokenClient.getUserProfile(context, credentials);
         if (profile.isPresent()) {
-            // todo 兼容性升级
-            CommonProfile commonProfile = (CommonProfile) profile.get();
-            TokenProfile tokenProfile;
-            if (commonProfile instanceof TokenProfile) {
-                tokenProfile = (TokenProfile) commonProfile;
-            } else {
-                tokenProfile = new TokenProfile();
-                Set<String> permissions = commonProfile.getPermissions();
-                tokenProfile.addPermissions(permissions);
-                Set<String> roles = commonProfile.getRoles();
-                tokenProfile.addRoles(roles);
-                tokenProfile.setId(commonProfile.getId());
-                tokenProfile.addAttributes(commonProfile.getAttributes());
-            }
-            tokenProfile.setToken(credentials.getToken());
+            tokenProfile = (TokenProfile) profile.get();
+            tokenProfile.setToken(((TokenCredentials) credentials).getToken());
             return tokenProfile;
         }
-        return null;
+        return tokenProfile;
     }
 
     @Override
     public String generateToken(TokenProfile profile, String expireTime) {
-        JwtGenerator<TokenProfile> jwtGenerator = jwtTypeSelector.getGenerator();
+        JwtGenerator jwtGenerator = jwtTypeSelector.getGenerator();
         if (CommonHelper.isNotBlank(expireTime)) {
             jwtGenerator.setExpirationTime(ExpireTimeUtil.getTargetDate(expireTime));
         }

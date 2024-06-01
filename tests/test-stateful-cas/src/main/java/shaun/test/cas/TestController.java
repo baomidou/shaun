@@ -1,21 +1,18 @@
 package shaun.test.cas;
 
-import java.util.UUID;
-
-import javax.servlet.http.HttpServletRequest;
-
+import com.baomidou.shaun.core.annotation.HasPermission;
+import com.baomidou.shaun.core.annotation.HasRole;
+import com.baomidou.shaun.core.context.ProfileHolder;
+import com.baomidou.shaun.core.profile.TokenProfile;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.baomidou.shaun.core.annotation.HasPermission;
-import com.baomidou.shaun.core.annotation.HasRole;
-import com.baomidou.shaun.core.context.ProfileHolder;
-import com.baomidou.shaun.core.profile.TokenProfile;
-
-import lombok.AllArgsConstructor;
+import java.util.UUID;
 
 /**
  * @author miemie

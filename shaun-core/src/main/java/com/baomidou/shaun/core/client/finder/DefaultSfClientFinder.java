@@ -21,7 +21,6 @@ import org.pac4j.core.client.Client;
 import org.pac4j.core.client.Clients;
 import org.pac4j.core.client.finder.ClientFinder;
 import org.pac4j.core.context.WebContext;
-import org.pac4j.core.credentials.Credentials;
 import org.pac4j.core.util.Pac4jConstants;
 
 import java.util.ArrayList;
@@ -39,8 +38,8 @@ public class DefaultSfClientFinder implements ClientFinder {
     private String clientNameParameter = Pac4jConstants.DEFAULT_CLIENT_NAME_PARAMETER;
 
     @Override
-    public List<Client<? extends Credentials>> find(final Clients clients, final WebContext context, final String clientNames) {
-        final List<Client<? extends Credentials>> result = new ArrayList<>();
+    public List<Client> find(final Clients clients, final WebContext context, final String clientNames) {
+        final List<Client> result = new ArrayList<>();
         final Optional<String> clientNameOnRequest = context.getRequestParameter(clientNameParameter);
         log.debug("clientNameOnRequest: {}", clientNameOnRequest);
         if (clientNameOnRequest.isPresent()) {

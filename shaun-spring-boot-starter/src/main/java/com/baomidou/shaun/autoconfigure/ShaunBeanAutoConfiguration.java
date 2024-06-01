@@ -22,7 +22,6 @@ import com.baomidou.shaun.autoconfigure.properties.ThirdPartyAuthProperties;
 import com.baomidou.shaun.core.authority.AuthorityManager;
 import com.baomidou.shaun.core.authority.DefaultAuthorityManager;
 import com.baomidou.shaun.core.config.CoreConfig;
-import com.baomidou.shaun.core.credentials.extractor.DefaultTokenCredentialsExtractor;
 import com.baomidou.shaun.core.credentials.extractor.TokenCredentialsExtractor;
 import com.baomidou.shaun.core.filter.*;
 import com.baomidou.shaun.core.handler.CallbackHandler;
@@ -43,6 +42,7 @@ import org.pac4j.core.authorization.authorizer.Authorizer;
 import org.pac4j.core.client.Client;
 import org.pac4j.core.client.Clients;
 import org.pac4j.core.client.IndirectClient;
+import org.pac4j.core.credentials.extractor.CredentialsExtractor;
 import org.pac4j.core.http.ajax.AjaxRequestResolver;
 import org.pac4j.core.http.url.DefaultUrlResolver;
 import org.pac4j.core.matching.matcher.Matcher;
@@ -88,7 +88,6 @@ public class ShaunBeanAutoConfiguration {
                                  ObjectProvider<HttpActionHandler> httpActionHandlerProvider) {
         CoreConfig coreConfig = new CoreConfig();
         coreConfig.setStateless(properties.isStateless());
-        coreConfig.setSessionOn(properties.isSessionOn());
 
         httpActionHandlerProvider.ifAvailable(coreConfig::setHttpActionHandler);
         ajaxRequestResolverProvider.ifAvailable(coreConfig::setAjaxRequestResolver);
@@ -228,9 +227,9 @@ public class ShaunBeanAutoConfiguration {
          */
         @Bean
         @ConditionalOnMissingBean
-        public TokenCredentialsExtractor credentialsExtractor() {
+        public CredentialsExtractor credentialsExtractor() {
             SecurityProperties.Extractor extractor = properties.getSecurity().getExtractor();
-            return new DefaultTokenCredentialsExtractor(extractor.getLocation(), extractor.getHeader(), extractor.getCookie(), extractor.getParameter());
+            return new TokenCredentialsExtractor(extractor.getLocation(), extractor.getHeader(), extractor.getCookie(), extractor.getParameter());
         }
 
         /**
@@ -238,7 +237,7 @@ public class ShaunBeanAutoConfiguration {
          */
         @Bean
         @ConditionalOnMissingBean
-        public ProfileTokenManager profileTokenManager(JwtTypeSelector jwtTypeSelector, TokenCredentialsExtractor credentialsExtractor) {
+        public ProfileTokenManager profileTokenManager(JwtTypeSelector jwtTypeSelector, CredentialsExtractor credentialsExtractor) {
             return new JwtProfileTokenManager(jwtTypeSelector, credentialsExtractor);
         }
 

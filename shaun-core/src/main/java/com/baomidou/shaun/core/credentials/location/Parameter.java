@@ -39,5 +39,5 @@ public class Parameter {
     /**
      * 支持 post 请求
      */
-    private boolean supportPostRequest = false;
+    private boolean supportPostRequest = true;
 }

@@ -15,7 +15,7 @@
  */
 package com.baomidou.shaun.core.matching.matcher;
 
-import org.pac4j.core.context.WebContext;
+import org.pac4j.core.context.CallContext;
 import org.pac4j.core.exception.TechnicalException;
 import org.pac4j.core.matching.matcher.Matcher;
 import org.pac4j.core.util.CommonHelper;
@@ -34,8 +34,8 @@ public class IncludePathMatcher implements Matcher {
     private final Set<Pattern> includePatterns = new HashSet<>();
 
     @Override
-    public boolean matches(WebContext context) {
-        String path = context.getPath();
+    public boolean matches(CallContext context) {
+        String path = context.webContext().getPath();
 
         if (includePaths.contains(path)) {
             return true;

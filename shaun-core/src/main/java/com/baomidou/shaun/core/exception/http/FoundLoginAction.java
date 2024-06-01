@@ -18,6 +18,8 @@ package com.baomidou.shaun.core.exception.http;
 import org.pac4j.core.context.HttpConstants;
 import org.pac4j.core.exception.http.RedirectionAction;
 
+import java.io.Serial;
+
 /**
  * 跳转登录页
  *
@@ -25,8 +27,9 @@ import org.pac4j.core.exception.http.RedirectionAction;
  * @since 2020-12-01
  */
 public class FoundLoginAction extends RedirectionAction {
-    public static final FoundLoginAction INSTANCE = new FoundLoginAction();
+    @Serial
     private static final long serialVersionUID = 3129463209921232281L;
+    public static final FoundLoginAction INSTANCE = new FoundLoginAction();
 
     protected FoundLoginAction() {
         super(HttpConstants.FOUND);

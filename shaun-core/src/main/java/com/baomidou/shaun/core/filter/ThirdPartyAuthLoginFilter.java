@@ -23,11 +23,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.pac4j.core.client.Client;
 import org.pac4j.core.client.Clients;
 import org.pac4j.core.client.finder.ClientFinder;
+import org.pac4j.core.context.CallContext;
 import org.pac4j.core.exception.http.HttpAction;
 import org.pac4j.core.exception.http.RedirectionAction;
 import org.pac4j.core.matching.matcher.Matcher;
 import org.pac4j.core.util.CommonHelper;
-import org.pac4j.jee.context.JEEContext;
 
 import java.util.List;
 import java.util.Optional;
@@ -43,7 +43,6 @@ import static org.pac4j.core.util.CommonHelper.assertTrue;
  */
 @Slf4j
 @Setter
-@SuppressWarnings("unchecked")
 public class ThirdPartyAuthLoginFilter extends AbstractShaunFilter {
 
     private Clients clients;
@@ -54,11 +53,11 @@ public class ThirdPartyAuthLoginFilter extends AbstractShaunFilter {
     }
 
     @Override
-    protected HttpAction matchThen(CoreConfig config, JEEContext context) {
+    protected HttpAction matchThen(CoreConfig config, CallContext context) {
         if (log.isDebugEnabled()) {
-            log.debug("access sfLogin \"{}\"", context.getFullRequestURL());
+            log.debug("access sfLogin \"{}\"", context.webContext().getFullRequestURL());
         }
-        final List<Client<?>> foundClients = clientFinder.find(this.clients, context, null);
+        final List<Client> foundClients = clientFinder.find(this.clients, context.webContext(), null);
         assertTrue(foundClients != null && foundClients.size() == 1,
                 "unable to find one indirect client for the sfLogin: check the sfLogin URL for a client name parameter");
         final Client foundClient = foundClients.get(0);

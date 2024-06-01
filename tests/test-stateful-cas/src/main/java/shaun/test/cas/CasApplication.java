@@ -3,9 +3,9 @@ package shaun.test.cas;
 import com.baomidou.shaun.core.handler.CallbackHandler;
 import org.pac4j.cas.client.CasClient;
 import org.pac4j.cas.config.CasConfiguration;
+import org.pac4j.core.context.CallContext;
 import org.pac4j.core.exception.http.HttpAction;
 import org.pac4j.core.profile.UserProfile;
-import org.pac4j.jee.context.JEEContext;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -31,7 +31,7 @@ public class CasApplication {
     public CallbackHandler callbackHandler() {
         return new CallbackHandler() {
             @Override
-            public HttpAction callBack(JEEContext context, UserProfile profile) {
+            public HttpAction callBack(CallContext context, UserProfile profile) {
                 System.out.println(profile);
                 return null;
             }

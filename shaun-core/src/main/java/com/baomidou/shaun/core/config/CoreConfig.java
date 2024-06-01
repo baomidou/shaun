@@ -34,6 +34,7 @@ import org.pac4j.core.authorization.checker.AuthorizationChecker;
 import org.pac4j.core.authorization.checker.DefaultAuthorizationChecker;
 import org.pac4j.core.client.finder.ClientFinder;
 import org.pac4j.core.client.finder.DefaultCallbackClientFinder;
+import org.pac4j.core.context.CallContext;
 import org.pac4j.core.http.ajax.AjaxRequestResolver;
 import org.pac4j.core.http.ajax.DefaultAjaxRequestResolver;
 import org.pac4j.core.matching.checker.DefaultMatchingChecker;
@@ -42,7 +43,6 @@ import org.pac4j.core.matching.matcher.DefaultMatchers;
 import org.pac4j.core.matching.matcher.Matcher;
 import org.pac4j.core.util.CommonHelper;
 import org.pac4j.core.util.Pac4jConstants;
-import org.pac4j.jee.context.JEEContext;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Collection;
@@ -206,11 +206,12 @@ public class CoreConfig {
         }
     }
 
-    public boolean matchingChecker(JEEContext context) {
+    public boolean matchingChecker(CallContext context) {
         return matchingChecker.matches(context, matcherNames, matchersMap, Collections.emptyList());
     }
 
-    public boolean authorizationChecker(JEEContext context, TokenProfile profile) {
-        return authorizationChecker.isAuthorized(context, Collections.singletonList(profile), authorizerNames, authorizersMap, Collections.emptyList());
+    public boolean authorizationChecker(CallContext context, TokenProfile profile) {
+        return authorizationChecker.isAuthorized(context.webContext(), context.sessionStore(),
+                Collections.singletonList(profile), authorizerNames, authorizersMap, Collections.emptyList());
     }
 }

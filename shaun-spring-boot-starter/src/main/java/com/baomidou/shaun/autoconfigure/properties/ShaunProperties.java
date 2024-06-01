@@ -39,10 +39,6 @@ public class ShaunProperties {
      */
     private boolean stateless = true;
     /**
-     * 是否-启用session
-     */
-    private boolean sessionOn = false;
-    /**
      * 登录页面的 url
      * <p>
      * 配置后会自动加入地址过滤链,避免请求该地址被拦截,

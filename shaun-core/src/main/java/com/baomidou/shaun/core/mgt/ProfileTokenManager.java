@@ -16,7 +16,7 @@
 package com.baomidou.shaun.core.mgt;
 
 import com.baomidou.shaun.core.profile.TokenProfile;
-import org.pac4j.jee.context.JEEContext;
+import org.pac4j.core.context.CallContext;
 
 /**
  * profile 管理器
@@ -32,7 +32,7 @@ public interface ProfileTokenManager {
      * @param context JEEContext
      * @return TokenProfile
      */
-    TokenProfile getProfile(JEEContext context);
+    TokenProfile getProfile(CallContext context);
 
     /**
      * 把 TokenProfile 构建为 token(jwt)

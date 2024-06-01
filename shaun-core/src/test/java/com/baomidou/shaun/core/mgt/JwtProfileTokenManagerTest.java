@@ -25,8 +25,10 @@ class JwtProfileTokenManagerTest extends BaseTokenTest {
         profile.setId(uuid());
         profile.setLinkedId(uuid());
         profile.setTenantId(uuid());
-        profile.addPermission(uuid());
         profile.addRole(uuid());
+        profile.addRole(uuid());
+        profile.addPermission(uuid());
+        profile.addPermission(uuid());
         profile.setIssuer(uuid());
         profile.setAudience(Lists.newArrayList(uuid()));
         profile.addAuthenticationAttribute(uuid(), uuid());
@@ -45,8 +47,8 @@ class JwtProfileTokenManagerTest extends BaseTokenTest {
         assertThat(profile.getId()).isNotNull();
         assertThat(profile.getLinkedId()).isNotNull();
         assertThat(profile.getTenantId()).isNotNull();
-        assertThat(profile.getPermissions().size()).isEqualTo(1);
-        assertThat(profile.getRoles().size()).isEqualTo(1);
+        assertThat(profile.getRoles().size()).isEqualTo(2);
+        assertThat(profile.getPermissions().size()).isEqualTo(2);
         assertThat(profile.getIssuedAt()).isNotNull();
         assertThat(profile.getExpirationDate()).isNotNull();
         assertThat(profile.getIssuer()).isNotNull();

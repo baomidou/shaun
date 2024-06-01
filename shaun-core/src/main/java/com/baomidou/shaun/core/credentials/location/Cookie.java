@@ -30,12 +30,12 @@ import org.pac4j.http.credentials.extractor.CookieExtractor;
 public class Cookie {
 
     private String name = Pac4jConstants.SESSION_ID;
-    private int version = 0;
-    private String comment;
     private String domain = "";
     private String path = Pac4jConstants.DEFAULT_URL_VALUE;
     private boolean secure;
-    private boolean isHttpOnly;
+    private boolean isHttpOnly = false;
+    private String sameSitePolicy;
+    private String comment;
 
     /**
      * 获取pac4j的cookie
@@ -46,13 +46,13 @@ public class Cookie {
      */
     public org.pac4j.core.context.Cookie getCookie(final String token, int maxAge) {
         org.pac4j.core.context.Cookie cookie = new org.pac4j.core.context.Cookie(name, token);
-        cookie.setVersion(version);
-        cookie.setSecure(secure);
-        cookie.setPath(path);
-        cookie.setMaxAge(maxAge);
-        cookie.setHttpOnly(isHttpOnly);
-        cookie.setComment(comment);
         cookie.setDomain(domain);
+        cookie.setMaxAge(maxAge);
+        cookie.setPath(path);
+        cookie.setSecure(secure);
+        cookie.setHttpOnly(isHttpOnly);
+        cookie.setSameSitePolicy(sameSitePolicy);
+        cookie.setComment(comment);
         return cookie;
     }
 

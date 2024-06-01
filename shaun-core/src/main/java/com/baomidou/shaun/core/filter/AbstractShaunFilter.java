@@ -16,10 +16,10 @@
 package com.baomidou.shaun.core.filter;
 
 import com.baomidou.shaun.core.config.CoreConfig;
+import org.pac4j.core.context.CallContext;
 import org.pac4j.core.exception.http.HttpAction;
 import org.pac4j.core.matching.matcher.Matcher;
 import org.pac4j.core.util.CommonHelper;
-import org.pac4j.jee.context.JEEContext;
 
 /**
  * @author miemie
@@ -35,7 +35,7 @@ public abstract class AbstractShaunFilter implements ShaunFilter {
     }
 
     @Override
-    final public HttpAction doFilter(CoreConfig config, JEEContext context) {
+    final public HttpAction doFilter(CoreConfig config, CallContext context) {
         if (pathMatcher.matches(context)) {
             try {
                 return matchThen(config, context);
@@ -46,7 +46,7 @@ public abstract class AbstractShaunFilter implements ShaunFilter {
         return null;
     }
 
-    protected abstract HttpAction matchThen(CoreConfig config, JEEContext context);
+    protected abstract HttpAction matchThen(CoreConfig config, CallContext context);
 
     protected HttpAction handleEx(Exception e) {
         if (e instanceof HttpAction) {

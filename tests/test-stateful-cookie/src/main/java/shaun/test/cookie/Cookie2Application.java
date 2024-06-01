@@ -1,7 +1,10 @@
 package shaun.test.cookie;
 
-import java.util.concurrent.ConcurrentHashMap;
-
+import com.baomidou.shaun.autoconfigure.properties.ShaunProperties;
+import com.baomidou.shaun.core.context.ProfileHolder;
+import com.baomidou.shaun.core.profile.TokenProfile;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.pac4j.core.authorization.authorizer.Authorizer;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -11,14 +14,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.session.MapSessionRepository;
 import org.springframework.session.config.annotation.web.http.EnableSpringHttpSession;
 import org.springframework.stereotype.Component;
-
-import com.baomidou.shaun.autoconfigure.properties.ShaunProperties;
-import com.baomidou.shaun.core.context.ProfileHolder;
-import com.baomidou.shaun.core.profile.TokenProfile;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import shaun.test.support.StarterWebInfo;
+
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author miemie
@@ -39,9 +37,9 @@ public class Cookie2Application {
     }
 
     @Bean
-    public Authorizer<TokenProfile> authorizer1() {
-        return (context, profiles) -> {
-            final TokenProfile profile = profiles.get(0);
+    public Authorizer authorizer1() {
+        return (context, sessionStore, profiles) -> {
+            final TokenProfile profile = (TokenProfile) profiles.get(0);
             profile.setLinkedId("111222333444555666777888999000");
             return true;
         };

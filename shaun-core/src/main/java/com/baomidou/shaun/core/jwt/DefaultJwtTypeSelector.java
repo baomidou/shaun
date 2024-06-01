@@ -15,6 +15,7 @@
  */
 package com.baomidou.shaun.core.jwt;
 
+import com.baomidou.shaun.core.profile.TokenProfileDefinition;
 import org.pac4j.core.util.CommonHelper;
 import org.pac4j.core.util.InitializableObject;
 import org.pac4j.jwt.config.encryption.EncryptionConfiguration;
@@ -83,6 +84,7 @@ public class DefaultJwtTypeSelector extends InitializableObject implements JwtTy
     @Override
     protected void internalInit(boolean forceReinit) {
         this.jwtAuthenticator = new JwtAuthenticator();
+        jwtAuthenticator.setProfileDefinition(new TokenProfileDefinition());
         if (this.signatureConfiguration != null) {
             jwtAuthenticator.setSignatureConfiguration(this.signatureConfiguration);
         }

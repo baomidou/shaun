@@ -16,11 +16,9 @@
 package com.baomidou.shaun.core.context;
 
 import com.baomidou.shaun.core.profile.TokenProfile;
-import jakarta.servlet.http.HttpServletRequest;
+import com.baomidou.shaun.core.util.WebUtil;
 import org.pac4j.core.util.Pac4jConstants;
 import org.springframework.util.Assert;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 
 /**
@@ -28,7 +26,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
  * @since 2020-05-25
  */
 final class RequestProfileHolderStrategy implements ProfileHolderStrategy {
-
     private static final String key_profile = Pac4jConstants.USER_PROFILES;
 
     @Override
@@ -38,17 +35,12 @@ final class RequestProfileHolderStrategy implements ProfileHolderStrategy {
 
     @Override
     public TokenProfile getProfile() {
-        return (TokenProfile) request().getAttribute(key_profile);
+        return (TokenProfile) WebUtil.getRequestBySpringWebHolder().getAttribute(key_profile);
     }
 
     @Override
     public void setProfile(TokenProfile profile) {
         Assert.notNull(profile, "Only non-null TokenProfile instances are permitted");
-        request().setAttribute(key_profile, profile);
-    }
-
-    @SuppressWarnings("all")
-    private HttpServletRequest request() {
-        return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        WebUtil.getRequestBySpringWebHolder().setAttribute(key_profile, profile);
     }
 }

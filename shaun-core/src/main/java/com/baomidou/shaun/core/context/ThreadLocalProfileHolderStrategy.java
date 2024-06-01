@@ -23,7 +23,6 @@ import org.springframework.util.Assert;
  * @since 2020-05-25
  */
 final class ThreadLocalProfileHolderStrategy implements ProfileHolderStrategy {
-
     private static final ThreadLocal<TokenProfile> contextHolder = new ThreadLocal<>();
 
     @Override

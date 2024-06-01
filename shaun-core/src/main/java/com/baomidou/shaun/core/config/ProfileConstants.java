@@ -25,4 +25,8 @@ public interface ProfileConstants {
      * 多租户 ID
      */
     String tenantId = "tenantId";
+    /**
+     * permissions
+     */
+    String INTERNAL_PERMISSIONS = "$int_perms";
 }

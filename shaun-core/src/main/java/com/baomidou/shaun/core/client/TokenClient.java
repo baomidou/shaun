@@ -16,7 +16,6 @@
 package com.baomidou.shaun.core.client;
 
 import org.pac4j.core.client.DirectClient;
-import org.pac4j.core.credentials.TokenCredentials;
 import org.pac4j.core.credentials.extractor.CredentialsExtractor;
 import org.pac4j.jwt.credentials.authenticator.JwtAuthenticator;
 
@@ -26,16 +25,16 @@ import org.pac4j.jwt.credentials.authenticator.JwtAuthenticator;
  * @author miemie
  * @since 2019-07-20
  */
-public class TokenClient extends DirectClient<TokenCredentials> {
+public class TokenClient extends DirectClient {
 
-    public TokenClient(final CredentialsExtractor<TokenCredentials> credentialsExtractor,
+    public TokenClient(final CredentialsExtractor credentialsExtractor,
                        final JwtAuthenticator tokenAuthenticator) {
-        defaultCredentialsExtractor(credentialsExtractor);
-        defaultAuthenticator(tokenAuthenticator);
+        setCredentialsExtractor(credentialsExtractor);
+        setAuthenticator(tokenAuthenticator);
     }
 
     @Override
-    protected void clientInit() {
+    protected void internalInit(boolean forceReinit) {
         // ignore
     }
 }

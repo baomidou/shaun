@@ -22,12 +22,11 @@ import com.baomidou.shaun.core.annotation.Logical;
 import com.baomidou.shaun.core.authority.AuthorityManager;
 import com.baomidou.shaun.core.context.ProfileHolder;
 import com.baomidou.shaun.core.profile.TokenProfile;
+import com.baomidou.shaun.core.util.HttpActionInstance;
 import lombok.extern.slf4j.Slf4j;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
-import org.pac4j.core.exception.http.ForbiddenAction;
 import org.pac4j.core.exception.http.HttpAction;
-import org.pac4j.core.exception.http.UnauthorizedAction;
 import org.pac4j.core.util.InitializableObject;
 import org.springframework.aop.framework.AopProxyUtils;
 import org.springframework.beans.BeansException;
@@ -98,7 +97,7 @@ public class MethodSecurityInterceptor extends InitializableObject implements Me
             final TokenProfile profiles = ProfileHolder.getProfile();
             if (profiles == null) {
                 log.debug("not found TokenProfile, so authorization not success!");
-                return UnauthorizedAction.INSTANCE;
+                return HttpActionInstance.UNAUTHORIZED;
             }
             if (!authorityManager.isSkipAuthentication(profiles)) {
                 HttpAction action = toCheck(profiles, true, role.logical(), roles, authorityManager::roles);
@@ -123,7 +122,7 @@ public class MethodSecurityInterceptor extends InitializableObject implements Me
         final TokenProfile profiles = ProfileHolder.getProfile();
         if (profiles == null) {
             log.debug("not found TokenProfile, so authorization not success!");
-            return UnauthorizedAction.INSTANCE;
+            return HttpActionInstance.UNAUTHORIZED;
         }
         if (authorityManager.isSkipAuthentication(profiles)) {
             return null;
@@ -135,11 +134,11 @@ public class MethodSecurityInterceptor extends InitializableObject implements Me
                                final Set<String> elements, final Function<TokenProfile, Set<String>> checkValues) {
         if (isRole) {
             if (!authorityManager.checkRoles(logical, elements, checkValues.apply(profiles))) {
-                return ForbiddenAction.INSTANCE;
+                return HttpActionInstance.FORBIDDEN;
             }
         }
         if (!authorityManager.checkPermissions(logical, elements, checkValues.apply(profiles))) {
-            return ForbiddenAction.INSTANCE;
+            return HttpActionInstance.FORBIDDEN;
         }
         return null;
     }

@@ -65,7 +65,7 @@ public class SecurityManager {
         String token = config.getProfileTokenManager().generateToken(profile, expireTime);
         profile.setToken(token);
         if (config.getTokenLocation().enableCookie()) {
-            JEEContext jeeContext = WebUtil.getJEEContext(config.isSessionOn());
+            JEEContext jeeContext = WebUtil.getJEEContext();
             jeeContext.addResponseCookie(config.getCookie().getCookie(token, getCookieAge(expireTime)));
         }
         config.getProfileStateManager().online(profile);
@@ -76,7 +76,7 @@ public class SecurityManager {
      * 用户登出
      */
     public void logout(TokenProfile profile) {
-        config.getLogoutHandler().logout(config, WebUtil.getJEEContext(config.isSessionOn()), profile);
+        config.getLogoutHandler().logout(config, WebUtil.getCallContext(), profile);
     }
 
     private String chooseExpireTime(String optionExpireTime) {

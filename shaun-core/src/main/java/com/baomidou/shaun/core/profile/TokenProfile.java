@@ -16,6 +16,7 @@
 package com.baomidou.shaun.core.profile;
 
 import com.baomidou.shaun.core.config.ProfileConstants;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.pac4j.core.profile.Gender;
 import org.pac4j.core.profile.definition.CommonProfileDefinition;
@@ -25,6 +26,7 @@ import org.pac4j.core.util.CommonHelper;
 import org.pac4j.core.util.Pac4jConstants;
 import org.springframework.util.Assert;
 
+import java.io.Serial;
 import java.net.URI;
 import java.util.*;
 
@@ -34,17 +36,14 @@ import java.util.*;
  */
 @NoArgsConstructor
 public class TokenProfile extends AbstractJwtProfile {
+    @Serial
     private static final long serialVersionUID = -1;
     private Set<String> permissions = new HashSet<>();
-
+    @Getter
     private String token;
 
     public TokenProfile(String id) {
         this.setId(id);
-    }
-
-    public String getToken() {
-        return token;
     }
 
     public void setToken(final String token) {
@@ -59,7 +58,7 @@ public class TokenProfile extends AbstractJwtProfile {
      * @return 租户ID
      */
     public String getTenantId() {
-        return (String) getAttribute(ProfileConstants.tenantId);
+        return getAttributeAsString(ProfileConstants.tenantId);
     }
 
     /**
@@ -122,26 +121,11 @@ public class TokenProfile extends AbstractJwtProfile {
         addAttribute(Pac4jConstants.USERNAME, username);
     }
 
-    @Override
-    public Gender getGender() {
-        String attribute = getAttribute(CommonProfileDefinition.GENDER, String.class);
-        if (attribute == null) {
-            return Gender.UNSPECIFIED;
-        }
-        return Gender.valueOf(attribute);
-    }
-
     /**
      * {@link #getGender()}
      */
     public void setGender(Gender gender) {
         addAttribute(CommonProfileDefinition.GENDER, gender.name());
-    }
-
-    @Override
-    public Locale getLocale() {
-        String attribute = getAttribute(CommonProfileDefinition.LOCALE, String.class);
-        return attribute == null ? null : Locale.forLanguageTag(attribute);
     }
 
     /**
@@ -151,23 +135,11 @@ public class TokenProfile extends AbstractJwtProfile {
         addAttribute(CommonProfileDefinition.LOCALE, locale.toLanguageTag());
     }
 
-    @Override
-    public URI getPictureUrl() {
-        String attribute = getAttribute(CommonProfileDefinition.PICTURE_URL, String.class);
-        return attribute == null ? null : URI.create(attribute);
-    }
-
     /**
      * {@link #getPictureUrl()}
      */
     public void setPictureUrl(URI pictureUrl) {
         addAttribute(CommonProfileDefinition.PICTURE_URL, pictureUrl.toASCIIString());
-    }
-
-    @Override
-    public URI getProfileUrl() {
-        String attribute = getAttribute(CommonProfileDefinition.PROFILE_URL, String.class);
-        return attribute == null ? null : URI.create(attribute);
     }
 
     /**
@@ -183,6 +155,8 @@ public class TokenProfile extends AbstractJwtProfile {
     public void setLocation(String location) {
         addAttribute(CommonProfileDefinition.LOCATION, location);
     }
+
+    /* ====================================== pac4j 6.x 开始删除了 permissions ====================================== */
 
     public void addPermission(final String permission) {
         CommonHelper.assertNotBlank("permission", permission);

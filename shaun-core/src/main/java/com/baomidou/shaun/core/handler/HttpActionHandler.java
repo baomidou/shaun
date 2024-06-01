@@ -16,8 +16,8 @@
 package com.baomidou.shaun.core.handler;
 
 import com.baomidou.shaun.core.config.CoreConfig;
+import org.pac4j.core.context.CallContext;
 import org.pac4j.core.exception.http.HttpAction;
-import org.pac4j.jee.context.JEEContext;
 
 /**
  * HttpAction 处理器
@@ -34,5 +34,5 @@ public interface HttpActionHandler {
      * @param context 上下文
      * @param action  异常
      */
-    void handle(CoreConfig config, JEEContext context, HttpAction action);
+    void handle(CoreConfig config, CallContext context, HttpAction action);
 }

@@ -18,8 +18,10 @@ package com.baomidou.shaun.core.util;
 import com.baomidou.shaun.core.exception.ShaunException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.pac4j.core.context.CallContext;
 import org.pac4j.core.context.HttpConstants;
 import org.pac4j.jee.context.JEEContext;
+import org.pac4j.jee.context.session.JEESessionStore;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -31,6 +33,7 @@ import java.nio.charset.StandardCharsets;
  * @since 2020-05-26
  */
 public abstract class WebUtil {
+    private static final JEESessionStore JEE_SESSION_STORE = new JEESessionStore();
 
     /**
      * 获取 ServletRequestAttributes
@@ -65,7 +68,7 @@ public abstract class WebUtil {
      * @param context 上下文
      * @param url     地址
      */
-    public static void redirectUrl(JEEContext context, String url) {
+    public static void redirectUrl(CallContext context, String url) {
         redirectUrl(context, HttpConstants.FOUND, url);
     }
 
@@ -76,8 +79,8 @@ public abstract class WebUtil {
      * @param code    httpCode
      * @param url     地址
      */
-    public static void redirectUrl(JEEContext context, int code, String url) {
-        final HttpServletResponse response = context.getNativeResponse();
+    public static void redirectUrl(CallContext context, int code, String url) {
+        final HttpServletResponse response = getJEEContext(context).getNativeResponse();
         response.setHeader(HttpConstants.LOCATION_HEADER, url);
         response.setStatus(code);
     }
@@ -88,7 +91,7 @@ public abstract class WebUtil {
      * @param context 上下文
      * @param content 信息
      */
-    public static void write(JEEContext context, String content) {
+    public static void write(CallContext context, String content) {
         write(context, HttpConstants.OK, content);
     }
 
@@ -99,7 +102,7 @@ public abstract class WebUtil {
      * @param code    httpCode
      * @param content 信息
      */
-    public static void write(JEEContext context, int code, String content) {
+    public static void write(CallContext context, int code, String content) {
         write(context, code, content, "text/plain");
     }
 
@@ -110,8 +113,8 @@ public abstract class WebUtil {
      * @param code    httpCode
      * @param content 信息
      */
-    public static void write(JEEContext context, int code, String content, String contentType) {
-        final HttpServletResponse response = context.getNativeResponse();
+    public static void write(CallContext context, int code, String content, String contentType) {
+        final HttpServletResponse response = getJEEContext(context).getNativeResponse();
         try {
             response.setStatus(code);
             if (content != null) {
@@ -130,7 +133,20 @@ public abstract class WebUtil {
         return getJEEContext(sra.getRequest(), sra.getResponse());
     }
 
+    public static JEEContext getJEEContext(CallContext callContext) {
+        return (JEEContext) callContext.webContext();
+    }
+
     public static JEEContext getJEEContext(HttpServletRequest request, HttpServletResponse response) {
         return new JEEContext(request, response);
+    }
+
+    public static CallContext getCallContext() {
+        ServletRequestAttributes sra = getServletRequestAttributes();
+        return getCallContext(sra.getRequest(), sra.getResponse());
+    }
+
+    public static CallContext getCallContext(HttpServletRequest request, HttpServletResponse response) {
+        return new CallContext(getJEEContext(request, response), JEE_SESSION_STORE);
     }
 }

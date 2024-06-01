@@ -15,11 +15,11 @@
  */
 package com.baomidou.shaun.core.handler;
 
+import org.pac4j.core.context.CallContext;
 import org.pac4j.core.exception.http.FoundAction;
 import org.pac4j.core.exception.http.HttpAction;
 import org.pac4j.core.exception.http.SeeOtherAction;
 import org.pac4j.core.profile.UserProfile;
-import org.pac4j.jee.context.JEEContext;
 
 /**
  * 回调操作
@@ -37,5 +37,5 @@ public interface CallbackHandler {
      * @param context 上下文
      * @param profile callback 获取到的 profile
      */
-    HttpAction callBack(JEEContext context, UserProfile profile);
+    HttpAction callBack(CallContext context, UserProfile profile);
 }
