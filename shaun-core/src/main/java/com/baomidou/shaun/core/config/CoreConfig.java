@@ -55,17 +55,12 @@ import java.util.Map;
  * @since 2020-04-29
  */
 @Data
-@SuppressWarnings("all")
 public class CoreConfig {
 
     /**
      * 是否-前后端分离
      */
     private boolean stateless = true;
-//    /**
-//     * 是否-启用session
-//     */
-//    private boolean sessionOn = false;
     /**
      * token 位置
      */
