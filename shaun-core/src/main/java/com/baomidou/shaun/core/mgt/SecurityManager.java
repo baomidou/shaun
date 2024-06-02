@@ -66,7 +66,7 @@ public class SecurityManager {
         profile.setToken(token);
         if (config.getTokenLocation().enableCookie()) {
             JEEContext jeeContext = WebUtil.getJEEContext();
-            jeeContext.addResponseCookie(config.getCookie().getCookie(token, getCookieAge(expireTime)));
+            jeeContext.addResponseCookie(config.getCookie().genCookie(token, getCookieAge(expireTime)));
         }
         config.getProfileStateManager().online(profile);
         return token;

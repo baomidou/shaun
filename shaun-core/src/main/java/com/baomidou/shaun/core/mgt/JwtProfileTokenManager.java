@@ -48,11 +48,9 @@ public class JwtProfileTokenManager implements ProfileTokenManager {
     @Override
     public TokenProfile getProfile(CallContext context) {
         Credentials credentials = tokenClient.getCredentials(context).orElse(null);
-        if (credentials == null) {
-            return null;
-        }
-        TokenProfile tokenProfile = null;
+        credentials = tokenClient.validateCredentials(context, credentials).orElse(null);
         Optional<UserProfile> profile = tokenClient.getUserProfile(context, credentials);
+        TokenProfile tokenProfile = null;
         if (profile.isPresent()) {
             tokenProfile = (TokenProfile) profile.get();
             tokenProfile.setToken(((TokenCredentials) credentials).getToken());

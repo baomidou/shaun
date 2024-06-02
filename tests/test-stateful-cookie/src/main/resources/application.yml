@@ -1,7 +1,6 @@
 shaun:
   model: web_filter
   stateless: false
-  session-on: true
   login-path: /login
   matcher-names: csrfToken
   security:
