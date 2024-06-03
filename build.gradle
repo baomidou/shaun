@@ -1,7 +1,6 @@
 ext {
     javaVersion = JavaVersion.VERSION_17
     pac4jVersion = "6.0.3"
-//    pac4jVersion = "4.5.7"
     springBootVersion = "3.1.12"
     shiroVersion = "1.9.0"
     togglzVersion = "4.4.0"
@@ -13,9 +12,9 @@ allprojects {
 
     repositories {
         mavenLocal()
-//        maven { url "https://maven.aliyun.com/nexus/content/groups/public/" }
-        mavenCentral()
-//        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+        maven { url "https://maven.aliyun.com/nexus/content/groups/public/" }
+//        mavenCentral()
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
     }
 }
 

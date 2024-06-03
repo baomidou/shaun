@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2022 baomidou (wonderming@vip.qq.com)
+ * Copyright 2019-2024 baomidou (wonderming@vip.qq.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,12 +15,11 @@
  */
 package com.baomidou.shaun.autoconfigure;
 
+import com.baomidou.shaun.core.aop.MethodSecurityAdvisor;
+import com.baomidou.shaun.core.aop.MethodSecurityInterceptor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import com.baomidou.shaun.core.aop.MethodSecurityAdvisor;
-import com.baomidou.shaun.core.aop.MethodSecurityInterceptor;
 
 /**
  * @author miemie
