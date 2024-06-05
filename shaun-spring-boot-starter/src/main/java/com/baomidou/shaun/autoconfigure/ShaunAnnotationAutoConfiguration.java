@@ -17,15 +17,15 @@ package com.baomidou.shaun.autoconfigure;
 
 import com.baomidou.shaun.core.aop.MethodSecurityAdvisor;
 import com.baomidou.shaun.core.aop.MethodSecurityInterceptor;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 /**
  * @author miemie
  * @since 2020-08-04
  */
-@Configuration(proxyBeanMethods = false)
+@AutoConfiguration
 @ConditionalOnProperty(prefix = "shaun.security", name = {"enable", "annotation"}, havingValue = "true", matchIfMissing = true)
 public class ShaunAnnotationAutoConfiguration {
 

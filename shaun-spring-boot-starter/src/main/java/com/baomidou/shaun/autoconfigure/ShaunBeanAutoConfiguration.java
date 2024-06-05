@@ -48,7 +48,7 @@ import org.pac4j.core.http.url.DefaultUrlResolver;
 import org.pac4j.core.matching.matcher.Matcher;
 import org.pac4j.core.matching.matcher.PathMatcher;
 import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.boot.autoconfigure.AutoConfigureBefore;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -68,10 +68,8 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @RequiredArgsConstructor
-@SuppressWarnings("rawtypes")
-@Configuration(proxyBeanMethods = false)
+@AutoConfiguration(before = ShaunWebAutoConfiguration.class)
 @EnableConfigurationProperties(ShaunProperties.class)
-@AutoConfigureBefore(ShaunWebAutoConfiguration.class)
 public class ShaunBeanAutoConfiguration {
 
     private final ShaunProperties properties;

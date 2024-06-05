@@ -20,13 +20,13 @@ import com.baomidou.shaun.core.intercept.ShaunHandlerInterceptor;
 import com.baomidou.shaun.core.intercept.ShaunOncePerRequestFilter;
 import com.baomidou.shaun.core.intercept.support.ShaunFilterChain;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -36,7 +36,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * @author miemie
  * @since 2020-08-04
  */
-@Configuration(proxyBeanMethods = false)
+@AutoConfiguration
 public class ShaunWebAutoConfiguration {
 
     @Bean
@@ -58,8 +58,8 @@ public class ShaunWebAutoConfiguration {
         return bean;
     }
 
+    @AutoConfiguration
     @RequiredArgsConstructor
-    @Configuration(proxyBeanMethods = false)
     @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
     @ConditionalOnProperty(prefix = "shaun", name = "model", havingValue = "interceptor", matchIfMissing = true)
     public static class ShaunWebMvcConfigurer implements WebMvcConfigurer {
