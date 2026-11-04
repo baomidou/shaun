@@ -1,70 +1,57 @@
 import java.time.LocalDateTime
 
-apply plugin: "maven-publish"
-apply plugin: "signing"
+apply plugin: 'com.vanniktech.maven.publish.base'
 
-jar {
-    into("META-INF/") {
-        from rootProject.file("LICENSE")
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
+
+def repositoryUrl = 'https://github.com/baomidou/shaun'
+
+tasks.named('jar', Jar) {
+    into('META-INF') {
+        from rootProject.file('LICENSE')
     }
-    into("META-INF/maven/$project.group/$project.name") {
-        from { generatePomFileForMavenJavaPublication }
-        rename ".*", "pom.xml"
+    from(tasks.named('generatePomFileForMavenJavaPublication')) {
+        into "META-INF/maven/${project.group}/${project.name}"
+        rename { 'pom.xml' }
     }
-    afterEvaluate {
-        manifest {
-            attributes 'Implementation-Title': archiveBaseName
-            attributes 'Implementation-Version': archiveVersion
-            attributes 'Built-Gradle': gradle.gradleVersion
-            attributes 'Bundle-DocURL': 'https://gitee.com/baomidou/shaun'
-            attributes 'Build-OS': System.getProperty("os.name")
-            attributes 'Built-By': System.getProperty("user.name")
-            attributes 'Build-Jdk': System.getProperty("java.version")
-            attributes 'Build-Timestamp': LocalDateTime.now().format("yyyy-MM-dd HH:mm:ss")
-        }
+    manifest {
+        attributes(
+            'Implementation-Title': archiveBaseName.get(),
+            'Implementation-Version': archiveVersion.get(),
+            'Built-Gradle': gradle.gradleVersion,
+            'Bundle-DocURL': repositoryUrl,
+            'Build-OS': System.getProperty('os.name'),
+            'Built-By': System.getProperty('user.name'),
+            'Build-Jdk': System.getProperty('java.version'),
+            'Build-Timestamp': LocalDateTime.now().format('yyyy-MM-dd HH:mm:ss'),
+            'Automatic-Module-Name': "${project.group}.${project.name.replace('-', '.')}"
+        )
     }
 }
 
 publishing {
-    repositories {
-        maven {
-            def userName = System.getProperty("un")
-            def passWord = System.getProperty("ps")
-            def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
-            def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
-            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
-
-            credentials {
-                username userName
-                password passWord
-            }
-        }
-    }
-
     publications {
         mavenJava(MavenPublication) {
             from components.java
 
-            artifact sourcesJar
-            artifact javadocJar
-
             pom {
-
-                name = 'shaun'
-                packaging 'jar'
+                name = project.name
                 description = rootProject.description
-                url = 'https://gitee.com/baomidou/shaun'
+                url = repositoryUrl
 
                 scm {
-                    url = 'https://gitee.com/baomidou/shaun'
-                    connection = 'scm:git:https://gitee.com/baomidou/shaun.git'
-                    developerConnection = 'scm:git:git@gitee.com:baomidou/shaun.git'
+                    url = repositoryUrl
+                    connection = "scm:git:${repositoryUrl}.git"
+                    developerConnection = 'scm:git:ssh://git@github.com/baomidou/shaun.git'
                 }
 
                 licenses {
                     license {
                         name = 'The Apache License, Version 2.0'
-                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        url = 'https://www.apache.org/licenses/LICENSE-2.0.txt'
                     }
                 }
 
@@ -77,22 +64,21 @@ publishing {
                 }
 
                 withXml {
-                    def root = asNode()
-                    root.dependencies.'*'.findAll {
-                        def d = it
-                        d.scope.text() == 'runtime' && project.configurations.findByName("implementation").allDependencies.find { dep ->
-                            dep.name == it.artifactId.text()
-                        }.each() {
-                            d.scope*.value = 'compile'
-                            d.appendNode('optional', true)
+                    asNode().dependencies.dependency.findAll { node ->
+                        node.scope.text() == 'runtime' && project.configurations.implementation.allDependencies.any { dependency ->
+                            dependency.group == node.groupId.text() && dependency.name == node.artifactId.text()
                         }
+                    }.each { node ->
+                        node.scope[0].value = 'compile'
+                        node.appendNode('optional', true)
                     }
                 }
             }
         }
     }
+}
 
-    signing {
-        sign publishing.publications.mavenJava
-    }
+mavenPublishing {
+    publishToMavenCentral(false)
+    signAllPublications()
 }

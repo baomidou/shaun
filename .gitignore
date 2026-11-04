@@ -2,6 +2,7 @@ HELP.md
 .gradle
 lombok.config
 build/
+bin/
 !**/src/main/**
 !**/src/test/**
 

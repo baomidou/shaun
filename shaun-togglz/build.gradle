@@ -1,5 +1,3 @@
-apply from: "${rootDir}/gradle/publications.gradle"
-
 dependencies {
     api project(":shaun-core")
     api "org.togglz:togglz-core:${togglzVersion}"

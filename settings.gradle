@@ -2,15 +2,16 @@ rootProject.name = "shaun"
 
 buildscript {
     repositories {
-        maven { url "https://maven.aliyun.com/nexus/content/groups/public" }
-        maven { url "https://maven.aliyun.com/nexus/content/repositories/gradle-plugin" }
         mavenCentral()
-        maven { url "https://plugins.gradle.org/m2/" }
+        gradlePluginPortal()
+        maven { url = "https://maven.aliyun.com/nexus/content/groups/public" }
+        maven { url = "https://maven.aliyun.com/nexus/content/repositories/gradle-plugin" }
     }
 
     dependencies {
         classpath("gradle.plugin.com.hierynomus.gradle.plugins:license-gradle-plugin:0.16.1")
-        classpath("io.freefair.gradle:lombok-plugin:8.6")
+        classpath("io.freefair.gradle:lombok-plugin:9.8.3")
+        classpath("com.vanniktech:gradle-maven-publish-plugin:0.37.0")
     }
 }
 

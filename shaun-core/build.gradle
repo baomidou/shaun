@@ -1,5 +1,3 @@
-apply from: "${rootDir}/gradle/publications.gradle"
-
 dependencies {
     api "org.pac4j:pac4j-jwt:${pac4jVersion}"
     api "org.pac4j:pac4j-http:${pac4jVersion}"

@@ -1,5 +1,3 @@
-apply from: "${rootDir}/gradle/publications.gradle"
-
 dependencies {
     api project(":shaun-core")
     api "org.springframework.boot:spring-boot-autoconfigure"
@@ -8,8 +6,6 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-actuator"
     annotationProcessor "org.springframework.boot:spring-boot-autoconfigure-processor"
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
-    implementation "org.springframework.boot:spring-boot-autoconfigure-processor"
-    implementation "org.springframework.boot:spring-boot-configuration-processor"
     testImplementation "org.springframework.boot:spring-boot-starter-test"
 }
 

@@ -1,20 +1,24 @@
 ext {
-    javaVersion = JavaVersion.VERSION_17
-    pac4jVersion = "6.0.3"
-    springBootVersion = "3.1.12"
+    pac4jVersion = "6.6.0"
+    springBootVersion = "3.5.16"
     shiroVersion = "1.9.0"
     togglzVersion = "4.4.0"
 }
 
+def targetJava = JavaVersion.VERSION_17
+int javaRelease = targetJava.majorVersion.toInteger()
+def appGroup = providers.gradleProperty("APP_GROUP").get()
+def appVersion = providers.gradleProperty("releaseVersion").orElse(providers.gradleProperty("APP_VERSION")).get()
+
 allprojects {
-    group = "com.baomidou"
-    version = "2.0.0-SNAPSHOT"
+    group = appGroup
+    version = appVersion
 
     repositories {
         mavenLocal()
-        maven { url "https://maven.aliyun.com/nexus/content/groups/public/" }
-//        mavenCentral()
-        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+        mavenCentral()
+        maven { url = "https://maven.aliyun.com/nexus/content/groups/public/" }
+        maven { url = "https://oss.sonatype.org/content/repositories/snapshots/" }
     }
 }
 
@@ -26,12 +30,12 @@ subprojects {
     apply plugin: 'com.github.hierynomus.license'
 
     java {
-        sourceCompatibility = "${javaVersion}"
-        targetCompatibility = "${javaVersion}"
+        sourceCompatibility = targetJava
+        targetCompatibility = targetJava
     }
 
     lombok {
-        version = "1.18.32"
+        version = "1.18.48"
     }
 
     dependencies {
@@ -39,20 +43,48 @@ subprojects {
         annotationProcessor(platform("org.springframework.boot:spring-boot-dependencies:${springBootVersion}"))
 
         testImplementation("org.assertj:assertj-core")
-        testImplementation("org.junit.jupiter:junit-jupiter-engine")
+        testImplementation("org.junit.jupiter:junit-jupiter")
+        testRuntimeOnly("org.junit.platform:junit-platform-launcher")
         testImplementation("org.mockito:mockito-junit-jupiter")
         testImplementation("ch.qos.logback:logback-classic")
     }
 
-    tasks.withType(JavaCompile) {
+    tasks.withType(JavaCompile).configureEach {
+        options.release = javaRelease
         options.encoding = 'UTF-8'
-        options.warnings = false
-        options.deprecation = true
-        options.compilerArgs += ["-parameters"]
+        options.compilerArgs.add('-parameters')
     }
 
-    tasks.withType(GenerateModuleMetadata) {
+    tasks.withType(GenerateModuleMetadata).configureEach {
         enabled = false
+    }
+
+    tasks.withType(Jar).configureEach {
+        preserveFileTimestamps = false
+        reproducibleFileOrder = true
+    }
+
+    def mainClasses = sourceSets.main.output.classesDirs
+    def verifyBytecodeVersion = tasks.register('verifyBytecodeVersion') {
+        group = 'verification'
+        description = 'Verifies that compiled main classes target the configured Java release.'
+        dependsOn tasks.named('classes')
+
+        doLast {
+            int expectedMajor = javaRelease + 44
+            mainClasses.asFileTree.matching { include '**/*.class' }.each { classFile ->
+                classFile.withDataInputStream { input ->
+                    input.skipNBytes(6)
+                    int major = input.readUnsignedShort()
+                    if (major != expectedMajor) {
+                        throw new GradleException("${classFile}: expected Java ${javaRelease} bytecode (major ${expectedMajor}), got ${major}")
+                    }
+                }
+            }
+        }
+    }
+    tasks.named('check') {
+        dependsOn verifyBytecodeVersion
     }
 
     license {
@@ -62,45 +94,28 @@ subprojects {
         exclude "**/test/**/*.java"
         exclude "**/*Test.java"
         mapping "java", "SLASHSTAR_STYLE"
-        ext.year = Calendar.getInstance().get(Calendar.YEAR)
+        // Match the checked-in headers regardless of the build date.
+        ext.year = 2024
     }
 
-    //noinspection GroovyAssignabilityCheck
-    task sourcesJar(type: Jar) {
-        archiveClassifier = "sources"
-        from sourceSets.main.allJava
+    tasks.named('clean') {
+        delete layout.projectDirectory.dir('out')
     }
 
-    tasks.clean {
-        delete "${projectDir}/build"
-        delete "${projectDir}/out"
-    }
-
-    javadoc {
-        afterEvaluate {
-            configure(options) {
-                encoding "UTF-8"
-                charSet 'UTF-8'
-                author true
-                version true
-                failOnError false
-                links "http://docs.oracle.com/javase/8/docs/api"
-            }
+    tasks.named('javadoc', Javadoc) {
+        options {
+            encoding = 'UTF-8'
+            charSet = 'UTF-8'
+            author = true
+            version = true
         }
     }
 
-    task javadocJar(type: Jar) {
-        archiveClassifier = "javadoc"
-        from javadoc
-    }
-
-    test {
+    tasks.named('test', Test) {
         useJUnitPlatform()
     }
+}
 
-    tasks.whenTaskAdded { task ->
-        if (task.name.contains('signMavenJavaPublication')) {
-            task.enabled = new File(project.property('signing.secretKeyRingFile') as String).isFile()
-        }
-    }
+configure([project(':shaun-core'), project(':shaun-spring-boot-starter'), project(':shaun-togglz')]) {
+    apply from: rootProject.file('gradle/publications.gradle')
 }

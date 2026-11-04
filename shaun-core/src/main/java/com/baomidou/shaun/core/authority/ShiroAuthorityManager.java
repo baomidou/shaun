@@ -30,9 +30,8 @@ import java.util.Set;
  * shiro 的 permission 验证支持
  * 只需要 shiro-core 包
  *
- * </P>
- * maven 引用:
- * <blockquote><pre>
+ * <p>Maven 依赖</p>
+ * <pre>{@code
  *  <dependency>
  *     <groupId>org.apache.shiro</groupId>
  *     <artifactId>shiro-core</artifactId>
@@ -44,17 +43,15 @@ import java.util.Set;
  *         </exclusion>
  *     </exclusions>
  *  </dependency>
- * </pre></blockquote>
+ * }</pre>
  *
- * </p>
- * gradle 引用:
- * <blockquote><pre>
+ * <p>Gradle 依赖</p>
+ * <pre>{@code
  *  api("org.apache.shiro:shiro-core:1.7.1") {
  *         exclude group: 'org.apache.shiro'
  *  }
- * </pre></blockquote>
- * <p>
- * 文档: <a herf="https://doc.yonyoucloud.com/doc/apache-shiro-1.2.x-reference/II.%20Core%20%E6%A0%B8%E5%BF%83/6.1.%20Permissions%20%E6%9D%83%E9%99%90.html"></a>
+ * }</pre>
+ * <p><a href="https://doc.yonyoucloud.com/doc/apache-shiro-1.2.x-reference/II.%20Core%20%E6%A0%B8%E5%BF%83/6.1.%20Permissions%20%E6%9D%83%E9%99%90.html">Shiro 权限文档</a></p>
  *
  * @author miemie
  * @since 1.1
